@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/msys64/ucrt64/home/julian/CppProjects/int128/build/cmake_install.cmake",
+		"C:/msys64/ucrt64/home/julian/CppProjects/int128/build/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

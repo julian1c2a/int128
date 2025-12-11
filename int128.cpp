@@ -1,16 +1,18 @@
-#include "include/uint128_t.hpp"
+#include "uint128_t.hpp"
 
 #include <cstdint>
 #include <cctype>
 #include <iostream>
-#include <iomanip>
+#include_next <iomanip>
+
+using namespace append;
 
 int main()
 {
     // Prueba: Crear un entero de 128 bits
     // High: 0x1111222233334444
     // Low:  0x5555666677778888
-    append::uint128_t num(0x1111222233334444, 0x5555666677778888);
+    uint128_t num(0x1111222233334444, 0x5555666677778888);
 
     std::cout << "Valor 128-bit (Hex): 0x";
     std::cout << std::hex << std::uppercase << std::setfill('0');

@@ -1,0 +1,8 @@
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/CMakeFiles/int128.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/CMakeFiles/test.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/CMakeFiles/edit_cache.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/CMakeFiles/rebuild_cache.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/tests/CMakeFiles/test_uint128.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/tests/CMakeFiles/test.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/tests/CMakeFiles/edit_cache.dir
+C:/msys64/ucrt64/home/julian/CppProjects/int128/build/tests/CMakeFiles/rebuild_cache.dir
