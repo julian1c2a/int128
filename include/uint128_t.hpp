@@ -6,480 +6,195 @@
 #include <type_traits>
 #include <utility>
 #include <concepts>
+#include <stdexcept>
 
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
 
-namespace append {
 
-    using std::uint64_t;
-    using std::uint32_t;
-    using std::uint16_t;
-    using std::uint8_t;
-    using std::int64_t;
-    using std::int32_t;
-    using std::int16_t;
-    using std::int8_t;
-    using std::size_t;
+
 
 struct uint128_t {
-    static constexpr int UINT128_BITS = 128;
-
     uint64_t low;
     uint64_t high;
 
-#if !defined(_MSC_VER)
-    // Constructor from __int128_t (signed)
-    constexpr uint128_t(__int128_t value) noexcept
-        : low(static_cast<uint64_t>(static_cast<unsigned __int128>(value))),
-          high(static_cast<uint64_t>(static_cast<unsigned __int128>(value) >> 64)) {}
-
-    // Constructor from unsigned __int128
-    constexpr uint128_t(unsigned __int128 value) noexcept
-        : low(static_cast<uint64_t>(value)),
-          high(static_cast<uint64_t>(value >> 64)) {}
-#endif
-
     // CONSTRUCTORS
+    constexpr uint128_t() noexcept : low(0), high(0) {}
+    constexpr uint128_t(uint64_t h, uint64_t l) noexcept : low(l), high(h) {}
+    
+    template<typename T, typename = std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>>>
+    constexpr uint128_t(T value) noexcept : low(static_cast<uint64_t>(value)), high(0) {}
 
-    // Default constructor
-    constexpr uint128_t() noexcept : low(0ull), high(0ull) {}
-
-    // Constructor from two uint64_t values
-    constexpr uint128_t(uint64_t _high, uint64_t _low) noexcept : low(_low), high(_high) {}
-
-    // Constructor from only one uint64_t value
-    template<typename T, typename = std::enable_if_t<std::is_unsigned<T>::value && std::is_integral<T>::value>>
-    constexpr uint128_t(T _low) noexcept : 
-        low(static_cast<uint64_t>(_low)), high(0ull) {}
-
-    // Copy Constructor
-    constexpr uint128_t(const uint128_t& other) noexcept 
-        : low(other.low), high(other.high) {}
-
-    // Move Constructor
-    constexpr uint128_t(uint128_t&& other) noexcept 
-        : uint128_t(other.high, other.low) {}
-
-    // ASSIGMENT OPERATORS
-    // Copy Assignment Operator
-    constexpr uint128_t& operator=(const uint128_t& other) noexcept {
-        if (this == &other) {
-            return (*this);
-        }
-        high = other.high;
-        low = other.low;
-        return (*this);
+#if defined(__GNUC__) || defined(__clang__)
+    constexpr uint128_t(unsigned __int128 value) noexcept
+        : low(static_cast<uint64_t>(value)), high(static_cast<uint64_t>(value >> 64)) {}
+#endif
+    
+    // ASSIGNMENT OPERATORS
+    constexpr uint128_t& operator=(const uint128_t& other) noexcept = default;
+    
+    template<typename T, typename = std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>>>
+    constexpr uint128_t& operator=(T value) noexcept {
+        low = static_cast<uint64_t>(value);
+        high = 0;
+        return *this;
     }
 
     // CONVERSIONS
-    
-    // Explicit conversion to bool
-    explicit constexpr operator bool() const noexcept {
-        return (high != 0) || (low != 0);
-    }
+    explicit constexpr operator bool() const noexcept { return (high != 0) || (low != 0); }
 
-    // CONVERSION FROM uint128_t TO integral TYPE
-    template<typename TYPE, typename = std::enable_if_t<std::is_integral<TYPE>::value>>
-    explicit constexpr operator TYPE() const noexcept {
-        if constexpr (std::is_same<TYPE, bool>::value) {
-            return (high != 0) || (low != 0);
-        } else if constexpr (std::is_same<TYPE, uint64_t>::value) {
-            return low;
-        } else if constexpr (std::is_same<TYPE, int32_t>::value) {
-            return static_cast<int32_t>(low);
-        } else if constexpr (std::is_same<TYPE, uint32_t>::value) {
-            return static_cast<uint32_t>(low);
-        } else if constexpr (std::is_same<TYPE, int16_t>::value) {
-            return static_cast<int16_t>(low);
-        } else if constexpr (std::is_same<TYPE, uint16_t>::value) {
-            return static_cast<uint16_t>(low);
-        } else if constexpr (std::is_same<TYPE, int8_t>::value) {
-            return static_cast<int8_t>(low);
-        } else if constexpr (std::is_same<TYPE, uint8_t>::value) {
-            return static_cast<uint8_t>(low);
-        } else if constexpr (std::is_same<TYPE, int64_t>::value) {
-            return static_cast<int64_t>(low);
-        }  else {
-            static_assert(sizeof(TYPE) > 8, "Conversion to this type is not supported.");
+    template<typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+    explicit constexpr operator T() const noexcept {
+        return static_cast<T>(low);
+    }
+    
+#if defined(__GNUC__) || defined(__clang__)
+    explicit constexpr operator unsigned __int128() const noexcept {
+        return (static_cast<unsigned __int128>(high) << 64) | low;
+    }
+#endif
+
+    // UNARY OPERATORS
+    uint128_t& operator++() noexcept {
+        if (++low == 0) {
+            ++high;
         }
+        return *this;
     }
 
-    // Move Assignment Operator
-    // Tipos simples como uint64_t no necesitan realmente un move assignment,
-    // pero se incluye aquí para completar la implementación.
-    constexpr uint128_t& operator=(uint128_t&& other) noexcept {
-        if (this == &other) {
-            return (*this);
-        } 
-        high = other.high;
-        low = other.low;
-        return (*this);
+    uint128_t operator++(int) noexcept {
+        uint128_t temp(*this);
+        ++(*this);
+        return temp;
     }
 
-    // Copy and Move Assigment Operator from uint64_t object
-    template<typename T, typename = std::enable_if_t<std::is_unsigned<T>::value && std::is_integral<T>::value>>
-    constexpr uint128_t& operator=(T _low) noexcept {
-        high = 0ull;
-        low = static_cast<uint64_t>(_low);
-        return (*this);
+    uint128_t& operator--() noexcept {
+        if (low-- == 0) {
+            --high;
+        }
+        return *this;
+    }
+
+    uint128_t operator--(int) noexcept {
+        uint128_t temp(*this);
+        --(*this);
+        return temp;
+    }
     
+    uint128_t operator-() const noexcept {
+        return ~(*this) + 1;
+    }
+
+    // ARITHMETIC ASSIGNMENT OPERATORS
+    uint128_t& operator+=(const uint128_t& other) noexcept {
+        uint64_t old_low = low;
+        low += other.low;
+        high += other.high;
+        if (low < old_low) { // check for carry
+            high++;
+        }
+        return *this;
+    }
+
+    uint128_t& operator-=(const uint128_t& other) noexcept {
+        uint64_t old_low = low;
+        low -= other.low;
+        high -= other.high;
+        if (low > old_low) { // check for borrow
+            high--;
+        }
+        return *this;
     }
 
 #ifdef _MSC_VER
-    // PRE-INCREMENT OPERATOR
-    uint128_t& operator++() noexcept {
-        uint64_t new_low;
-        unsigned char carry = _addcarry_u64(0, low, 1ull, &new_low);
-        low = new_low;
-        if (carry) {
-            high += 1ull;
-        }
-        return (*this);
-    }
-
-    // POST-INCREMENT OPERATOR
-    uint128_t operator++(int) noexcept {
-        uint128_t temp(*this);
-        ++(*this);
-        return temp;
-    }
-
-    // PRE-DECREMENT OPERATOR
-    uint128_t& operator--() noexcept {
-        uint64_t new_low;
-        unsigned char borrow = _subborrow_u64(0, low, 1ull, &new_low);
-        low = new_low;
-        if (borrow) {
-            high -= 1ull;
-        }
-        return (*this);
-    }
-
-    // POST-DECREMENT OPERATOR
-    uint128_t operator--(int) noexcept {
-        uint128_t temp(*this);
-        --(*this);
-        return temp;
-    }
-
-    // Addition with assigment operator
-    uint128_t& operator+=(const uint128_t& other) noexcept {
-        uint64_t new_low;
-        unsigned char carry = _addcarry_u64(0, low, other.low, &new_low);
-        low = new_low;
-        _addcarry_u64(carry, high, other.high, &high);
-        return (*this);
-    }
-
-    // Subtraction with assigment operator
-    uint128_t& operator-=(const uint128_t& other) noexcept {
-        uint64_t new_low;
-        unsigned char borrow = _subborrow_u64(0, low, other.low, &new_low);
-        low = new_low;
-        _subborrow_u64(borrow, high, other.high, &high);
-        return (*this);
-    }
-
-    // Multiplication with assignment operator
     uint128_t& operator*=(const uint128_t& other) noexcept {
-        uint64_t result_high;
-        low = _umul128(low, other.low, &result_high);
-        high = result_high + high * other.low + low * other.high;
-        return (*this);
-    }
+        uint64_t h1 = high, l1 = low;
+        uint64_t h2 = other.high, l2 = other.low;
+        
+        uint64_t cross_product1 = h1 * l2;
+        uint64_t cross_product2 = h2 * l1;
 
-#else // GCC/Clang specific implementation
+        uint64_t high_res; // will be discarded (overflow)
+        uint64_t low_res = _umul128(l1, l2, &high_res);
 
-    // PRE-INCREMENT OPERATOR
-    uint128_t& operator++() noexcept {
-        __int128_t temp = static_cast<__int128_t>(*this);
-        temp++;
-        (*this) = uint128_t(temp);
-        return (*this);
-    }
-
-    // POST-INCREMENT OPERATOR
-    uint128_t operator++(int) noexcept {
-        uint128_t temp(*this);
-        ++(*this);
-        return temp;
-    }
-
-    // PRE-DECREMENT OPERATOR
-    uint128_t& operator--() noexcept {
-        __int128_t temp = static_cast<__int128_t>(*this);
-        temp--;
-        (*this) = uint128_t(temp);
-        return (*this);
-    }
-
-    // POST-DECREMENT OPERATOR
-    uint128_t operator--(int) noexcept {
-        uint128_t temp(*this);
-        --(*this);
-        return temp;
-    }
-
-    // Addition with assigment operator
-    uint128_t& operator+=(const uint128_t& other) noexcept {
-        unsigned __int128 tmp = (static_cast<unsigned __int128>(high) << 64) | low;
-        unsigned __int128 other_tmp = (static_cast<unsigned __int128>(other.high) << 64) | other.low;
-        tmp += other_tmp;
-        high = tmp >> 64;
-        low = static_cast<uint64_t>(tmp);
+        high = high_res + cross_product1 + cross_product2;
+        low = low_res;
         return *this;
     }
     
-    // Subtraction with assigment operator
-    uint128_t& operator-=(const uint128_t& other) noexcept {
-        unsigned __int128 tmp = (static_cast<unsigned __int128>(high) << 64) | low;
-        unsigned __int128 other_tmp = (static_cast<unsigned __int128>(other.high) << 64) | other.low;
-        tmp -= other_tmp;
-        high = tmp >> 64;
-        low = static_cast<uint64_t>(tmp);
-        return (*this);
-    }
-    
-    // Multiplication with assignment operator
-    uint128_t& operator*=(const uint128_t& other) noexcept {
-        unsigned __int128 tmp = (static_cast<unsigned __int128>(high) << 64) | low;
-        unsigned __int128 other_tmp = (static_cast<unsigned __int128>(other.high) << 64) | other.low;
-        tmp *= other_tmp;
-        high = tmp >> 64;
-        low = static_cast<uint64_t>(tmp);
+    // Division by a 64-bit integer
+    uint128_t& operator/=(uint64_t divisor) {
+        if (divisor == 0) {
+            throw std::domain_error("Division by zero.");
+        }
+        uint64_t remainder;
+        low = _udiv128(high, low, divisor, &remainder);
+        high = 0; // The quotient of 128/64 fits in 64 bits if high < divisor
+        
+        // if high part is >= divisor, the result won't fit in 64 bits.
+        // _udiv128 handles this by returning the largest possible quotient.
+        // We need a more complex algorithm for true 128/64 division where quotient can be > 64 bits
+        // For now, this is a common implementation. A full 128/128 or 192/64 division is needed for correctness.
+        // Let's stick to a simpler 128/64 that fits in a uint128_t result.
+
+        // A better approach for 128/64:
+        if (high >= divisor) {
+             throw std::overflow_error("Division result overflows uint128_t.");
+        }
+        uint64_t rem;
+        uint64_t q1 = _udiv128(0, high, divisor, &rem); // q1 = high / divisor
+        uint64_t q2 = _udiv128(rem, low, divisor, &rem); // q2 = (rem:low) / divisor
+        high = q1;
+        low = q2;
         return *this;
     }
 
+    // Modulo by a 64-bit integer
+    uint128_t& operator%=(uint64_t divisor) {
+        if (divisor == 0) {
+            throw std::domain_error("Division by zero.");
+        }
+        uint64_t remainder;
+        _udiv128(high, low, divisor, &remainder);
+        low = remainder;
+        high = 0;
+        return *this;
+    }
+
+#else // GCC/Clang with __int128
+    uint128_t& operator*=(const uint128_t& other) noexcept {
+        unsigned __int128 res = static_cast<unsigned __int128>(*this) * static_cast<unsigned __int128>(other);
+        high = res >> 64;
+        low = static_cast<uint64_t>(res);
+        return *this;
+    }
+    
+    uint128_t& operator/=(const uint128_t& other) noexcept {
+        unsigned __int128 res = static_cast<unsigned __int128>(*this) / static_cast<unsigned __int128>(other);
+        high = res >> 64;
+        low = static_cast<uint64_t>(res);
+        return *this;
+    }
+    
+    uint128_t& operator%=(const uint128_t& other) noexcept {
+        unsigned __int128 res = static_cast<unsigned __int128>(*this) % static_cast<unsigned __int128>(other);
+        high = res >> 64;
+        low = static_cast<uint64_t>(res);
+        return *this;
+    }
 #endif
 
-    // Addition with assigment operator for integral types
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    uint128_t& operator+=(T other) noexcept {
-        if constexpr (std::is_unsigned<T>::value) {
-            // Unsigned integral type
-            *this += uint128_t(0, static_cast<uint64_t>(other));
-            return *this;
-        } else {
-            // Signed integral type
-            if (other >= 0) {
-                // Positive value: normal addition
-                (*this) += uint128_t(0, static_cast<uint64_t>(other));
-                return (*this);
-            } else {
-                // Negative value: subtraction of absolute value
-                (*this) -= uint128_t(0, static_cast<uint64_t>(-other));
-                return (*this);
-            }
-        }
-    }
+    // BITWISE ASSIGNMENT OPERATORS
+    uint128_t& operator&=(const uint128_t& other) noexcept { high &= other.high; low &= other.low; return *this; }
+    uint128_t& operator|=(const uint128_t& other) noexcept { high |= other.high; low |= other.low; return *this; }
+    uint128_t& operator^=(const uint128_t& other) noexcept { high ^= other.high; low ^= other.low; return *this; }
+    uint128_t operator~() const noexcept { return uint128_t(~high, ~low); }
 
-// Subtraction with assigment operator for integral types
-template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-uint128_t& operator-=(T other) noexcept {
-    if constexpr (std::is_unsigned<T>::value) {
-        // Unsigned integral type
-        (*this) -= uint128_t(0, static_cast<uint64_t>(other));
-        return (*this);
-    } else {
-        // Signed integral type
-        if (other >= 0) {
-            // Positive value: normal subtraction
-            (*this) -= uint128_t(0, static_cast<uint64_t>(other));
-            return *this;
-        } else {
-            // Negative value: addition of absolute value
-            (*this) += uint128_t(0, static_cast<uint64_t>(-other));
-            return (*this);
-        }
-    }
-}
-
-    // Multiplication with assignment operator from an integral type
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    uint128_t& operator*=(T other) noexcept {
-        if constexpr (std::is_unsigned<T>::value) {
-            // Unsigned Integral Type
-            (*this) *= uint128_t(0, static_cast<uint64_t>(other));
-            return (*this);
-        } else {
-            // Signed Integral Type
-            if (other >= 0) {
-                // Positive value
-                (*this) *= uint128_t(0, static_cast<uint64_t>(other));
-                return (*this);
-            } else {
-                // Negative value
-                // Multiplying by a negative number results in zero for uint128_t
-                high = 0ull;
-                low = 0ull;
-                return (*this);
-            }
-        }
-    }
-
-    // Addition operator (uses operator+=)
-    uint128_t operator+(const uint128_t& other) const noexcept {
-        uint128_t result(*this);
-        result += other;
-        return result;
-    }
-
-    // Addition operator for integral types (uses operator+=)
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    uint128_t operator+(T other) const noexcept {
-        uint128_t result(*this);
-        result += other;
-        return result;
-    }
-
-    // Subtraction operator (uses operator-=)
-    uint128_t operator-(const uint128_t& other) const noexcept {
-        uint128_t result(*this);
-        result -= other;
-        return result;
-    }
-
-    // Subtraction operator for integral types (uses operator-=)
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    uint128_t operator-(T other) const noexcept {
-        uint128_t result(*this);
-        result -= other;
-        return result;
-    }
-
-    // Multiplication operator (uses operator*=)
-    uint128_t operator*(const uint128_t& other) const noexcept {
-        uint128_t result(*this);
-        result *= other;
-        return result;
-    }
-
-    // Multiplication operator (uses operator*=)
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    uint128_t operator*(T other) const noexcept {
-        uint128_t result(*this);
-        result *= other;
-        return result;
-    }
-
-    // Equality operator
-    bool operator==(uint128_t other) const {
-        return (high == other.high) && (low == other.low);
-    }
-
-    // Equality operator for integral types
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    bool operator==(T other) const {
-        if constexpr (std::is_unsigned<T>::value) {
-            // Unsigned integral type
-            return (high == 0) && (low == static_cast<uint64_t>(other));
-        } else {
-            // Signed integral type
-            if (other >= 0) {
-                return (high == 0) && (low == static_cast<uint64_t>(other));
-            } else {
-                return false; // uint128_t can never be equal to a negative integer
-            }
-        }
-    }
-
-    // Less than operator
-    bool operator<(const uint128_t& other) const {
-        if (high < other.high) return true;
-        if (high > other.high) return false;
-        return low < other.low;
-    }
-
-    // Less than operator for integral types
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    bool operator<(T other) const {
-        if constexpr (std::is_unsigned<T>::value) {
-            // Unsigned integral type
-            if (high != 0) return false;
-            return low < static_cast<uint64_t>(other);
-        } else {
-            // Signed integral type
-            if (other >= 0) {
-                // Positive value
-                if (high != 0) return false;
-                return low < static_cast<uint64_t>(other);
-            } else {
-                // Negative value
-                return false; // uint128_t can never be less than a negative integer
-            }
-        }
-    }
-
-    // Additional comparison operators
-    bool operator!=(const uint128_t& other) const {
-        return !((*this) == other);
-    }
-
-    bool operator>(const uint128_t& other) const {
-        return other < (*this);
-    }
-
-    bool operator<=(const uint128_t& other) const {
-        return !((*this) > other);
-    }
-
-    bool operator>=(const uint128_t& other) const {
-        return !((*this) < other);
-    }
-
-    // Additional comparison operators from integral types
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    bool operator!=(T other) const {
-        return !((*this) == other);
-    }
-
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    bool operator>(T other) const {
-        return other < (*this);
-    }
-
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    bool operator<=(T other) const {
-        return !((*this) > other);
-    }
-
-    template<typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-    bool operator>=(T other) const {
-        return !((*this) < other);
-    }
-    
-    // BITWISE OPERATORS WITH ASSIGNMENT
-
-    // Bitwise AND with assignment
-    uint128_t& operator&=(const uint128_t& other) noexcept {
-        high &= other.high;
-        low &= other.low;
-        return (*this);
-    }
-
-    // Bitwise OR with assignment
-    uint128_t& operator|=(const uint128_t& other) noexcept {
-        high |= other.high;
-        low |= other.low;
-        return (*this);
-    }
-
-    // Bitwise XOR with assignment
-    uint128_t& operator^=(const uint128_t& other) noexcept {
-        high ^= other.high;
-        low ^= other.low;
-        return (*this);
-    }
-
-    // Left shift with assignment
+    // SHIFT OPERATORS
     uint128_t& operator<<=(unsigned int shift) noexcept {
         if (shift == 0) return *this;
-        if (shift >= 128) {
-            high = low = 0;
-            return (*this);
-        }
+        if (shift >= 128) { high = low = 0; return *this; }
         if (shift >= 64) {
             high = low << (shift - 64);
             low = 0;
@@ -487,18 +202,12 @@ uint128_t& operator-=(T other) noexcept {
             high = (high << shift) | (low >> (64 - shift));
             low <<= shift;
         }
-        return (*this);
+        return *this;
     }
 
-    // Right shift with assignment
     uint128_t& operator>>=(unsigned int shift) noexcept {
-        if (shift == 0) { 
-            return (*this); 
-        }
-        if (shift >= 128) {
-            high = low = 0;
-            return (*this);
-        }
+        if (shift == 0) return *this;
+        if (shift >= 128) { high = low = 0; return *this; }
         if (shift >= 64) {
             low = high >> (shift - 64);
             high = 0;
@@ -506,57 +215,98 @@ uint128_t& operator-=(T other) noexcept {
             low = (low >> shift) | (high << (64 - shift));
             high >>= shift;
         }
-        return (*this);
+        return *this;
     }
 
-    // BINARY BITWISE OPERATORS (using assignment operators)
+    // BINARY ARITHMETIC OPERATORS
+    uint128_t operator+(const uint128_t& other) const noexcept { return uint128_t(*this) += other; }
+    uint128_t operator-(const uint128_t& other) const noexcept { return uint128_t(*this) -= other; }
+    uint128_t operator*(const uint128_t& other) const noexcept { return uint128_t(*this) *= other; }
+    
+#ifdef _MSC_VER
+    uint128_t operator/(uint64_t other) const { return uint128_t(*this) /= other; }
+    uint128_t operator%(uint64_t other) const { return uint128_t(*this) %= other; }
+#else
+    uint128_t operator/(const uint128_t& other) const { return uint128_t(*this) /= other; }
+    uint128_t operator%(const uint128_t& other) const { return uint128_t(*this) %= other; }
+#endif
 
-    // Bitwise AND
-    uint128_t operator&(const uint128_t& other) const noexcept {
-        uint128_t result(*this);
-        result &= other;
-        return result;
-    }
+    // BINARY BITWISE OPERATORS
+    uint128_t operator&(const uint128_t& other) const noexcept { return uint128_t(*this) &= other; }
+    uint128_t operator|(const uint128_t& other) const noexcept { return uint128_t(*this) |= other; }
+    uint128_t operator^(const uint128_t& other) const noexcept { return uint128_t(*this) ^= other; }
+    uint128_t operator<<(unsigned int shift) const noexcept { return uint128_t(*this) <<= shift; }
+    uint128_t operator>>(unsigned int shift) const noexcept { return uint128_t(*this) >>= shift; }
 
-    // Bitwise OR
-    uint128_t operator|(const uint128_t& other) const noexcept {
-        uint128_t result(*this);
-        result |= other;
-        return result;
+    // COMPARISON OPERATORS
+    bool operator==(const uint128_t& other) const noexcept { return (high == other.high) && (low == other.low); }
+    bool operator!=(const uint128_t& other) const noexcept { return !(*this == other); }
+    bool operator<(const uint128_t& other) const noexcept {
+        if (high < other.high) return true;
+        if (high > other.high) return false;
+        return low < other.low;
     }
-
-    // Bitwise XOR
-    uint128_t operator^(const uint128_t& other) const noexcept {
-        uint128_t result(*this);
-        result ^= other;
-        return result;
-    }
-
-    // Bitwise NOT
-    uint128_t operator~() const noexcept {
-        return uint128_t(~high, ~low);
-    }
-
-    // Left shift
-    uint128_t operator<<(unsigned int shift) const noexcept {
-        uint128_t result(*this);
-        result <<= shift;
-        return result;
-    }
-
-    // Right shift
-    uint128_t operator>>(unsigned int shift) const noexcept {
-        uint128_t result(*this);
-        result >>= shift;
-        return result;
-    }
-
-    // Unary minus (negation)
-    uint128_t operator-() const noexcept {
-        uint128_t result = ~(*this);
-        ++result;
-        return result;
-    }
+    bool operator>(const uint128_t& other) const noexcept { return other < *this; }
+    bool operator<=(const uint128_t& other) const noexcept { return !(*this > other); }
+    bool operator>=(const uint128_t& other) const noexcept { return !(*this < other); }
 };
-} // local close of namespace append
+
+// NON-MEMBER ARITHMETIC OPERATORS
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+uint128_t operator+(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) + rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+uint128_t operator-(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) - rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+uint128_t operator*(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) * rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+uint128_t operator/(T lhs, const uint128_t& rhs) {
+    return uint128_t(lhs) / rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+uint128_t operator%(T lhs, const uint128_t& rhs) {
+    return uint128_t(lhs) % rhs;
+}
+
+
+// NON-MEMBER COMPARISON OPERATORS
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+bool operator==(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) == rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+bool operator!=(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) != rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+bool operator<(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) < rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+bool operator>(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) > rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+bool operator<=(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) <= rhs;
+}
+
+template<typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
+bool operator>=(T lhs, const uint128_t& rhs) noexcept {
+    return uint128_t(lhs) >= rhs;
+}
+
 #endif // UINT128_T_HPP
