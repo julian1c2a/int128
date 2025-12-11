@@ -1,16 +1,16 @@
 #ifndef UINT128_T_HPP
 #define UINT128_T_HPP
 
-#ifdef _MSC_VER
-#define _UINT128_T_
-
 #include <cstdint>
 #include <climits>
 #include <type_traits>
 #include <utility>
 #include <concepts>
 
+#ifdef _MSC_VER
 #include <intrin.h>
+#endif
+
 namespace append {
 
     using std::uint64_t;
@@ -111,6 +111,7 @@ struct uint128_t {
         return *this;
     }
 
+#ifdef _MSC_VER
     // PRE-INCREMENT OPERATOR
     uint128_t& operator++() noexcept {
         uint64_t new_low;
@@ -149,97 +150,159 @@ struct uint128_t {
 
     // Addition with assigment operator
     uint128_t& operator+=(const uint128_t& other) noexcept {
-        uint64_t new_low, new_high;
+        uint64_t new_low;
         unsigned char carry = _addcarry_u64(0, low, other.low, &new_low);
-        _addcarry_u64(carry, high, other.high, &new_high);
-        high = new_high;
         low = new_low;
+        _addcarry_u64(carry, high, other.high, &high);
         return *this;
     }
+
+    // Subtraction with assigment operator
+    uint128_t& operator-=(const uint128_t& other) noexcept {
+        uint64_t new_low;
+        unsigned char borrow = _subborrow_u64(0, low, other.low, &new_low);
+        low = new_low;
+        _subborrow_u64(borrow, high, other.high, &high);
+        return *this;
+    }
+
+    // Multiplication with assignment operator
+    uint128_t& operator*=(const uint128_t& other) noexcept {
+        uint64_t result_high;
+        low = _umul128(low, other.low, &result_high);
+        high = result_high + high * other.low + low * other.high;
+        return *this;
+    }
+
+#else // GCC/Clang specific implementation
+
+    // PRE-INCREMENT OPERATOR
+    uint128_t& operator++() noexcept {
+        __int128_t temp = static_cast<__int128_t>(*this);
+        temp++;
+        *this = temp;
+        return *this;
+    }
+
+    // POST-INCREMENT OPERATOR
+    uint128_t operator++(int) noexcept {
+        uint128_t temp(*this);
+        ++(*this);
+        return temp;
+    }
+
+    // PRE-DECREMENT OPERATOR
+    uint128_t& operator--() noexcept {
+        __int128_t temp = static_cast<__int128_t>(*this);
+        temp--;
+        *this = temp;
+        return *this;
+    }
+
+    // POST-DECREMENT OPERATOR
+    uint128_t operator--(int) noexcept {
+        uint128_t temp(*this);
+        --(*this);
+        return temp;
+    }
+
+    // Addition with assigment operator
+    uint128_t& operator+=(const uint128_t& other) noexcept {
+        unsigned __int128 tmp = (static_cast<unsigned __int128>(high) << 64) | low;
+        unsigned __int128 other_tmp = (static_cast<unsigned __int128>(other.high) << 64) | other.low;
+        tmp += other_tmp;
+        high = tmp >> 64;
+        low = static_cast<uint64_t>(tmp);
+        return *this;
+    }
+    
+    // Subtraction with assigment operator
+    uint128_t& operator-=(const uint128_t& other) noexcept {
+        unsigned __int128 tmp = (static_cast<unsigned __int128>(high) << 64) | low;
+        unsigned __int128 other_tmp = (static_cast<unsigned __int128>(other.high) << 64) | other.low;
+        tmp -= other_tmp;
+        high = tmp >> 64;
+        low = static_cast<uint64_t>(tmp);
+        return *this;
+    }
+    
+    // Multiplication with assignment operator
+    uint128_t& operator*=(const uint128_t& other) noexcept {
+        unsigned __int128 tmp = (static_cast<unsigned __int128>(high) << 64) | low;
+        unsigned __int128 other_tmp = (static_cast<unsigned __int128>(other.high) << 64) | other.low;
+        tmp *= other_tmp;
+        high = tmp >> 64;
+        low = static_cast<uint64_t>(tmp);
+        return *this;
+    }
+
+#endif
+
     // Addition with assigment operator for integral types
     template<std::integral T>
     uint128_t& operator+=(T other) noexcept {
         if constexpr (std::is_unsigned_v<T>) {
             // Unsigned integral type
-            uint64_t other_u64 = static_cast<uint64_t>(other);
-            uint64_t new_low, new_high;
-            unsigned char carry = _addcarry_u64(0, low, other_u64, &new_low);
-            _addcarry_u64(carry, high, 0, &new_high);
-            high = new_high;
-            low = new_low;
+            *this += uint128_t(0, static_cast<uint64_t>(other));
             return *this;
         } else {
             // Signed integral type
             if (other >= 0) {
                 // Positive value: normal addition
-                uint64_t other_u64 = static_cast<uint64_t>(other);
-                uint64_t new_low, new_high;
-                unsigned char carry = _addcarry_u64(0, low, other_u64, &new_low);
-                _addcarry_u64(carry, high, 0, &new_high);
-                high = new_high;
-                low = new_low;
+                *this += uint128_t(0, static_cast<uint64_t>(other));
                 return *this;
             } else {
                 // Negative value: subtraction of absolute value
-                uint64_t abs_other = static_cast<uint64_t>(-other);
-                uint64_t new_low, new_high;
-                unsigned char borrow = _subborrow_u64(0, low, abs_other, &new_low);
-                _subborrow_u64(borrow, high, 0, &new_high);
-                high = new_high;
-                low = new_low;
+                *this -= uint128_t(0, static_cast<uint64_t>(-other));
                 return *this;
             }
         }
     }
-    
-    // Subtraction with assigment operator
-    uint128_t& operator-=(const uint128_t& other) noexcept {
-        uint64_t new_low, new_high;
-        unsigned char borrow = _subborrow_u64(0, low, other.low, &new_low);
-        _subborrow_u64(borrow, high, other.high, &new_high);
-        high = new_high;
-        low = new_low;
-        return *this;
-    }
-    
+
     // Subtraction with assigment operator for integral types
     template<std::integral T>
+.
     uint128_t& operator-=(T other) noexcept {
         if constexpr (std::is_unsigned_v<T>) {
             // Unsigned integral type
-            uint64_t other_u64 = static_cast<uint64_t>(other);
-            uint64_t new_low, new_high;
-            unsigned char borrow = _subborrow_u64(0, low, other_u64, &new_low);
-            _subborrow_u64(borrow, high, 0, &new_high);
-            high = new_high;
-            low = new_low;
+            *this -= uint128_t(0, static_cast<uint64_t>(other));
             return *this;
         } else {
             // Signed integral type
             if (other >= 0) {
                 // Positive value: normal subtraction
-                uint64_t other_u64 = static_cast<uint64_t>(other);
-                uint64_t new_low, new_high;
-                unsigned char borrow =
-                    _subborrow_u64(0, low, other_u64, &new_low);
-                _subborrow_u64(borrow, high, 0, &new_high);
-                high = new_high;
-                low = new_low;
+                *this -= uint128_t(0, static_cast<uint64_t>(other));
                 return *this;
             } else {
                 // Negative value: addition of absolute value
-
-                uint64_t abs_other = static_cast<uint64_t>(-other);
-                uint64_t new_low, new_high;
-                unsigned char carry = _addcarry_u64(0, low, abs_other, &new_low);
-                _addcarry_u64(carry, high, 0, &new_high);
-                high = new_high;
-                low = new_low;
+                *this += uint128_t(0, static_cast<uint64_t>(-other));
                 return *this;
             }
         }
     }
 
+    // Multiplication with assignment operator from an integral type
+    template<std::integral T>
+    uint128_t& operator*=(T other) noexcept {
+        if constexpr (std::is_unsigned_v<T>) {
+            // Unsigned Integral Type
+            *this *= uint128_t(0, static_cast<uint64_t>(other));
+            return *this;
+        } else {
+            // Signed Integral Type
+            if (other >= 0) {
+                // Positive value
+                *this *= uint128_t(0, static_cast<uint64_t>(other));
+                return *this;
+            } else {
+                // Negative value
+                // Multiplying by a negative number results in zero for uint128_t
+                high = 0ull;
+                low = 0ull;
+                return *this;
+            }
+        }
+    }
 
     // Addition operator (uses operator+=)
     uint128_t operator+(const uint128_t& other) const noexcept {
@@ -269,51 +332,6 @@ struct uint128_t {
         uint128_t result(*this);
         result -= other;
         return result;
-    }
-
-    // Multiplication with assignment operator
-    uint128_t& operator*=(const uint128_t& other) noexcept {
-        uint64_t result_high, result_low;
-        // low * other.low -> resultado completo de 128 bits
-        result_low = _umul128(low, other.low, &result_high);
-        // Agregar las multiplicaciones cruzadas al high
-        result_high += high * other.low + low * other.high;
-        high = result_high;
-        low = result_low;
-        return *this;
-    }
-
-    // Multiplication with assignment operator from an integral type
-    template<std::integral T>
-    uint128_t& operator*=(T other) noexcept {
-        if constexpr (std::is_unsigned_v<T>) {
-            // Unsigned Integral Type
-            uint64_t other_u64 = static_cast<uint64_t>(other);
-            uint64_t result_high;
-            uint64_t result_low = _umul128(low, other_u64, &result_high);
-            result_high += high * other_u64;
-            high = result_high;
-            low = result_low;
-            return *this;
-        } else {
-            // Signed Integral Type
-            if (other >= 0) {
-                // Positive value
-                uint64_t other_u64 = static_cast<uint64_t>(other);
-                uint64_t result_high;
-                uint64_t result_low = _umul128(low, other_u64, &result_high);
-                result_high += high * other_u64;
-                high = result_high;
-                low = result_low;
-                return *this;
-            } else {
-                // Negative value
-                // Multiplying by a negative number results in zero for uint128_t
-                high = 0ull;
-                low = 0ull;
-                return *this;
-            }
-        }
     }
 
     // Multiplication operator (uses operator*=)
@@ -463,6 +481,7 @@ struct uint128_t {
         if (shift >= 128) {
             high = low = 0;
             return *this;
+.
         }
         if (shift >= 64) {
             low = high >> (shift - 64);
@@ -524,5 +543,4 @@ struct uint128_t {
     }
 };
 } // local close of namespace append
-#endif // _MSC_VER
 #endif // UINT128_T_HPP
