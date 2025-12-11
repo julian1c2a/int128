@@ -24,26 +24,25 @@ namespace append {
     using std::size_t;
 
 struct uint128_t {
-    static constexpr int UINT128_BITS = sizeof(uint128_t) * CHAR_BIT; // 128
+    static constexpr int UINT128_BITS = 128;
 
-    uint64_t data[2];
-    uint64_t& low{data[0]};
-    uint64_t& high{data[1]};
+    uint64_t low;
+    uint64_t high;
 
     // CONSTRUCTORS
 
     // Default constructor
-    constexpr uint128_t() noexcept : high(0ull), low(0ull) {}
+    constexpr uint128_t() noexcept : low(0ull), high(0ull) {}
 
     // Constructor from two uint64_t values
-    constexpr uint128_t(uint64_t _high, uint64_t _low) noexcept : high(_high), low(_low) {}
+    constexpr uint128_t(uint64_t _high, uint64_t _low) noexcept : low(_low), high(_high) {}
 
     // Constructor from only one uint64_t value
     template<std::unsigned_integral T>
-    constexpr uint128_t(T _low) noexcept : high(0ull), low(static_cast<uint64_t>(_low)) {}
+    constexpr uint128_t(T _low) noexcept : low(static_cast<uint64_t>(_low)), high(0ull) {}
 
     // Copy Constructor
-    constexpr uint128_t(const uint128_t& other) noexcept : high(other.high), low(other.low) {}
+    constexpr uint128_t(const uint128_t& other) noexcept : low(other.low), high(other.high) {}
 
     // Move Constructor
     constexpr uint128_t(uint128_t&& other) noexcept : uint128_t(other.high, other.low) {}
