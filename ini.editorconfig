@@ -1,9 +1,9 @@
-# EditorConfig es increíble: https://EditorConfig.org
+# EditorConfig es increÃ­ble: https://EditorConfig.org
 
 # Archivo de nivel superior
 root = true
 
-# Configuración para todos los archivos
+# ConfiguraciÃ³n para todos los archivos
 [*]
 charset = utf-8
 insert_final_newline = true
@@ -20,7 +20,7 @@ end_of_line = crlf
 indent_style = space
 indent_size = 2
 
-# Archivos de solución
+# Archivos de soluciï¿½n
 [*.{sln,slnx}]
 indent_style = tab
 tab_width = 4
@@ -30,7 +30,7 @@ tab_width = 4
 trim_trailing_whitespace = false
 indent_size = 2
 
-# Archivos de configuración
+# Archivos de configuraciï¿½n
 [*.{json,yml,yaml}]
 indent_size = 2
 
