@@ -2,3 +2,4 @@ build/CMakeFiles/4.2.0/CompilerIdCXX/a.exe
 CMakeFiles/4.2.0/CompilerIdC/a.exe
 CMakeFiles/4.2.0/CompilerIdCXX/a.exe
 build/tests/CMakeFiles/test_uint128.dir/test_uint128.cpp.obj
+build/build_tests/test_uint128.exe

@@ -7,11 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build_tests)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# This block is executed when CMAKE_TOOLCHAIN_FILE is set, which is what conan does
-if(CMAKE_TOOLCHAIN_FILE)
-  find_package(Catch2 REQUIRED)
-  include(Catch2/Catch.cmake)
-endif()
+find_package(Catch2 REQUIRED)
 
 # Opciones recomendadas para MSVC (Advertencias y manejo de excepciones)
 if(MSVC)
