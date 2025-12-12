@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Catch2 REQUIRED)
+list(APPEND CMAKE_MODULE_PATH ${catch2_BUILD_DIRS_RELEASE})
 
 # Opciones recomendadas para MSVC (Advertencias y manejo de excepciones)
 if(MSVC)
