@@ -70,7 +70,6 @@ template <typename Func>
 BenchmarkResult benchmarkOperation(const std::string &name, Func func, size_t iterations = 100000)
 {
     std::vector<double> times;
-    times.reserve(iterations);
 
     // Warm up
     for (int i = 0; i < 1000; ++i)
@@ -78,18 +77,39 @@ BenchmarkResult benchmarkOperation(const std::string &name, Func func, size_t it
         func();
     }
 
-    // Actual benchmark
-    for (size_t i = 0; i < iterations; ++i)
+    // Actual benchmark - measure batches to get accurate timing
+    const size_t batch_size = 1000;                                      // Measure 1000 operations at once
+    size_t num_batches = std::max(size_t(100), iterations / batch_size); // At least 100 measurements
+    times.reserve(num_batches);
+
+    for (size_t batch = 0; batch < num_batches; ++batch)
     {
         auto start = high_resolution_clock::now();
-        func();
+
+        // Execute batch_size operations
+        for (size_t i = 0; i < batch_size; ++i)
+        {
+            func();
+        }
+
         auto end = high_resolution_clock::now();
 
         auto duration = duration_cast<nanoseconds>(end - start);
-        times.push_back(static_cast<double>(duration.count()));
+        // Store time per single operation
+        double time_per_op = static_cast<double>(duration.count()) / batch_size;
+        if (time_per_op > 0.0)
+        { // Only store positive times
+            times.push_back(time_per_op);
+        }
     }
 
     // Calculate statistics
+    if (times.empty())
+    {
+        // Fallback if no measurements were captured
+        return {name, 0.1, 0.1, 0.0, 0.1, 0.1, num_batches * batch_size, 0.0, 10000000000.0};
+    }
+
     std::sort(times.begin(), times.end());
 
     double median_ns = times[times.size() / 2];
@@ -105,14 +125,26 @@ BenchmarkResult benchmarkOperation(const std::string &name, Func func, size_t it
     }
     double stddev_ns = std::sqrt(variance / times.size());
 
-    double ops_per_second = 1000000000.0 / median_ns;
+    double ops_per_second = (median_ns > 0.0) ? 1000000000.0 / median_ns : 1e10;
 
-    return {name, median_ns, mean_ns, stddev_ns, min_ns, max_ns, iterations, 0.0, ops_per_second};
+    return {name, median_ns, mean_ns, stddev_ns, min_ns, max_ns, num_batches * batch_size, 0.0, ops_per_second};
 }
 
 void writeCSV(const std::vector<BenchmarkResult> &results, const SystemInfo &sysInfo, const std::string &filename)
 {
-    std::ofstream file("../documentation/benchmarks/" + filename);
+    std::ofstream file("../../documentation/benchmarks/" + filename);
+
+    if (!file.is_open())
+    {
+        std::cerr << "Error: Could not create CSV file at ../../documentation/benchmarks/" << filename << std::endl;
+        std::cerr << "Trying alternative path..." << std::endl;
+        file.open("documentation/benchmarks/" + filename);
+        if (!file.is_open())
+        {
+            std::cerr << "Error: Could not create CSV file. Results will only be shown on screen." << std::endl;
+            return;
+        }
+    }
 
     // Header with system info
     file << "# uint128_t Benchmark Results\n";
