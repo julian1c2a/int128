@@ -470,6 +470,9 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //Value Computed by CMake
 Catch2_BINARY_DIR:STATIC=C:/msys64/ucrt64/home/julian/CppProjects/int128/build/external/Catch2
 
+//The directory containing a CMake configuration file for Catch2.
+Catch2_DIR:PATH=C:/msys64/ucrt64/lib/cmake/Catch2
+
 //Value Computed by CMake
 Catch2_IS_TOP_LEVEL:STATIC=OFF
 

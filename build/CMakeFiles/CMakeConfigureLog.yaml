@@ -1805,3 +1805,116 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "find_package-v1"
+    backtrace:
+      - "tests/CMakeLists.txt:9 (find_package)"
+    name: "Catch2"
+    configs:
+      -
+        filename: "Catch2Config.cmake"
+        kind: "cmake"
+      -
+        filename: "catch2-config.cmake"
+        kind: "cmake"
+    version_request:
+      exact: false
+    settings:
+      required: "required_explicit"
+      quiet: false
+      global: false
+      policy_scope: true
+      bypass_provider: false
+      names:
+        - "Catch2"
+      path_suffixes:
+        - ""
+      paths:
+        CMAKE_FIND_USE_CMAKE_PATH: true
+        CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+        CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+        CMAKE_FIND_USE_INSTALL_PREFIX: true
+        CMAKE_FIND_USE_PACKAGE_ROOT_PATH: true
+        CMAKE_FIND_USE_CMAKE_PACKAGE_REGISTRY: true
+        CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY: true
+        CMAKE_FIND_ROOT_PATH_MODE: "BOTH"
+    candidates:
+      -
+        path: "C:/msys64/ucrt64/home/julian/CppProjects/int128/build/CMakeFiles/pkgRedirects/Catch2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/ucrt64/home/julian/CppProjects/int128/build/CMakeFiles/pkgRedirects/catch2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/home/julia/.cabal/Catch2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/home/julia/.cabal/catch2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/ghcup/Catch2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/ghcup/catch2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/ucrt64/Catch2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/ucrt64/catch2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/ucrt64/cmake/Catch2Config.cmake"
+        mode: "config"
+        reason: "no_exist"
+      -
+        path: "C:/msys64/ucrt64/cmake/catch2-config.cmake"
+        mode: "config"
+        reason: "no_exist"
+    found:
+      path: "C:/msys64/ucrt64/lib/cmake/Catch2/Catch2Config.cmake"
+      mode: "config"
+      version: "3.11.0"
+    search_context:
+      ENV{PATH}:
+        - "C:\\msys64\\home\\julia\\.cabal\\bin"
+        - "C:\\ghcup\\bin"
+        - "C:\\msys64\\ucrt64\\bin"
+        - "C:\\msys64\\ucrt64\\bin\\site_perl\\5.38.4"
+        - "C:\\msys64\\ucrt64\\bin\\vendor_perl"
+        - "C:\\msys64\\ucrt64\\bin\\core_perl"
+        - "C:\\msys64\\usr\\local\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\msys64\\usr\\bin"
+        - "C:\\Windows\\System32"
+        - "C:\\Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\msys64\\ucrt64\\lib\\emscripten"
+        - "C:\\msys64\\ucrt64\\lib\\rustup\\bin"
+        - "C:\\Program Files\\Microsoft VS Code\\bin"
+        - "D:\\gdrive\\numericrepresentations_gamma"
+        - "D:\\gdrive\\numericrepresentations_gamma\\scripts"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/int128_project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/msys64/ucrt64/local"
+        - "C:/msys64/ucrt64"
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/msys64/ucrt64"
+        - "C:/Program Files (x86)/int128_project"
+      CMAKE_MODULE_PATH:
+        - "C:/msys64/ucrt64/home/julian/CppProjects/int128/external/Catch2/extras"
+...
