@@ -30,47 +30,47 @@ auto big = "999999999999999999999"_U128;
 
 ## Operadores Aritméticos
 
-| Operador | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `+` | Suma | `a + b` |
-| `-` | Resta | `a - b` |
-| `*` | Multiplicación | `a * b` |
-| `/` | División | `a / b` |
-| `%` | Módulo | `a % b` |
-| `++` | Incremento | `++a`, `a++` |
-| `--` | Decremento | `--a`, `a--` |
+| Operador | Descripción    | Ejemplo      |
+|----------|----------------|--------------|
+| `+`      | Suma           | `a + b`      |
+| `-`      | Resta          | `a - b`      |
+| `*`      | Multiplicación | `a * b`      |
+| `/`      | División       | `a / b`      |
+| `%`      | Módulo         | `a % b`      |
+| `++`     | Incremento     | `++a`, `a++` |
+| `--`     | Decremento     | `--a`, `a--` |
 
 ## Operadores de Asignación
 
-| Operador | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `+=` | Suma y asigna | `a += b` |
-| `-=` | Resta y asigna | `a -= b` |
-| `*=` | Multiplica y asigna | `a *= b` |
-| `/=` | Divide y asigna | `a /= b` |
-| `%=` | Módulo y asigna | `a %= b` |
+| Operador | Descripción          | Ejemplo   |
+|----------|----------------------|-----------|
+| `+=`     | Suma y asigna        | `a += b`  |
+| `-=`     | Resta y asigna       | `a -= b`  |
+| `*=`     | Multiplica y asigna  | `a *= b`  |
+| `/=`     | Divide y asigna      | `a /= b`  |
+| `%=`     | Módulo y asigna      | `a %= b`  |
 
 ## Operadores de Comparación
 
-| Operador | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `==` | Igualdad | `a == b` |
-| `!=` | Desigualdad | `a != b` |
-| `<` | Menor que | `a < b` |
-| `<=` | Menor o igual | `a <= b` |
-| `>` | Mayor que | `a > b` |
-| `>=` | Mayor o igual | `a >= b` |
+| Operador | Descripción   | Ejemplo   |
+|----------|---------------|-----------|
+| `==`     | Igualdad      | `a == b`  |
+| `!=`     | Desigualdad   | `a != b`  |
+| `<`      | Menor que     | `a < b`   |
+| `<=`     | Menor o igual | `a <= b`  |
+| `>`      | Mayor que     | `a > b`   |
+| `>=`     | Mayor o igual | `a >= b`  |
 
 ## Operadores Bit a Bit
 
-| Operador | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `&` | AND bit a bit | `a & b` |
-| `\|` | OR bit a bit | `a \| b` |
-| `^` | XOR bit a bit | `a ^ b` |
-| `~` | NOT bit a bit | `~a` |
-| `<<` | Desplazamiento izquierda | `a << 5` |
-| `>>` | Desplazamiento derecha | `a >> 3` |
+| Operador | Descripción             | Ejemplo  |
+|----------|-------------------------|----------|
+| `&`      | AND bit a bit           | `a & b`  |
+| `\|`     | OR bit a bit            | `a \| b` |
+| `^`      | XOR bit a bit           | `a ^ b`  |
+| `~`      | NOT bit a bit           | `~a`     |
+| `<<`     | Desplazamiento izquierda| `a << 5` |
+| `>>`     | Desplazamiento derecha  | `a >> 3` |
 
 ## Métodos de Acceso
 
