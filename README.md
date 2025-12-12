@@ -31,23 +31,29 @@ int128/
 
 ### Scripts de Build
 
-- `build.ps1` - Script principal de build
-- `test.ps1` - Script rápido para desarrollo
+- `build_msvc.ps1` - Script PowerShell principal (recomendado para Windows)
+- `build.ps1` - Script PowerShell original  
+- `build.sh` - Script bash para entornos Unix-like (con cygpath)
+- `msys_build.sh` - Script bash optimizado para MSYS2
 
 ### Uso del Sistema de Build
 
+#### En PowerShell (Recomendado):
 ```powershell
-# Compilar todos los tests en modo debug
-.\build.ps1
-
-# Compilar todos los tests en modo release
-.\build.ps1 "" release
-
 # Compilar y ejecutar un test específico (debug)
-.\test.ps1 user_literals_test
+.\build_msvc.ps1 user_literals_test debug
 
-# Compilar test específico en modo release
-.\build.ps1 user_literals_test release
+# Compilar en modo release
+.\build_msvc.ps1 user_literals_test release
+```
+
+#### En terminal MSYS2/Bash:
+```bash
+# Compilar y ejecutar un test específico
+./msys_build.sh user_literals_test debug
+
+# Compilar en modo release  
+./msys_build.sh user_literals_test release
 ```
 
 ### Estructura de Compilación
