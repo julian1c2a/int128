@@ -309,4 +309,4 @@ bool operator>=(T lhs, const uint128_t& rhs) noexcept {
     return uint128_t(lhs) >= rhs;
 }
 
-#endif // UINT128_T_HPP
+#endif // UINT128_T_HP

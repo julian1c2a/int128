@@ -7,8 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build_tests)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Catch2 REQUIRED)
-list(APPEND CMAKE_MODULE_PATH ${catch2_BUILD_DIRS_RELEASE})
+add_subdirectory(external/Catch2)
 
 # Opciones recomendadas para MSVC (Advertencias y manejo de excepciones)
 if(MSVC)

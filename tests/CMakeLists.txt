@@ -5,6 +5,7 @@ add_executable(test_uint128 test_uint128.cpp)
 target_link_libraries(test_uint128 PRIVATE int128 Catch2::Catch2WithMain)
 
 # Integra Catch2 con CTest para descubrir las pruebas automáticamente
-include(Catch2/Catch.cmake)
+
+find_package(Catch2 REQUIRED)
 catch_discover_tests(test_uint128)
 
