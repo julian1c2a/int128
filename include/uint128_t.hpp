@@ -4,6 +4,7 @@
 #include <climits>
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <optional>
 #include <string>
 #include <type_traits>
@@ -11,6 +12,12 @@
 
 #ifdef _MSC_VER
 #include <intrin.h>
+#elif defined(__GNUC__) || defined(__clang__)
+// Includes para intrínsecos de GCC/Clang
+#include <immintrin.h>
+#if defined(__x86_64__) || defined(_M_X64)
+#include <x86intrin.h>
+#endif
 #endif
 
 class uint128_t
@@ -43,17 +50,15 @@ class uint128_t
     }
 
     // Setters
-    template <typename T>
-    constexpr void set_high(T value) noexcept
-        requires std::is_integral_v<T>
+    template <typename T> constexpr void set_high(T value) noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         data[1] = static_cast<uint64_t>(value);
     }
 
-    template <typename T>
-    constexpr void set_low(T value) noexcept
-        requires std::is_integral_v<T>
+    template <typename T> constexpr void set_low(T value) noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         data[0] = static_cast<uint64_t>(value);
     }
 
@@ -62,20 +67,22 @@ class uint128_t
 
     template <typename T1, typename T2>
     constexpr uint128_t(T1 _high, T2 _low) noexcept
-        requires std::is_integral_v<T1> && std::is_integral_v<T2>
         : data{static_cast<uint64_t>(_low), static_cast<uint64_t>(_high)}
     {
+        static_assert(std::is_integral<T1>::value && std::is_integral<T2>::value,
+                      "T1 and T2 must be integral types");
     }
 
-    template <typename T>
-    constexpr uint128_t(T _low) noexcept
-        requires std::is_integral_v<T>
-        : data{static_cast<uint64_t>(_low), 0ull}
+    template <typename T, typename = typename std::enable_if<std::is_integral<T>::value>::type>
+    constexpr uint128_t(T _low) noexcept : data{static_cast<uint64_t>(_low), 0ull}
     {
     }
 
     constexpr uint128_t(const uint128_t& other) noexcept : data{other.data[0], other.data[1]} {}
     constexpr uint128_t(uint128_t&& other) noexcept : data{other.data[0], other.data[1]} {}
+
+    // Constructor desde string (definido después de la clase)
+    explicit uint128_t(const std::string& str);
 
     // ASSIGNMENT OPERATORS
     constexpr uint128_t& operator=(const uint128_t& other) noexcept
@@ -96,10 +103,9 @@ class uint128_t
         return *this;
     }
 
-    template <typename T>
-    constexpr uint128_t& operator=(T _low) noexcept
-        requires std::is_integral_v<T>
+    template <typename T> constexpr uint128_t& operator=(T _low) noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         data[1] = 0ull;
         data[0] = static_cast<uint64_t>(_low);
         return *this;
@@ -111,10 +117,10 @@ class uint128_t
         return (data[1] != 0) || (data[0] != 0);
     }
 
-    template <typename TYPE>
-    explicit constexpr operator TYPE() const noexcept
-        requires std::is_integral_v<TYPE> && (sizeof(TYPE) <= 8)
+    template <typename TYPE> explicit constexpr operator TYPE() const noexcept
     {
+        static_assert(std::is_integral<TYPE>::value && (sizeof(TYPE) <= 8),
+                      "TYPE must be an integral type of 8 bytes or less");
         return static_cast<TYPE>(data[0]);
     }
 
@@ -129,6 +135,7 @@ class uint128_t
             data[1] += 1ull;
         }
 #else
+        // GCC/Clang y otros: usar el método confiable sin intrínsecos
         if (++data[0] == 0) {
             ++data[1];
         }
@@ -153,6 +160,7 @@ class uint128_t
             data[1] -= 1ull;
         }
 #else
+        // GCC/Clang y otros: usar el método confiable sin intrínsecos
         if (data[0]-- == 0) {
             --data[1];
         }
@@ -174,7 +182,33 @@ class uint128_t
         unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _addcarry_u64(carry, data[1], other.data[1], &data[1]);
+#elif defined(__GNUC__) || defined(__clang__)
+        // GCC/Clang: usar builtin cuando sea posible
+#if defined(__has_builtin)
+#if __has_builtin(__builtin_addcll) && defined(__x86_64__)
+        unsigned long long carry;
+        data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+        data[1] = __builtin_addcll(data[1], other.data[1], carry, &carry);
 #else
+        // Fallback: método tradicional confiable
+        uint64_t old_low = data[0];
+        data[0] += other.data[0];
+        data[1] += other.data[1];
+        if (data[0] < old_low) {
+            ++data[1];
+        }
+#endif
+#else
+        // Fallback: método tradicional confiable
+        uint64_t old_low = data[0];
+        data[0] += other.data[0];
+        data[1] += other.data[1];
+        if (data[0] < old_low) {
+            ++data[1];
+        }
+#endif
+#else
+        // Fallback genérico
         uint64_t old_low = data[0];
         data[0] += other.data[0];
         data[1] += other.data[1];
@@ -192,7 +226,33 @@ class uint128_t
         unsigned char borrow = _subborrow_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _subborrow_u64(borrow, data[1], other.data[1], &data[1]);
+#elif defined(__GNUC__) || defined(__clang__)
+        // GCC/Clang: usar builtin cuando sea posible
+#if defined(__has_builtin)
+#if __has_builtin(__builtin_subcll) && defined(__x86_64__)
+        unsigned long long borrow;
+        data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+        data[1] = __builtin_subcll(data[1], other.data[1], borrow, &borrow);
 #else
+        // Fallback: método tradicional confiable
+        uint64_t old_low = data[0];
+        data[0] -= other.data[0];
+        data[1] -= other.data[1];
+        if (data[0] > old_low) {
+            --data[1];
+        }
+#endif
+#else
+        // Fallback: método tradicional confiable
+        uint64_t old_low = data[0];
+        data[0] -= other.data[0];
+        data[1] -= other.data[1];
+        if (data[0] > old_low) {
+            --data[1];
+        }
+#endif
+#else
+        // Fallback genérico
         uint64_t old_low = data[0];
         data[0] -= other.data[0];
         data[1] -= other.data[1];
@@ -376,10 +436,9 @@ class uint128_t
     }
 
     // División con assignment para tipos integrales
-    template <typename T>
-    uint128_t& operator/=(T other) noexcept
-        requires std::is_integral_v<T>
+    template <typename T> uint128_t& operator/=(T other) noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         return *this /= uint128_t(other);
     }
 
@@ -396,10 +455,9 @@ class uint128_t
     }
 
     // Módulo con assignment para tipos integrales
-    template <typename T>
-    uint128_t& operator%=(T other) noexcept
-        requires std::is_integral_v<T>
+    template <typename T> uint128_t& operator%=(T other) noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         return *this %= uint128_t(other);
     }
 
@@ -412,10 +470,9 @@ class uint128_t
     }
 
     // División operator para tipos integrales (uses operator/=)
-    template <typename T>
-    uint128_t operator/(T other) const noexcept
-        requires std::is_integral_v<T>
+    template <typename T> uint128_t operator/(T other) const noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         uint128_t result(*this);
         result /= other;
         return result;
@@ -430,10 +487,9 @@ class uint128_t
     }
 
     // Módulo operator para tipos integrales (uses operator%=)
-    template <typename T>
-    uint128_t operator%(T other) const noexcept
-        requires std::is_integral_v<T>
+    template <typename T> uint128_t operator%(T other) const noexcept
     {
+        static_assert(std::is_integral<T>::value, "T must be an integral type");
         uint128_t result(*this);
         result %= other;
         return result;
@@ -576,7 +632,53 @@ class uint128_t
 
         return result.empty() ? "0" : result;
     }
+
+    // Función estática para convertir string a uint128_t
+    static uint128_t from_string(const std::string& str)
+    {
+        if (str.empty()) {
+            return uint128_t(0, 0);
+        }
+
+        uint128_t result(0, 0);
+        uint128_t base(0, 10);
+
+        for (char c : str) {
+            if (c < '0' || c > '9') {
+                // Caracteres inválidos se ignoran (podrías lanzar excepción si prefieres)
+                continue;
+            }
+
+            // result = result * 10 + (c - '0')
+            result *= base;
+            result += uint128_t(0, static_cast<uint64_t>(c - '0'));
+        }
+
+        return result;
+    }
 };
+
+// Constructor desde string (definido después de from_string)
+inline uint128_t::uint128_t(const std::string& str) : data{0ull, 0ull}
+{
+    *this = from_string(str);
+}
+
+// Operadores de flujo definidos fuera de la clase
+inline std::ostream& operator<<(std::ostream& os, const uint128_t& value)
+{
+    return os << value.to_string();
+}
+
+inline std::istream& operator>>(std::istream& is, uint128_t& value)
+{
+    std::string str;
+    is >> str;
+    if (is.good() || is.eof()) {
+        value = uint128_t::from_string(str);
+    }
+    return is;
+}
 
 // Constante MAX definida después de la clase
 constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
