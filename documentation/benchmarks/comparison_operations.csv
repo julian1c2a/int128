@@ -1,0 +1,7 @@
+Operation,Time_ns,Iterations,Ops_per_second
+Equality,0.57,1000000,1.77e+09
+Inequality,0.55,1000000,1.82e+09
+Less_Than,0.94,1000000,1.06e+09
+Less_Equal,0.95,1000000,1.05e+09
+Greater_Than,0.93,1000000,1.08e+09
+Greater_Equal,0.96,1000000,1.04e+09

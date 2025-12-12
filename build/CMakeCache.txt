@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//Build the testing tree.
+BUILD_TESTING:BOOL=ON
+
 //Read docs/configuration.md for details
 CATCH_CONFIG_ANDROID_LOGWRITE:BOOL=OFF
 
@@ -467,8 +470,21 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Path to the coverage program that CTest uses for performing coverage
+// inspection
+COVERAGE_COMMAND:FILEPATH=C:/msys64/ucrt64/bin/gcov.exe
+
+//Extra command line flags to pass to the coverage tool
+COVERAGE_EXTRA_FLAGS:STRING=-l
+
+//How many times to retry timed-out CTest submissions.
+CTEST_SUBMIT_RETRY_COUNT:STRING=3
+
+//How long to wait between timed-out CTest submissions.
+CTEST_SUBMIT_RETRY_DELAY:STRING=5
+
 //Value Computed by CMake
-Catch2_BINARY_DIR:STATIC=C:/msys64/ucrt64/home/julian/CppProjects/int128/build/external/Catch2
+Catch2_BINARY_DIR:STATIC=C:/msys64/ucrt64/home/julian/CppProjects/int128/build/_deps/catch2-build
 
 //The directory containing a CMake configuration file for Catch2.
 Catch2_DIR:PATH=C:/msys64/ucrt64/lib/cmake/Catch2
@@ -477,7 +493,48 @@ Catch2_DIR:PATH=C:/msys64/ucrt64/lib/cmake/Catch2
 Catch2_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-Catch2_SOURCE_DIR:STATIC=C:/msys64/ucrt64/home/julian/CppProjects/int128/external/Catch2
+Catch2_SOURCE_DIR:STATIC=C:/msys64/ucrt64/home/julian/CppProjects/int128/build/_deps/catch2-src
+
+//Maximum time allowed before CTest will kill the test.
+DART_TESTING_TIMEOUT:STRING=1500
+
+//Directory under which to collect all populated content
+FETCHCONTENT_BASE_DIR:PATH=C:/msys64/ucrt64/home/julian/CppProjects/int128/build/_deps
+
+//Disables all attempts to download or update content and assumes
+// source dirs already exist
+FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
+
+//Enables QUIET option for all content population
+FETCHCONTENT_QUIET:BOOL=ON
+
+//When not empty, overrides where to find pre-populated content
+// for Catch2
+FETCHCONTENT_SOURCE_DIR_CATCH2:PATH=
+
+//Enables UPDATE_DISCONNECTED behavior for all content population
+FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of Catch2
+FETCHCONTENT_UPDATES_DISCONNECTED_CATCH2:BOOL=OFF
+
+//Path to a program.
+GITCOMMAND:FILEPATH=C:/msys64/usr/bin/git.exe
+
+//Git command line client
+GIT_EXECUTABLE:FILEPATH=C:/msys64/usr/bin/git.exe
+
+//Command to build the project
+MAKECOMMAND:STRING=C:\msys64\ucrt64\bin\cmake.exe --build . --config "${CTEST_CONFIGURATION_TYPE}"
+
+//Path to the memory checking command, used for memory error detection.
+MEMORYCHECK_COMMAND:FILEPATH=MEMORYCHECK_COMMAND-NOTFOUND
+
+//File that contains suppressions for the memory checker
+MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=
+
+//Name of the computer/site where compile is being run
+SITE:STRING=MSI
 
 //Value Computed by CMake
 int128_project_BINARY_DIR:STATIC=C:/msys64/ucrt64/home/julian/CppProjects/int128/build
@@ -623,6 +680,8 @@ CMAKE_CACHE_PATCH_VERSION:INTERNAL=0
 CMAKE_COMMAND:INTERNAL=C:/msys64/ucrt64/bin/cmake.exe
 //Path to cpack program executable.
 CMAKE_CPACK_COMMAND:INTERNAL=C:/msys64/ucrt64/bin/cpack.exe
+//ADVANCED property for variable: CMAKE_CTEST_COMMAND
+CMAKE_CTEST_COMMAND-ADVANCED:INTERNAL=1
 //Path to ctest program executable.
 CMAKE_CTEST_COMMAND:INTERNAL=C:/msys64/ucrt64/bin/ctest.exe
 //ADVANCED property for variable: CMAKE_CXX_COMPILER
@@ -783,12 +842,36 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_TAPI-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: COVERAGE_COMMAND
+COVERAGE_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: COVERAGE_EXTRA_FLAGS
+COVERAGE_EXTRA_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CTEST_SUBMIT_RETRY_COUNT
+CTEST_SUBMIT_RETRY_COUNT-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CTEST_SUBMIT_RETRY_DELAY
+CTEST_SUBMIT_RETRY_DELAY-ADVANCED:INTERNAL=1
 //Project GUID
 Catch2WithMain_GUID_CMAKE:INTERNAL=8bd3552a-2cfb-4a59-ab15-2031b97ada1e
 //Project GUID
 Catch2_GUID_CMAKE:INTERNAL=8d538cbe-01bf-4a2e-a98a-6c368fdf13d7
+//ADVANCED property for variable: DART_TESTING_TIMEOUT
+DART_TESTING_TIMEOUT-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: GITCOMMAND
+GITCOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: GIT_EXECUTABLE
+GIT_EXECUTABLE-ADVANCED:INTERNAL=1
+//Test HAVE_FLAG__ffile_prefix_map_C__msys64_ucrt64_home_julian_CppProjects_int128_build__deps_catch2_src__
+HAVE_FLAG__ffile_prefix_map_C__msys64_ucrt64_home_julian_CppProjects_int128_build__deps_catch2_src__:INTERNAL=1
 //Test HAVE_FLAG__ffile_prefix_map_C__msys64_ucrt64_home_julian_CppProjects_int128_external_Catch2__
 HAVE_FLAG__ffile_prefix_map_C__msys64_ucrt64_home_julian_CppProjects_int128_external_Catch2__:INTERNAL=1
+//ADVANCED property for variable: MAKECOMMAND
+MAKECOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MEMORYCHECK_COMMAND
+MEMORYCHECK_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MEMORYCHECK_SUPPRESSIONS_FILE
+MEMORYCHECK_SUPPRESSIONS_FILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SITE
+SITE-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/int128_project
 

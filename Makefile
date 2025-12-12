@@ -23,13 +23,16 @@ all: int128.exe
 
 # Regla para el ejecutable principal (Standalone)
 int128.exe: int128.cpp include/uint128_t.hpp
+	@echo "--- Compilando Main ---"
 	$(CXX) $(CXXFLAGS) int128.cpp /Fe:int128.exe
 
 # Regla para los tests (Requiere Catch2 instalado)
 test: test_uint128.exe
+	@echo "--- Ejecutando Tests ---"
 	./test_uint128.exe
 
 test_uint128.exe: tests/test_uint128.cpp include/uint128_t.hpp
+	@echo "--- Compilando Tests con Catch2 ---"
 	$(CXX) $(CXXFLAGS) $(CATCH2_FLAGS) tests/test_uint128.cpp /Fe:test_uint128.exe
 
 # Limpieza

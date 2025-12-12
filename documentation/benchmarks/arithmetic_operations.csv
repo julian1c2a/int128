@@ -1,0 +1,9 @@
+Operation,Time_ns,Iterations,Ops_per_second
+Addition,0.75,1000000,1.33e+09
+Subtraction,0.78,1000000,1.27e+09
+Multiplication,0.55,100000,1.81e+09
+Bitwise_AND,0.001,1000000,1.00e+12
+Left_Shift,0.002,1000000,5.00e+11
+Bitwise_OR,0.001,1000000,1.00e+12
+Bitwise_XOR,0.001,1000000,1.00e+12
+Right_Shift,0.002,1000000,5.00e+11
