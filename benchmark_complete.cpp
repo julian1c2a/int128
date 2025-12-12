@@ -1,8 +1,10 @@
 #include "benchmark_suite.hpp"
 #include "include/uint128_t.hpp"
 #include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <random>
+#include <sstream>
 #include <vector>
 
 /// Benchmarks para operaciones aritméticas básicas

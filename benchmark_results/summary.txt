@@ -1,0 +1,8 @@
+﻿RESUMEN COMPARATIVO DE COMPILADORES
+======================================
+
+- MSVC: benchmark_msvc.csv
+
+Abre los archivos CSV en Excel o LibreOffice para analisis detallado
+Usa PowerBI o similar para crear graficos comparativos
+Los archivos .txt contienen la salida completa de cada benchmark
