@@ -11,6 +11,7 @@
 #include <utility>
 
 #ifdef _MSC_VER
+// Includes para intrínsecos de MSVC
 #include <intrin.h>
 #elif defined(__GNUC__) || defined(__clang__)
 // Includes para intrínsecos de GCC/Clang
@@ -191,7 +192,7 @@ class uint128_t
         data[1] = __builtin_addcll(data[1], other.data[1], carry, &carry);
 #else
         // Fallback: método tradicional confiable
-        uint64_t old_low = data[0];
+        const uint64_t old_low = data[0];
         data[0] += other.data[0];
         data[1] += other.data[1];
         if (data[0] < old_low) {
@@ -200,7 +201,7 @@ class uint128_t
 #endif
 #else
         // Fallback: método tradicional confiable
-        uint64_t old_low = data[0];
+        const uint64_t old_low = data[0];
         data[0] += other.data[0];
         data[1] += other.data[1];
         if (data[0] < old_low) {
@@ -209,7 +210,7 @@ class uint128_t
 #endif
 #else
         // Fallback genérico
-        uint64_t old_low = data[0];
+        const uint64_t old_low = data[0];
         data[0] += other.data[0];
         data[1] += other.data[1];
         if (data[0] < old_low) {
@@ -223,19 +224,19 @@ class uint128_t
     {
 #ifdef _MSC_VER
         uint64_t new_low;
-        unsigned char borrow = _subborrow_u64(0, data[0], other.data[0], &new_low);
+        const unsigned char borrow = _subborrow_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _subborrow_u64(borrow, data[1], other.data[1], &data[1]);
 #elif defined(__GNUC__) || defined(__clang__)
         // GCC/Clang: usar builtin cuando sea posible
 #if defined(__has_builtin)
 #if __has_builtin(__builtin_subcll) && defined(__x86_64__)
-        unsigned long long borrow;
+        const unsigned long long borrow;
         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
         data[1] = __builtin_subcll(data[1], other.data[1], borrow, &borrow);
 #else
         // Fallback: método tradicional confiable
-        uint64_t old_low = data[0];
+        const uint64_t old_low = data[0];
         data[0] -= other.data[0];
         data[1] -= other.data[1];
         if (data[0] > old_low) {
@@ -244,7 +245,7 @@ class uint128_t
 #endif
 #else
         // Fallback: método tradicional confiable
-        uint64_t old_low = data[0];
+        const uint64_t old_low = data[0];
         data[0] -= other.data[0];
         data[1] -= other.data[1];
         if (data[0] > old_low) {
@@ -253,7 +254,7 @@ class uint128_t
 #endif
 #else
         // Fallback genérico
-        uint64_t old_low = data[0];
+        const uint64_t old_low = data[0];
         data[0] -= other.data[0];
         data[1] -= other.data[1];
         if (data[0] > old_low) {
@@ -684,3 +685,124 @@ inline std::istream& operator>>(std::istream& is, uint128_t& value)
 constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
 
 #endif // UINT128_T_HPP
+       // ESQUEMA DE CÓDIGO PARA DIVISIÓN DE 128 BITS (Knuth D)
+       // // Helper especial: Multiplicación extendida (128 bits * 64 bits -> overflow de 128 bits)
+       // // Devuelve la parte "High" (bits 128..191) de la operación: u128 * v64
+// // Esto es necesario porque el operator* estándar de Uint128 trunca el resultado a 128 bits,
+// // y Knuth D necesita el bloque completo para la resta.
+// uint64_t multiplyMsgOverflow(Uint128 u, uint64_t v) {
+//     unsigned __int128 p_full = (unsigned __int128)u.words[1] * v;
+//     unsigned __int128 low_prod = (unsigned __int128)u.words[0] * v;
+
+//     // Calculamos el carry que viene de la parte baja hacia la alta
+//     unsigned __int128 mid_sum = (low_prod >> 64) + (uint64_t)p_full;
+
+//     // El overflow total son los bits superiores de p_full más cualquier carry de mid_sum
+//     uint64_t overflow = (uint64_t)(p_full >> 64) + (uint64_t)(mid_sum >> 64);
+//     return overflow;
+// }
+
+// // ----------------------------------------------------------------------------------
+// // ALGORITMO D DE KNUTH (Limpiado)
+// // ----------------------------------------------------------------------------------
+
+// bool knuth_div(Uint128 u_in, Uint128 v_in, Uint128 &q_out, Uint128 &r_out) {
+//     // 0. Casos triviales
+//     if (v_in == Uint128(0, 0)) return false; // División por cero
+//     if (u_in < v_in) {
+//         q_out = Uint128(0, 0);
+//         r_out = u_in;
+//         return true;
+//     }
+
+//     // Si el divisor cabe en 64 bits (words[1] == 0), usamos una ruta rápida.
+//     // Aunque podríamos usar Knuth D completo, suele ser ineficiente para n=1.
+//     // Asumimos que existe lógica para esto o usamos __int128 para el fallback rápido.
+//     if (v_in.words[1] == 0) {
+//         unsigned __int128 dividend = (unsigned __int128)u_in.words[1] << 64 | u_in.words[0];
+//         uint64_t divisor = v_in.words[0];
+//         unsigned __int128 q = dividend / divisor;
+//         unsigned __int128 r = dividend % divisor;
+//         q_out = Uint128((uint64_t)(q >> 64), (uint64_t)q);
+//         r_out = Uint128(0, (uint64_t)r);
+//         return true;
+//     }
+
+//     // --- ALGORITMO D (Para divisor de > 64 bits, n=2) ---
+
+//     // D1. Normalización
+//     // Desplazamos u y v para que el MSB de v sea 1.
+//     int s = countLeadingZeros(v_in.words[1]);
+//     Uint128 v = v_in << s;
+//     Uint128 u_shifted = u_in << s;
+
+//     // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
+//     // Knuth considera el dividendo como (u_extension, u_shifted...).
+//     uint64_t u_extension = (s == 0) ? 0 : (u_in.words[1] >> (64 - s));
+
+//     // D3. Calcular q_hat (Estimación del cociente)
+//     // Dividimos los dos dígitos más significativos del dividendo (u_extension, u_shifted.high)
+//     // entre el dígito más significativo del divisor (v.high).
+
+//     unsigned __int128 numerator = ((unsigned __int128)u_extension << 64) | u_shifted.words[1];
+//     uint64_t divisor_high = v.words[1];
+
+//     // División nativa de 128/64 para estimar
+//     unsigned __int128 q_hat_wide = numerator / divisor_high;
+//     unsigned __int128 r_hat_wide = numerator % divisor_high;
+
+//     uint64_t q_hat = (uint64_t)q_hat_wide;
+
+//     // Ajuste de q_hat: El bucle interno de Knuth para refinar la estimación
+//     // Verifica si la estimación viola la restricción con el segundo dígito del divisor.
+//     while (true) {
+//         if (q_hat_wide >= 0xFFFFFFFFFFFFFFFFULL) {
+//              q_hat--;
+//              r_hat_wide += divisor_high;
+//              if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL) continue;
+//         }
+
+//         unsigned __int128 left = (unsigned __int128)q_hat * v.words[0];
+//         unsigned __int128 right = (r_hat_wide << 64) | u_shifted.words[0];
+
+//         if (left > right) {
+//             q_hat--;
+//             r_hat_wide += divisor_high;
+//             if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL) break;
+//         } else {
+//             break;
+//         }
+//         q_hat_wide = q_hat;
+//     }
+
+//     // D4. Multiplicar y Restar: u -= q_hat * v
+//     // Calculamos q_hat * v. Necesitamos la parte baja (128 bits) y la parte alta (overflow).
+//     Uint128 p_low = v * q_hat;
+//     uint64_t p_ext = multiplyMsgOverflow(v, q_hat);
+
+//     // Guardamos estado para detectar "borrow" (underflow) en la resta de 128 bits
+//     Uint128 u_shifted_old = u_shifted;
+//     u_shifted -= p_low;
+
+//     // Detectamos si la resta 'u_shifted - p_low' pidió prestado
+//     uint64_t borrow = (u_shifted > u_shifted_old) ? 1 : 0;
+
+//     // Realizamos la resta final en la parte más significativa (la extensión)
+//     // Balance final = u_extension - (overflow_de_producto + borrow_de_resta)
+//     int64_t final_balance = u_extension - (p_ext + borrow);
+
+//     // D5. Test de Resto (Corrección de signo)
+//     // Si el balance es negativo, significa que restamos demasiado -> q_hat era 1 unidad muy
+//     grande. if (final_balance < 0) {
+//         // D6. Add Back
+//         q_hat--;
+//         u_shifted += v; // Devolvemos una vez el divisor al resto
+//     }
+
+//     q_out = Uint128(0, q_hat);
+
+//     // D8. Desnormalizar Resto
+//     r_out = u_shifted >> s;
+
+//     return true;
+// }
