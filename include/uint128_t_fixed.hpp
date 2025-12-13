@@ -366,7 +366,7 @@ class uint128_t
     // División con assignment
     uint128_t& operator/=(const uint128_t& other) noexcept
     {
-        auto result = divrem(other);
+        const auto result = divrem(other);
         if (result.has_value()) {
             *this = result.value().first; // quotient
         } else {
