@@ -28,6 +28,7 @@
 #ifndef INT128_IOSTREAMS_HPP
 #define INT128_IOSTREAMS_HPP
 
+#include "int128_format.hpp"
 #include "int128_t.hpp"
 #include <iomanip>
 #include <iostream>
@@ -37,129 +38,43 @@
 /**
  * @brief Soporte completo de iostreams con iomanip para int128_t
  *
- * Este archivo implementa soporte completo de formateo para int128_t,
- * incluyendo todos los manipuladores estándar de iomanip:
- * - Bases: std::hex, std::oct, std::dec
- * - Ancho: std::setw()
- * - Relleno: std::setfill()
- * - Alineación: std::left, std::right, std::internal
- * - Prefijos: std::showbase, std::noshowbase
- * - Signo: std::showpos, std::noshowpos
- * - Mayúsculas: std::uppercase, std::nouppercase
+ * NOTA IMPORTANTE: Los operadores iostream básicos (operator<< y operator>>)
+ * están definidos en int128_t.hpp para evitar conflictos de redefinición.
+ *
+ * Este archivo se enfoca en proporcionar funciones de formateo avanzado
+ * que permiten control fino sobre el formato de salida usando manipuladores.
  */
 
-namespace std
+// ===============================================================================
+// FUNCIONES DE CONVENIENCIA PARA FORMATEO ESPECÍFICO CON IOSTREAM
+// ===============================================================================
+
+namespace int128_iostream
 {
 
-/*
- * NOTA: Los operadores << y >> básicos están definidos en int128_t.hpp
- * Aquí proporcionamos funciones de formateo avanzado y conveniencia.
- * Si necesitas operadores que respeten completamente iomanip, usa las
- * funciones del namespace int128_format.
+/**
+ * @brief Aplica formateo usando el estado actual del stream
  */
+inline std::string format_for_stream(const int128_t& value, const std::ostream& os)
 {
-    // Guardar el estado de formateo actual
-    const auto flags = os.flags();
-    const int base = (flags & std::ios_base::basefield);
-    const bool show_base = (flags & std::ios_base::showbase);
-    const bool show_pos = (flags & std::ios_base::showpos);
-    const bool uppercase = (flags & std::ios_base::uppercase);
-    const auto width = os.width();
-    const auto fill_char = os.fill();
-    const auto alignment = (flags & std::ios_base::adjustfield);
-
-    std::string result;
-    bool is_negative = value.is_negative();
-
-    // Para valores negativos en bases no decimales, mostrar como complemento a 2
-    int128_t abs_value = is_negative ? -value : value;
-
-    // Determinar la base numérica
-    switch (base) {
-    case std::ios_base::hex:
-        if (is_negative) {
-            // Para negativos en hex, mostrar representación de complemento a 2
-            result = value.to_uint128().to_string_base(16, false);
-        } else {
-            result = abs_value.to_string_base(16, show_base);
-        }
-        if (uppercase) {
-            // Convertir a mayúsculas
-            for (char& c : result) {
-                if (c >= 'a' && c <= 'f') {
-                    c = c - 'a' + 'A';
-                }
-            }
-        }
-        break;
-
-    case std::ios_base::oct:
-        if (is_negative) {
-            // Para negativos en octal, mostrar representación de complemento a 2
-            result = value.to_uint128().to_string_base(8, false);
-        } else {
-            result = abs_value.to_string_base(8, show_base);
-        }
-        break;
-
-    default: // std::ios_base::dec o sin especificar
-        result = value.to_string();
-        if (!is_negative && show_pos) {
-            result = "+" + result;
-        }
-        break;
-    }
-
-    // Aplicar ancho de campo y alineación
-    if (width > 0 && static_cast<int>(result.length()) < width) {
-        const int padding = width - static_cast<int>(result.length());
-
-        switch (alignment) {
-        case std::ios_base::left:
-            result += std::string(padding, fill_char);
-            break;
-
-        case std::ios_base::internal:
-            // Para internal, el relleno va después del prefijo/signo pero antes del número
-            if ((show_base && !is_negative &&
-                 (base == std::ios_base::hex || base == std::ios_base::oct))) {
-                if (base == std::ios_base::hex && result.substr(0, 2) == "0x") {
-                    result = "0x" + std::string(padding, fill_char) + result.substr(2);
-                } else if (base == std::ios_base::hex && result.substr(0, 2) == "0X") {
-                    result = "0X" + std::string(padding, fill_char) + result.substr(2);
-                } else if (base == std::ios_base::oct && result.substr(0, 1) == "0") {
-                    result = "0" + std::string(padding, fill_char) + result.substr(1);
-                } else {
-                    result = std::string(padding, fill_char) + result; // fallback a right
-                }
-            } else if ((is_negative || (show_pos && !is_negative)) && base == std::ios_base::dec) {
-                // Para números decimales con signo, poner el relleno después del signo
-                if (result[0] == '-' || result[0] == '+') {
-                    result = result[0] + std::string(padding, fill_char) + result.substr(1);
-                } else {
-                    result = std::string(padding, fill_char) + result; // fallback a right
-                }
-            } else {
-                result = std::string(padding, fill_char) + result; // Sin prefijo, actúa como right
-            }
-            break;
-
-        default: // std::ios_base::right o sin especificar
-            result = std::string(padding, fill_char) + result;
-            break;
-        }
-    }
-
-    // Resetear width (comportamiento estándar de iostream)
-    os.width(0);
-
-    return os << result;
+    return int128_format::format_like_iostream(value, os.flags(), os.width(), os.fill());
 }
 
 /**
- * @brief Operador de entrada mejorado que respeta la base y maneja signos
+ * @brief Operador de salida que aplica formato avanzado (usar con cuidado)
+ * Esta función aplica el formateo del stream actual, pero puede ser más lenta.
  */
-inline std::istream& operator>>(std::istream& is, int128_t& value)
+inline std::ostream& formatted_output(std::ostream& os, const int128_t& value)
+{
+    std::string formatted = format_for_stream(value, os);
+    os.width(0); // Reset width como hacen los streams estándar
+    return os << formatted;
+}
+
+/**
+ * @brief Operador de entrada que respeta la base del stream
+ */
+inline std::istream& formatted_input(std::istream& is, int128_t& value)
 {
     const auto flags = is.flags();
     const int base_flags = (flags & std::ios_base::basefield);
@@ -211,23 +126,23 @@ inline std::istream& operator>>(std::istream& is, int128_t& value)
     return is;
 }
 
-} // namespace std
+} // namespace int128_iostream
 
 // ===============================================================================
-// FUNCIONES DE CONVENIENCIA PARA FORMATEO ESPECÍFICO
+// EXTENSIONES PARA FORMATEO AVANZADO
 // ===============================================================================
 
 namespace int128_format
 {
 
 /**
- * @brief Formatea int128_t con especificaciones completas
+ * @brief Formatea int128_t usando ostringstream con manipuladores
  */
-inline std::string format(const int128_t& value, int base = 10, int width = 0, char fill = ' ',
-                          bool show_base = false, bool show_pos = false, bool uppercase = false,
-                          bool left_align = false, bool internal_align = false)
+inline std::string stream_format(const int128_t& value, int base = 10, int width = 0,
+                                 char fill = ' ', bool show_base = false, bool show_pos = false,
+                                 bool uppercase = false, bool left_align = false,
+                                 bool internal_align = false)
 {
-
     std::ostringstream oss;
 
     // Configurar base
@@ -264,45 +179,45 @@ inline std::string format(const int128_t& value, int base = 10, int width = 0, c
         oss << std::right; // Por defecto
     }
 
-    // Generar resultado
+    // Generar resultado usando el operador básico
     oss << value;
     return oss.str();
 }
 
 /**
- * @brief Formateo hexadecimal con opciones
+ * @brief Formateo hexadecimal mejorado
  */
-inline std::string hex(const int128_t& value, int width = 0, bool show_base = false,
-                       bool uppercase = false, char fill = '0')
+inline std::string hex_advanced(const int128_t& value, int width = 0, bool show_base = false,
+                                bool uppercase = false, char fill = '0')
 {
-    return format(value, 16, width, fill, show_base, false, uppercase, false, false);
+    return stream_format(value, 16, width, fill, show_base, false, uppercase, false, false);
 }
 
 /**
- * @brief Formateo octal con opciones
+ * @brief Formateo octal mejorado
  */
-inline std::string oct(const int128_t& value, int width = 0, bool show_base = false,
-                       char fill = '0')
+inline std::string oct_advanced(const int128_t& value, int width = 0, bool show_base = false,
+                                char fill = '0')
 {
-    return format(value, 8, width, fill, show_base, false, false, false, false);
+    return stream_format(value, 8, width, fill, show_base, false, false, false, false);
 }
 
 /**
- * @brief Formateo decimal con opciones
+ * @brief Formateo decimal mejorado
  */
-inline std::string dec(const int128_t& value, int width = 0, char fill = ' ', bool show_pos = false,
-                       bool left_align = false)
+inline std::string dec_advanced(const int128_t& value, int width = 0, char fill = ' ',
+                                bool show_pos = false, bool left_align = false)
 {
-    return format(value, 10, width, fill, false, show_pos, false, left_align, false);
+    return stream_format(value, 10, width, fill, false, show_pos, false, left_align, false);
 }
 
 /**
- * @brief Formateo decimal con signo siempre visible
+ * @brief Formateo decimal con signo siempre visible (avanzado)
  */
-inline std::string dec_signed(const int128_t& value, int width = 0, char fill = ' ',
-                              bool left_align = false)
+inline std::string dec_signed_advanced(const int128_t& value, int width = 0, char fill = ' ',
+                                       bool left_align = false)
 {
-    return format(value, 10, width, fill, false, true, false, left_align, false);
+    return stream_format(value, 10, width, fill, false, true, false, left_align, false);
 }
 
 } // namespace int128_format
