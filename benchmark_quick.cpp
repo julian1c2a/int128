@@ -4,22 +4,61 @@
 #include <iostream>
 #include <vector>
 
-class QuickTimer
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__x86_64__) || defined(_M_X64)
+#ifdef __has_builtin
+#if __has_builtin(__builtin_ia32_rdtsc)
+#define HAS_RDTSC 1
+#endif
+#endif
+#endif
+
+class QuickCycleTimer
 {
   private:
     std::chrono::high_resolution_clock::time_point start_time;
+    uint64_t start_cycles;
 
   public:
     void start()
     {
+        start_cycles = read_tsc();
         start_time = std::chrono::high_resolution_clock::now();
     }
 
-    double stop_ns()
+    struct QuickResult {
+        double ns_per_op;
+        double cycles_per_op;
+    };
+
+    QuickResult stop(int iterations)
     {
         auto end_time = std::chrono::high_resolution_clock::now();
+        uint64_t end_cycles = read_tsc();
+
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
-        return static_cast<double>(duration.count());
+        double total_ns = static_cast<double>(duration.count());
+        uint64_t total_cycles = end_cycles - start_cycles;
+
+        return {total_ns / iterations, static_cast<double>(total_cycles) / iterations};
+    }
+
+  private:
+    static inline uint64_t read_tsc()
+    {
+#ifdef _MSC_VER
+        return __rdtsc();
+#elif defined(HAS_RDTSC)
+        return __builtin_ia32_rdtsc();
+#elif defined(__x86_64__) || defined(_M_X64)
+        uint64_t cycles;
+        __asm__ volatile("rdtsc" : "=A"(cycles));
+        return cycles;
+#else
+        auto now = std::chrono::high_resolution_clock::now();
+        return static_cast<uint64_t>(now.time_since_epoch().count());
+#endif
     }
 };
 

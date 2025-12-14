@@ -4,22 +4,72 @@
 #include <iostream>
 #include <vector>
 
-class OptimizedBenchmarkTimer
+#ifdef _MSC_VER
+#include <intrin.h>
+#elif defined(__x86_64__) || defined(_M_X64)
+// Para GCC/Clang en x86_64
+#ifdef __has_builtin
+#if __has_builtin(__builtin_ia32_rdtsc)
+#define HAS_RDTSC 1
+#endif
+#endif
+#endif
+
+// Clase para medir tanto tiempo como ciclos de reloj
+class CycleAwareTimer
 {
   private:
     std::chrono::high_resolution_clock::time_point start_time;
+    uint64_t start_cycles;
 
   public:
     void start()
     {
+        start_cycles = read_tsc();
         start_time = std::chrono::high_resolution_clock::now();
     }
 
-    double stop_ns()
+    struct BenchmarkResult {
+        double nanoseconds;
+        uint64_t cycles;
+        double cycles_per_op;
+        double ns_per_cycle;
+    };
+
+    BenchmarkResult stop(int iterations)
     {
         auto end_time = std::chrono::high_resolution_clock::now();
+        uint64_t end_cycles = read_tsc();
+
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
-        return static_cast<double>(duration.count());
+        double total_ns = static_cast<double>(duration.count());
+        uint64_t total_cycles = end_cycles - start_cycles;
+
+        return {
+            total_ns / iterations,                            // ns per operation
+            total_cycles / static_cast<uint64_t>(iterations), // cycles per operation
+            static_cast<double>(total_cycles) / iterations,   // cycles per op (decimal)
+            total_ns / static_cast<double>(total_cycles)      // ns per cycle
+        };
+    }
+
+  private:
+    static inline uint64_t read_tsc()
+    {
+#ifdef _MSC_VER
+        return __rdtsc();
+#elif defined(HAS_RDTSC)
+        return __builtin_ia32_rdtsc();
+#elif defined(__x86_64__) || defined(_M_X64)
+        // Inline assembly fallback para x86_64
+        uint64_t cycles;
+        __asm__ volatile("rdtsc" : "=A"(cycles));
+        return cycles;
+#else
+        // Fallback: usar timestamp aproximado
+        auto now = std::chrono::high_resolution_clock::now();
+        return static_cast<uint64_t>(now.time_since_epoch().count());
+#endif
     }
 };
 
@@ -143,12 +193,12 @@ void benchmark_optimizations(const std::vector<OptimizedTestCase>& test_cases, i
 {
     std::cout << "\n=== BENCHMARK DE OPTIMIZACIONES (" << iterations
               << " iteraciones) ===" << std::endl;
-    std::cout << std::setw(25) << "Caso" << std::setw(15) << "divrem (ns)" << std::setw(18)
-              << "knuth_D (ns)" << std::setw(12) << "Speedup" << std::setw(25)
-              << "Tipo de Optimización" << std::endl;
-    std::cout << std::string(95, '-') << std::endl;
+    std::cout << std::setw(20) << "Caso" << std::setw(12) << "divrem (ns)" << std::setw(15)
+              << "knuth_D (ns)" << std::setw(10) << "Speedup" << std::setw(15) << "divrem (cyc)"
+              << std::setw(18) << "knuth_D (cyc)" << std::setw(12) << "Cyc Speedup" << std::endl;
+    std::cout << std::string(122, '-') << std::endl;
 
-    OptimizedBenchmarkTimer timer;
+    CycleAwareTimer timer;
 
     for (const auto& test_case : test_cases) {
         // Benchmark divrem()
@@ -157,7 +207,7 @@ void benchmark_optimizations(const std::vector<OptimizedTestCase>& test_cases, i
             auto result = test_case.dividend.divrem(test_case.divisor);
             prevent_optimization(result);
         }
-        double divrem_time = timer.stop_ns() / iterations;
+        auto divrem_result = timer.stop(iterations);
 
         // Benchmark knuth_D_divrem()
         timer.start();
@@ -165,16 +215,23 @@ void benchmark_optimizations(const std::vector<OptimizedTestCase>& test_cases, i
             auto result = test_case.dividend.knuth_D_divrem(test_case.divisor);
             prevent_optimization(result);
         }
-        double knuth_time = timer.stop_ns() / iterations;
+        auto knuth_result = timer.stop(iterations);
 
-        double speedup = divrem_time / knuth_time;
+        double time_speedup = divrem_result.nanoseconds / knuth_result.nanoseconds;
+        double cycle_speedup = divrem_result.cycles_per_op / knuth_result.cycles_per_op;
 
-        std::cout << std::setw(25) << test_case.name << std::setw(15) << std::fixed
-                  << std::setprecision(1) << divrem_time << std::setw(18) << std::fixed
-                  << std::setprecision(1) << knuth_time << std::setw(11) << std::fixed
-                  << std::setprecision(1) << speedup << "x" << std::setw(25)
-                  << test_case.optimization_type << std::endl;
+        std::cout << std::setw(20) << test_case.name << std::setw(12) << std::fixed
+                  << std::setprecision(1) << divrem_result.nanoseconds << std::setw(15)
+                  << std::fixed << std::setprecision(1) << knuth_result.nanoseconds << std::setw(9)
+                  << std::fixed << std::setprecision(1) << time_speedup << "x" << std::setw(15)
+                  << std::fixed << std::setprecision(1) << divrem_result.cycles_per_op
+                  << std::setw(18) << std::fixed << std::setprecision(1)
+                  << knuth_result.cycles_per_op << std::setw(11) << std::fixed
+                  << std::setprecision(1) << cycle_speedup << "x" << std::endl;
     }
+
+    std::cout << "\nNota: cyc = ciclos de CPU (independiente de frecuencia del procesador)"
+              << std::endl;
 }
 
 int main()
