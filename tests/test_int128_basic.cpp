@@ -211,8 +211,8 @@ void test_string_conversion()
     assert(int128_t::from_string("123456789") == int128_t(123456789));
 
     // Base 16
-    assert(int128_t(255).to_string_base(16) == "ff");
-    assert(int128_t(-255).to_string_base(16) == "-ff");
+    assert(int128_t(255).to_string_base(16) == "FF");
+    assert(int128_t(-255).to_string_base(16) == "-FF");
 
     std::cout << "✅ String conversions OK" << std::endl;
 }

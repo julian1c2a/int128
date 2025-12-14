@@ -30,8 +30,10 @@
 #include "uint128_t.hpp"
 #include <cstdint>
 #include <istream>
+#include <limits>
 #include <ostream>
 #include <string>
+#include <type_traits>
 
 /**
  * @brief Entero con signo de 128 bits
@@ -59,17 +61,23 @@ class int128_t
     constexpr int128_t() noexcept : data{0, 0} {}
 
     /**
-     * @brief Constructor desde enteros con signo
+     * @brief Constructor desde enteros (cualquier tipo entero)
      */
-    constexpr int128_t(int64_t value) noexcept
-        : data{static_cast<uint64_t>(value), value < 0 ? UINT64_MAX : 0}
+    template <typename T>
+    constexpr int128_t(T value) noexcept
+        requires(std::is_integral_v<T> && !std::is_same_v<T, bool>)
+        : data{0, 0}
     {
+        if constexpr (std::is_signed_v<T>) {
+            int64_t val = static_cast<int64_t>(value);
+            data[0] = static_cast<uint64_t>(val);
+            data[1] = val < 0 ? UINT64_MAX : 0;
+        } else {
+            uint64_t val = static_cast<uint64_t>(value);
+            data[0] = val;
+            data[1] = 0;
+        }
     }
-
-    /**
-     * @brief Constructor desde enteros sin signo
-     */
-    constexpr int128_t(uint64_t value) noexcept : data{value, 0} {}
 
     /**
      * @brief Constructor desde dos uint64_t (high, low)
@@ -175,7 +183,7 @@ class int128_t
             // Para tipos sin signo
             if (is_negative())
                 return 0; // Negativo se convierte a 0
-            return to_uint128().to<T>();
+            return static_cast<T>(to_uint128());
         }
     }
 
@@ -349,7 +357,7 @@ class int128_t
         uint128_t result = a % b;
 
         // Aplicar signo del dividendo
-        if (result_negative && !result.is_zero()) {
+        if (result_negative && result != uint128_t(0)) {
             return -int128_t(result);
         }
         return int128_t(result);
@@ -414,23 +422,17 @@ class int128_t
         if (!this_neg && other_neg)
             return false; // positivo >= negativo
 
-        // Mismo signo - comparar magnitud
-        if (data[1] != other.data[1]) {
-            if (this_neg) {
-                // Ambos negativos - orden invertido
-                return data[1] > other.data[1];
-            } else {
-                // Ambos positivos - orden normal
-                return data[1] < other.data[1];
-            }
+        // Mismo signo - comparar como enteros con signo
+        // Para complemento a 2, podemos comparar directamente high parts como signed
+        int64_t this_high_signed = static_cast<int64_t>(data[1]);
+        int64_t other_high_signed = static_cast<int64_t>(other.data[1]);
+
+        if (this_high_signed != other_high_signed) {
+            return this_high_signed < other_high_signed;
         }
 
-        // High parts iguales, comparar low parts
-        if (this_neg) {
-            return data[0] > other.data[0]; // Negativos - orden invertido
-        } else {
-            return data[0] < other.data[0]; // Positivos - orden normal
-        }
+        // High parts iguales, comparar low parts como unsigned
+        return data[0] < other.data[0];
     }
 
     constexpr bool operator<=(const int128_t& other) const noexcept
