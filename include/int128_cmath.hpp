@@ -229,11 +229,47 @@ constexpr int128_t max(const int128_t& a, const int128_t& b) noexcept
 }
 
 /**
+ * @brief Valor máximo entre int128_t y tipo integral
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> max(const int128_t& a, T b) noexcept
+{
+    return max(a, int128_t(b));
+}
+
+/**
+ * @brief Valor máximo entre tipo integral e int128_t
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> max(T a, const int128_t& b) noexcept
+{
+    return max(int128_t(a), b);
+}
+
+/**
  * @brief Valor mínimo entre dos números
  */
 constexpr int128_t min(const int128_t& a, const int128_t& b) noexcept
 {
     return (a < b) ? a : b;
+}
+
+/**
+ * @brief Valor mínimo entre int128_t y tipo integral
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> min(const int128_t& a, T b) noexcept
+{
+    return min(a, int128_t(b));
+}
+
+/**
+ * @brief Valor mínimo entre tipo integral e int128_t
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> min(T a, const int128_t& b) noexcept
+{
+    return min(int128_t(a), b);
 }
 
 /**

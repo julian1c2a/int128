@@ -73,6 +73,91 @@ template <> struct is_signed<int128_t> : true_type {
 };
 
 // ===============================================================================
+// TRAITS DE TRIVIALIDAD
+// ===============================================================================
+
+/**
+ * @brief int128_t NO es trivialmente copiable según el compilador
+ *
+ * Aunque solo contiene datos POD, el compilador no lo considera trivialmente
+ * copiable debido a constructores definidos por el usuario.
+ */
+template <> struct is_trivially_copyable<int128_t> : false_type {
+};
+
+/**
+ * @brief int128_t NO es trivialmente constructible por defecto
+ *
+ * Tiene constructores definidos por el usuario.
+ */
+template <> struct is_trivially_default_constructible<int128_t> : false_type {
+};
+
+/**
+ * @brief int128_t es trivialmente constructible por copia
+ *
+ * Puede ser copiado sin ejecutar código de constructor.
+ */
+template <> struct is_trivially_copy_constructible<int128_t> : true_type {
+};
+
+/**
+ * @brief int128_t es trivialmente constructible por movimiento
+ *
+ * Puede ser movido sin ejecutar código de constructor.
+ */
+template <> struct is_trivially_move_constructible<int128_t> : true_type {
+};
+
+/**
+ * @brief int128_t es trivialmente asignable por copia
+ *
+ * Puede ser asignado por copia usando memcpy.
+ */
+template <> struct is_trivially_copy_assignable<int128_t> : true_type {
+};
+
+/**
+ * @brief int128_t es trivialmente asignable por movimiento
+ *
+ * Puede ser asignado por movimiento sin código especial.
+ */
+template <> struct is_trivially_move_assignable<int128_t> : true_type {
+};
+
+/**
+ * @brief int128_t es trivialmente destructible
+ *
+ * No requiere código de destructor especial.
+ */
+template <> struct is_trivially_destructible<int128_t> : true_type {
+};
+
+/**
+ * @brief int128_t NO es un tipo trivial
+ *
+ * No es trivial porque tiene constructores definidos por el usuario.
+ */
+template <> struct is_trivial<int128_t> : false_type {
+};
+
+/**
+ * @brief int128_t tiene layout estándar
+ *
+ * Garantiza que tiene el mismo layout que una estructura C equivalente.
+ */
+template <> struct is_standard_layout<int128_t> : true_type {
+};
+
+/**
+ * @brief int128_t NO es un tipo POD (Plain Old Data)
+ *
+ * No es POD porque no es trivial (constructores definidos por usuario).
+ */
+template <> struct is_pod<int128_t> : false_type {
+};
+
+// ===============================================================================
 // TRANSFORMACIÓN DE TIPOS
 // ===============================================================================
 

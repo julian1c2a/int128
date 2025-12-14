@@ -194,6 +194,62 @@ constexpr uint128_t sqrt(const uint128_t& n) noexcept
 }
 
 // =============================================================================
+// std::min y std::max specializations for uint128_t
+// =============================================================================
+
+/**
+ * @brief Valor máximo entre dos números uint128_t
+ */
+constexpr uint128_t max(const uint128_t& a, const uint128_t& b) noexcept
+{
+    return (a > b) ? a : b;
+}
+
+/**
+ * @brief Valor máximo entre uint128_t y tipo integral
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, uint128_t> max(const uint128_t& a, T b) noexcept
+{
+    return max(a, uint128_t(b));
+}
+
+/**
+ * @brief Valor máximo entre tipo integral y uint128_t
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, uint128_t> max(T a, const uint128_t& b) noexcept
+{
+    return max(uint128_t(a), b);
+}
+
+/**
+ * @brief Valor mínimo entre dos números uint128_t
+ */
+constexpr uint128_t min(const uint128_t& a, const uint128_t& b) noexcept
+{
+    return (a < b) ? a : b;
+}
+
+/**
+ * @brief Valor mínimo entre uint128_t y tipo integral
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, uint128_t> min(const uint128_t& a, T b) noexcept
+{
+    return min(a, uint128_t(b));
+}
+
+/**
+ * @brief Valor mínimo entre tipo integral y uint128_t
+ */
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, uint128_t> min(T a, const uint128_t& b) noexcept
+{
+    return min(uint128_t(a), b);
+}
+
+// =============================================================================
 // Coeficientes de Bézout - Algoritmo Extendido de Euclides
 // =============================================================================
 
