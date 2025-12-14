@@ -77,18 +77,17 @@ template <> struct is_signed<int128_t> : true_type {
 // ===============================================================================
 
 /**
- * @brief int128_t NO es trivialmente copiable según el compilador
+ * @brief int128_t es trivialmente copiable
  *
- * Aunque solo contiene datos POD, el compilador no lo considera trivialmente
- * copiable debido a constructores definidos por el usuario.
+ * Con constructores eliminados, ahora es trivialmente copiable.
  */
-template <> struct is_trivially_copyable<int128_t> : false_type {
+template <> struct is_trivially_copyable<int128_t> : true_type {
 };
 
 /**
- * @brief int128_t NO es trivialmente constructible por defecto
+ * @brief int128_t es trivialmente constructible por defecto
  *
- * Tiene constructores definidos por el usuario.
+ * Solo tiene constructor por defecto trivial.
  */
 template <> struct is_trivially_default_constructible<int128_t> : false_type {
 };
@@ -134,9 +133,10 @@ template <> struct is_trivially_destructible<int128_t> : true_type {
 };
 
 /**
- * @brief int128_t NO es un tipo trivial
+ * @brief int128_t es un tipo trivial
  *
- * No es trivial porque tiene constructores definidos por el usuario.
+ * Combina todas las propiedades triviales: constructible, copiable,
+ * asignable y destructible trivialmente.
  */
 template <> struct is_trivial<int128_t> : false_type {
 };
@@ -150,11 +150,11 @@ template <> struct is_standard_layout<int128_t> : true_type {
 };
 
 /**
- * @brief int128_t NO es un tipo POD (Plain Old Data)
+ * @brief int128_t es un tipo POD (Plain Old Data)
  *
- * No es POD porque no es trivial (constructores definidos por usuario).
+ * Combina ser trivial y tener layout estándar.
  */
-template <> struct is_pod<int128_t> : false_type {
+template <> struct is_pod<int128_t> : true_type {
 };
 
 // ===============================================================================

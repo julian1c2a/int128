@@ -66,54 +66,35 @@ class uint128_t
         data[0] = static_cast<uint64_t>(value);
     }
 
-    // CONSTRUCTORS
+    // CONSTRUCTORS - Constructor por defecto + constructor desde integrales básicos
     constexpr uint128_t() noexcept : data{0ull, 0ull} {}
 
-    template <typename T1, typename T2>
-    constexpr uint128_t(T1 _high, T2 _low) noexcept
-        : data{static_cast<uint64_t>(_low), static_cast<uint64_t>(_high)}
+    // Constructor básico para conversiones desde tipos integrales (mantiene trivialidad)
+    template <typename T> constexpr uint128_t(T value) noexcept : data{0ull, 0ull}
     {
-        static_assert(std::is_integral<T1>::value && std::is_integral<T2>::value,
-                      "T1 and T2 must be integral types");
-    }
-
-    template <typename T, typename = typename std::enable_if<std::is_integral<T>::value>::type>
-    constexpr uint128_t(T _low) noexcept : data{static_cast<uint64_t>(_low), 0ull}
-    {
-    }
-
-    constexpr uint128_t(const uint128_t& other) noexcept : data{other.data[0], other.data[1]} {}
-    constexpr uint128_t(uint128_t&& other) noexcept : data{other.data[0], other.data[1]} {}
-
-    // Constructor desde string (definido después de la clase)
-    explicit uint128_t(const std::string& str);
-
-    // ASSIGNMENT OPERATORS
-    constexpr uint128_t& operator=(const uint128_t& other) noexcept
-    {
-        if (this != &other) {
-            data[0] = other.data[0];
-            data[1] = other.data[1];
+        static_assert(std::is_integral_v<T> && sizeof(T) <= 8,
+                      "T must be an integral type <= 8 bytes");
+        if constexpr (std::is_signed_v<T>) {
+            if (value < 0) {
+                // Para negativos en tipo unsigned, mantenemos solo la parte baja
+                data[0] = static_cast<uint64_t>(value);
+            } else {
+                data[0] = static_cast<uint64_t>(value);
+            }
+        } else {
+            data[0] = static_cast<uint64_t>(value);
         }
-        return *this;
     }
 
-    constexpr uint128_t& operator=(uint128_t&& other) noexcept
-    {
-        if (this != &other) {
-            data[1] = other.data[1];
-            data[0] = other.data[0];
-        }
-        return *this;
-    }
+    // Constructor desde dos uint64_t (necesario para operaciones internas)
+    constexpr uint128_t(uint64_t high, uint64_t low) noexcept : data{low, high} {}
 
-    template <typename T> constexpr uint128_t& operator=(T _low) noexcept
-    {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
-        data[1] = 0ull;
-        data[0] = static_cast<uint64_t>(_low);
-        return *this;
-    }
+    // NOTA: Para construcciones más complejas, usar las funciones de fábrica en int128_factory.hpp:
+    // - make_uint128(high, low) para construcción desde dos uint64_t
+    // - make_uint128(str) para construcción desde string
+
+    // ASSIGNMENT OPERATORS - Eliminados para trivialidad
+    // El compilador genera versiones triviales automáticamente
 
     // CONVERSIONS
     explicit constexpr operator bool() const noexcept
@@ -1475,11 +1456,8 @@ inline constexpr uint128_t operator^(std::uint64_t lhs, const uint128_t& rhs) no
     return uint128_t(lhs) ^ rhs;
 }
 
-// Constructor desde string (definido después de from_string)
-inline uint128_t::uint128_t(const std::string& str) : data{0ull, 0ull}
-{
-    *this = from_string(str);
-}
+// Constructor desde string ELIMINADO para mantener trivialidad
+// Usar make_uint128(str) en lugar de uint128_t(str)
 
 // Operadores de flujo definidos fuera de la clase
 inline std::ostream& operator<<(std::ostream& os, const uint128_t& value)

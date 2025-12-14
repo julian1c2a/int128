@@ -52,44 +52,51 @@ class int128_t
 
   public:
     // ===============================================================================
-    // CONSTRUCTORES
+    // CONSTRUCTORES - Constructor por defecto + constructor desde integrales básicos
     // ===============================================================================
 
     /**
      * @brief Constructor por defecto (valor 0)
      */
-    explicit constexpr int128_t() noexcept : data{0, 0} {}
+    constexpr int128_t() noexcept : data{0, 0} {}
 
     /**
-     * @brief Constructor desde enteros (cualquier tipo entero)
+     * @brief Constructor desde tipos integrales básicos (mantiene trivialidad)
      */
-    template <typename T>
-    explicit constexpr int128_t(T value) noexcept
-        requires(std::is_integral_v<T> && !std::is_same_v<T, bool>)
-        : data{0, 0}
+    template <typename T> constexpr int128_t(T value) noexcept : data{0, 0}
     {
+        static_assert(std::is_integral_v<T> && sizeof(T) <= 8 && !std::is_same_v<T, uint128_t>,
+                      "T must be an integral type <= 8 bytes and not uint128_t");
         if constexpr (std::is_signed_v<T>) {
-            int64_t val = static_cast<int64_t>(value);
-            data[0] = static_cast<uint64_t>(val);
-            data[1] = val < 0 ? UINT64_MAX : 0;
+            if (value < 0) {
+                // Extensión de signo: propagar el bit de signo a través de ambos uint64_t
+                data[0] = static_cast<uint64_t>(value);
+                data[1] = UINT64_MAX; // Todos los bits en 1 para representar signo negativo
+            } else {
+                data[0] = static_cast<uint64_t>(value);
+                data[1] = 0;
+            }
         } else {
-            uint64_t val = static_cast<uint64_t>(value);
-            data[0] = val;
+            data[0] = static_cast<uint64_t>(value);
             data[1] = 0;
         }
     }
 
     /**
-     * @brief Constructor desde dos uint64_t (high, low)
+     * @brief Constructor desde dos uint64_t (necesario para operaciones internas)
      */
-    explicit constexpr int128_t(uint64_t high, uint64_t low) noexcept : data{low, high} {}
+    constexpr int128_t(uint64_t high, uint64_t low) noexcept : data{low, high} {}
 
     /**
-     * @brief Constructor desde uint128_t (interpretación directa)
+     * @brief Constructor desde uint128_t (conversión específica)
      */
     constexpr explicit int128_t(const uint128_t& value) noexcept : data{value.low(), value.high()}
     {
     }
+
+    // NOTA: Para construcciones más complejas, usar las funciones de fábrica en int128_factory.hpp:
+    // - make_int128(high, low) para construcción desde dos uint64_t
+    // - make_int128(uint128_value) para conversión desde uint128_t
 
     // ===============================================================================
     // ACCESSORS
@@ -102,6 +109,22 @@ class int128_t
     constexpr uint64_t high() const noexcept
     {
         return data[1];
+    }
+
+    /**
+     * @brief Establece la parte baja (64 bits inferiores)
+     */
+    constexpr void set_low(uint64_t value) noexcept
+    {
+        data[0] = value;
+    }
+
+    /**
+     * @brief Establece la parte alta (64 bits superiores)
+     */
+    constexpr void set_high(uint64_t value) noexcept
+    {
+        data[1] = value;
     }
 
     /**
