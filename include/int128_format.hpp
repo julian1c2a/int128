@@ -69,9 +69,15 @@ inline std::string format_like_iostream(const int128_t& value, std::ios_base::fm
     case std::ios_base::hex:
         if (is_negative) {
             // Para negativos en hex, usar complemento a 2
-            result = value.to_uint128().to_string_base(16, false);
+            result = value.to_uint128().to_string_base(16);
+            if (show_base) {
+                result = "0x" + result;
+            }
         } else {
-            result = abs_value.to_string_base(16, show_base);
+            result = abs_value.to_string_base(16);
+            if (show_base) {
+                result = "0x" + result;
+            }
         }
         if (uppercase) {
             // Convertir a mayúsculas
@@ -86,9 +92,15 @@ inline std::string format_like_iostream(const int128_t& value, std::ios_base::fm
     case std::ios_base::oct:
         if (is_negative) {
             // Para negativos en octal, usar complemento a 2
-            result = value.to_uint128().to_string_base(8, false);
+            result = value.to_uint128().to_string_base(8);
+            if (show_base) {
+                result = "0" + result;
+            }
         } else {
-            result = abs_value.to_string_base(8, show_base);
+            result = abs_value.to_string_base(8);
+            if (show_base) {
+                result = "0" + result;
+            }
         }
         break;
 
