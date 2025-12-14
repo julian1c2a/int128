@@ -1,25 +1,23 @@
-#include "../include/uint128_t.hpp"
-#include <iostream>
-#include <chrono>
-#include <vector>
-#include <fstream>
-#include <random>
-#include <iomanip>
+#include "../include/int128.hpp"
 #include <algorithm>
+#include <chrono>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <numeric>
+#include <random>
+#include <vector>
 
 using namespace std::chrono;
 
-struct SystemInfo
-{
+struct SystemInfo {
     std::string cpu_info;
     std::string compiler_info;
     std::string build_config;
     std::string timestamp;
 };
 
-struct BenchmarkResult
-{
+struct BenchmarkResult {
     std::string operation;
     double median_ns;
     double mean_ns;
@@ -48,7 +46,8 @@ SystemInfo getSystemInfo()
 #elif defined(__GNUC__)
     info.compiler_info = "GCC_" + std::to_string(__GNUC__) + "." + std::to_string(__GNUC_MINOR__);
 #elif defined(__clang__)
-    info.compiler_info = "Clang_" + std::to_string(__clang_major__) + "." + std::to_string(__clang_minor__);
+    info.compiler_info =
+        "Clang_" + std::to_string(__clang_major__) + "." + std::to_string(__clang_minor__);
 #else
     info.compiler_info = "Unknown";
 #endif
@@ -67,28 +66,26 @@ SystemInfo getSystemInfo()
 }
 
 template <typename Func>
-BenchmarkResult benchmarkOperation(const std::string &name, Func func, size_t iterations = 100000)
+BenchmarkResult benchmarkOperation(const std::string& name, Func func, size_t iterations = 100000)
 {
     std::vector<double> times;
 
     // Warm up
-    for (int i = 0; i < 1000; ++i)
-    {
+    for (int i = 0; i < 1000; ++i) {
         func();
     }
 
     // Actual benchmark - measure batches to get accurate timing
-    const size_t batch_size = 1000;                                      // Measure 1000 operations at once
-    size_t num_batches = std::max(size_t(100), iterations / batch_size); // At least 100 measurements
+    const size_t batch_size = 1000; // Measure 1000 operations at once
+    size_t num_batches =
+        std::max(size_t(100), iterations / batch_size); // At least 100 measurements
     times.reserve(num_batches);
 
-    for (size_t batch = 0; batch < num_batches; ++batch)
-    {
+    for (size_t batch = 0; batch < num_batches; ++batch) {
         auto start = high_resolution_clock::now();
 
         // Execute batch_size operations
-        for (size_t i = 0; i < batch_size; ++i)
-        {
+        for (size_t i = 0; i < batch_size; ++i) {
             func();
         }
 
@@ -97,15 +94,13 @@ BenchmarkResult benchmarkOperation(const std::string &name, Func func, size_t it
         auto duration = duration_cast<nanoseconds>(end - start);
         // Store time per single operation
         double time_per_op = static_cast<double>(duration.count()) / batch_size;
-        if (time_per_op > 0.0)
-        { // Only store positive times
+        if (time_per_op > 0.0) { // Only store positive times
             times.push_back(time_per_op);
         }
     }
 
     // Calculate statistics
-    if (times.empty())
-    {
+    if (times.empty()) {
         // Fallback if no measurements were captured
         return {name, 0.1, 0.1, 0.0, 0.1, 0.1, num_batches * batch_size, 0.0, 10000000000.0};
     }
@@ -119,29 +114,30 @@ BenchmarkResult benchmarkOperation(const std::string &name, Func func, size_t it
 
     // Calculate standard deviation
     double variance = 0.0;
-    for (auto time : times)
-    {
+    for (auto time : times) {
         variance += (time - mean_ns) * (time - mean_ns);
     }
     double stddev_ns = std::sqrt(variance / times.size());
 
     double ops_per_second = (median_ns > 0.0) ? 1000000000.0 / median_ns : 1e10;
 
-    return {name, median_ns, mean_ns, stddev_ns, min_ns, max_ns, num_batches * batch_size, 0.0, ops_per_second};
+    return {name, median_ns,     mean_ns, stddev_ns, min_ns, max_ns, num_batches * batch_size,
+            0.0,  ops_per_second};
 }
 
-void writeCSV(const std::vector<BenchmarkResult> &results, const SystemInfo &sysInfo, const std::string &filename)
+void writeCSV(const std::vector<BenchmarkResult>& results, const SystemInfo& sysInfo,
+              const std::string& filename)
 {
     std::ofstream file("../../documentation/benchmarks/" + filename);
 
-    if (!file.is_open())
-    {
-        std::cerr << "Error: Could not create CSV file at ../../documentation/benchmarks/" << filename << std::endl;
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not create CSV file at ../../documentation/benchmarks/"
+                  << filename << std::endl;
         std::cerr << "Trying alternative path..." << std::endl;
         file.open("documentation/benchmarks/" + filename);
-        if (!file.is_open())
-        {
-            std::cerr << "Error: Could not create CSV file. Results will only be shown on screen." << std::endl;
+        if (!file.is_open()) {
+            std::cerr << "Error: Could not create CSV file. Results will only be shown on screen."
+                      << std::endl;
             return;
         }
     }
@@ -155,19 +151,15 @@ void writeCSV(const std::vector<BenchmarkResult> &results, const SystemInfo &sys
     file << "#\n";
 
     // CSV headers
-    file << "Operation,Median_ns,Mean_ns,StdDev_ns,Min_ns,Max_ns,Iterations,Relative_to_Baseline,Ops_per_second\n";
+    file << "Operation,Median_ns,Mean_ns,StdDev_ns,Min_ns,Max_ns,Iterations,Relative_to_Baseline,"
+            "Ops_per_second\n";
 
-    for (const auto &result : results)
-    {
-        file << result.operation << ","
-             << std::fixed << std::setprecision(3) << result.median_ns << ","
-             << result.mean_ns << ","
-             << result.stddev_ns << ","
-             << result.min_ns << ","
-             << result.max_ns << ","
-             << result.iterations << ","
-             << std::setprecision(2) << result.relative_to_baseline << ","
-             << std::scientific << result.ops_per_second << "\n";
+    for (const auto& result : results) {
+        file << result.operation << "," << std::fixed << std::setprecision(3) << result.median_ns
+             << "," << result.mean_ns << "," << result.stddev_ns << "," << result.min_ns << ","
+             << result.max_ns << "," << result.iterations << "," << std::setprecision(2)
+             << result.relative_to_baseline << "," << std::scientific << result.ops_per_second
+             << "\n";
     }
 }
 
@@ -197,39 +189,40 @@ int main()
     std::cout << "Running baseline (uint64_t) benchmarks...\n";
 
     // Baseline: uint64_t addition
-    auto baseline = benchmarkOperation("uint64_t_addition", [&]()
-                                       { volatile auto result = native_a + native_b; });
+    auto baseline = benchmarkOperation("uint64_t_addition",
+                                       [&]() { volatile auto result = native_a + native_b; });
     baseline.relative_to_baseline = 1.0;
 
     std::cout << "Running uint128_t benchmarks...\n";
 
     // uint128_t operations
-    auto uint128_add = benchmarkOperation("uint128_t_addition", [&]()
-                                          { volatile auto result = a + b; });
+    auto uint128_add =
+        benchmarkOperation("uint128_t_addition", [&]() { volatile auto result = a + b; });
     uint128_add.relative_to_baseline = uint128_add.median_ns / baseline.median_ns;
 
-    auto uint128_sub = benchmarkOperation("uint128_t_subtraction", [&]()
-                                          { volatile auto result = a - b; });
+    auto uint128_sub =
+        benchmarkOperation("uint128_t_subtraction", [&]() { volatile auto result = a - b; });
     uint128_sub.relative_to_baseline = uint128_sub.median_ns / baseline.median_ns;
 
-    auto uint128_mul = benchmarkOperation("uint128_t_multiplication", [&]()
-                                          { volatile auto result = a * b; }, 50000); // Fewer iterations for slower ops
+    auto uint128_mul = benchmarkOperation(
+        "uint128_t_multiplication", [&]() { volatile auto result = a * b; },
+        50000); // Fewer iterations for slower ops
     uint128_mul.relative_to_baseline = uint128_mul.median_ns / baseline.median_ns;
 
-    auto uint128_and = benchmarkOperation("uint128_t_bitwise_and", [&]()
-                                          { volatile auto result = a & b; });
+    auto uint128_and =
+        benchmarkOperation("uint128_t_bitwise_and", [&]() { volatile auto result = a & b; });
     uint128_and.relative_to_baseline = uint128_and.median_ns / baseline.median_ns;
 
-    auto uint128_lshift = benchmarkOperation("uint128_t_left_shift", [&]()
-                                             { volatile auto result = a << 5; });
+    auto uint128_lshift =
+        benchmarkOperation("uint128_t_left_shift", [&]() { volatile auto result = a << 5; });
     uint128_lshift.relative_to_baseline = uint128_lshift.median_ns / baseline.median_ns;
 
-    auto uint128_eq = benchmarkOperation("uint128_t_equality", [&]()
-                                         { volatile bool result = a == b; });
+    auto uint128_eq =
+        benchmarkOperation("uint128_t_equality", [&]() { volatile bool result = a == b; });
     uint128_eq.relative_to_baseline = uint128_eq.median_ns / baseline.median_ns;
 
-    auto uint128_lt = benchmarkOperation("uint128_t_less_than", [&]()
-                                         { volatile bool result = a < b; });
+    auto uint128_lt =
+        benchmarkOperation("uint128_t_less_than", [&]() { volatile bool result = a < b; });
     uint128_lt.relative_to_baseline = uint128_lt.median_ns / baseline.median_ns;
 
     // Add results
@@ -248,18 +241,15 @@ int main()
 
     // Display results
     std::cout << "\nBenchmark Results (median times):\n";
-    std::cout << std::left << std::setw(25) << "Operation"
-              << std::setw(12) << "Time (ns)"
-              << std::setw(10) << "Relative"
-              << std::setw(15) << "Ops/sec" << "\n";
+    std::cout << std::left << std::setw(25) << "Operation" << std::setw(12) << "Time (ns)"
+              << std::setw(10) << "Relative" << std::setw(15) << "Ops/sec" << "\n";
     std::cout << std::string(65, '-') << "\n";
 
-    for (const auto &result : results)
-    {
-        std::cout << std::left << std::setw(25) << result.operation
-                  << std::setw(12) << std::fixed << std::setprecision(2) << result.median_ns
-                  << std::setw(10) << std::setprecision(2) << result.relative_to_baseline << "x"
-                  << std::setw(15) << std::scientific << result.ops_per_second << "\n";
+    for (const auto& result : results) {
+        std::cout << std::left << std::setw(25) << result.operation << std::setw(12) << std::fixed
+                  << std::setprecision(2) << result.median_ns << std::setw(10)
+                  << std::setprecision(2) << result.relative_to_baseline << "x" << std::setw(15)
+                  << std::scientific << result.ops_per_second << "\n";
     }
 
     std::cout << "\nKey insights:\n";
