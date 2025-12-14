@@ -45,8 +45,7 @@
 // Concepts y algorithms requieren que traits estén definidos primero
 #include "uint128_algorithm.hpp"
 #include "uint128_concepts.hpp"
-#include "uint128_ranges_clean.hpp" // Funciones de rango especializadas
-
+#include "uint128_ranges_clean.hpp" // Funciones de rango especializadas#include "uint128_iostreams.hpp"     // Formateo avanzado de iostream/iomanip
 /**
  * @brief Verificaciones de compilación
  *

@@ -98,7 +98,31 @@ Hemos implementado **todas las funciones relevantes para tipos enteros** del est
 ✅ **STL Integration**: Especializaciones completas para integración perfecta  
 ✅ **Type Safety**: Conceptos C++20 para verificación en tiempo de compilación
 
-## Uso Recomendado
+## Formateo y I/O Streams
+
+### Capacidades de Formateo (uint128_format.hpp)
+- **`uint128_format::hex(value, width, show_base, uppercase, fill)`** - Formateo hexadecimal avanzado
+- **`uint128_format::oct(value, width, show_base, fill)`** - Formateo octal
+- **`uint128_format::dec(value, width, fill, left_align)`** - Formateo decimal
+- **`uint128_format::format(value, base, width, fill, show_base, uppercase, left_align, internal_align)`** - Formateo completo personalizable
+
+### Comparación con Tipos Builtin
+```cpp
+// Tipos builtin con iostream
+uint64_t val = 0xDEADBEEF;
+std::cout << std::hex << std::uppercase << std::showbase << std::setw(15) << std::setfill('0') << val;
+// Output: 0X0000000DEADBEEF
+
+// uint128_t con funciones equivalentes
+uint128_t our_val(0, 0xDEADBEEF);
+std::cout << uint128_format::format(our_val, 16, 15, '0', true, true, false, true);
+// Output: 0x0000000DEADBEEF
+```
+
+### Estado de Compatibilidad
+✅ **Misma funcionalidad**: Todas las capacidades de formateo de tipos builtin
+✅ **Sintaxis intuitiva**: Funciones de conveniencia fáciles de usar
+📝 **Nota**: Los manipuladores iostream estándar (std::hex, std::setw) no funcionan automáticamente con uint128_t, pero las funciones de formateo proporcionan funcionalidad equivalente o superior
 
 ```cpp
 #include "uint128_simple_traits.hpp"  // Incluye todo
