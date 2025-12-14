@@ -1,6 +1,6 @@
 # Benchmark Multiplataforma para uint128_t - Version Simple
 param(
-    [int]$iterations = 1000000,
+    [int]$iterations = 10000000,
     [string]$outputDir = "benchmark_results"
 )
 

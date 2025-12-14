@@ -1,9 +1,9 @@
 #include "include/uint128_t.hpp"
-#include <cstdint>
-#include <cstddef>
 #include <cctype>
-#include <iostream>
+#include <cstddef>
+#include <cstdint>
 #include <iomanip>
+#include <iostream>
 
 int main()
 {
@@ -14,7 +14,7 @@ int main()
 
     std::cout << "Valor 128-bit (Hex): 0x";
     std::cout << std::hex << std::uppercase << std::setfill('0');
-    std::cout << std::setw(16) << num.high << std::setw(16) << num.low << "\n";
+    std::cout << std::setw(16) << num.high() << std::setw(16) << num.low() << "\n";
 
     return 0;
 }

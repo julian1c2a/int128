@@ -3,7 +3,5 @@
     "vendor": {
         "conan": {}
     },
-    "include": [
-        "build/CMakePresets.json"
-    ]
+    "include": []
 }

@@ -17,6 +17,7 @@
 // Includes para intrínsecos de GCC/Clang
 #include <immintrin.h>
 #if defined(__x86_64__) || defined(_M_X64)
+#include <bmi2intrin.h>
 #include <x86intrin.h>
 #endif
 #endif
@@ -125,8 +126,16 @@ class uint128_t
         return static_cast<TYPE>(data[0]);
     }
 
+#if defined(__SIZEOF_INT128__)
+    // Conversión directa a __uint128_t para intrínsecos optimizados
+    constexpr operator __uint128_t() const noexcept
+    {
+        return (static_cast<__uint128_t>(data[1]) << 64) | data[0];
+    }
+#endif
+
     // ARITHMETIC OPERATORS
-    uint128_t& operator++() noexcept
+    constexpr uint128_t& operator++() noexcept
     {
 #ifdef _MSC_VER
         uint64_t new_low;
@@ -144,18 +153,18 @@ class uint128_t
         return *this;
     }
 
-    uint128_t operator++(int) noexcept
+    constexpr uint128_t operator++(int) noexcept
     {
         uint128_t temp(*this);
         ++(*this);
         return temp;
     }
 
-    uint128_t& operator--() noexcept
+    constexpr uint128_t& operator--() noexcept
     {
 #ifdef _MSC_VER
         uint64_t new_low;
-        unsigned char borrow = _subborrow_u64(0, data[0], 1ull, &new_low);
+        const unsigned char borrow = _subborrow_u64(0, data[0], 1ull, &new_low);
         data[0] = new_low;
         if (borrow) {
             data[1] -= 1ull;
@@ -169,25 +178,25 @@ class uint128_t
         return *this;
     }
 
-    uint128_t operator--(int) noexcept
+    constexpr uint128_t operator--(int) noexcept
     {
         uint128_t temp(*this);
         --(*this);
         return temp;
     }
 
-    uint128_t& operator+=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator+=(const uint128_t& other) noexcept
     {
 #ifdef _MSC_VER
         uint64_t new_low;
-        unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
+        const unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _addcarry_u64(carry, data[1], other.data[1], &data[1]);
 #elif defined(__GNUC__) || defined(__clang__)
         // GCC/Clang: usar builtin cuando sea posible
 #if defined(__has_builtin)
 #if __has_builtin(__builtin_addcll) && defined(__x86_64__)
-        unsigned long long carry;
+        unsigned long long carry = 0;
         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
         data[1] = __builtin_addcll(data[1], other.data[1], carry, &carry);
 #else
@@ -220,7 +229,7 @@ class uint128_t
         return *this;
     }
 
-    uint128_t& operator-=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator-=(const uint128_t& other) noexcept
     {
 #ifdef _MSC_VER
         uint64_t new_low;
@@ -231,7 +240,7 @@ class uint128_t
         // GCC/Clang: usar builtin cuando sea posible
 #if defined(__has_builtin)
 #if __has_builtin(__builtin_subcll) && defined(__x86_64__)
-        const unsigned long long borrow;
+        unsigned long long borrow = 0;
         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
         data[1] = __builtin_subcll(data[1], other.data[1], borrow, &borrow);
 #else
@@ -267,7 +276,7 @@ class uint128_t
     // FUNCIONES AUXILIARES PARA DIVISIÓN
 
     // Cuenta cuántos ceros hay al inicio (MSB) del número
-    int leading_zeros() const noexcept
+    constexpr int leading_zeros() const noexcept
     {
         if (data[1] != 0) {
 #ifdef _MSC_VER
@@ -287,13 +296,13 @@ class uint128_t
     }
 
     // Calcula la longitud efectiva (bits significativos)
-    int effective_length() const noexcept
+    constexpr int effective_length() const noexcept
     {
         return 128 - leading_zeros();
     }
 
     // Desplaza a la izquierda
-    uint128_t shift_left(int positions) const noexcept
+    constexpr uint128_t shift_left(int positions) const noexcept
     {
         if (positions <= 0)
             return *this;
@@ -303,14 +312,14 @@ class uint128_t
         if (positions >= 64) {
             return uint128_t(data[0] << (positions - 64), 0);
         } else {
-            uint64_t new_high = (data[1] << positions) | (data[0] >> (64 - positions));
-            uint64_t new_low = data[0] << positions;
+            const uint64_t new_high = (data[1] << positions) | (data[0] >> (64 - positions));
+            const uint64_t new_low = data[0] << positions;
             return uint128_t(new_high, new_low);
         }
     }
 
     // Desplaza a la derecha
-    uint128_t shift_right(int positions) const noexcept
+    constexpr uint128_t shift_right(int positions) const noexcept
     {
         if (positions <= 0)
             return *this;
@@ -320,24 +329,24 @@ class uint128_t
         if (positions >= 64) {
             return uint128_t(0, data[1] >> (positions - 64));
         } else {
-            uint64_t new_low = (data[0] >> positions) | (data[1] << (64 - positions));
-            uint64_t new_high = data[1] >> positions;
+            const uint64_t new_low = (data[0] >> positions) | (data[1] << (64 - positions));
+            const uint64_t new_high = data[1] >> positions;
             return uint128_t(new_high, new_low);
         }
     }
 
     // COMPARISON OPERATORS
-    bool operator==(const uint128_t& other) const noexcept
+    constexpr bool operator==(const uint128_t& other) const noexcept
     {
         return (data[0] == other.data[0]) && (data[1] == other.data[1]);
     }
 
-    bool operator!=(const uint128_t& other) const noexcept
+    constexpr bool operator!=(const uint128_t& other) const noexcept
     {
         return !(*this == other);
     }
 
-    bool operator<(const uint128_t& other) const noexcept
+    constexpr bool operator<(const uint128_t& other) const noexcept
     {
         if (data[1] != other.data[1]) {
             return data[1] < other.data[1];
@@ -345,28 +354,28 @@ class uint128_t
         return data[0] < other.data[0];
     }
 
-    bool operator<=(const uint128_t& other) const noexcept
+    constexpr bool operator<=(const uint128_t& other) const noexcept
     {
         return (*this < other) || (*this == other);
     }
 
-    bool operator>(const uint128_t& other) const noexcept
+    constexpr bool operator>(const uint128_t& other) const noexcept
     {
         return !(*this <= other);
     }
 
-    bool operator>=(const uint128_t& other) const noexcept
+    constexpr bool operator>=(const uint128_t& other) const noexcept
     {
         return !(*this < other);
     }
 
   private:
     // Normalizar divisor para tener la misma longitud efectiva que el dividendo
-    std::pair<uint128_t, int> normalize_divisor(const uint128_t& dividendo) const noexcept
+    constexpr std::pair<uint128_t, int> normalize_divisor(const uint128_t& dividendo) const noexcept
     {
-        int dividend_length = dividendo.effective_length();
-        int divisor_length = this->effective_length();
-        int shift_amount = dividend_length - divisor_length;
+        const int dividend_length = dividendo.effective_length();
+        const int divisor_length = this->effective_length();
+        const int shift_amount = dividend_length - divisor_length;
 
         if (shift_amount <= 0) {
             return std::make_pair(*this, 0);
@@ -379,7 +388,8 @@ class uint128_t
     // OPERADORES DE DIVISIÓN
 
     // División con resto - función base para /= y %=
-    std::optional<std::pair<uint128_t, uint128_t>> divrem(const uint128_t& divisor) const noexcept
+    constexpr std::optional<std::pair<uint128_t, uint128_t>>
+    divrem(const uint128_t& divisor) const noexcept
     {
         // Detectar división por cero
         if (divisor == uint128_t(0, 0)) {
@@ -402,9 +412,9 @@ class uint128_t
         }
 
         // CASO GENERAL: Algoritmo de división larga binaria
-        auto normalized_pair = divisor.normalize_divisor(*this);
+        const auto normalized_pair = divisor.normalize_divisor(*this);
         uint128_t normalized_divisor = normalized_pair.first;
-        int shift_amount = normalized_pair.second;
+        const int shift_amount = normalized_pair.second;
 
         remainder = *this;
         quotient = uint128_t(0, 0);
@@ -425,9 +435,9 @@ class uint128_t
     }
 
     // División con assignment
-    uint128_t& operator/=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator/=(const uint128_t& other) noexcept
     {
-        auto result = divrem(other);
+        const auto result = divrem(other);
         if (result.has_value()) {
             *this = result.value().first; // quotient
         } else {
@@ -437,16 +447,16 @@ class uint128_t
     }
 
     // División con assignment para tipos integrales
-    template <typename T> uint128_t& operator/=(T other) noexcept
+    template <typename T> constexpr uint128_t& operator/=(T other) noexcept
     {
         static_assert(std::is_integral<T>::value, "T must be an integral type");
         return *this /= uint128_t(other);
     }
 
     // Módulo con assignment
-    uint128_t& operator%=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator%=(const uint128_t& other) noexcept
     {
-        auto result = divrem(other);
+        const auto result = divrem(other);
         if (result.has_value()) {
             *this = result.value().second; // remainder
         } else {
@@ -456,14 +466,14 @@ class uint128_t
     }
 
     // Módulo con assignment para tipos integrales
-    template <typename T> uint128_t& operator%=(T other) noexcept
+    template <typename T> constexpr uint128_t& operator%=(T other) noexcept
     {
         static_assert(std::is_integral<T>::value, "T must be an integral type");
         return *this %= uint128_t(other);
     }
 
     // División operator (uses operator/=)
-    uint128_t operator/(const uint128_t& other) const noexcept
+    constexpr uint128_t operator/(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result /= other;
@@ -471,7 +481,7 @@ class uint128_t
     }
 
     // División operator para tipos integrales (uses operator/=)
-    template <typename T> uint128_t operator/(T other) const noexcept
+    template <typename T> constexpr uint128_t operator/(T other) const noexcept
     {
         static_assert(std::is_integral<T>::value, "T must be an integral type");
         uint128_t result(*this);
@@ -480,7 +490,7 @@ class uint128_t
     }
 
     // Módulo operator (uses operator%=)
-    uint128_t operator%(const uint128_t& other) const noexcept
+    constexpr uint128_t operator%(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result %= other;
@@ -488,7 +498,7 @@ class uint128_t
     }
 
     // Módulo operator para tipos integrales (uses operator%=)
-    template <typename T> uint128_t operator%(T other) const noexcept
+    template <typename T> constexpr uint128_t operator%(T other) const noexcept
     {
         static_assert(std::is_integral<T>::value, "T must be an integral type");
         uint128_t result(*this);
@@ -497,14 +507,14 @@ class uint128_t
     }
 
     // OTHER ARITHMETIC OPERATORS
-    uint128_t operator+(const uint128_t& other) const noexcept
+    constexpr uint128_t operator+(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result += other;
         return result;
     }
 
-    uint128_t operator-(const uint128_t& other) const noexcept
+    constexpr uint128_t operator-(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result -= other;
@@ -512,15 +522,19 @@ class uint128_t
     }
 
     // Multiplicación básica (para verificación)
-    uint128_t& operator*=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator*=(const uint128_t& other) noexcept
     {
-        // Implementación básica usando descomposición
-        uint64_t a_low = data[0] & 0xFFFFFFFF;
-        uint64_t a_high = data[0] >> 32;
-        uint64_t b_low = other.data[0] & 0xFFFFFFFF;
-        uint64_t b_high = other.data[0] >> 32;
+        // Guardamos los valores originales antes de modificar
+        const uint64_t orig_low = data[0];
+        const uint64_t orig_high = data[1];
 
-        uint64_t result0 = a_low * b_low;
+        // Implementación básica usando descomposición
+        const uint64_t a_low = orig_low & 0xFFFFFFFF;
+        const uint64_t a_high = orig_low >> 32;
+        const uint64_t b_low = other.data[0] & 0xFFFFFFFF;
+        const uint64_t b_high = other.data[0] >> 32;
+
+        const uint64_t result0 = a_low * b_low;
         uint64_t result1 = a_high * b_low + a_low * b_high;
         uint64_t result2 = a_high * b_high;
 
@@ -528,12 +542,12 @@ class uint128_t
         result2 += result1 >> 32;
 
         data[0] = (result1 << 32) | (result0 & 0xFFFFFFFF);
-        data[1] = result2 + (data[1] * other.data[0]) + (data[0] * other.data[1]);
+        data[1] = result2 + (orig_high * other.data[0]) + (orig_low * other.data[1]);
 
         return *this;
     }
 
-    uint128_t operator*(const uint128_t& other) const noexcept
+    constexpr uint128_t operator*(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result *= other;
@@ -541,73 +555,260 @@ class uint128_t
     }
 
     // BITWISE OPERATORS
-    uint128_t& operator<<=(int shift) noexcept
+    constexpr uint128_t& operator<<=(int shift) noexcept
     {
         *this = shift_left(shift);
         return *this;
     }
 
-    uint128_t& operator>>=(int shift) noexcept
+    constexpr uint128_t& operator>>=(int shift) noexcept
     {
         *this = shift_right(shift);
         return *this;
     }
 
-    uint128_t operator<<(int shift) const noexcept
+    constexpr uint128_t operator<<(int shift) const noexcept
     {
         return shift_left(shift);
     }
 
-    uint128_t operator>>(int shift) const noexcept
+    constexpr uint128_t operator>>(int shift) const noexcept
     {
         return shift_right(shift);
     }
 
-    uint128_t& operator&=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator&=(const uint128_t& other) noexcept
     {
         data[0] &= other.data[0];
         data[1] &= other.data[1];
         return *this;
     }
 
-    uint128_t& operator|=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator|=(const uint128_t& other) noexcept
     {
         data[0] |= other.data[0];
         data[1] |= other.data[1];
         return *this;
     }
 
-    uint128_t& operator^=(const uint128_t& other) noexcept
+    constexpr uint128_t& operator^=(const uint128_t& other) noexcept
     {
         data[0] ^= other.data[0];
         data[1] ^= other.data[1];
         return *this;
     }
 
-    uint128_t operator&(const uint128_t& other) const noexcept
+    constexpr uint128_t operator&(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result &= other;
         return result;
     }
 
-    uint128_t operator|(const uint128_t& other) const noexcept
+    constexpr uint128_t operator|(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result |= other;
         return result;
     }
 
-    uint128_t operator^(const uint128_t& other) const noexcept
+    constexpr uint128_t operator^(const uint128_t& other) const noexcept
     {
         uint128_t result(*this);
         result ^= other;
         return result;
     }
 
-    uint128_t operator~() const noexcept
+    constexpr uint128_t operator~() const noexcept
     {
         return uint128_t(~data[1], ~data[0]);
+    }
+
+    /// Multiplicación completa: uint128_t * uint64_t -> parte alta (bits 128-191)
+    /// Esta función calcula los bits superiores del resultado de multiplicar
+    /// un número de 128 bits por uno de 64 bits, útil para el algoritmo de Knuth
+
+  private:
+    // Emulación optimizada de __umulh para GCC/Clang
+    static inline uint64_t umulh_emulation(uint64_t a, uint64_t b) noexcept
+    {
+#if defined(__x86_64__) && defined(__BMI2__)
+        // BMI2: usar _mulx_u64 (equivalente directo a __umulh)
+        unsigned long long high_part;
+        (void)_mulx_u64(a, b, &high_part);
+        return high_part;
+
+#elif defined(__SIZEOF_INT128__)
+        // __uint128_t: más portable y generalmente muy eficiente
+        const __uint128_t result = static_cast<__uint128_t>(a) * b;
+        return static_cast<uint64_t>(result >> 64);
+
+#elif defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
+        // Inline assembly: mapeo directo a mulq (exactamente como __umulh)
+        uint64_t high_part, low_part;
+        __asm__("mulq %3" : "=a"(low_part), "=d"(high_part) : "a"(a), "r"(b) : "cc");
+        return high_part;
+
+#else
+        // Fallback: implementación manual optimizada
+        const uint32_t a_lo = static_cast<uint32_t>(a);
+        const uint32_t a_hi = static_cast<uint32_t>(a >> 32);
+        const uint32_t b_lo = static_cast<uint32_t>(b);
+        const uint32_t b_hi = static_cast<uint32_t>(b >> 32);
+
+        const uint64_t p0 = static_cast<uint64_t>(a_lo) * b_lo;
+        const uint64_t p1 = static_cast<uint64_t>(a_lo) * b_hi;
+        const uint64_t p2 = static_cast<uint64_t>(a_hi) * b_lo;
+        const uint64_t p3 = static_cast<uint64_t>(a_hi) * b_hi;
+
+        const uint64_t middle = p1 + (p0 >> 32) + static_cast<uint32_t>(p2);
+
+        return p3 + (middle >> 32) + (p2 >> 32);
+#endif
+    }
+
+  public:
+    uint64_t fullmult_times_uint64(uint64_t multiplier) const noexcept
+    {
+#ifdef _MSC_VER
+        // MSVC: usar __umulh nativo (el más rápido)
+        const uint64_t high_high = __umulh(data[1], multiplier);
+        const uint64_t low_high = __umulh(data[0], multiplier);
+        const uint64_t mid_low = data[1] * multiplier;
+
+        // Sumar la parte media con carry
+        const uint64_t sum = low_high + mid_low;
+        const uint64_t carry = (sum < low_high) ? 1 : 0;
+
+        return high_high + carry;
+
+#else
+        // GCC/Clang: usar nuestra emulación optimizada de __umulh
+        const uint64_t high_high = umulh_emulation(data[1], multiplier);
+        const uint64_t low_high = umulh_emulation(data[0], multiplier);
+        const uint64_t mid_low = data[1] * multiplier;
+
+        // Sumar la parte media con carry (idéntico a MSVC)
+        const uint64_t sum = low_high + mid_low;
+        const uint64_t carry = (sum < low_high) ? 1 : 0;
+
+        return high_high + carry;
+#endif
+    }
+
+    /// División avanzada usando Algoritmo D de Knuth
+    /// Implementa división precisa para 128-bit / 128-bit con optimizaciones
+    /// @param v_in Divisor (uint128_t)
+    /// @return std::optional<std::pair<quotient, remainder>> o nullopt si división por cero
+    std::optional<std::pair<uint128_t, uint128_t>>
+    knuth_D_divrem(const uint128_t& v_in) const noexcept
+    {
+        // 0. Casos triviales
+        if (v_in == uint128_t(0, 0))
+            return std::nullopt; // División por cero
+        if (*this < v_in) {
+            return std::make_pair(uint128_t(0, 0), *this);
+        }
+
+        // Si el divisor cabe en 64 bits (data[1] == 0), usamos una ruta rápida.
+        if (v_in.data[1] == 0) {
+#if defined(__SIZEOF_INT128__)
+            const __uint128_t dividend = (static_cast<__uint128_t>(data[1]) << 64) | data[0];
+            const uint64_t divisor = v_in.data[0];
+            const __uint128_t q = dividend / divisor;
+            const __uint128_t r = dividend % divisor;
+            const uint128_t quotient(static_cast<uint64_t>(q >> 64), static_cast<uint64_t>(q));
+            const uint128_t remainder(0, static_cast<uint64_t>(r));
+            return std::make_pair(quotient, remainder);
+#else
+            // Fallback para compiladores sin __uint128_t
+            return divrem(v_in);
+#endif
+        }
+
+        // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
+
+        // D1. Normalización
+        // Desplazamos u y v para que el MSB de v sea 1.
+        const int s = v_in.leading_zeros() > 0 ? v_in.leading_zeros() - 64 : 0;
+        const uint128_t v = v_in.shift_left(s);
+        const uint128_t u_shifted = this->shift_left(s);
+
+        // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
+        uint64_t u_extension = 0;
+        if (s > 0) {
+            u_extension = data[1] >> (64 - s);
+        }
+
+        // D3. Calcular q_hat (Estimación del cociente)
+        // Dividimos los dos dígitos más significativos del dividendo
+#if defined(__SIZEOF_INT128__)
+        const __uint128_t numerator =
+            (static_cast<__uint128_t>(u_extension) << 64) | u_shifted.data[1];
+        const uint64_t divisor_high = v.data[1];
+
+        // División nativa de 128/64 para estimar
+        __uint128_t q_hat_wide = numerator / divisor_high;
+        __uint128_t r_hat_wide = numerator % divisor_high;
+
+        uint64_t q_hat = static_cast<uint64_t>(q_hat_wide);
+
+        // Ajuste de q_hat: El bucle interno de Knuth para refinar la estimación
+        while (true) {
+            if (q_hat_wide >= 0xFFFFFFFFFFFFFFFFULL) {
+                q_hat--;
+                r_hat_wide += divisor_high;
+                if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL)
+                    continue;
+            }
+
+            const __uint128_t left = static_cast<__uint128_t>(q_hat) * v.data[0];
+            const __uint128_t right = (r_hat_wide << 64) | u_shifted.data[0];
+
+            if (left > right) {
+                q_hat--;
+                r_hat_wide += divisor_high;
+                if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL)
+                    break;
+            } else {
+                break;
+            }
+            q_hat_wide = q_hat;
+        }
+#else
+        // Fallback sin __uint128_t - usar algoritmo básico
+        return divrem(v_in);
+#endif
+
+        // D4. Multiplicar y Restar: u -= q_hat * v
+        const uint128_t p_low = v * uint128_t(0, q_hat);
+        const uint64_t p_ext = v.fullmult_times_uint64(q_hat);
+
+        // Guardamos estado para detectar "borrow" (underflow) en la resta de 128 bits
+        const uint128_t u_shifted_old = u_shifted;
+        uint128_t u_result = u_shifted - p_low;
+
+        // Detectamos si la resta pidió prestado
+        const uint64_t borrow = (u_result > u_shifted_old) ? 1 : 0;
+
+        // Realizamos la resta final en la parte más significativa
+        const int64_t final_balance =
+            static_cast<int64_t>(u_extension) - static_cast<int64_t>(p_ext + borrow);
+
+        // D5. Test de Resto (Corrección de signo)
+        // Si el balance es negativo, q_hat era 1 unidad muy grande.
+        if (final_balance < 0) {
+            // D6. Add Back
+            q_hat--;
+            u_result += v; // Devolvemos una vez el divisor al resto
+        }
+
+        const uint128_t quotient(0, q_hat);
+
+        // D8. Desnormalizar Resto
+        const uint128_t remainder = u_result.shift_right(s);
+
+        return std::make_pair(quotient, remainder);
     }
 
     // STRING CONVERSION (basic implementation)
@@ -621,9 +822,10 @@ class uint128_t
         uint128_t temp = *this;
 
         while (temp != uint128_t(0, 0)) {
-            auto divmod = temp.divrem(uint128_t(0, 10));
+            const auto divmod = temp.divrem(uint128_t(0, 10));
             if (divmod.has_value()) {
-                char digit = '0' + static_cast<char>(static_cast<uint64_t>(divmod.value().second));
+                const char digit =
+                    '0' + static_cast<char>(static_cast<uint64_t>(divmod.value().second));
                 result = digit + result;
                 temp = divmod.value().first;
             } else {
@@ -642,7 +844,7 @@ class uint128_t
         }
 
         uint128_t result(0, 0);
-        uint128_t base(0, 10);
+        const uint128_t base(0, 10);
 
         for (char c : str) {
             if (c < '0' || c > '9') {
@@ -684,127 +886,7 @@ inline std::istream& operator>>(std::istream& is, uint128_t& value)
 // Constante MAX definida después de la clase
 constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
 
-#endif 
-
-// UINT128_T_HPP
-// ESQUEMA DE CÓDIGO PARA DIVISIÓN DE 128 BITS (Knuth D)
-// Helper especial: Multiplicación extendida (128 bits * 64 bits -> overflow de 128 bits)
-// Devuelve la parte "High" (bits 128..191) de la operación: u128 * v64
-// Esto es necesario porque el operator* estándar de Uint128 trunca el resultado a 128 bits,
-// y Knuth D necesita el bloque completo para la resta.
-uint64_t multiplyMsgOverflow(uint128 u, uint64_t v) {
-    uint128 p_full = uint128(u).high() * v;
-    uint128 low_prod = uint128(u).low() * v;
-
-    // Calculamos el carry que viene de la parte baja hacia la alta
-    uint128_t mid_sum = (low_prod >> 64) + (uint64_t(p_full));
-
-    // El overflow total son los bits superiores de p_full más cualquier carry de mid_sum
-    uint64_t overflow = (uint64_t(p_full >> 64)) + (uint64_t(mid_sum >> 64));
-    return overflow;
-}
-
-// // ----------------------------------------------------------------------------------
-// // ALGORITMO D DE KNUTH (Limpiado)
-// // ----------------------------------------------------------------------------------
-
-// bool knuth_div(Uint128 u_in, Uint128 v_in, Uint128 &q_out, Uint128 &r_out) {
-//     // 0. Casos triviales
-//     if (v_in == Uint128(0, 0)) return false; // División por cero
-//     if (u_in < v_in) {
-//         q_out = Uint128(0, 0);
-//         r_out = u_in;
-//         return true;
-//     }
-
-//     // Si el divisor cabe en 64 bits (words[1] == 0), usamos una ruta rápida.
-//     // Aunque podríamos usar Knuth D completo, suele ser ineficiente para n=1.
-//     // Asumimos que existe lógica para esto o usamos __int128 para el fallback rápido.
-//     if (v_in.words[1] == 0) {
-//         unsigned __int128 dividend = (unsigned __int128)u_in.words[1] << 64 | u_in.words[0];
-//         uint64_t divisor = v_in.words[0];
-//         unsigned __int128 q = dividend / divisor;
-//         unsigned __int128 r = dividend % divisor;
-//         q_out = Uint128((uint64_t)(q >> 64), (uint64_t)q);
-//         r_out = Uint128(0, (uint64_t)r);
-//         return true;
-//     }
-
-//     // --- ALGORITMO D (Para divisor de > 64 bits, n=2) ---
-
-//     // D1. Normalización
-//     // Desplazamos u y v para que el MSB de v sea 1.
-//     int s = countLeadingZeros(v_in.words[1]);
-//     Uint128 v = v_in << s;
-//     Uint128 u_shifted = u_in << s;
-
-//     // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
-//     // Knuth considera el dividendo como (u_extension, u_shifted...).
-//     uint64_t u_extension = (s == 0) ? 0 : (u_in.words[1] >> (64 - s));
-
-//     // D3. Calcular q_hat (Estimación del cociente)
-//     // Dividimos los dos dígitos más significativos del dividendo (u_extension, u_shifted.high)
-//     // entre el dígito más significativo del divisor (v.high).
-
-//     unsigned __int128 numerator = ((unsigned __int128)u_extension << 64) | u_shifted.words[1];
-//     uint64_t divisor_high = v.words[1];
-
-//     // División nativa de 128/64 para estimar
-//     unsigned __int128 q_hat_wide = numerator / divisor_high;
-//     unsigned __int128 r_hat_wide = numerator % divisor_high;
-
-//     uint64_t q_hat = (uint64_t)q_hat_wide;
-
-//     // Ajuste de q_hat: El bucle interno de Knuth para refinar la estimación
-//     // Verifica si la estimación viola la restricción con el segundo dígito del divisor.
-//     while (true) {
-//         if (q_hat_wide >= 0xFFFFFFFFFFFFFFFFULL) {
-//              q_hat--;
-//              r_hat_wide += divisor_high;
-//              if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL) continue;
-//         }
-
-//         unsigned __int128 left = (unsigned __int128)q_hat * v.words[0];
-//         unsigned __int128 right = (r_hat_wide << 64) | u_shifted.words[0];
-
-//         if (left > right) {
-//             q_hat--;
-//             r_hat_wide += divisor_high;
-//             if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL) break;
-//         } else {
-//             break;
-//         }
-//         q_hat_wide = q_hat;
-//     }
-
-//     // D4. Multiplicar y Restar: u -= q_hat * v
-//     // Calculamos q_hat * v. Necesitamos la parte baja (128 bits) y la parte alta (overflow).
-//     Uint128 p_low = v * q_hat;
-//     uint64_t p_ext = multiplyMsgOverflow(v, q_hat);
-
-//     // Guardamos estado para detectar "borrow" (underflow) en la resta de 128 bits
-//     Uint128 u_shifted_old = u_shifted;
-//     u_shifted -= p_low;
-
-//     // Detectamos si la resta 'u_shifted - p_low' pidió prestado
-//     uint64_t borrow = (u_shifted > u_shifted_old) ? 1 : 0;
-
-//     // Realizamos la resta final en la parte más significativa (la extensión)
-//     // Balance final = u_extension - (overflow_de_producto + borrow_de_resta)
-//     int64_t final_balance = u_extension - (p_ext + borrow);
-
-//     // D5. Test de Resto (Corrección de signo)
-//     // Si el balance es negativo, significa que restamos demasiado -> q_hat era 1 unidad muy
-//     grande. if (final_balance < 0) {
-//         // D6. Add Back
-//         q_hat--;
-//         u_shifted += v; // Devolvemos una vez el divisor al resto
-//     }
-
-//     q_out = Uint128(0, q_hat);
-
-//     // D8. Desnormalizar Resto
-//     r_out = u_shifted >> s;
+#endif // UINT128_T_HPP
 
 //     return true;
 // }
