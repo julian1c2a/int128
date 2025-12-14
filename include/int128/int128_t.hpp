@@ -27,7 +27,7 @@
 #ifndef INT128_T_HPP
 #define INT128_T_HPP
 
-#include "uint128_t.hpp"
+#include "../uint128/uint128_t.hpp"
 #include <cstdint>
 #include <istream>
 #include <limits>

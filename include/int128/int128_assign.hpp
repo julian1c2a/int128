@@ -27,8 +27,8 @@
 #ifndef INT128_ASSIGN_HPP
 #define INT128_ASSIGN_HPP
 
+#include "../uint128/uint128_t.hpp"
 #include "int128_t.hpp"
-#include "uint128_t.hpp"
 #include <cstdint>
 #include <string>
 #include <type_traits>
