@@ -684,23 +684,25 @@ inline std::istream& operator>>(std::istream& is, uint128_t& value)
 // Constante MAX definida después de la clase
 constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
 
-#endif // UINT128_T_HPP
-       // ESQUEMA DE CÓDIGO PARA DIVISIÓN DE 128 BITS (Knuth D)
-       // // Helper especial: Multiplicación extendida (128 bits * 64 bits -> overflow de 128 bits)
-       // // Devuelve la parte "High" (bits 128..191) de la operación: u128 * v64
-// // Esto es necesario porque el operator* estándar de Uint128 trunca el resultado a 128 bits,
-// // y Knuth D necesita el bloque completo para la resta.
-// uint64_t multiplyMsgOverflow(Uint128 u, uint64_t v) {
-//     unsigned __int128 p_full = (unsigned __int128)u.words[1] * v;
-//     unsigned __int128 low_prod = (unsigned __int128)u.words[0] * v;
+#endif 
 
-//     // Calculamos el carry que viene de la parte baja hacia la alta
-//     unsigned __int128 mid_sum = (low_prod >> 64) + (uint64_t)p_full;
+// UINT128_T_HPP
+// ESQUEMA DE CÓDIGO PARA DIVISIÓN DE 128 BITS (Knuth D)
+// Helper especial: Multiplicación extendida (128 bits * 64 bits -> overflow de 128 bits)
+// Devuelve la parte "High" (bits 128..191) de la operación: u128 * v64
+// Esto es necesario porque el operator* estándar de Uint128 trunca el resultado a 128 bits,
+// y Knuth D necesita el bloque completo para la resta.
+uint64_t multiplyMsgOverflow(uint128 u, uint64_t v) {
+    uint128 p_full = uint128(u).high() * v;
+    uint128 low_prod = uint128(u).low() * v;
 
-//     // El overflow total son los bits superiores de p_full más cualquier carry de mid_sum
-//     uint64_t overflow = (uint64_t)(p_full >> 64) + (uint64_t)(mid_sum >> 64);
-//     return overflow;
-// }
+    // Calculamos el carry que viene de la parte baja hacia la alta
+    uint128_t mid_sum = (low_prod >> 64) + (uint64_t(p_full));
+
+    // El overflow total son los bits superiores de p_full más cualquier carry de mid_sum
+    uint64_t overflow = (uint64_t(p_full >> 64)) + (uint64_t(mid_sum >> 64));
+    return overflow;
+}
 
 // // ----------------------------------------------------------------------------------
 // // ALGORITMO D DE KNUTH (Limpiado)
