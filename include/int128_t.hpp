@@ -58,13 +58,13 @@ class int128_t
     /**
      * @brief Constructor por defecto (valor 0)
      */
-    constexpr int128_t() noexcept : data{0, 0} {}
+    explicit constexpr int128_t() noexcept : data{0, 0} {}
 
     /**
      * @brief Constructor desde enteros (cualquier tipo entero)
      */
     template <typename T>
-    constexpr int128_t(T value) noexcept
+    explicit constexpr int128_t(T value) noexcept
         requires(std::is_integral_v<T> && !std::is_same_v<T, bool>)
         : data{0, 0}
     {
@@ -82,7 +82,7 @@ class int128_t
     /**
      * @brief Constructor desde dos uint64_t (high, low)
      */
-    constexpr int128_t(uint64_t high, uint64_t low) noexcept : data{low, high} {}
+    explicit constexpr int128_t(uint64_t high, uint64_t low) noexcept : data{low, high} {}
 
     /**
      * @brief Constructor desde uint128_t (interpretación directa)
