@@ -6,7 +6,9 @@
 #include <cstdint>
 #include <iostream>
 #include <optional>
+#include <stdexcept>
 #include <string>
+#include <thread>
 #include <type_traits>
 #include <utility>
 
@@ -1017,21 +1019,32 @@ class uint128_t
     }
 
     // STRING CONVERSION (basic implementation)
+    // Conversión a string decimal (por defecto)
     std::string to_string() const
     {
+        return to_string_base(10);
+    }
+
+    // Conversión a string con base específica
+    std::string to_string_base(int base) const
+    {
+        if (base < 2 || base > 36) {
+            throw std::invalid_argument("Base debe estar entre 2 y 36");
+        }
+
         if (*this == uint128_t(0, 0)) {
             return "0";
         }
 
         std::string result;
         uint128_t temp = *this;
+        const char* digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         while (temp != uint128_t(0, 0)) {
-            const auto divmod = temp.divrem(uint128_t(0, 10));
+            const auto divmod = temp.divrem(uint128_t(0, static_cast<uint64_t>(base)));
             if (divmod.has_value()) {
-                const char digit =
-                    '0' + static_cast<char>(static_cast<uint64_t>(divmod.value().second));
-                result = digit + result;
+                const uint64_t remainder = static_cast<uint64_t>(divmod.value().second);
+                result = digits[remainder] + result;
                 temp = divmod.value().first;
             } else {
                 break;
@@ -1041,30 +1054,426 @@ class uint128_t
         return result.empty() ? "0" : result;
     }
 
+    // Conversiones específicas con prefijos
+    std::string to_string_hex(bool with_prefix = false) const
+    {
+        std::string result = to_string_base(16);
+        return with_prefix ? "0x" + result : result;
+    }
+
+    std::string to_string_bin(bool with_prefix = false) const
+    {
+        std::string result = to_string_base(2);
+        return with_prefix ? "0b" + result : result;
+    }
+
+    std::string to_string_oct(bool with_prefix = false) const
+    {
+        std::string result = to_string_base(8);
+        return with_prefix ? "0" + result : result;
+    }
+
+    // Función constexpr para convertir C-string a uint128_t
+    static constexpr uint128_t from_cstr(const char* str)
+    {
+        if (!str || !*str) {
+            return uint128_t(0, 0);
+        }
+
+        // Detectar base y posición inicial
+        int base = 10;
+        const char* start = str;
+
+        if (str[0] == '0' && str[1]) {
+            if (str[1] == 'x' || str[1] == 'X') {
+                base = 16;
+                start = str + 2;
+            } else if (str[1] == 'b' || str[1] == 'B') {
+                base = 2;
+                start = str + 2;
+            } else {
+                // Verificar si es octal válido
+                bool is_octal = true;
+                for (const char* p = str + 1; *p && is_octal; ++p) {
+                    if (*p < '0' || *p > '7') {
+                        is_octal = false;
+                    }
+                }
+                if (is_octal) {
+                    base = 8;
+                    start = str + 1;
+                }
+            }
+        }
+
+        return from_cstr_base(start, base);
+    }
+
+    // Función constexpr para convertir desde C-string con base específica
+    static constexpr uint128_t from_cstr_base(const char* str, int base)
+    {
+        if (!str || !*str || base < 2 || base > 36) {
+            return uint128_t(0, 0);
+        }
+
+        uint128_t result(0, 0);
+        const uint128_t base_val(0, static_cast<uint64_t>(base));
+
+        for (const char* p = str; *p; ++p) {
+            int digit_value = -1;
+
+            if (*p >= '0' && *p <= '9') {
+                digit_value = *p - '0';
+            } else if (*p >= 'A' && *p <= 'Z') {
+                digit_value = *p - 'A' + 10;
+            } else if (*p >= 'a' && *p <= 'z') {
+                digit_value = *p - 'a' + 10;
+            }
+
+            if (digit_value == -1 || digit_value >= base) {
+                // Caracteres inválidos terminan el parsing
+                break;
+            }
+
+            result = result * base_val + uint128_t(0, static_cast<uint64_t>(digit_value));
+        }
+
+        return result;
+    }
+
+    // Función para convertir a C-string (buffer estático con rotación)
+    const char* to_cstr() const
+    {
+        return to_cstr_base(10);
+    }
+
+    // Función para convertir a C-string con base específica
+    const char* to_cstr_base(int base) const
+    {
+        // Buffer estático rotativo para permitir múltiples llamadas
+        static thread_local char buffers[4][64]; // 4 buffers de 64 chars cada uno
+        static thread_local int current_buffer = 0;
+
+        current_buffer = (current_buffer + 1) % 4;
+        char* buffer = buffers[current_buffer];
+
+        if (base < 2 || base > 36) {
+            buffer[0] = '0';
+            buffer[1] = '\0';
+            return buffer;
+        }
+
+        if (*this == uint128_t(0, 0)) {
+            buffer[0] = '0';
+            buffer[1] = '\0';
+            return buffer;
+        }
+
+        const char* digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        char temp_buffer[64];
+        int pos = 63;
+        temp_buffer[63] = '\0';
+
+        uint128_t temp = *this;
+        while (temp != uint128_t(0, 0)) {
+            const auto divmod = temp.divrem(uint128_t(0, static_cast<uint64_t>(base)));
+            if (divmod.has_value()) {
+                const uint64_t remainder = static_cast<uint64_t>(divmod.value().second);
+                temp_buffer[--pos] = digits[remainder];
+                temp = divmod.value().first;
+            } else {
+                break;
+            }
+        }
+
+        // Copiar resultado al buffer rotativo
+        const char* result_start = &temp_buffer[pos];
+        int len = 0;
+        while (result_start[len] != '\0') {
+            buffer[len] = result_start[len];
+            ++len;
+        }
+        buffer[len] = '\0';
+
+        return buffer;
+    }
+
+    // Funciones C-string específicas por formato
+    const char* to_cstr_hex() const
+    {
+        return to_cstr_base(16);
+    }
+    const char* to_cstr_bin() const
+    {
+        return to_cstr_base(2);
+    }
+    const char* to_cstr_oct() const
+    {
+        return to_cstr_base(8);
+    }
+
     // Función estática para convertir string a uint128_t
+    // Función que detecta automáticamente la base del string
     static uint128_t from_string(const std::string& str)
     {
         if (str.empty()) {
             return uint128_t(0, 0);
         }
 
+        std::string cleaned = str;
+        int base = 10;
+        size_t start_pos = 0;
+
+        // Detectar prefijo y base
+        if (cleaned.size() > 2) {
+            if (cleaned.substr(0, 2) == "0x" || cleaned.substr(0, 2) == "0X") {
+                base = 16;
+                start_pos = 2;
+            } else if (cleaned.substr(0, 2) == "0b" || cleaned.substr(0, 2) == "0B") {
+                base = 2;
+                start_pos = 2;
+            }
+        }
+        if (cleaned.size() > 1 && cleaned[0] == '0' && base == 10) {
+            // Detectar octal (empieza con 0 pero no es 0x o 0b)
+            bool is_octal = true;
+            for (size_t i = 1; i < cleaned.size(); ++i) {
+                if (cleaned[i] < '0' || cleaned[i] > '7') {
+                    is_octal = false;
+                    break;
+                }
+            }
+            if (is_octal && cleaned.size() > 1) {
+                base = 8;
+                start_pos = 1;
+            }
+        }
+
+        return from_string_base(cleaned.substr(start_pos), base);
+    }
+
+    // Función para convertir desde string con base específica
+    static uint128_t from_string_base(const std::string& str, int base)
+    {
+        if (str.empty() || base < 2 || base > 36) {
+            return uint128_t(0, 0);
+        }
+
         uint128_t result(0, 0);
-        const uint128_t base(0, 10);
+        const uint128_t base_val(0, static_cast<uint64_t>(base));
 
         for (char c : str) {
-            if (c < '0' || c > '9') {
-                // Caracteres inválidos se ignoran (podrías lanzar excepción si prefieres)
+            int digit_value = -1;
+
+            if (c >= '0' && c <= '9') {
+                digit_value = c - '0';
+            } else if (c >= 'A' && c <= 'Z') {
+                digit_value = c - 'A' + 10;
+            } else if (c >= 'a' && c <= 'z') {
+                digit_value = c - 'a' + 10;
+            }
+
+            if (digit_value == -1 || digit_value >= base) {
+                // Caracteres inválidos se ignoran
                 continue;
             }
 
-            // result = result * 10 + (c - '0')
-            result *= base;
-            result += uint128_t(0, static_cast<uint64_t>(c - '0'));
+            result *= base_val;
+            result += uint128_t(0, static_cast<uint64_t>(digit_value));
         }
 
         return result;
     }
 };
+
+// ========================= OPERADORES FRIEND FUERA DE LA CLASE =========================
+// Para evitar ambigüedad con operadores existentes, se definen fuera de la clase
+
+// Operadores aritméticos simétricos para int
+inline constexpr uint128_t operator+(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) + rhs;
+}
+inline constexpr uint128_t operator-(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) - rhs;
+}
+inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) * rhs;
+}
+inline constexpr uint128_t operator/(int lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) / rhs;
+}
+inline constexpr uint128_t operator%(int lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) % rhs;
+}
+
+// Operadores aritméticos simétricos para uint32_t
+inline constexpr uint128_t operator+(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) + rhs;
+}
+inline constexpr uint128_t operator-(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) - rhs;
+}
+inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) * rhs;
+}
+inline constexpr uint128_t operator/(std::uint32_t lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) / rhs;
+}
+inline constexpr uint128_t operator%(std::uint32_t lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) % rhs;
+}
+
+// Operadores aritméticos simétricos para uint64_t
+inline constexpr uint128_t operator+(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) + rhs;
+}
+inline constexpr uint128_t operator-(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) - rhs;
+}
+inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) * rhs;
+}
+inline constexpr uint128_t operator/(std::uint64_t lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) / rhs;
+}
+inline constexpr uint128_t operator%(std::uint64_t lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) % rhs;
+}
+
+// Operadores de comparación simétricos para int
+inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) == rhs;
+}
+inline constexpr bool operator!=(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) != rhs;
+}
+inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) < rhs;
+}
+inline constexpr bool operator<=(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) <= rhs;
+}
+inline constexpr bool operator>(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) > rhs;
+}
+inline constexpr bool operator>=(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) >= rhs;
+}
+
+// Operadores de comparación simétricos para uint32_t
+inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) == rhs;
+}
+inline constexpr bool operator!=(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) != rhs;
+}
+inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) < rhs;
+}
+inline constexpr bool operator<=(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) <= rhs;
+}
+inline constexpr bool operator>(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) > rhs;
+}
+inline constexpr bool operator>=(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) >= rhs;
+}
+
+// Operadores de comparación simétricos para uint64_t
+inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) == rhs;
+}
+inline constexpr bool operator!=(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) != rhs;
+}
+inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) < rhs;
+}
+inline constexpr bool operator<=(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) <= rhs;
+}
+inline constexpr bool operator>(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) > rhs;
+}
+inline constexpr bool operator>=(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) >= rhs;
+}
+
+// Operadores bitwise simétricos para int
+inline constexpr uint128_t operator&(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) & rhs;
+}
+inline constexpr uint128_t operator|(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) | rhs;
+}
+inline constexpr uint128_t operator^(int lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) ^ rhs;
+}
+
+// Operadores bitwise simétricos para uint32_t
+inline constexpr uint128_t operator&(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) & rhs;
+}
+inline constexpr uint128_t operator|(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) | rhs;
+}
+inline constexpr uint128_t operator^(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) ^ rhs;
+}
+
+// Operadores bitwise simétricos para uint64_t
+inline constexpr uint128_t operator&(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) & rhs;
+}
+inline constexpr uint128_t operator|(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) | rhs;
+}
+inline constexpr uint128_t operator^(std::uint64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) ^ rhs;
+}
 
 // Constructor desde string (definido después de from_string)
 inline uint128_t::uint128_t(const std::string& str) : data{0ull, 0ull}
@@ -1090,6 +1499,44 @@ inline std::istream& operator>>(std::istream& is, uint128_t& value)
 
 // Constante MAX definida después de la clase
 constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
+
+// ========================= LITERALES DEFINIDOS POR EL USUARIO =========================
+// Namespace para los literales UDL
+namespace uint128_literals
+{
+
+// Literal para enteros pequeños (hasta uint64_t)
+constexpr uint128_t operator""_u128(unsigned long long value) noexcept
+{
+    return uint128_t(0, value);
+}
+
+// Literal para strings (soporta múltiples formatos)
+uint128_t operator""_u128(const char* str, std::size_t len)
+{
+    return uint128_t::from_string(std::string(str, len));
+}
+
+// Literales específicos por formato
+uint128_t operator""_u128_hex(const char* str, std::size_t len)
+{
+    return uint128_t::from_string_base(std::string(str, len), 16);
+}
+
+uint128_t operator""_u128_bin(const char* str, std::size_t len)
+{
+    return uint128_t::from_string_base(std::string(str, len), 2);
+}
+
+uint128_t operator""_u128_oct(const char* str, std::size_t len)
+{
+    return uint128_t::from_string_base(std::string(str, len), 8);
+}
+
+} // namespace uint128_literals
+
+// Conveniencia: importar literales al namespace global cuando se usa
+// using namespace uint128_literals;
 
 #endif // UINT128_T_HPP
 

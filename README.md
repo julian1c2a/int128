@@ -6,13 +6,18 @@ Una implementación completa y eficiente de enteros sin signo de 128 bits para C
 
 ```
 int128/
-├── include/                    # Headers públicos
+├── include/                    # Headers públicos (arquitectura modular)
 │   ├── uint128_t.hpp          # Implementación principal
-│   └── uint128_traits.hpp     # Extensiones STL
+│   ├── uint128_limits.hpp     # std::numeric_limits especializations
+│   ├── uint128_traits.hpp     # Type traits y std::hash
+│   ├── uint128_concepts.hpp   # C++20 concepts personalizados
+│   ├── uint128_algorithm.hpp  # Algoritmos optimizados
+│   ├── uint128_numeric.hpp    # Funciones numéricas C++20 (midpoint, clamp, etc.)
+│   └── uint128_simple_traits.hpp # Header de conveniencia (incluye todo)
 ├── tests/                     # Tests unitarios
 │   ├── basic_test.cpp
-│   ├── user_literals_test.cpp
-│   ├── string_constructor_test.cpp
+│   ├── final_traits_test.cpp  # Test completo de type traits
+│   ├── test_numeric_functions.cpp # Test funciones numéricas C++20
 │   └── ...
 ├── sources/                   # Código fuente de bibliotecas compiladas
 ├── build/                     # Archivos compilados
@@ -24,6 +29,9 @@ int128/
 │   ├── benchmarks/          # Resultados de benchmarks (.csv)
 │   ├── api.md              # Documentación de API
 │   └── examples.md         # Ejemplos de uso
+├── TRAITS_SUMMARY.md        # Resumen completo de type traits
+├── TODO.md                  # Estado del proyecto y roadmap
+├── LICENSE.txt              # Licencia Boost Software License 1.0  
 └── scripts/                 # Scripts de build y utilidades
 ```
 
@@ -101,6 +109,94 @@ Los resultados de performance se almacenan en `documentation/benchmarks/` como a
 - `string_conversion.csv` - Conversiones string ↔ uint128_t
 - `comparison_operations.csv` - Operaciones de comparación
 
+## �️ Arquitectura Modular
+
+uint128_t utiliza una **arquitectura modular** para mejor organización y mantenibilidad:
+
+### 📁 Módulos Principales
+
+#### Core (`uint128_t.hpp`)
+- Implementación principal de la clase uint128_t
+- Todas las operaciones aritméticas, bitwise y de comparación
+- Optimizaciones con intrínsecos del compilador
+- Conversiones string y literales de usuario
+
+#### Límites (`uint128_limits.hpp`) 
+- Especialización completa de `std::numeric_limits<uint128_t>`
+- Constantes numéricas y propiedades del tipo
+
+#### Traits (`uint128_traits.hpp`)
+- Type traits: `std::is_integral`, `std::is_unsigned`, etc.
+- `std::common_type` especializaciones
+- `std::hash<uint128_t>` para containers
+
+#### Conceptos (`uint128_concepts.hpp`)
+- Conceptos C++20 personalizados
+- Metaprogramación avanzada
+- Verificaciones automáticas de compatibilidad
+
+#### Algoritmos (`uint128_algorithm.hpp`) 
+- Algoritmos STL optimizados para uint128_t
+- Funciones especializadas (GCD/LCM de rangos, estadísticas)
+- Templates con concepts para type safety
+
+#### Numérico (`uint128_numeric.hpp`) 🆕
+- **Funciones C++20**: `std::midpoint`, `std::clamp`
+- **Manipulación de bits**: `std::popcount`, `std::countl_zero`, `std::bit_width`
+- **Potencias de 2**: `std::has_single_bit`, `std::bit_ceil`, `std::bit_floor`
+- **Rotaciones**: `std::rotl`, `std::rotr`
+- **Utilidades**: `isqrt`, `factorial`, `power`
+
+### 🎯 Uso Recomendado
+
+```cpp
+// Para uso completo, simplemente incluir:
+#include "uint128_simple_traits.hpp"  // Incluye todos los módulos
+
+// O incluir módulos específicos según necesidades:
+#include "uint128_t.hpp"              // Solo funcionalidad básica
+#include "uint128_limits.hpp"         // + numeric_limits
+#include "uint128_concepts.hpp"       // + conceptos C++20
+// etc...
+```
+
+## �🎯 Type Traits y STL Compatibility
+
+uint128_t incluye **completa compatibilidad con la biblioteca estándar de C++**:
+
+```cpp
+// Para usar traits completos, incluir:
+#include "uint128_simple_traits.hpp"
+
+// Type traits funcionan como esperado:
+static_assert(std::is_integral_v<uint128_t>);
+static_assert(std::is_unsigned_v<uint128_t>);
+static_assert(std::numeric_limits<uint128_t>::digits == 128);
+
+// C++20 concepts
+template<std::unsigned_integral T>
+void process(T value) { /* ... */ }
+process(uint128_t(42)); // ✅ Funciona
+
+// STL algorithms
+std::vector<uint128_t> vec = {3, 1, 4, 1, 5};
+std::sort(vec.begin(), vec.end()); // ✅ Funciona
+
+// Hash support para containers
+std::unordered_set<uint128_t> set;
+set.insert(uint128_t(123456789));
+```
+
+**Traits implementados:**
+- ✅ `std::numeric_limits` - Límites y propiedades numéricas
+- ✅ `std::is_integral` - Reconocido como tipo integral  
+- ✅ `std::is_unsigned` - Reconocido como tipo sin signo
+- ✅ `std::make_unsigned` - Transformación de tipo
+- ✅ `std::common_type` - Tipos comunes con enteros estándar
+- ✅ `std::hash` - Soporte para containers hash-based
+
+Ver [TRAITS_SUMMARY.md](TRAITS_SUMMARY.md) para detalles completos.
+
 ## 🚀 Ejemplos de Uso
 
 ```cpp
@@ -142,4 +238,14 @@ std::iota(vec.begin(), vec.end(), 1000_u128);
 
 ## 📝 Licencia
 
-[Especificar licencia aquí]
+**Boost Software License 1.0**
+
+Copyright (c) 2025 uint128_t Contributors
+
+Permission is hereby granted, free of charge, to any person or organization obtaining a copy of the software and accompanying documentation covered by this license (the "Software") to use, reproduce, display, distribute, execute, and transmit the Software, and to prepare derivative works of the Software, and to permit third-parties to whom the Software is furnished to do so, all subject to the following:
+
+The copyright notices in the Software and this entire statement, including the above license grant, this restriction and the following disclaimer, must be included in all copies of the Software, in whole or in part, and all derivative works of the Software, unless such copies or derivative works are solely in the form of machine-executable object code generated by a source language processor.
+
+**THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.**
+
+Ver [Boost Software License](https://www.boost.org/LICENSE_1_0.txt) para el texto completo de la licencia.

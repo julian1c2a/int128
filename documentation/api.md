@@ -1,8 +1,69 @@
-# Documentación de la API uint128_t
+# API Reference - uint128_t Library
 
 ## Descripción General
 
 `uint128_t` es una implementación completa de enteros sin signo de 128 bits compatible con C++20, diseñada para proporcionar alta precisión aritmética manteniendo la eficiencia y compatibilidad con la STL.
+
+## Estructura Modular
+
+La biblioteca está organizada en módulos especializados:
+
+- **Core** (`uint128_t.hpp`): Implementación principal
+- **Límites** (`uint128_limits.hpp`): std::numeric_limits especialization  
+- **Traits** (`uint128_traits.hpp`): Type traits y std::hash
+- **Concepts** (`uint128_concepts.hpp`): C++20 concepts
+- **Algoritmos** (`uint128_algorithm.hpp`): STL algorithms optimizados
+- **Numérico** (`uint128_numeric.hpp`): Funciones numéricas C++20 🆕
+
+## Funciones Numéricas C++20 (`uint128_numeric.hpp`)
+
+### Funciones Estándar
+
+```cpp
+// Punto medio entre dos valores (evita overflow)  
+uint128_t result = midpoint(uint128_t(100), uint128_t(200));  // 150
+
+// Restringe valor a un rango
+uint128_t clamped = clamp(value, uint128_t(0), uint128_t(255));
+```
+
+### Manipulación de Bits
+
+```cpp
+// Contar bits activados
+uint128_t count = popcount(value);
+
+// Contar ceros a la izquierda/derecha
+uint128_t leading_zeros = countl_zero(value);
+uint128_t trailing_zeros = countr_zero(value);
+
+// Ancho en bits (posición del bit más alto)
+uint128_t width = bit_width(value);
+
+// Comprobar si es potencia de 2
+bool is_power_of_2 = has_single_bit(value);
+
+// Siguiente/anterior potencia de 2
+uint128_t next_pow2 = bit_ceil(value);
+uint128_t prev_pow2 = bit_floor(value);
+```
+
+### Rotaciones y Utilidades
+
+```cpp
+// Rotar bits
+uint128_t rotated_left = rotl(value, 5);
+uint128_t rotated_right = rotr(value, 3);
+
+// Intercambio de bytes
+uint128_t swapped = byteswap(value);
+
+// Utilidades matemáticas
+uint128_t sqrt_val = isqrt(value);      // Raíz cuadrada entera
+uint128_t power_result = power(a, b);   // Potencia
+bool even = is_even(value);             // Paridad
+uint128_t diff = abs_diff(a, b);        // Diferencia absoluta
+```
 
 ## Constructores
 
