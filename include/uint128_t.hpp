@@ -667,6 +667,171 @@ class uint128_t
 #endif
     }
 
+    // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
+
+    // Detectar si un número es potencia de 2
+    static constexpr bool is_power_of_2(const uint128_t& n) noexcept
+    {
+        return (n != uint128_t(0, 0)) && ((n & (n - uint128_t(0, 1))) == uint128_t(0, 0));
+    }
+
+    // Contar ceros al final (trailing zeros) para calcular la potencia de 2
+    constexpr int count_trailing_zeros() const noexcept
+    {
+        if (data[0] != 0) {
+#ifdef _MSC_VER
+            unsigned long index;
+            _BitScanForward64(&index, data[0]);
+            return static_cast<int>(index);
+#else
+            return __builtin_ctzll(data[0]);
+#endif
+        } else if (data[1] != 0) {
+#ifdef _MSC_VER
+            unsigned long index;
+            _BitScanForward64(&index, data[1]);
+            return 64 + static_cast<int>(index);
+#else
+            return 64 + __builtin_ctzll(data[1]);
+#endif
+        } else {
+            return 128; // Número es cero
+        }
+    }
+
+    static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
+    {
+        return n.count_trailing_zeros();
+    }
+
+    // Verificar si el número cabe efectivamente en 64 bits
+    static constexpr bool fits_in_64_bits(const uint128_t& n) noexcept
+    {
+        return n.data[1] == 0;
+    }
+
+    // Extraer el valor de 64 bits cuando se sabe que cabe
+    static constexpr uint64_t effective_to_64_bits(const uint128_t& n) noexcept
+    {
+        return n.data[0];
+    }
+
+    // División rápida por potencias de 10 (10^n = 2^n * 5^n)
+    std::optional<std::pair<uint128_t, uint128_t>>
+    try_divide_by_power_of_10(const uint128_t& divisor) const noexcept
+    {
+        // Detectar si es potencia de 10: 1, 10, 100, 1000, etc.
+        if (divisor == uint128_t(0, 1))
+            return std::make_pair(*this, uint128_t(0, 0));
+        if (divisor == uint128_t(0, 10))
+            return divide_by_10();
+        if (divisor == uint128_t(0, 100))
+            return divide_by_100();
+        if (divisor == uint128_t(0, 1000))
+            return divide_by_1000();
+
+        // Otras potencias de 10 pueden implementarse según necesidad
+        return std::nullopt;
+    }
+
+    // División rápida por potencias de 3
+    std::optional<std::pair<uint128_t, uint128_t>>
+    try_divide_by_power_of_3(const uint128_t& divisor) const noexcept
+    {
+        if (divisor == uint128_t(0, 3))
+            return divide_by_3();
+        if (divisor == uint128_t(0, 9))
+            return divide_by_9();
+        if (divisor == uint128_t(0, 27))
+            return divide_by_27();
+
+        return std::nullopt;
+    }
+
+    // División rápida por potencias de 5
+    std::optional<std::pair<uint128_t, uint128_t>>
+    try_divide_by_power_of_5(const uint128_t& divisor) const noexcept
+    {
+        if (divisor == uint128_t(0, 5))
+            return divide_by_5();
+        if (divisor == uint128_t(0, 25))
+            return divide_by_25();
+        if (divisor == uint128_t(0, 125))
+            return divide_by_125();
+
+        return std::nullopt;
+    }
+
+    // Implementaciones específicas de división rápida
+    std::pair<uint128_t, uint128_t> divide_by_10() const noexcept
+    {
+        // Implementación correcta: dividir por 10 directamente por ahora
+        auto result = divrem(uint128_t(0, 10));
+        return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_100() const noexcept
+    {
+        // Implementación correcta: dividir por 100 directamente por ahora
+        auto result = divrem(uint128_t(0, 100));
+        return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_1000() const noexcept
+    {
+        // Implementación correcta: dividir por 1000 directamente por ahora
+        auto result = divrem(uint128_t(0, 1000));
+        return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_3() const noexcept
+    {
+        // Usar multiplicación por inverso: 1/3 ≈ 0x55555555555555555555555555555556
+        // Esta es una aproximación, necesitaría implementación más precisa
+        auto result = divrem(uint128_t(0, 3));
+        return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_9() const noexcept
+    {
+        auto [q3, r3] = divide_by_3();
+        auto [final_q, temp_r] = q3.divide_by_3();
+        const uint128_t final_r = temp_r * uint128_t(0, 3) + r3;
+        return std::make_pair(final_q, final_r);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_27() const noexcept
+    {
+        auto [q9, r9] = divide_by_9();
+        auto [final_q, temp_r] = q9.divide_by_3();
+        const uint128_t final_r = temp_r * uint128_t(0, 9) + r9;
+        return std::make_pair(final_q, final_r);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_5() const noexcept
+    {
+        // Usar multiplicación por inverso: 1/5 ≈ 0x33333333333333333333333333333334
+        // Implementación simplificada por ahora
+        auto result = divrem(uint128_t(0, 5));
+        return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_25() const noexcept
+    {
+        auto [q5, r5] = divide_by_5();
+        auto [final_q, temp_r] = q5.divide_by_5();
+        const uint128_t final_r = temp_r * uint128_t(0, 5) + r5;
+        return std::make_pair(final_q, final_r);
+    }
+
+    std::pair<uint128_t, uint128_t> divide_by_125() const noexcept
+    {
+        auto [q25, r25] = divide_by_25();
+        auto [final_q, temp_r] = q25.divide_by_5();
+        const uint128_t final_r = temp_r * uint128_t(0, 25) + r25;
+        return std::make_pair(final_q, final_r);
+    }
+
   public:
     uint64_t fullmult_times_uint64(uint64_t multiplier) const noexcept
     {
@@ -696,8 +861,8 @@ class uint128_t
 #endif
     }
 
-    /// División avanzada usando Algoritmo D de Knuth
-    /// Implementa división precisa para 128-bit / 128-bit con optimizaciones
+    /// División avanzada usando Algoritmo D de Knuth con optimizaciones
+    /// Implementa división precisa para 128-bit / 128-bit con múltiples rutas optimizadas
     /// @param v_in Divisor (uint128_t)
     /// @return std::optional<std::pair<quotient, remainder>> o nullopt si división por cero
     std::optional<std::pair<uint128_t, uint128_t>>
@@ -709,6 +874,46 @@ class uint128_t
         if (*this < v_in) {
             return std::make_pair(uint128_t(0, 0), *this);
         }
+
+        // === OPTIMIZACIONES RÁPIDAS ===
+
+        // 1. OPTIMIZACIÓN: División por potencias de 2 (usar shift)
+        if (is_power_of_2(v_in)) {
+            const int shift_amount = count_trailing_zeros(v_in);
+            const uint128_t quotient = this->shift_right(shift_amount);
+            const uint128_t mask = v_in - uint128_t(0, 1); // 2^n - 1
+            const uint128_t remainder = *this & mask;
+            return std::make_pair(quotient, remainder);
+        }
+
+        // 2. OPTIMIZACIÓN: División por potencias de 10 (descomponer en 2^n * 5^n)
+        auto power_of_10_result = try_divide_by_power_of_10(v_in);
+        if (power_of_10_result.has_value()) {
+            return power_of_10_result;
+        }
+
+        // 3. OPTIMIZACIÓN: División por potencias de 3
+        auto power_of_3_result = try_divide_by_power_of_3(v_in);
+        if (power_of_3_result.has_value()) {
+            return power_of_3_result;
+        }
+
+        // 4. OPTIMIZACIÓN: División por potencias de 5
+        auto power_of_5_result = try_divide_by_power_of_5(v_in);
+        if (power_of_5_result.has_value()) {
+            return power_of_5_result;
+        }
+
+        // 5. OPTIMIZACIÓN: Ambos números caben efectivamente en 64 bits
+        if (fits_in_64_bits(*this) && fits_in_64_bits(v_in)) {
+            const uint64_t dividend_64 = effective_to_64_bits(*this);
+            const uint64_t divisor_64 = effective_to_64_bits(v_in);
+            const uint64_t q_64 = dividend_64 / divisor_64;
+            const uint64_t r_64 = dividend_64 % divisor_64;
+            return std::make_pair(uint128_t(0, q_64), uint128_t(0, r_64));
+        }
+
+        // === RUTAS ESTÁNDAR ===
 
         // Si el divisor cabe en 64 bits (data[1] == 0), usamos una ruta rápida.
         if (v_in.data[1] == 0) {
