@@ -52,7 +52,7 @@ class int128_t
 
   public:
     // ===============================================================================
-    // CONSTRUCTORES - Constructor por defecto + constructor desde integrales básicos
+    // CONSTRUCTORES - Constructor por defecto + constructores básicos para compatibilidad
     // ===============================================================================
 
     /**
@@ -61,7 +61,7 @@ class int128_t
     constexpr int128_t() noexcept : data{0, 0} {}
 
     /**
-     * @brief Constructor desde tipos integrales básicos (mantiene trivialidad)
+     * @brief Constructor desde tipos integrales básicos (trivially copyable)
      */
     template <typename T> constexpr int128_t(T value) noexcept : data{0, 0}
     {
@@ -69,9 +69,8 @@ class int128_t
                       "T must be an integral type <= 8 bytes and not uint128_t");
         if constexpr (std::is_signed_v<T>) {
             if (value < 0) {
-                // Extensión de signo: propagar el bit de signo a través de ambos uint64_t
                 data[0] = static_cast<uint64_t>(value);
-                data[1] = UINT64_MAX; // Todos los bits en 1 para representar signo negativo
+                data[1] = UINT64_MAX; // Extensión de signo
             } else {
                 data[0] = static_cast<uint64_t>(value);
                 data[1] = 0;
@@ -94,9 +93,8 @@ class int128_t
     {
     }
 
-    // NOTA: Para construcciones más complejas, usar las funciones de fábrica en int128_factory.hpp:
-    // - make_int128(high, low) para construcción desde dos uint64_t
-    // - make_int128(uint128_value) para conversión desde uint128_t
+    // NOTA: También disponibles funciones assign en int128_assign.hpp:
+    // - assign_int128(target, high, low), assign_int128(target, value), etc.
 
     // ===============================================================================
     // ACCESSORS

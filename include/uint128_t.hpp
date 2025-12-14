@@ -66,17 +66,16 @@ class uint128_t
         data[0] = static_cast<uint64_t>(value);
     }
 
-    // CONSTRUCTORS - Constructor por defecto + constructor desde integrales básicos
+    // CONSTRUCTORS - Constructor por defecto + constructores básicos para compatibilidad
     constexpr uint128_t() noexcept : data{0ull, 0ull} {}
 
-    // Constructor básico para conversiones desde tipos integrales (mantiene trivialidad)
+    // Constructor básico desde tipos integrales (trivially copyable)
     template <typename T> constexpr uint128_t(T value) noexcept : data{0ull, 0ull}
     {
         static_assert(std::is_integral_v<T> && sizeof(T) <= 8,
                       "T must be an integral type <= 8 bytes");
         if constexpr (std::is_signed_v<T>) {
             if (value < 0) {
-                // Para negativos en tipo unsigned, mantenemos solo la parte baja
                 data[0] = static_cast<uint64_t>(value);
             } else {
                 data[0] = static_cast<uint64_t>(value);
@@ -89,12 +88,10 @@ class uint128_t
     // Constructor desde dos uint64_t (necesario para operaciones internas)
     constexpr uint128_t(uint64_t high, uint64_t low) noexcept : data{low, high} {}
 
-    // NOTA: Para construcciones más complejas, usar las funciones de fábrica en int128_factory.hpp:
-    // - make_uint128(high, low) para construcción desde dos uint64_t
-    // - make_uint128(str) para construcción desde string
+    // NOTA: También disponibles funciones assign en int128_assign.hpp:
+    // - assign_uint128(target, high, low), assign_uint128(target, value), etc.
 
-    // ASSIGNMENT OPERATORS - Eliminados para trivialidad
-    // El compilador genera versiones triviales automáticamente
+    // ASSIGNMENT OPERATORS - Solo los generados automáticamente por el compilador
 
     // CONVERSIONS
     explicit constexpr operator bool() const noexcept
