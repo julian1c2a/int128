@@ -47,6 +47,11 @@ class uint128_t
      * @brief Accede a los 64 bits superiores (high part) del número de 128 bits.
      * @return El valor de los 64 bits superiores como un `uint64_t`.
      * @property Es `constexpr` y `noexcept`.
+     * @test (Caso de prueba)
+     * @code{.cpp}
+     * // const uint128_t val(0x1234, 0x5678);
+     * // assert(val.high() == 0x1234);
+     * @endcode
      */
     constexpr uint64_t high() const noexcept
     {
@@ -57,6 +62,11 @@ class uint128_t
      * @brief Accede a los 64 bits inferiores (low part) del número de 128 bits.
      * @return El valor de los 64 bits inferiores como un `uint64_t`.
      * @property Es `constexpr` y `noexcept`.
+     * @test (Caso de prueba)
+     * @code{.cpp}
+     * // const uint128_t val(0x1234, 0x5678);
+     * // assert(val.low() == 0x5678);
+     * @endcode
      */
     constexpr uint64_t low() const noexcept
     {
@@ -71,6 +81,12 @@ class uint128_t
      * @pre T debe ser un tipo integral. Esta condición se verifica en tiempo de compilación.
      * @post La parte alta del `uint128_t` se actualiza con `static_cast<uint64_t>(value)`.
      * @property Es `constexpr` y `noexcept`.
+     * @test (Caso de prueba)
+     * @code{.cpp}
+     * // uint128_t val;
+     * // val.set_high(0xABCD);
+     * // assert(val.high() == 0xABCD);
+     * @endcode
      */
     template <typename T> constexpr void set_high(T value) noexcept
     {
@@ -85,6 +101,12 @@ class uint128_t
      * @pre T debe ser un tipo integral. Esta condición se verifica en tiempo de compilación.
      * @post La parte baja del `uint128_t` se actualiza con `static_cast<uint64_t>(value)`.
      * @property Es `constexpr` y `noexcept`.
+     * @test (Caso de prueba)
+     * @code{.cpp}
+     * // uint128_t val;
+     * // val.set_low(0x1234);
+     * // assert(val.low() == 0x1234);
+     * @endcode
      */
     template <typename T> constexpr void set_low(T value) noexcept
     {
