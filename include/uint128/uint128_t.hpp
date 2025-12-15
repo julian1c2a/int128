@@ -2002,6 +2002,3 @@ uint128_t operator""_u128_oct(const char* str, std::size_t len)
 // using namespace uint128_literals;
 
 #endif // UINT128_T_HPP
-
-//     return true;
-// }
