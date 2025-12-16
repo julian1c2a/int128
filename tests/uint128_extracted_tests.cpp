@@ -199,6 +199,38 @@ void test_high_low_constructor()
         uint128_t val32(h32, l32);
         assert(val32.high() == h32);
         assert(val32.low() == l32);
+
+        // Test with signed types (random values which might be negative)
+        int64_t h_signed = static_cast<int64_t>(h);
+        int64_t l_signed = static_cast<int64_t>(l);
+
+        uint128_t val_signed(h_signed, l_signed);
+
+        // Verification: The constructor casts to uint64_t, which for negative
+        // numbers behaves as 2's complement (standard behavior for unsigned
+        // cast).
+        assert(val_signed.high() == static_cast<uint64_t>(h_signed));
+        assert(val_signed.low() == static_cast<uint64_t>(l_signed));
+
+        // Test with mixed signed/unsigned
+        uint128_t val_mixed1(h_signed, l);
+        assert(val_mixed1.high() == static_cast<uint64_t>(h_signed));
+        assert(val_mixed1.low() == l);
+
+        uint128_t val_mixed2(h, l_signed);
+        assert(val_mixed2.high() == h);
+        assert(val_mixed2.low() == static_cast<uint64_t>(l_signed));
+
+        // Test with smaller signed types (to check sign extension behavior)
+        int8_t h_i8 = static_cast<int8_t>(h);    // Random 8-bit signed
+        int16_t l_i16 = static_cast<int16_t>(l); // Random 16-bit signed
+
+        uint128_t val_small_signed(h_i8, l_i16);
+
+        // Sign extension is expected here because the constructor takes T1, T2
+        // and casts to uint64_t. static_cast<uint64_t>(int8_t) extends sign.
+        assert(val_small_signed.high() == static_cast<uint64_t>(h_i8));
+        assert(val_small_signed.low() == static_cast<uint64_t>(l_i16));
     }
     std::cout << "test_high_low_constructor passed" << std::endl;
 }
