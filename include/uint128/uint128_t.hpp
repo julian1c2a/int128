@@ -203,10 +203,10 @@ class uint128_t
      * automáticamente (prefijos `0x` para hexadecimal, `0b` para binario, `0` para octal).
      * @property Es `constexpr` y `noexcept`.
      * @see from_cstr
-     * @test (Caso de prueba)
+     * @test (test_cstr_constructor)
      * @code{.cpp}
-     * uint128_t val("0x1234");
-     * assert(val.low() == 0x1234);
+     * uint128_t val("0x12346789ABCDEF00");
+     * assert(val.low() == 0x12346789 && val.high() == 0xABCDEF00);
      * @endcode
      */
     explicit constexpr uint128_t(const char* str) noexcept : data{0, 0}

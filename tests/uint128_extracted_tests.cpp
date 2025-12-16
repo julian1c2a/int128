@@ -235,6 +235,35 @@ void test_high_low_constructor()
     std::cout << "test_high_low_constructor passed" << std::endl;
 }
 
+void test_cstr_constructor()
+{
+    // Test hex parsing
+    uint128_t val_hex("0x123456789ABCDEF0");
+    assert(val_hex.low() == 0x123456789ABCDEF0ULL);
+    assert(val_hex.high() == 0);
+
+    // Test large hex parsing (spanning into high bits)
+    // 0x10000000000000000 (1 followed by 16 zeros) = 2^64
+    uint128_t val_large("0x10000000000000000");
+    assert(val_large.high() == 1);
+    assert(val_large.low() == 0);
+
+    // Test decimal parsing
+    uint128_t val_dec("12345");
+    assert(val_dec.low() == 12345);
+    assert(val_dec.high() == 0);
+
+    // Test octal parsing (prefix 0)
+    uint128_t val_oct("010"); // Octal 10 = Decimal 8
+    assert(val_oct.low() == 8);
+
+    // Test binary parsing (prefix 0b)
+    uint128_t val_bin("0b1010"); // Binary 1010 = Decimal 10
+    assert(val_bin.low() == 10);
+
+    std::cout << "test_cstr_constructor passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -249,6 +278,7 @@ int main()
     test_set_low();
     test_integral_constructor();
     test_high_low_constructor();
+    test_cstr_constructor();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
