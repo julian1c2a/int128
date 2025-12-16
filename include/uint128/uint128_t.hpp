@@ -226,7 +226,7 @@ class uint128_t
      * // assert(val.low() == 0x1234);
      * @endcode
      */
-    explicit constexpr uint128_t(const char* str) noexcept
+    explicit constexpr uint128_t(const char* str) noexcept : data{0, 0}
     {
         *this = from_cstr(str);
     }
@@ -1185,7 +1185,47 @@ class uint128_t
      * // assert(val.low() == 0x1234);
      * @endcode
      */
-    constexpr uint128_t& operator*=(const uint128_t& other) noexcept;
+    constexpr uint128_t& operator*=(const uint128_t& other) noexcept
+    {
+#if defined(__SIZEOF_INT128__)
+        // Ruta optimizada para compiladores con soporte nativo de 128 bits (GCC/Clang)
+        __uint128_t lhs = (static_cast<__uint128_t>(data[1]) << 64) | data[0];
+        __uint128_t rhs = (static_cast<__uint128_t>(other.data[1]) << 64) | other.data[0];
+        __uint128_t res = lhs * rhs;
+        data[0] = static_cast<uint64_t>(res);
+        data[1] = static_cast<uint64_t>(res >> 64);
+#else
+        // Fallback manual compatible con constexpr (para MSVC y otros)
+        const uint64_t lhs_lo = data[0];
+        const uint64_t lhs_hi = data[1];
+        const uint64_t rhs_lo = other.data[0];
+        const uint64_t rhs_hi = other.data[1];
+
+        // Multiplicación 64x64 -> 128 (parte baja)
+        const uint64_t u1 = lhs_lo & 0xffffffff;
+        const uint64_t v1 = rhs_lo & 0xffffffff;
+        uint64_t t = u1 * v1;
+        const uint64_t w3 = t & 0xffffffff;
+        uint64_t k = t >> 32;
+
+        const uint64_t u0 = lhs_lo >> 32;
+        t = (u0 * v1) + k;
+        k = t & 0xffffffff;
+        const uint64_t w1 = t >> 32;
+
+        const uint64_t v0 = rhs_lo >> 32;
+        t = (u1 * v0) + k;
+        k = t >> 32;
+
+        const uint64_t lo_hi = (u0 * v0) + w1 + k;
+        const uint64_t lo_lo = (t << 32) + w3;
+
+        // Resultado final
+        data[0] = lo_lo;
+        data[1] = (lhs_hi * rhs_lo) + (lhs_lo * rhs_hi) + lo_hi;
+#endif
+        return *this;
+    }
 
     /**
      * @brief Operador de multiplicación.
