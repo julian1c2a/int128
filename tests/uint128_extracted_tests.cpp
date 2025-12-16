@@ -182,6 +182,27 @@ void test_integral_constructor()
     std::cout << "test_integral_constructor passed" << std::endl;
 }
 
+void test_high_low_constructor()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t h = rng();
+        uint64_t l = rng();
+
+        // Test with uint64_t
+        uint128_t val(h, l);
+        assert(val.high() == h);
+        assert(val.low() == l);
+
+        // Test with mixed types (e.g. uint32_t)
+        uint32_t h32 = static_cast<uint32_t>(h);
+        uint32_t l32 = static_cast<uint32_t>(l);
+        uint128_t val32(h32, l32);
+        assert(val32.high() == h32);
+        assert(val32.low() == l32);
+    }
+    std::cout << "test_high_low_constructor passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -195,6 +216,7 @@ int main()
     test_set_high();
     test_set_low();
     test_integral_constructor();
+    test_high_low_constructor();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;

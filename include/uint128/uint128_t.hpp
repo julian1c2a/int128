@@ -64,9 +64,8 @@ class uint128_t
      * @endcode
      * @test (self_div_2_64_equ_high)
      * @code{.cpp}
-     * // // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
-     * // const uint128_t val(0x1234, 0x5678);
-     * // assert((val >> 64).low() == val.high());
+     * uint128_t val(0x1234, 0x5678);
+     * assert(val.high() == 0x1234);
      * @endcode
      */
     constexpr uint64_t high() const noexcept
@@ -84,9 +83,8 @@ class uint128_t
      * @endcode
      * @test (self_rem_2_64_equ_low)
      * @code{.cpp}
-     * // // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
-     * // const uint128_t val(0x1234, 0x5678);
-     * // assert((val >> 64).low() == val.high());
+     * uint128_t val(0x1234, 0x5678);
+     * assert(val.low() == 0x5678);
      * @endcode
      */
     constexpr uint64_t low() const noexcept
@@ -104,10 +102,9 @@ class uint128_t
      * @property Es `constexpr` y `noexcept`.
      * @test (set_high_test)
      * @code{.cpp}
-     * // // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
-     * // uint128_t val;
-     * // val.set_high(0xABCD);
-     * // assert(val.high() == 0xABCD);
+     * uint128_t val;
+     * val.set_high(0xABCD);
+     * assert(val.high() == 0xABCD);
      * @endcode
      */
     template <typename T> constexpr void set_high(T value) noexcept
@@ -125,10 +122,9 @@ class uint128_t
      * @property Es `constexpr` y `noexcept`.
      * @test (set_low_test)
      * @code{.cpp}
-     * // // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val;
+     * val.set_low(0x1234);
+     * assert(val.low() == 0x1234);
      * @endcode
      */
     template <typename T> constexpr void set_low(T value) noexcept
@@ -143,7 +139,8 @@ class uint128_t
      * @property Es `constexpr` y `noexcept`.
      * @test (default_constructor_test)
      * @code{.cpp}
-     * // // BUSCA LAS PRUEBAS NECESARIAS
+     * uint128_t val;
+     * assert(val.low() == 0 && val.high() == 0);
      * @endcode
      */
     constexpr uint128_t() noexcept : data{0ull, 0ull} {}
@@ -156,26 +153,12 @@ class uint128_t
      * @post El `uint128_t` se inicializa con `value`. Si `T` es un tipo con signo y `value` es
      * negativo, se realiza una extensión de signo para preservar el valor.
      * @property Es `constexpr` y `noexcept`.
-     * @test (integral_constructor_test_uint8)
-     * El siguiente test se debe verificar para cada tipo entero estándar:
+     * @test (integral_constructor_test)
      * @code{.cpp}
-     * // uint64_t vallow = random_value;
-     * // uint128_t val_1(0x1234,static_cast<uint8_t>(vallow));
-     * // assert( static_cast<uint8_t>(val_1.low()) == static_cast<uint8_t>(vallow) );
-     * // uint128_t val_2(0x1234,static_cast<uint16_t>(vallow));
-     * // assert( static_cast<uint16_t>(val_2.low()) == static_cast<uint16_t>(vallow) );
-     * // uint128_t val_3(0x1234,static_cast<uint32_t>(vallow));
-     * // assert( static_cast<uint32_t>(val_3.low()) == static_cast<uint32_t>(vallow) );
-     * // uint128_t val_4(0x1234,static_cast<uint64_t>(vallow));
-     * // assert( static_cast<uint64_t>(val_4.low()) == static_cast<uint64_t>(vallow));
-     * // uint128_t val_5(0x1234,static_cast<int8_t>(vallow));
-     * // assert( static_cast<int8_t>(val_5.low()) == static_cast<int8_t>(vallow) );
-     * // uint128_t val_6(0x1234,static_cast<int16_t>(vallow));
-     * // assert( static_cast<int16_t>(val_6.low()) == static_cast<int16_t>(vallow) );
-     * // uint128_t val_7(0x1234,static_cast<int32_t>(vallow));
-     * // assert( static_cast<int32_t>(val_7.low()) == static_cast<int32_t>(vallow) );
-     * // uint128_t val_8(0x1234,static_cast<int64_t>(vallow));
-     * // assert( static_cast<int64_t>(val_8.low()) == static_cast<int64_t>(vallow) );
+     * uint128_t val(42);
+     * assert(val.low() == 42);
+     * uint128_t neg(-1); // Extensión de signo
+     * assert(neg.high() == ~0ull);
      * @endcode
      */
     template <typename T>
@@ -198,17 +181,18 @@ class uint128_t
      * @param low El valor para los 64 bits inferiores.
      * @post El `uint128_t` se inicializa con los valores `high` y `low` proporcionados.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_high_low_constructor)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val(static_cast<uint16_t>(0x1), static_cast<uint32_t>(0x2));
+     * assert(val.high() == 0x1 && val.low() == 0x2);
      * @endcode
      */
     template <typename T1, typename T2>
     constexpr uint128_t(T1 high, T2 low) noexcept
         : data{static_cast<uint64_t>(low), static_cast<uint64_t>(high)}
     {
+        static_assert(std::is_integral_v<T1> && std::is_integral_v<T2>,
+                      "T1 and T2 must be integral types");
     }
 
     /**
@@ -221,9 +205,8 @@ class uint128_t
      * @see from_cstr
      * @test (Caso de prueba)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val("0x1234");
+     * assert(val.low() == 0x1234);
      * @endcode
      */
     explicit constexpr uint128_t(const char* str) noexcept : data{0, 0}
@@ -252,9 +235,9 @@ class uint128_t
      * @property Es `constexpr` y `noexcept`.
      * @test (Caso de prueba)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val;
+     * val = 100;
+     * assert(val.low() == 100);
      * @endcode
      */
     template <typename T> constexpr uint128_t& operator=(T value) noexcept
@@ -280,9 +263,9 @@ class uint128_t
      * @property Es `constexpr` y `noexcept`.
      * @test (Caso de prueba)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val;
+     * val = "0xFF";
+     * assert(val.low() == 255);
      * @endcode
      * @see from_cstr
      */
@@ -300,9 +283,8 @@ class uint128_t
      * @property Es `explicit`, `constexpr` y `noexcept`.
      * @test (Caso de prueba)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val(1);
+     * assert(static_cast<bool>(val) == true);
      * @endcode
      */
     explicit constexpr operator bool() const noexcept
@@ -321,9 +303,8 @@ class uint128_t
      * @property Es `explicit`, `constexpr` y `noexcept`.
      * @test (Caso de prueba)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * uint128_t val(123);
+     * assert(static_cast<int>(val) == 123);
      * @endcode
      */
     template <typename TYPE> explicit constexpr operator TYPE() const noexcept
