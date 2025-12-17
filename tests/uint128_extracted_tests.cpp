@@ -182,6 +182,109 @@ void test_integral_constructor()
     std::cout << "test_integral_constructor passed" << std::endl;
 }
 
+void test_integral_assignment()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t rand_val = rng();
+        uint128_t val;
+
+        // --- UNSIGNED TYPES (Siempre high=0) ---
+
+        // uint8_t
+        val = uint128_t(rng(), rng()); // Ensuciar valor previo
+        val = static_cast<uint8_t>(rand_val);
+        assert(static_cast<uint8_t>(val.low()) == static_cast<uint8_t>(rand_val));
+        assert(val.high() == 0ull);
+
+        // uint16_t
+        val = uint128_t(rng(), rng());
+        val = static_cast<uint16_t>(rand_val);
+        assert(static_cast<uint16_t>(val.low()) == static_cast<uint16_t>(rand_val));
+        assert(val.high() == 0ull);
+
+        // uint32_t
+        val = uint128_t(rng(), rng());
+        val = static_cast<uint32_t>(rand_val);
+        assert(static_cast<uint32_t>(val.low()) == static_cast<uint32_t>(rand_val));
+        assert(val.high() == 0ull);
+
+        // uint64_t
+        val = uint128_t(rng(), rng());
+        val = static_cast<uint64_t>(rand_val);
+        assert(static_cast<uint64_t>(val.low()) == static_cast<uint64_t>(rand_val));
+        assert(val.high() == 0ull);
+
+        // --- SIGNED TYPES (Positivos: high=0) ---
+
+        // int8_t
+        int8_t v_i8_pos = static_cast<int8_t>(rand_val & 0x7F);
+        val = uint128_t(rng(), rng());
+        val = v_i8_pos;
+        assert(static_cast<int8_t>(val.low()) == v_i8_pos);
+        assert(val.high() == 0ull);
+
+        // int16_t
+        int16_t v_i16_pos = static_cast<int16_t>(rand_val & 0x7FFF);
+        val = uint128_t(rng(), rng());
+        val = v_i16_pos;
+        assert(static_cast<int16_t>(val.low()) == v_i16_pos);
+        assert(val.high() == 0ull);
+
+        // int32_t
+        int32_t v_i32_pos = static_cast<int32_t>(rand_val & 0x7FFFFFFF);
+        val = uint128_t(rng(), rng());
+        val = v_i32_pos;
+        assert(static_cast<int32_t>(val.low()) == v_i32_pos);
+        assert(val.high() == 0ull);
+
+        // int64_t
+        int64_t v_i64_pos = static_cast<int64_t>(rand_val & 0x7FFFFFFFFFFFFFFFULL);
+        val = uint128_t(rng(), rng());
+        val = v_i64_pos;
+        assert(static_cast<int64_t>(val.low()) == v_i64_pos);
+        assert(val.high() == 0ull);
+
+        // --- SIGNED TYPES (Negativos: high=~0) ---
+
+        // int8_t
+        int8_t v_i8_neg = static_cast<int8_t>(rand_val | 0x80);
+        if (v_i8_neg >= 0)
+            v_i8_neg = -1;
+        val = uint128_t(rng(), rng());
+        val = v_i8_neg;
+        assert(static_cast<int8_t>(val.low()) == v_i8_neg);
+        assert(val.high() == ~0ull);
+
+        // int16_t
+        int16_t v_i16_neg = static_cast<int16_t>(rand_val | 0x8000);
+        if (v_i16_neg >= 0)
+            v_i16_neg = -1;
+        val = uint128_t(rng(), rng());
+        val = v_i16_neg;
+        assert(static_cast<int16_t>(val.low()) == v_i16_neg);
+        assert(val.high() == ~0ull);
+
+        // int32_t
+        int32_t v_i32_neg = static_cast<int32_t>(rand_val | 0x80000000);
+        if (v_i32_neg >= 0)
+            v_i32_neg = -1;
+        val = uint128_t(rng(), rng());
+        val = v_i32_neg;
+        assert(static_cast<int32_t>(val.low()) == v_i32_neg);
+        assert(val.high() == ~0ull);
+
+        // int64_t
+        int64_t v_i64_neg = static_cast<int64_t>(rand_val | 0x8000000000000000ULL);
+        if (v_i64_neg >= 0)
+            v_i64_neg = -1;
+        val = uint128_t(rng(), rng());
+        val = v_i64_neg;
+        assert(static_cast<int64_t>(val.low()) == v_i64_neg);
+        assert(val.high() == ~0ull);
+    }
+    std::cout << "test_integral_assignment passed" << std::endl;
+}
+
 void test_high_low_constructor()
 {
     for (int i = 0; i < 1000; ++i) {
@@ -277,6 +380,7 @@ int main()
     test_set_high();
     test_set_low();
     test_integral_constructor();
+    test_integral_assignment();
     test_high_low_constructor();
     test_cstr_constructor();
 

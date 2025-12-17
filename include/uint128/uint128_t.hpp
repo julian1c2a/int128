@@ -233,11 +233,11 @@ class uint128_t
      * `T` es un tipo con signo y `value` es negativo.
      * @return Una referencia a `*this`.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_integral_assignment)
      * @code{.cpp}
-     * uint128_t val;
-     * val = 100;
-     * assert(val.low() == 100);
+     * //   Similar a test_integral_constructor
+     * //   Idéntico excepto que se crea una
+     * // variable con un valor inicial y luego se asigna otro
      * @endcode
      */
     template <typename T> constexpr uint128_t& operator=(T value) noexcept
@@ -2487,25 +2487,25 @@ constexpr uint128_t operator""_u128(unsigned long long value) noexcept
 }
 
 // Literal para strings (soporta múltiples formatos)
-uint128_t operator""_u128(const char* str, std::size_t len)
+constexpr uint128_t operator""_u128(const char* str, std::size_t)
 {
-    return uint128_t::from_string(std::string(str, len));
+    return uint128_t::from_cstr(str);
 }
 
 // Literales específicos por formato
-uint128_t operator""_u128_hex(const char* str, std::size_t len)
+constexpr uint128_t operator""_u128_hex(const char* str, std::size_t)
 {
-    return uint128_t::from_string_base(std::string(str, len), 16);
+    return uint128_t::from_cstr_base(str, 16);
 }
 
-uint128_t operator""_u128_bin(const char* str, std::size_t len)
+constexpr uint128_t operator""_u128_bin(const char* str, std::size_t)
 {
-    return uint128_t::from_string_base(std::string(str, len), 2);
+    return uint128_t::from_cstr_base(str, 2);
 }
 
-uint128_t operator""_u128_oct(const char* str, std::size_t len)
+constexpr uint128_t operator""_u128_oct(const char* str, std::size_t)
 {
-    return uint128_t::from_string_base(std::string(str, len), 8);
+    return uint128_t::from_cstr_base(str, 8);
 }
 
 } // namespace uint128_literals
