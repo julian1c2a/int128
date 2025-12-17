@@ -483,7 +483,7 @@ class uint128_t
      * // // y sumamos valores aleatorios "uint128_t b"
      * // // si el valor de "b" es 0, "a" no debe cambiar
      * // // si el valor de "b" es 1, "a" debe incrementarse en 1
-     * // // si el valor de "b" es pequeño, vemos si es igual 
+     * // // si el valor de "b" es pequeño, vemos si es igual
      * // // a+=b, a == (++a b veces)
      * // // vemos que a' = a, b' = b, a' += b, b' += a,  a' == b'
      * // // // y a'' = a, a' = a, b' = b, a' += b, a' += c, b' += c,  a'' += b',
@@ -835,11 +835,14 @@ class uint128_t
      * @return Un `std::optional` que contiene un `std::pair` con el cociente (`first`) y el resto
      * (`second`). El `optional` está vacío si ocurre una división por cero.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_divrem)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // Tanto para esta método como para los operadores / y %
+     * // // como para divisores de todos los tipos integrales soportados
+     * // // // casos especiales: división por 0, división por 1, división por potencia de 2,
+     * // // // dividendos menores que el divisor, dividendos iguales al divisor
+     * // // // casos generales: varios dividendos y divisores aleatorios
+     * // // // verificar que (quotient * divisor + remainder) == dividend
      * @endcode
      */
     constexpr std::optional<std::pair<uint128_t, uint128_t>>
