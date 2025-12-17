@@ -938,6 +938,47 @@ void test_comparison_operators()
     std::cout << "test_comparison_operators passed" << std::endl;
 }
 
+using namespace uint128_literals;
+
+void test_divrem_basic()
+{
+    std::cout << "Testing divrem basic..." << std::endl;
+    uint128_t a = 100_u128;
+    uint128_t b = 7_u128;
+
+    auto res = a.divrem(b);
+    assert(res.has_value());
+    assert(res->first == 14_u128);
+    assert(res->second == 2_u128);
+    std::cout << "  ✅ Basic OK" << std::endl;
+}
+
+void test_divrem_zero()
+{
+    std::cout << "Testing divrem zero..." << std::endl;
+    uint128_t a = 100_u128;
+    auto res = a.divrem(0_u128);
+    assert(!res.has_value());
+    std::cout << "  ✅ Zero OK" << std::endl;
+}
+
+void test_divrem_large()
+{
+    std::cout << "Testing divrem large..." << std::endl;
+    // 2^100
+    uint128_t large = 1_u128 << 100;
+    uint128_t divisor = 3_u128;
+
+    auto res = large.divrem(divisor);
+
+    // Verificación: dividendo = cociente * divisor + resto
+    assert(res->first * divisor + res->second == large);
+    // Resto debe ser menor que divisor (en valor absoluto)
+    assert(res->second < divisor);
+
+    std::cout << "  ✅ Large OK" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -973,6 +1014,9 @@ int main()
     test_effective_length();
     test_is_power_of_2();
     test_comparison_operators();
+    test_divrem_basic();
+    test_divrem_zero();
+    test_divrem_large();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
