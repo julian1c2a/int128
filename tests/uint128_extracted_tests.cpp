@@ -743,23 +743,199 @@ void test_bitwise_operators()
     std::cout << "test_bitwise_operators passed" << std::endl;
 }
 
-void test_shift_operators()
+void test_shift_left()
 {
+    // Test basic left shift
     uint128_t val(0, 1);
+    assert((val << 1) == uint128_t(0, 2));
+    assert((val << 63) == uint128_t(0, 1ULL << 63));
 
     // Left shift
     assert((val << 1) == uint128_t(0, 2));
     assert((val << 63) == uint128_t(0, 0x8000000000000000ULL));
+    // Test shift across boundary
     assert((val << 64) == uint128_t(1, 0));
     assert((val << 127) == uint128_t(0x8000000000000000ULL, 0));
+    assert((val << 127) == uint128_t(1ULL << 63, 0));
 
     // Right shift
     uint128_t val2(0x8000000000000000ULL, 0);
     assert((val2 >> 1) == uint128_t(0x4000000000000000ULL, 0));
     assert((val2 >> 64) == uint128_t(0, 0x8000000000000000ULL));
     assert((val2 >> 127) == uint128_t(0, 1));
+    // Test shift by 0
+    assert((val << 0) == val);
 
     std::cout << "test_shift_operators passed" << std::endl;
+    // Test shift by >= 128
+    assert((val << 128) == uint128_t(0, 0));
+    assert((val << 200) == uint128_t(0, 0));
+
+    // Test assignment operator
+    uint128_t val_assign(0, 1);
+    val_assign <<= 10;
+    assert(val_assign == uint128_t(0, 1024));
+    val_assign <<= 60; // total shift 70
+    assert(val_assign == (uint128_t(1) << 70));
+
+    std::cout << "test_shift_left passed" << std::endl;
+}
+
+void test_shift_right()
+{
+    // Test basic right shift
+    uint128_t val(1ULL << 63, 0); // MSB of high part is 1
+    assert((val >> 1) == uint128_t(1ULL << 62, 0));
+    assert((val >> 63) == uint128_t(1, 0));
+
+    // Test shift across boundary
+    assert((val >> 64) == uint128_t(0, 1ULL << 63));
+    assert((val >> 127) == uint128_t(0, 1));
+
+    // Test shift by 0
+    assert((val >> 0) == val);
+
+    // Test shift by >= 128
+    assert((val >> 128) == uint128_t(0, 0));
+    assert((val >> 200) == uint128_t(0, 0));
+
+    // Test assignment operator
+    uint128_t val_assign(1ULL << 63, 0);
+    val_assign >>= 10;
+    assert(val_assign == (uint128_t(1ULL << 63, 0) >> 10));
+    val_assign >>= 60; // total shift 70
+    assert(val_assign == (uint128_t(1ULL << 63, 0) >> 70));
+
+    std::cout << "test_shift_right passed" << std::endl;
+}
+
+void test_effective_length()
+{
+    // Test 0
+    uint128_t zero(0, 0);
+    assert(zero.effective_length() == 0);
+
+    // Test 1
+    uint128_t one(0, 1);
+    assert(one.effective_length() == 1);
+
+    // Test powers of 2
+    for (int i = 0; i < 128; ++i) {
+        uint128_t val = uint128_t(1) << i;
+        assert(val.effective_length() == i + 1);
+    }
+
+    // Test max value
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    assert(max_val.effective_length() == 128);
+
+    std::cout << "test_effective_length passed" << std::endl;
+}
+
+void test_is_power_of_2()
+{
+    // Test 0
+    uint128_t zero(0, 0);
+    assert(!zero.is_power_of_2());
+
+    // Test powers of 2
+    for (int i = 0; i < 128; ++i) {
+        uint128_t val = uint128_t(1) << i;
+        assert(val.is_power_of_2());
+    }
+
+    // Test non-powers of 2
+    for (int i = 2; i < 128; ++i) {
+        uint128_t val = (uint128_t(1) << i) + uint128_t(1);
+        assert(!val.is_power_of_2());
+    }
+
+    // Test max value (all ones)
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    assert(!max_val.is_power_of_2());
+
+    std::cout << "test_is_power_of_2 passed" << std::endl;
+}
+
+void test_comparison_operators()
+{
+    // Equality / Inequality
+    uint128_t zero(0);
+    uint128_t one(1);
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+
+    assert(zero == zero);
+    assert(one == one);
+    assert(max_val == max_val);
+    assert(!(zero == one));
+    assert(zero != one);
+    assert(!(zero != zero));
+
+    // Less than / Greater than
+    assert(zero < one);
+    assert(one > zero);
+    assert(!(one < zero));
+    assert(!(zero > one));
+
+    // High part comparison
+    uint128_t h1(1, 0);
+    uint128_t h2(2, 0);
+    assert(h1 < h2);
+    assert(h2 > h1);
+
+    // Low part comparison with equal high
+    uint128_t hl1(1, 10);
+    uint128_t hl2(1, 20);
+    assert(hl1 < hl2);
+    assert(hl2 > hl1);
+
+    // Mixed comparison (high part dominates)
+    uint128_t m1(1, UINT64_MAX);
+    uint128_t m2(2, 0);
+    assert(m1 < m2);
+    assert(m2 > m1);
+
+    // <= and >=
+    assert(zero <= zero);
+    assert(zero <= one);
+    assert(one >= one);
+    assert(one >= zero);
+    assert(!(one <= zero));
+    assert(!(zero >= one));
+
+    // Edge cases
+    uint128_t max_low(0, UINT64_MAX);
+    uint128_t min_high(1, 0);
+    assert(max_low < min_high);
+    assert(min_high > max_low);
+
+    uint128_t max_u128(UINT64_MAX, UINT64_MAX);
+    uint128_t almost_max(UINT64_MAX, UINT64_MAX - 1);
+    assert(almost_max < max_u128);
+    assert(max_u128 > almost_max);
+
+    // Random tests
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t h1_r = rng();
+        uint64_t l1_r = rng();
+        uint64_t h2_r = rng();
+        uint64_t l2_r = rng();
+
+        uint128_t u1(h1_r, l1_r);
+        uint128_t u2(h2_r, l2_r);
+
+        bool real_less = (h1_r < h2_r) || (h1_r == h2_r && l1_r < l2_r);
+        bool real_eq = (h1_r == h2_r) && (l1_r == l2_r);
+
+        assert((u1 < u2) == real_less);
+        assert((u1 > u2) == (!real_less && !real_eq));
+        assert((u1 == u2) == real_eq);
+        assert((u1 != u2) == !real_eq);
+        assert((u1 <= u2) == (real_less || real_eq));
+        assert((u1 >= u2) == (!real_less));
+    }
+
+    std::cout << "test_comparison_operators passed" << std::endl;
 }
 
 int main()
@@ -793,6 +969,11 @@ int main()
     test_trailing_zeros();
     test_bitwise_operators();
     test_shift_operators();
+    test_shift_left();
+    test_shift_right();
+    test_effective_length();
+    test_is_power_of_2();
+    test_comparison_operators();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;

@@ -684,11 +684,7 @@ class uint128_t
      * @post Si `positions` es <= 0, devuelve `*this`. Si es >= 128, devuelve 0.
      * @return Un nuevo `uint128_t` con el resultado del desplazamiento.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * @test (test_shift_left)
      * @endcode
      */
     constexpr uint128_t shift_left(int positions) const noexcept
@@ -714,12 +710,7 @@ class uint128_t
      * @post Si `positions` es <= 0, devuelve `*this`. Si es >= 128, devuelve 0.
      * @return Un nuevo `uint128_t` con el resultado del desplazamiento.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_shift_right)
      */
     constexpr uint128_t shift_right(int positions) const noexcept
     {
@@ -744,12 +735,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si ambos valores son idénticos, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_equal_operator)
      */
     constexpr bool operator==(const uint128_t& other) const noexcept
     {
@@ -761,12 +747,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si los valores no son idénticos, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_not_equal_operator)
      */
     constexpr bool operator!=(const uint128_t& other) const noexcept
     {
@@ -778,12 +759,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es estrictamente menor que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_less_operator)
      */
     constexpr bool operator<(const uint128_t& other) const noexcept
     {
@@ -798,12 +774,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es menor o igual que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_less_equal_operator)
      */
     constexpr bool operator<=(const uint128_t& other) const noexcept
     {
@@ -815,12 +786,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es estrictamente mayor que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_greater_operator)
      */
     constexpr bool operator>(const uint128_t& other) const noexcept
     {
@@ -832,12 +798,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es mayor o igual que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_greater_equal_operator)
      */
     constexpr bool operator>=(const uint128_t& other) const noexcept
     {
