@@ -342,7 +342,7 @@ class uint128_t
      * // // por lo tanto está definida la macro __SIZEOF_INT128__
      * @endcode
      */
-    constexpr operator __uint128_t() const noexcept
+    explicit constexpr operator __uint128_t() const noexcept
     {
         return (static_cast<__uint128_t>(data[1]) << 64) | data[0];
     }
@@ -359,7 +359,7 @@ class uint128_t
      * // // por lo tanto está definida la macro __SIZEOF_INT128__
      * @endcode
      */
-    constexpr operator __int128_t() const noexcept
+    explicit constexpr operator __int128_t() const noexcept
     {
         return static_cast<__int128_t>((static_cast<__uint128_t>(data[1]) << 64) | data[0]);
     }

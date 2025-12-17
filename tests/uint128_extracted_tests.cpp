@@ -52,9 +52,7 @@ void test_sizeof_low_is_8_bytes()
 
 void test_self_rem_2_64_equ_low()
 {
-    // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
-    // Nota: La documentación original tenía un error de copy-paste en el bloque
-    // de código. Se implementa la verificación lógica: low() debe corresponder a
+    //   Se implementa la verificación lógica: low() debe corresponder a
     // los 64 bits bajos.
     for (int i = 0; i < 1000; ++i) {
         const uint64_t h = rng();
@@ -1355,515 +1353,531 @@ void test_divrem_random_integral_divisor()
         uint128_t a(rng(), rng());
 
         // Divisor como uint64_t
-        auto b_u64(static_cast<uint64_t>(rng()));
+        {
+            auto b_u64(static_cast<uint64_t>(rng()));
 
-        if (b_u64 == 0_u128)
-            b_u64 = 1_u128;
+            if (b_u64 == 0_u128)
+                b_u64 = 1_u128;
 
-        auto res_u64 = a.divrem(b_u64);
-        assert(res_u64.has_value());
-        uint128_t q_u64 = res_u64->first;
-        uint128_t r_u64 = res_u64->second;
-        assert(r_u64 < b_u64);
+            auto res_u64 = a.divrem(b_u64);
+            assert(res_u64.has_value());
+            uint128_t q_u64 = res_u64->first;
+            uint128_t r_u64 = res_u64->second;
+            assert(r_u64 < b_u64);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_u64 > 1 && a > 0_u128) {
-            assert(q_u64 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_u64 > 1 && a > 0_u128) {
+                assert(q_u64 < a);
+            }
 
-        // Check operators
-        uint128_t a_div = a;
-        a_div /= b_u64;
-        assert(a_div == q_u64);
+            // Check operators
+            uint128_t a_div = a;
+            a_div /= b_u64;
+            assert(a_div == q_u64);
 
-        uint128_t a_mod = a;
-        a_mod %= b_u64;
-        assert(a_mod == r_u64);
+            uint128_t a_mod = a;
+            a_mod %= b_u64;
+            assert(a_mod == r_u64);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_u64;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_u64;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_u64 = a_minus_r.divrem(b_u64);
-        assert(check1_u64.has_value());
-        assert(check1_u64->first == q_u64);
-        assert(check1_u64->second == 0ULL);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_u64 = a_minus_r.divrem(b_u64);
+            assert(check1_u64.has_value());
+            assert(check1_u64->first == q_u64);
+            assert(check1_u64->second == 0ULL);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_u64 > 0_u128) {
-            auto check2_u64 = a_minus_r.divrem(q_u64);
-            assert(check2_u64.has_value());
-            assert(check2_u64->first == b_u64);
-            assert(check2_u64->second == 0ULL);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_u64 > 0_u128) {
+                auto check2_u64 = a_minus_r.divrem(q_u64);
+                assert(check2_u64.has_value());
+                assert(check2_u64->first == b_u64);
+                assert(check2_u64->second == 0ULL);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_u64 = (a - 1_u128).divrem(b_u64);
-            assert(check3_u64.has_value());
-            if (r_u64 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_u64->first == q_u64);
-                assert(check3_u64->second == r_u64 - 1_u128);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                assert(check3_u64->first == q_u64 - 1_u128);
-                assert(check3_u64->second == b_u64 - 1_u128);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_u64 = (a - 1_u128).divrem(b_u64);
+                assert(check3_u64.has_value());
+                if (r_u64 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_u64->first == q_u64);
+                    assert(check3_u64->second == r_u64 - 1_u128);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    assert(check3_u64->first == q_u64 - 1_u128);
+                    assert(check3_u64->second == b_u64 - 1_u128);
+                }
             }
         }
 
         // Divisor como int64_t
-        auto b_i64(static_cast<int64_t>(rng()));
+        {
+            auto b_i64(static_cast<int64_t>(rng()));
 
-        if (b_i64 == 0)
-            b_i64 = 1;
-        auto res_i64 = a.divrem(b_i64);
-        assert(res_i64.has_value());
-        uint128_t q_i64 = res_i64->first;
-        uint128_t r_i64 = res_i64->second;
-        assert(r_i64 < b_i64);
+            if (b_i64 == 0)
+                b_i64 = 1;
+            auto res_i64 = a.divrem(b_i64);
+            assert(res_i64.has_value());
+            uint128_t q_i64 = res_i64->first;
+            uint128_t r_i64 = res_i64->second;
+            assert(r_i64 < b_i64);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_i64 > 1 && a > 0_u128) {
-            assert(q_i64 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_i64 > 1 && a > 0_u128) {
+                assert(q_i64 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_i64;
-        assert(a_div == q_i64);
+            // Check operators
+            a_div = a;
+            a_div /= b_i64;
+            assert(a_div == q_i64);
 
-        a_mod = a;
-        a_mod %= b_i64;
-        assert(a_mod == r_i64);
+            a_mod = a;
+            a_mod %= b_i64;
+            assert(a_mod == r_i64);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_i64;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_i64;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_i64 = a_minus_r.divrem(b_i64);
-        assert(check1_i64.has_value());
-        assert(check1_i64->first == q_i64);
-        assert(check1_i64->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_i64 = a_minus_r.divrem(b_i64);
+            assert(check1_i64.has_value());
+            assert(check1_i64->first == q_i64);
+            assert(check1_i64->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_i64 > 0_u128) {
-            auto check2_i64 = a_minus_r.divrem(q_i64);
-            assert(check2_i64.has_value());
-            assert(check2_i64->first == b_i64);
-            assert(check2_i64->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_i64 > 0_u128) {
+                auto check2_i64 = a_minus_r.divrem(q_i64);
+                assert(check2_i64.has_value());
+                assert(check2_i64->first == b_i64);
+                assert(check2_i64->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_i64 = (a - 1_u128).divrem(b_i64);
-            assert(check3_i64.has_value());
-            if (r_i64 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_i64->first == q_i64);
-                assert(check3_i64->second == r_i64 - 1_u128);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_i64 = q_i64;
-                --q2_i64;
-                auto b2_i64 = b_i64;
-                --b2_i64;
-                assert(check3_i64->first == q2_i64);
-                assert(check3_i64->second == b2_i64);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_i64 = (a - 1_u128).divrem(b_i64);
+                assert(check3_i64.has_value());
+                if (r_i64 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_i64->first == q_i64);
+                    assert(check3_i64->second == r_i64 - 1_u128);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_i64 = q_i64;
+                    --q2_i64;
+                    auto b2_i64 = b_i64;
+                    --b2_i64;
+                    assert(check3_i64->first == q2_i64);
+                    assert(check3_i64->second == b2_i64);
+                }
             }
         }
 
         // Divisor como uint32_t
-        auto b_u32(static_cast<uint32_t>(rng()));
+        {
+            auto b_u32(static_cast<uint32_t>(rng()));
 
-        if (b_u32 == 0)
-            b_u32 = 1;
-        auto res_u32 = a.divrem(b_u32);
-        assert(res_u32.has_value());
-        uint128_t q_u32 = res_u32->first;
-        uint128_t r_u32 = res_u32->second;
-        assert(r_u32 < b_u32);
+            if (b_u32 == 0)
+                b_u32 = 1;
+            auto res_u32 = a.divrem(b_u32);
+            assert(res_u32.has_value());
+            uint128_t q_u32 = res_u32->first;
+            uint128_t r_u32 = res_u32->second;
+            assert(r_u32 < b_u32);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_u32 > 1 && a > 0_u128) {
-            assert(q_u32 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_u32 > 1 && a > 0_u128) {
+                assert(q_u32 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_u32;
-        assert(a_div == q_u32);
+            // Check operators
+            a_div = a;
+            a_div /= b_u32;
+            assert(a_div == q_u32);
 
-        a_mod = a;
-        a_mod %= b_u32;
-        assert(a_mod == r_u32);
+            a_mod = a;
+            a_mod %= b_u32;
+            assert(a_mod == r_u32);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_u32;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_u32;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_u32 = a_minus_r.divrem(b_u32);
-        assert(check1_u32.has_value());
-        assert(check1_u32->first == q_u32);
-        assert(check1_u32->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_u32 = a_minus_r.divrem(b_u32);
+            assert(check1_u32.has_value());
+            assert(check1_u32->first == q_u32);
+            assert(check1_u32->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_u32 > 0_u128) {
-            auto check2_u32 = a_minus_r.divrem(q_u32);
-            assert(check2_u32.has_value());
-            assert(check2_u32->first == b_u32);
-            assert(check2_u32->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_u32 > 0_u128) {
+                auto check2_u32 = a_minus_r.divrem(q_u32);
+                assert(check2_u32.has_value());
+                assert(check2_u32->first == b_u32);
+                assert(check2_u32->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_u32 = (a - 1_u128).divrem(b_u32);
-            assert(check3_u32.has_value());
-            if (r_u32 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_u32->first == q_u32);
-                auto r2_u32 = r_u32;
-                --r2_u32;
-                assert(check3_u32->second == r2_u32);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_u32 = q_u32;
-                --q2_u32;
-                auto b2_u32 = b_u32;
-                --b2_u32;
-                assert(check3_u32->first == q2_u32);
-                assert(check3_u32->second == b2_u32);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_u32 = (a - 1_u128).divrem(b_u32);
+                assert(check3_u32.has_value());
+                if (r_u32 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_u32->first == q_u32);
+                    auto r2_u32 = r_u32;
+                    --r2_u32;
+                    assert(check3_u32->second == r2_u32);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_u32 = q_u32;
+                    --q2_u32;
+                    auto b2_u32 = b_u32;
+                    --b2_u32;
+                    assert(check3_u32->first == q2_u32);
+                    assert(check3_u32->second == b2_u32);
+                }
             }
         }
 
         // Divisor como int32_t
-        auto b_i32(static_cast<int32_t>(rng()));
+        {
+            auto b_i32(static_cast<int32_t>(rng()));
 
-        if (b_i32 == 0)
-            b_i32 = 1;
-        auto res_i32 = a.divrem(b_i32);
-        assert(res_i32.has_value());
-        uint128_t q_i32 = res_i32->first;
-        uint128_t r_i32 = res_i32->second;
-        assert(r_i32 < b_i32);
+            if (b_i32 == 0)
+                b_i32 = 1;
+            auto res_i32 = a.divrem(b_i32);
+            assert(res_i32.has_value());
+            uint128_t q_i32 = res_i32->first;
+            uint128_t r_i32 = res_i32->second;
+            assert(r_i32 < b_i32);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_i32 > 1 && a > 0_u128) {
-            assert(q_i32 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_i32 > 1 && a > 0_u128) {
+                assert(q_i32 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_i32;
-        assert(a_div == q_i32);
+            // Check operators
+            a_div = a;
+            a_div /= b_i32;
+            assert(a_div == q_i32);
 
-        a_mod = a;
-        a_mod %= b_i32;
-        assert(a_mod == r_i32);
+            a_mod = a;
+            a_mod %= b_i32;
+            assert(a_mod == r_i32);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_i32;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_i32;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_i32 = a_minus_r.divrem(b_i32);
-        assert(check1_i32.has_value());
-        assert(check1_i32->first == q_i32);
-        assert(check1_i32->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_i32 = a_minus_r.divrem(b_i32);
+            assert(check1_i32.has_value());
+            assert(check1_i32->first == q_i32);
+            assert(check1_i32->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_i32 > 0_u128) {
-            auto check2_i32 = a_minus_r.divrem(q_i32);
-            assert(check2_i32.has_value());
-            assert(check2_i32->first == b_i32);
-            assert(check2_i32->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_i32 > 0_u128) {
+                auto check2_i32 = a_minus_r.divrem(q_i32);
+                assert(check2_i32.has_value());
+                assert(check2_i32->first == b_i32);
+                assert(check2_i32->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_i32 = (a - 1_u128).divrem(b_i32);
-            assert(check3_i32.has_value());
-            if (r_i32 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_i32->first == q_i32);
-                auto r2_i32 = r_i32;
-                --r2_i32;
-                assert(check3_i32->second == r2_i32);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_i32 = q_i32;
-                --q2_i32;
-                auto b2_i32 = b_i32;
-                --b2_i32;
-                assert(check3_i32->first == q2_i32);
-                assert(check3_i32->second == b2_i32);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_i32 = (a - 1_u128).divrem(b_i32);
+                assert(check3_i32.has_value());
+                if (r_i32 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_i32->first == q_i32);
+                    auto r2_i32 = r_i32;
+                    --r2_i32;
+                    assert(check3_i32->second == r2_i32);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_i32 = q_i32;
+                    --q2_i32;
+                    auto b2_i32 = b_i32;
+                    --b2_i32;
+                    assert(check3_i32->first == q2_i32);
+                    assert(check3_i32->second == b2_i32);
+                }
             }
         }
 
         // Divisor como uint16_t
-        auto b_u16(static_cast<uint16_t>(rng()));
+        {
+            auto b_u16(static_cast<uint16_t>(rng()));
 
-        if (b_u16 == 0)
-            b_u16 = 1;
-        auto res_u16 = a.divrem(b_u16);
-        assert(res_u16.has_value());
-        uint128_t q_u16 = res_u16->first;
-        uint128_t r_u16 = res_u16->second;
-        assert(r_u16 < b_u16);
+            if (b_u16 == 0)
+                b_u16 = 1;
+            auto res_u16 = a.divrem(b_u16);
+            assert(res_u16.has_value());
+            uint128_t q_u16 = res_u16->first;
+            uint128_t r_u16 = res_u16->second;
+            assert(r_u16 < b_u16);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_u16 > 1 && a > 0_u128) {
-            assert(q_u16 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_u16 > 1 && a > 0_u128) {
+                assert(q_u16 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_u16;
-        assert(a_div == q_u16);
+            // Check operators
+            a_div = a;
+            a_div /= b_u16;
+            assert(a_div == q_u16);
 
-        a_mod = a;
-        a_mod %= b_u16;
-        assert(a_mod == r_u16);
+            a_mod = a;
+            a_mod %= b_u16;
+            assert(a_mod == r_u16);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_u16;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_u16;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_u16 = a_minus_r.divrem(b_u16);
-        assert(check1_u16.has_value());
-        assert(check1_u16->first == q_u16);
-        assert(check1_u16->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_u16 = a_minus_r.divrem(b_u16);
+            assert(check1_u16.has_value());
+            assert(check1_u16->first == q_u16);
+            assert(check1_u16->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_u16 > 0_u128) {
-            auto check2_u16 = a_minus_r.divrem(q_u16);
-            assert(check2_u16.has_value());
-            assert(check2_u16->first == b_u16);
-            assert(check2_u16->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_u16 > 0_u128) {
+                auto check2_u16 = a_minus_r.divrem(q_u16);
+                assert(check2_u16.has_value());
+                assert(check2_u16->first == b_u16);
+                assert(check2_u16->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_u16 = (a - 1_u128).divrem(b_u16);
-            assert(check3_u16.has_value());
-            if (r_u16 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_u16->first == q_u16);
-                auto r2_u16 = r_u16;
-                --r2_u16;
-                assert(check3_u16->second == r2_u16);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_u16 = q_u16;
-                --q2_u16;
-                auto b2_u16 = b_u16;
-                --b2_u16;
-                assert(check3_u16->first == q2_u16);
-                assert(check3_u16->second == b2_u16);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_u16 = (a - 1_u128).divrem(b_u16);
+                assert(check3_u16.has_value());
+                if (r_u16 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_u16->first == q_u16);
+                    auto r2_u16 = r_u16;
+                    --r2_u16;
+                    assert(check3_u16->second == r2_u16);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_u16 = q_u16;
+                    --q2_u16;
+                    auto b2_u16 = b_u16;
+                    --b2_u16;
+                    assert(check3_u16->first == q2_u16);
+                    assert(check3_u16->second == b2_u16);
+                }
             }
         }
 
         // Divisor como int16_t
-        auto b_i16(static_cast<int16_t>(rng()));
+        {
+            auto b_i16(static_cast<int16_t>(rng()));
 
-        if (b_i16 == 0)
-            b_i16 = 1;
-        auto res_i16 = a.divrem(b_i16);
-        assert(res_i16.has_value());
-        uint128_t q_i16 = res_i16->first;
-        uint128_t r_i16 = res_i16->second;
-        assert(r_i16 < b_i16);
+            if (b_i16 == 0)
+                b_i16 = 1;
+            auto res_i16 = a.divrem(b_i16);
+            assert(res_i16.has_value());
+            uint128_t q_i16 = res_i16->first;
+            uint128_t r_i16 = res_i16->second;
+            assert(r_i16 < b_i16);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_i16 > 1 && a > 0_u128) {
-            assert(q_i16 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_i16 > 1 && a > 0_u128) {
+                assert(q_i16 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_i16;
-        assert(a_div == q_i16);
+            // Check operators
+            a_div = a;
+            a_div /= b_i16;
+            assert(a_div == q_i16);
 
-        a_mod = a;
-        a_mod %= b_i16;
-        assert(a_mod == r_i16);
+            a_mod = a;
+            a_mod %= b_i16;
+            assert(a_mod == r_i16);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_i16;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_i16;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_i16 = a_minus_r.divrem(b_i16);
-        assert(check1_i16.has_value());
-        assert(check1_i16->first == q_i16);
-        assert(check1_i16->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_i16 = a_minus_r.divrem(b_i16);
+            assert(check1_i16.has_value());
+            assert(check1_i16->first == q_i16);
+            assert(check1_i16->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_i16 > 0_u128) {
-            auto check2_i16 = a_minus_r.divrem(q_i16);
-            assert(check2_i16.has_value());
-            assert(check2_i16->first == b_i16);
-            assert(check2_i16->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_i16 > 0_u128) {
+                auto check2_i16 = a_minus_r.divrem(q_i16);
+                assert(check2_i16.has_value());
+                assert(check2_i16->first == b_i16);
+                assert(check2_i16->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_i16 = (a - 1_u128).divrem(b_i16);
-            assert(check3_i16.has_value());
-            if (r_i16 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_i16->first == q_i16);
-                auto r2_i16 = r_i16;
-                --r2_i16;
-                assert(check3_i16->second == r2_i16);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_i16 = q_i16;
-                --q2_i16;
-                auto b2_i16 = b_i16;
-                --b2_i16;
-                assert(check3_i16->first == q2_i16);
-                assert(check3_i16->second == b2_i16);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_i16 = (a - 1_u128).divrem(b_i16);
+                assert(check3_i16.has_value());
+                if (r_i16 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_i16->first == q_i16);
+                    auto r2_i16 = r_i16;
+                    --r2_i16;
+                    assert(check3_i16->second == r2_i16);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_i16 = q_i16;
+                    --q2_i16;
+                    auto b2_i16 = b_i16;
+                    --b2_i16;
+                    assert(check3_i16->first == q2_i16);
+                    assert(check3_i16->second == b2_i16);
+                }
             }
         }
 
         // Divisor como uint8_t
-        auto b_u8(static_cast<uint8_t>(rng()));
+        {
+            auto b_u8(static_cast<uint8_t>(rng()));
 
-        if (b_u8 == 0)
-            b_u8 = 1;
-        auto res_u8 = a.divrem(b_u8);
-        assert(res_u8.has_value());
-        uint128_t q_u8 = res_u8->first;
-        uint128_t r_u8 = res_u8->second;
-        assert(r_u8 < b_u8);
+            if (b_u8 == 0)
+                b_u8 = 1;
+            auto res_u8 = a.divrem(b_u8);
+            assert(res_u8.has_value());
+            uint128_t q_u8 = res_u8->first;
+            uint128_t r_u8 = res_u8->second;
+            assert(r_u8 < b_u8);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_u8 > 1 && a > 0_u128) {
-            assert(q_u8 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_u8 > 1 && a > 0_u128) {
+                assert(q_u8 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_u8;
-        assert(a_div == q_u8);
+            // Check operators
+            a_div = a;
+            a_div /= b_u8;
+            assert(a_div == q_u8);
 
-        a_mod = a;
-        a_mod %= b_u8;
-        assert(a_mod == r_u8);
+            a_mod = a;
+            a_mod %= b_u8;
+            assert(a_mod == r_u8);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_u8;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_u8;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_u8 = a_minus_r.divrem(b_u8);
-        assert(check1_u8.has_value());
-        assert(check1_u8->first == q_u8);
-        assert(check1_u8->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_u8 = a_minus_r.divrem(b_u8);
+            assert(check1_u8.has_value());
+            assert(check1_u8->first == q_u8);
+            assert(check1_u8->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_u8 > 0_u128) {
-            auto check2_u8 = a_minus_r.divrem(q_u8);
-            assert(check2_u8.has_value());
-            assert(check2_u8->first == b_u8);
-            assert(check2_u8->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_u8 > 0_u128) {
+                auto check2_u8 = a_minus_r.divrem(q_u8);
+                assert(check2_u8.has_value());
+                assert(check2_u8->first == b_u8);
+                assert(check2_u8->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_u8 = (a - 1_u128).divrem(b_u8);
-            assert(check3_u8.has_value());
-            if (r_u8 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_u8->first == q_u8);
-                auto r2_u8 = r_u8;
-                --r2_u8;
-                assert(check3_u8->second == r2_u8);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_u8 = q_u8;
-                --q2_u8;
-                auto b2_u8 = b_u8;
-                --b2_u8;
-                assert(check3_u8->first == q2_u8);
-                assert(check3_u8->second == b2_u8);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_u8 = (a - 1_u128).divrem(b_u8);
+                assert(check3_u8.has_value());
+                if (r_u8 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_u8->first == q_u8);
+                    auto r2_u8 = r_u8;
+                    --r2_u8;
+                    assert(check3_u8->second == r2_u8);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_u8 = q_u8;
+                    --q2_u8;
+                    auto b2_u8 = b_u8;
+                    --b2_u8;
+                    assert(check3_u8->first == q2_u8);
+                    assert(check3_u8->second == b2_u8);
+                }
             }
         }
 
         // Divisor como int8_t
-        auto b_i8(static_cast<int8_t>(rng()));
+        {
+            auto b_i8(static_cast<int8_t>(rng()));
 
-        if (b_i8 == 0)
-            b_i8 = 1;
-        auto res_i8 = a.divrem(b_i8);
-        assert(res_i8.has_value());
-        uint128_t q_i8 = res_i8->first;
-        uint128_t r_i8 = res_i8->second;
-        assert(r_i8 < b_i8);
+            if (b_i8 == 0)
+                b_i8 = 1;
+            auto res_i8 = a.divrem(b_i8);
+            assert(res_i8.has_value());
+            uint128_t q_i8 = res_i8->first;
+            uint128_t r_i8 = res_i8->second;
+            assert(r_i8 < b_i8);
 
-        // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
-        if (b_i8 > 1 && a > 0_u128) {
-            assert(q_i8 < a);
-        }
+            // 4. Si el divisor es > 1 y el dividendo > 0, el cociente debe ser < que el dividendo.
+            if (b_i8 > 1 && a > 0_u128) {
+                assert(q_i8 < a);
+            }
 
-        // Check operators
-        a_div = a;
-        a_div /= b_i8;
-        assert(a_div == q_i8);
+            // Check operators
+            a_div = a;
+            a_div /= b_i8;
+            assert(a_div == q_i8);
 
-        a_mod = a;
-        a_mod %= b_i8;
-        assert(a_mod == r_i8);
+            a_mod = a;
+            a_mod %= b_i8;
+            assert(a_mod == r_i8);
 
-        // Verificación sin asumir multiplicación completa:
-        // a = q * b + r  =>  a - r = q * b
-        uint128_t a_minus_r = a - r_i8;
+            // Verificación sin asumir multiplicación completa:
+            // a = q * b + r  =>  a - r = q * b
+            uint128_t a_minus_r = a - r_i8;
 
-        // 1. (a - r) debe ser divisible por b y dar q
-        auto check1_i8 = a_minus_r.divrem(b_i8);
-        assert(check1_i8.has_value());
-        assert(check1_i8->first == q_i8);
-        assert(check1_i8->second == 0_u128);
+            // 1. (a - r) debe ser divisible por b y dar q
+            auto check1_i8 = a_minus_r.divrem(b_i8);
+            assert(check1_i8.has_value());
+            assert(check1_i8->first == q_i8);
+            assert(check1_i8->second == 0_u128);
 
-        // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
-        if (q_i8 > 0_u128) {
-            auto check2_i8 = a_minus_r.divrem(q_i8);
-            assert(check2_i8.has_value());
-            assert(check2_i8->first == b_i8);
-            assert(check2_i8->second == 0_u128);
-        }
+            // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
+            if (q_i8 > 0_u128) {
+                auto check2_i8 = a_minus_r.divrem(q_i8);
+                assert(check2_i8.has_value());
+                assert(check2_i8->first == b_i8);
+                assert(check2_i8->second == 0_u128);
+            }
 
-        // 3. Comprobación con (a-1) (check3)
-        if (a > 0_u128) {
-            auto check3_i8 = (a - 1_u128).divrem(b_i8);
-            assert(check3_i8.has_value());
-            if (r_i8 != 0_u128) {
-                // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
-                assert(check3_i8->first == q_i8);
-                auto r2_i8 = r_i8;
-                --r2_i8;
-                assert(check3_i8->second == r2_i8);
-            } else // r == 0
-            {
-                // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
-                auto q2_i8 = q_i8;
-                --q2_i8;
-                auto b2_i8 = b_i8;
-                --b2_i8;
-                assert(check3_i8->first == q2_i8);
-                assert(check3_i8->second == b2_i8);
+            // 3. Comprobación con (a-1) (check3)
+            if (a > 0_u128) {
+                auto check3_i8 = (a - 1_u128).divrem(b_i8);
+                assert(check3_i8.has_value());
+                if (r_i8 != 0_u128) {
+                    // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
+                    assert(check3_i8->first == q_i8);
+                    auto r2_i8 = r_i8;
+                    --r2_i8;
+                    assert(check3_i8->second == r2_i8);
+                } else // r == 0
+                {
+                    // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
+                    auto q2_i8 = q_i8;
+                    --q2_i8;
+                    auto b2_i8 = b_i8;
+                    --b2_i8;
+                    assert(check3_i8->first == q2_i8);
+                    assert(check3_i8->second == b2_i8);
+                }
             }
         }
     }
@@ -1876,6 +1890,7 @@ void test_divrem_known_result()
 
     // 100 / 3 = 33 rem 1
     auto res1 = 100_u128.divrem(3_u128);
+    auto res1 = (100_u128).divrem(3_u128);
     assert(res1->first == 33_u128);
     assert(res1->second == 1_u128);
     uint128_t a1 = 100_u128;
@@ -1908,6 +1923,7 @@ void test_divrem_known_result_integral_divisor()
 
     // 100 / 3 (int)
     auto res_u64 = 100_u128.divrem(static_cast<uint64_t>(3u));
+    auto res_u64 = (100_u128).divrem(static_cast<uint64_t>(3u));
     assert(res_u64->first == 33_u128);
     assert(res_u64->second == 1_u128);
     uint128_t a1 = 100_u128;
@@ -1933,6 +1949,7 @@ void test_divrem_known_result_integral_divisor()
 
     // 100 / 3 (int)
     auto res_i64 = 100_u128.divrem(static_cast<int64_t>(3));
+    auto res_i64 = (100_u128).divrem(static_cast<int64_t>(3));
     assert(res_i64->first == 33_u128);
     assert(res_i64->second == 1_u128);
     a1 = 100_u128;
@@ -1955,6 +1972,7 @@ void test_divrem_known_result_integral_divisor()
 
     // divisor como uint32_t
     auto res_u32 = 100_u128.divrem(static_cast<uint32_t>(3u));
+    auto res_u32 = (100_u128).divrem(static_cast<uint32_t>(3u));
     assert(res_u32->first == 33_u128);
     assert(res_u32->second == 1_u128);
     a1 = 100_u128;
@@ -1966,6 +1984,7 @@ void test_divrem_known_result_integral_divisor()
 
     // divisor como int32_t
     auto res_i32 = 100_u128.divrem(static_cast<int32_t>(3));
+    auto res_i32 = (100_u128).divrem(static_cast<int32_t>(3));
     assert(res_i32->first == 33_u128);
     assert(res_i32->second == 1_u128);
     a1 = 100_u128;
@@ -1977,6 +1996,7 @@ void test_divrem_known_result_integral_divisor()
 
     // divisor como uint16_t
     auto res_u16 = 100_u128.divrem(static_cast<uint16_t>(3u));
+    auto res_u16 = (100_u128).divrem(static_cast<uint16_t>(3u));
     assert(res_u16->first == 33_u128);
     assert(res_u16->second == 1_u128);
     a1 = 100_u128;
@@ -1988,6 +2008,7 @@ void test_divrem_known_result_integral_divisor()
 
     // divisor como int16_t
     auto res_i16 = 100_u128.divrem(static_cast<int16_t>(3));
+    auto res_i16 = (100_u128).divrem(static_cast<int16_t>(3));
     assert(res_i16->first == 33_u128);
     assert(res_i16->second == 1_u128);
     a1 = 100_u128;
@@ -1999,6 +2020,7 @@ void test_divrem_known_result_integral_divisor()
 
     // divisor como uint8_t
     auto res_u8 = 100_u128.divrem(static_cast<uint8_t>(3u));
+    auto res_u8 = (100_u128).divrem(static_cast<uint8_t>(3u));
     assert(res_u8->first == 33_u128);
     assert(res_u8->second == 1_u128);
     a1 = 100_u128;
@@ -2010,6 +2032,7 @@ void test_divrem_known_result_integral_divisor()
 
     // divisor como int8_t
     auto res_i8 = 100_u128.divrem(static_cast<int8_t>(3));
+    auto res_i8 = (100_u128).divrem(static_cast<int8_t>(3));
     assert(res_i8->first == 33_u128);
     assert(res_i8->second == 1_u128);
     a1 = 100_u128;
