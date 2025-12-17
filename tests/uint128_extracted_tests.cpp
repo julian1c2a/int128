@@ -1889,7 +1889,6 @@ void test_divrem_known_result()
     std::cout << "test_divrem: test_divrem_known_result ......" << std::endl;
 
     // 100 / 3 = 33 rem 1
-    auto res1 = 100_u128.divrem(3_u128);
     auto res1 = (100_u128).divrem(3_u128);
     assert(res1->first == 33_u128);
     assert(res1->second == 1_u128);
