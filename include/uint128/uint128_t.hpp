@@ -24,6 +24,9 @@
 #endif
 #endif
 
+// Include helpers de módulo optimizados
+#include "specializations/uint128_mod_helpers.hpp"
+
 class uint128_t
 {
     using uint64_t = std::uint64_t;
@@ -281,10 +284,14 @@ class uint128_t
      * @return `true` si el valor del `uint128_t` es distinto de cero.
      * @return `false` si el valor es cero.
      * @property Es `explicit`, `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_bool_conversion)
      * @code{.cpp}
-     * uint128_t val(1);
+     * // bucle con valores aleatorios distintos de cero
+     * // intercalados con valores cero
+     * uint128_t val(rng(), rng());
      * assert(static_cast<bool>(val) == true);
+     * val = uint128_t(0);
+     * assert(static_cast<bool>(val) == false);
      * @endcode
      */
     explicit constexpr operator bool() const noexcept
@@ -301,10 +308,17 @@ class uint128_t
      * @warning La conversión puede truncar el valor si este excede el máximo representable por
      * `TYPE`. Solo se utilizan los 64 bits inferiores.
      * @property Es `explicit`, `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_integral_conversion)
      * @code{.cpp}
      * uint128_t val(123);
-     * assert(static_cast<int>(val) == 123);
+     * assert(static_cast<uint8_t>(val) == 123);
+     * assert(static_cast<uint16_t>(val) == 123);
+     * assert(static_cast<uint32_t>(val) == 123);
+     * assert(static_cast<uint64_t>(val) == 123);
+     * assert(static_cast<int8_t>(val) == 123);
+     * assert(static_cast<int16_t>(val) == 123);
+     * assert(static_cast<int32_t>(val) == 123);
+     * assert(static_cast<int64_t>(val) == 123);
      * @endcode
      */
     template <typename TYPE> explicit constexpr operator TYPE() const noexcept
@@ -319,13 +333,13 @@ class uint128_t
      * @brief Conversión al tipo nativo `__uint128_t` del compilador.
      * @return El valor completo de 128 bits como `__uint128_t`.
      * @post El valor se preserva sin pérdida de datos.
-     * @property Esta conversión solo está disponible si el compilador define `__SIZEOF_INT128__`
-     * (típico en GCC y Clang). Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @property Esta conversión solo está disponible si el compilador
+     * define `__SIZEOF_INT128__` (típico en GCC y Clang).
+     * Es `constexpr` y `noexcept`.
+     * @test (test___uint128_conversion)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // Solo si el compilador soporta __uint128_t y 
+     * // // por lo tanto está definida la macro __SIZEOF_INT128__
      * @endcode
      */
     constexpr operator __uint128_t() const noexcept
@@ -1111,6 +1125,216 @@ class uint128_t
         uint128_t result(*this);
         result %= other;
         return result;
+    }
+
+  private:
+    // ============================================================================
+    // Helpers de módulo optimizados - definidos en specializations/uint128_mod_helpers.hpp
+    // ============================================================================
+    UINT128_MOD_HELPERS_PRIVATE_METHODS
+
+  public:
+    /**
+     * @brief Calcula el módulo con un valor de radio especificado en tiempo de compilación.
+     * @tparam Rad El valor del radio para el módulo (debe estar entre 2 y 63 inclusive).
+     * @return Un nuevo `uint128_t` con el resultado del módulo.
+     * @property Es `constexpr` y `noexcept`.
+     * @note Optimizado sin divisiones: potencias de 2 usan máscaras de bits,
+     *       mod 3/5/7/9 usan algoritmos especializados basados en propiedades modulares.
+     */
+    template <uint64_t Rad> constexpr uint128_t mod() const noexcept
+    {
+        static_assert(Rad > 1 && Rad < 64, "Rad must be > 1 and < 64");
+
+        // Caso especial: potencia de 2 -> máscara de bits (sin división)
+        if constexpr (uint128_mod_details::is_power_of_2(Rad)) {
+            constexpr int bits = uint128_mod_details::log2_uint64(Rad);
+            constexpr uint64_t mask = Rad - 1;
+
+            if constexpr (bits < 64) {
+                // El resultado cabe completamente en low()
+                return uint128_t(0, low() & mask);
+            } else {
+                // Necesitamos parte de high() también (bits >= 64)
+                constexpr int high_bits = bits - 64;
+                constexpr uint64_t high_mask = (1ULL << high_bits) - 1;
+                return uint128_t(high() & high_mask, low());
+            }
+        }
+        // Caso especial: potencia de 3 (3, 9, 27) -> optimización genérica
+        else if constexpr (uint128_mod_details::is_power_of_3(Rad)) {
+            return uint128_t(0, mod_power_of_3_helper<Rad>());
+        }
+        // Optimizaciones específicas para módulos pequeños comunes
+        else if constexpr (Rad == 3) {
+            return uint128_t(0, mod3_helper());
+        } else if constexpr (Rad == 5) {
+            return uint128_t(0, mod5_helper());
+        } else if constexpr (Rad == 6) {
+            return uint128_t(0, mod6_helper());
+        } else if constexpr (Rad == 7) {
+            return uint128_t(0, mod7_helper());
+        } else if constexpr (Rad == 9) {
+            return uint128_t(0, mod9_helper());
+        } else if constexpr (Rad == 10) {
+            return uint128_t(0, mod10_helper());
+        } else if constexpr (Rad == 11) {
+            return uint128_t(0, mod11_helper());
+        } else if constexpr (Rad == 12) {
+            return uint128_t(0, mod12_helper());
+        } else if constexpr (Rad == 13) {
+            return uint128_t(0, mod13_helper());
+        } else if constexpr (Rad == 14) {
+            return uint128_t(0, mod14_helper());
+        } else if constexpr (Rad == 15) {
+            return uint128_t(0, mod15_helper());
+        } else if constexpr (Rad == 17) {
+            return uint128_t(0, mod17_helper());
+        } else if constexpr (Rad == 18) {
+            return uint128_t(0, mod18_helper());
+        } else if constexpr (Rad == 19) {
+            return uint128_t(0, mod19_helper());
+        } else if constexpr (Rad == 20) {
+            return uint128_t(0, mod20_helper());
+        } else if constexpr (Rad == 23) {
+            return uint128_t(0, mod23_helper());
+        } else if constexpr (Rad == 29) {
+            return uint128_t(0, mod29_helper());
+        } else if constexpr (Rad == 31) {
+            return uint128_t(0, mod31_helper());
+        } else if constexpr (Rad == 37) {
+            return uint128_t(0, mod37_helper());
+        } else if constexpr (Rad == 41) {
+            return uint128_t(0, mod41_helper());
+        } else if constexpr (Rad == 43) {
+            return uint128_t(0, mod43_helper());
+        } else if constexpr (Rad == 47) {
+            return uint128_t(0, mod47_helper());
+        } else if constexpr (Rad == 53) {
+            return uint128_t(0, mod53_helper());
+        } else if constexpr (Rad == 59) {
+            return uint128_t(0, mod59_helper());
+        } else if constexpr (Rad == 61) {
+            return uint128_t(0, mod61_helper());
+        } else {
+            // Para otros casos, usar helper genérico optimizado
+            return uint128_t(0, modM_generic_helper<Rad>());
+        }
+    }
+
+    /**
+     * @brief Calcula el módulo con respecto a una potencia de 2 (2^n).
+     * @tparam n El exponente de la potencia de 2 (debe ser >= 1 y n < 64).
+     * @return Un nuevo `uint128_t` con el resultado de (*this) % (2^n).
+     * @property Es `constexpr` y `noexcept`.
+     * @note Optimizado usando máscara de bits, sin división.
+     * @example
+     * @code{.cpp}
+     * uint128_t val(100);
+     * auto r1 = val.mod_pot2<1>();  // 100 % 2 = 0
+     * auto r3 = val.mod_pot2<3>();  // 100 % 8 = 4
+     * auto r4 = val.mod_pot2<4>();  // 100 % 16 = 4
+     * @endcode
+     */
+    template <int n> constexpr uint128_t mod_pot2() const noexcept
+    {
+        static_assert(n >= 1, "Exponent n must be >= 1");
+        static_assert(n < 64, "n must be < 64");
+        constexpr uint64_t power_of_2 = 1ULL << n;
+
+        return uint128_t(0, mod_power_of_2_helper<power_of_2>());
+    }
+
+    /**
+     * @brief Calcula el módulo con respecto a una potencia de 3 (3^n).
+     * @tparam n El exponente de la potencia de 3 (debe ser >= 1 y 3^n < 64).
+     * @return Un nuevo `uint128_t` con el resultado de (*this) % (3^n).
+     * @property Es `constexpr` y `noexcept`.
+     * @note Optimizado usando propiedades modulares, evita división de 128 bits.
+     * @example
+     * @code{.cpp}
+     * uint128_t val(100);
+     * auto r1 = val.mod_pot3<1>();  // 100 % 3 = 1
+     * auto r2 = val.mod_pot3<2>();  // 100 % 9 = 1
+     * auto r3 = val.mod_pot3<3>();  // 100 % 27 = 19
+     * auto r4 = val.mod_pot3<4>();  // 100 % 81 = 19
+     * @endcode
+     */
+    template <int n> constexpr uint128_t mod_pot3() const noexcept
+    {
+        static_assert(n >= 1, "Exponent n must be >= 1");
+        constexpr uint64_t power_of_3 = uint128_mod_details::pow3(n);
+        static_assert(power_of_3 < 64, "3^n must be < 64");
+
+        return uint128_t(0, mod_power_of_3_helper<power_of_3>());
+    }
+
+    /**
+     * @brief Calcula el módulo con respecto a una potencia de 5 (5^n).
+     * @tparam n El exponente de la potencia de 5 (debe ser >= 1 y 5^n < 2^64).
+     * @return Un nuevo `uint128_t` con el resultado de (*this) % (5^n).
+     * @property Es `constexpr` y `noexcept`.
+     * @note Optimizado usando propiedades modulares, evita división de 128 bits.
+     * @example
+     * @code{.cpp}
+     * uint128_t val(100);
+     * auto r1 = val.mod_pot5<1>();  // 100 % 5 = 0
+     * auto r2 = val.mod_pot5<2>();  // 100 % 25 = 0
+     * auto r3 = val.mod_pot5<3>();  // 100 % 125 = 100
+     * @endcode
+     */
+    template <int n> constexpr uint128_t mod_pot5() const noexcept
+    {
+        static_assert(n >= 1, "Exponent n must be >= 1");
+        constexpr uint64_t power_of_5 = uint128_mod_details::pow5(n);
+        static_assert(power_of_5 <= 0xFFFFFFFFFFFFFFFFULL, "5^n must fit in uint64_t");
+
+        return uint128_t(0, mod_power_of_5_helper<power_of_5>());
+    }
+
+    /**
+     * @brief Calcula el módulo con respecto a una potencia de 7 (7^n).
+     * @tparam n El exponente de la potencia de 7 (debe ser >= 1 y 7^n < 2^64).
+     * @return Un nuevo `uint128_t` con el resultado de (*this) % (7^n).
+     * @property Es `constexpr` y `noexcept`.
+     * @note Optimizado usando propiedades modulares, evita división de 128 bits.
+     * @example
+     * @code{.cpp}
+     * uint128_t val(100);
+     * auto r1 = val.mod_pot7<1>();  // 100 % 7 = 2
+     * auto r2 = val.mod_pot7<2>();  // 100 % 49 = 2
+     * @endcode
+     */
+    template <int n> constexpr uint128_t mod_pot7() const noexcept
+    {
+        static_assert(n >= 1, "Exponent n must be >= 1");
+        constexpr uint64_t power_of_7 = uint128_mod_details::pow7(n);
+        static_assert(power_of_7 <= 0xFFFFFFFFFFFFFFFFULL, "7^n must fit in uint64_t");
+
+        return uint128_t(0, mod_power_of_7_helper<power_of_7>());
+    }
+
+    /**
+     * @brief Calcula el módulo con respecto a una potencia de 10 (10^n).
+     * @tparam n El exponente de la potencia de 10 (debe ser >= 1 y 10^n < 2^64).
+     * @return Un nuevo `uint128_t` con el resultado de (*this) % (10^n).
+     * @property Es `constexpr` y `noexcept`.
+     * @note Optimizado usando propiedades modulares, evita división de 128 bits.
+     * @example
+     * @code{.cpp}
+     * uint128_t val(123456);
+     * auto r1 = val.mod_pot10<1>();  // 123456 % 10 = 6
+     * auto r2 = val.mod_pot10<2>();  // 123456 % 100 = 56
+     * auto r3 = val.mod_pot10<3>();  // 123456 % 1000 = 456
+     * @endcode
+     */
+    template <int n> constexpr uint128_t mod_pot10() const noexcept
+    {
+        static_assert(n >= 1, "Exponent n must be >= 1");
+        constexpr uint64_t power_of_10 = uint128_mod_details::pow10(n);
+        static_assert(power_of_10 <= 0xFFFFFFFFFFFFFFFFULL, "10^n must fit in uint64_t");
+
+        return uint128_t(0, mod_power_of_10_helper<power_of_10>());
     }
 
     // OTHER ARITHMETIC OPERATORS

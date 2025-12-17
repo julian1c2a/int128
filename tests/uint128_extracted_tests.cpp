@@ -402,6 +402,58 @@ void test_cstr_assignment()
     std::cout << "test_cstr_assignment passed" << std::endl;
 }
 
+void test_bool_conversion()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t h = rng();
+        uint64_t l = rng();
+        if (h == 0 && l == 0)
+            l = 1; // Asegurar valor no-cero
+
+        uint128_t val(h, l);
+        assert(static_cast<bool>(val) == true);
+        assert(val); // Conversión contextual
+
+        val = uint128_t(0);
+        assert(static_cast<bool>(val) == false);
+        assert(!val); // Conversión contextual
+    }
+    std::cout << "test_bool_conversion passed" << std::endl;
+}
+
+void test_integral_conversion()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t rand_val = rng();
+        uint128_t val(rand_val);
+
+        // Unsigned types
+        assert(static_cast<uint8_t>(val) == static_cast<uint8_t>(rand_val));
+        assert(static_cast<uint16_t>(val) == static_cast<uint16_t>(rand_val));
+        assert(static_cast<uint32_t>(val) == static_cast<uint32_t>(rand_val));
+        assert(static_cast<uint64_t>(val) == static_cast<uint64_t>(rand_val));
+
+        // Signed types
+        assert(static_cast<int8_t>(val) == static_cast<int8_t>(rand_val));
+        assert(static_cast<int16_t>(val) == static_cast<int16_t>(rand_val));
+        assert(static_cast<int32_t>(val) == static_cast<int32_t>(rand_val));
+        assert(static_cast<int64_t>(val) == static_cast<int64_t>(rand_val));
+    }
+
+    // Test specific value from docs
+    uint128_t val(123);
+    assert(static_cast<uint8_t>(val) == 123);
+    assert(static_cast<uint16_t>(val) == 123);
+    assert(static_cast<uint32_t>(val) == 123);
+    assert(static_cast<uint64_t>(val) == 123);
+    assert(static_cast<int8_t>(val) == 123);
+    assert(static_cast<int16_t>(val) == 123);
+    assert(static_cast<int32_t>(val) == 123);
+    assert(static_cast<int64_t>(val) == 123);
+
+    std::cout << "test_integral_conversion passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -419,6 +471,8 @@ int main()
     test_high_low_constructor();
     test_cstr_constructor();
     test_cstr_assignment();
+    test_bool_conversion();
+    test_integral_conversion();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
