@@ -491,6 +491,92 @@ void test___int128_conversion()
 #endif
 }
 
+void test_pre_increment()
+{
+    // Simple increment
+    uint128_t val(0, 5);
+    ++val;
+    assert(val == uint128_t(0, 6));
+
+    // Overflow low part
+    uint128_t val_overflow_low(0, UINT64_MAX);
+    ++val_overflow_low;
+    assert(val_overflow_low == uint128_t(1, 0));
+
+    // Overflow full 128-bit
+    uint128_t val_max(UINT64_MAX, UINT64_MAX);
+    ++val_max;
+    assert(val_max == uint128_t(0, 0));
+
+    std::cout << "test_pre_increment passed" << std::endl;
+}
+
+void test_post_increment()
+{
+    // Simple increment
+    uint128_t val(0, 5);
+    uint128_t old = val++;
+    assert(old == uint128_t(0, 5));
+    assert(val == uint128_t(0, 6));
+
+    // Overflow low part
+    uint128_t val_overflow_low(0, UINT64_MAX);
+    old = val_overflow_low++;
+    assert(old == uint128_t(0, UINT64_MAX));
+    assert(val_overflow_low == uint128_t(1, 0));
+
+    // Overflow full 128-bit
+    uint128_t val_max(UINT64_MAX, UINT64_MAX);
+    old = val_max++;
+    assert(old == uint128_t(UINT64_MAX, UINT64_MAX));
+    assert(val_max == uint128_t(0, 0));
+
+    std::cout << "test_post_increment passed" << std::endl;
+}
+
+void test_pre_decrement()
+{
+    // Simple decrement
+    uint128_t val(0, 6);
+    --val;
+    assert(val == uint128_t(0, 5));
+
+    // Underflow low part (borrow from high)
+    uint128_t val_underflow_low(1, 0);
+    --val_underflow_low;
+    assert(val_underflow_low == uint128_t(0, UINT64_MAX));
+
+    // Underflow full 128-bit
+    uint128_t val_zero(0, 0);
+    --val_zero;
+    assert(val_zero == uint128_t(UINT64_MAX, UINT64_MAX));
+
+    std::cout << "test_pre_decrement passed" << std::endl;
+}
+
+void test_post_decrement()
+{
+    // Simple decrement
+    uint128_t val(0, 6);
+    uint128_t old = val--;
+    assert(old == uint128_t(0, 6));
+    assert(val == uint128_t(0, 5));
+
+    // Underflow low part
+    uint128_t val_underflow_low(1, 0);
+    old = val_underflow_low--;
+    assert(old == uint128_t(1, 0));
+    assert(val_underflow_low == uint128_t(0, UINT64_MAX));
+
+    // Underflow full 128-bit
+    uint128_t val_zero(0, 0);
+    old = val_zero--;
+    assert(old == uint128_t(0, 0));
+    assert(val_zero == uint128_t(UINT64_MAX, UINT64_MAX));
+
+    std::cout << "test_post_decrement passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -512,6 +598,10 @@ int main()
     test_integral_conversion();
     test___uint128_conversion();
     test___int128_conversion();
+    test_pre_increment();
+    test_post_increment();
+    test_pre_decrement();
+    test_post_decrement();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
