@@ -454,6 +454,43 @@ void test_integral_conversion()
     std::cout << "test_integral_conversion passed" << std::endl;
 }
 
+void test___uint128_conversion()
+{
+#if defined(__SIZEOF_INT128__)
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t h = rng();
+        uint64_t l = rng();
+        uint128_t val(h, l);
+        __uint128_t native = static_cast<__uint128_t>(val);
+
+        assert((static_cast<uint64_t>(native >> 64)) == h);
+        assert(static_cast<uint64_t>(native) == l);
+    }
+    std::cout << "test___uint128_conversion passed" << std::endl;
+#else
+    std::cout << "test___uint128_conversion skipped" << std::endl;
+#endif
+}
+
+void test___int128_conversion()
+{
+#if defined(__SIZEOF_INT128__)
+    for (int i = 0; i < 1000; ++i) {
+        uint64_t h = rng();
+        uint64_t l = rng();
+        uint128_t val(h, l);
+        __int128_t native = static_cast<__int128_t>(val);
+
+        __uint128_t native_u = static_cast<__uint128_t>(native);
+        assert((static_cast<uint64_t>(native_u >> 64)) == h);
+        assert(static_cast<uint64_t>(native_u) == l);
+    }
+    std::cout << "test___int128_conversion passed" << std::endl;
+#else
+    std::cout << "test___int128_conversion skipped" << std::endl;
+#endif
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -473,6 +510,8 @@ int main()
     test_cstr_assignment();
     test_bool_conversion();
     test_integral_conversion();
+    test___uint128_conversion();
+    test___int128_conversion();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;

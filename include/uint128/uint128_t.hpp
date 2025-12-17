@@ -338,7 +338,7 @@ class uint128_t
      * Es `constexpr` y `noexcept`.
      * @test (test___uint128_conversion)
      * @code{.cpp}
-     * // // Solo si el compilador soporta __uint128_t y 
+     * // // Solo si el compilador soporta __uint128_t y
      * // // por lo tanto está definida la macro __SIZEOF_INT128__
      * @endcode
      */
@@ -353,11 +353,10 @@ class uint128_t
      * @post El valor se reinterpreta como `__int128_t`.
      * @property Esta conversión solo está disponible si el compilador define `__SIZEOF_INT128__`.
      * Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test___int128_conversion)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // Solo si el compilador soporta __int128_t y
+     * // // por lo tanto está definida la macro __SIZEOF_INT128__
      * @endcode
      */
     constexpr operator __int128_t() const noexcept
@@ -373,11 +372,11 @@ class uint128_t
      * @property El desbordamiento (de `MAX` a `0`) ocurre de forma silenciosa, siguiendo el
      * comportamiento de los enteros sin signo. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this` después de la modificación.
-     * @test (Caso de prueba)
+     * @test (test_pre_increment)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // No solo tiene que comprobar que incrementa en 1
+     * // // sino que también maneja el desbordamiento correctamente
+     * // // y que el incremento es antes de la evaluación
      * @endcode
      */
     constexpr uint128_t& operator++() noexcept
@@ -404,11 +403,11 @@ class uint128_t
      * @property El desbordamiento (de `MAX` a `0`) ocurre de forma silenciosa. Es `constexpr` y
      * `noexcept`.
      * @return Una copia del valor del objeto *antes* de ser incrementado.
-     * @test (Caso de prueba)
+     * @test (test_post_increment)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // No solo tiene que comprobar que incrementa en 1
+     * // // sino que también maneja el desbordamiento correctamente
+     * // // y que el incremento es después de la evaluación
      * @endcode
      */
     constexpr uint128_t operator++(int) noexcept
@@ -424,11 +423,11 @@ class uint128_t
      * @property El subdesbordamiento (de `0` a `MAX`) ocurre de forma silenciosa. Es `constexpr` y
      * `noexcept`.
      * @return Una referencia a `*this` después de la modificación.
-     * @test (Caso de prueba)
+     * @test (test_pre_decrement)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // No solo tiene que comprobar que decrementa en 1
+     * // // sino que también maneja el desbordamiento correctamente (en --(0_uint128_t))
+     * // // y que el decremento es antes de la evaluación
      * @endcode
      */
     constexpr uint128_t& operator--() noexcept
@@ -455,11 +454,11 @@ class uint128_t
      * @property El subdesbordamiento (de `0` a `MAX`) ocurre de forma silenciosa. Es `constexpr` y
      * `noexcept`.
      * @return Una copia del valor del objeto *antes* de ser decrementado.
-     * @test (Caso de prueba)
+     * @test (test_post_decrement)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // No solo tiene que comprobar que decrementa en 1
+     * // // sino que también maneja el desbordamiento correctamente (en (0_uint128_t)--)
+     * // // y que el decremento es después de la evaluación
      * @endcode
      */
     constexpr uint128_t operator--(int) noexcept
