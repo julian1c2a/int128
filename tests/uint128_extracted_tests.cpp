@@ -367,6 +367,41 @@ void test_cstr_constructor()
     std::cout << "test_cstr_constructor passed" << std::endl;
 }
 
+void test_cstr_assignment()
+{
+    uint128_t val;
+
+    // Test hex assignment
+    val = uint128_t(rng(), rng()); // Ensuciar valor previo
+    val = "0x123456789ABCDEF0";
+    assert(val.low() == 0x123456789ABCDEF0ULL);
+    assert(val.high() == 0);
+
+    // Test large hex assignment
+    val = uint128_t(rng(), rng());
+    val = "0x10000000000000000";
+    assert(val.high() == 1);
+    assert(val.low() == 0);
+
+    // Test decimal assignment
+    val = uint128_t(rng(), rng());
+    val = "12345";
+    assert(val.low() == 12345);
+    assert(val.high() == 0);
+
+    // Test octal assignment
+    val = uint128_t(rng(), rng());
+    val = "010";
+    assert(val.low() == 8);
+
+    // Test binary assignment
+    val = uint128_t(rng(), rng());
+    val = "0b1010";
+    assert(val.low() == 10);
+
+    std::cout << "test_cstr_assignment passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -383,6 +418,7 @@ int main()
     test_integral_assignment();
     test_high_low_constructor();
     test_cstr_constructor();
+    test_cstr_assignment();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;

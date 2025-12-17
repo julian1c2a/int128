@@ -261,11 +261,11 @@ class uint128_t
      * @post El `uint128_t` se actualiza con el valor numérico de la cadena.
      * @return Una referencia a `*this`.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_cstr_assignment)
      * @code{.cpp}
-     * uint128_t val;
-     * val = "0xFF";
-     * assert(val.low() == 255);
+     * //   Similar a test_cstr_constructor
+     * //   Idéntico excepto que se crea una
+     * // variable con un valor inicial y luego se asigna desde la cadena
      * @endcode
      * @see from_cstr
      */
