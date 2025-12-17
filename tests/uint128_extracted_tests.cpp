@@ -2045,6 +2045,190 @@ void test_divrem_known_result_integral_divisor()
     std::cout << "test_divrem: test_divrem_known_result_integral_divisor passed" << std::endl;
 }
 
+void test_mult_assignment_operator()
+{
+    std::cout << "test_mult_assignment_operator ......" << std::endl;
+
+    // Test 1: Identidad multiplicativa (a *= 1 no cambia a)
+    for (int i = 0; i < 100; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t a_copy = a;
+        a_copy *= uint128_t(1);
+        assert(a_copy == a);
+    }
+
+    // Test 2: Elemento cero (a *= 0 = 0)
+    for (int i = 0; i < 100; ++i) {
+        uint128_t a(rng(), rng());
+        a *= uint128_t(0);
+        assert(a == uint128_t(0));
+    }
+
+    // Test 3: Conmutatividad (a * b == b * a)
+    for (int i = 0; i < 100; ++i) {
+        // Usar valores más pequeños para evitar overflow
+        uint128_t a(0, rng() % 0xFFFFFFFFULL);
+        uint128_t b(0, rng() % 0xFFFFFFFFULL);
+
+        uint128_t prod1 = a;
+        prod1 *= b;
+
+        uint128_t prod2 = b;
+        prod2 *= a;
+
+        assert(prod1 == prod2);
+    }
+
+    // Test 4: Verificación con división (estrategia de líneas 1300-1317)
+    // Si a * b = c, entonces c / b = a (si b != 0)
+    for (int i = 0; i < 100; ++i) {
+        // Usar valores pequeños para evitar overflow y asegurar que podamos dividir
+        uint64_t a_val = (rng() % 0xFFFFULL) + 1; // Evitar 0
+        uint64_t b_val = (rng() % 0xFFFFULL) + 1; // Evitar 0
+
+        uint128_t a(a_val);
+        uint128_t b(b_val);
+
+        uint128_t c = a;
+        c *= b;
+
+        // Verificación 1: c / b debe dar a
+        auto div_result_b = c.divrem(b);
+        assert(div_result_b.has_value());
+        assert(div_result_b->first == a);
+        assert(div_result_b->second == uint128_t(0)); // Sin resto
+
+        // Verificación 2: c / a debe dar b
+        auto div_result_a = c.divrem(a);
+        assert(div_result_a.has_value());
+        assert(div_result_a->first == b);
+        assert(div_result_a->second == uint128_t(0)); // Sin resto
+    }
+
+    // Test 5: Asociatividad ((a * b) * c == a * (b * c))
+    for (int i = 0; i < 100; ++i) {
+        // Valores aún más pequeños para evitar overflow con 3 factores
+        uint128_t a(0, (rng() % 0xFFFFULL) + 1);
+        uint128_t b(0, (rng() % 0xFFFFULL) + 1);
+        uint128_t c(0, (rng() % 0xFFFFULL) + 1);
+
+        uint128_t ab = a;
+        ab *= b;
+        uint128_t ab_c = ab;
+        ab_c *= c;
+
+        uint128_t bc = b;
+        bc *= c;
+        uint128_t a_bc = a;
+        a_bc *= bc;
+
+        assert(ab_c == a_bc);
+    }
+
+    // Test 6: Casos conocidos específicos
+    {
+        // 2 * 3 = 6
+        uint128_t val = uint128_t(2);
+        val *= uint128_t(3);
+        assert(val == uint128_t(6));
+
+        // Verificar con división
+        auto check = val.divrem(uint128_t(2));
+        assert(check->first == uint128_t(3));
+        assert(check->second == uint128_t(0));
+    }
+
+    {
+        // 100 * 200 = 20000
+        uint128_t val = uint128_t(100);
+        val *= uint128_t(200);
+        assert(val == uint128_t(20000));
+
+        // Verificar con división
+        auto check1 = val.divrem(uint128_t(100));
+        assert(check1->first == uint128_t(200));
+        assert(check1->second == uint128_t(0));
+
+        auto check2 = val.divrem(uint128_t(200));
+        assert(check2->first == uint128_t(100));
+        assert(check2->second == uint128_t(0));
+    }
+
+    {
+        // 2^32 * 2^32 = 2^64
+        uint128_t val(0, 1ULL << 32);
+        val *= uint128_t(0, 1ULL << 32);
+        assert(val == uint128_t(1, 0)); // 2^64 = (1, 0)
+
+        // Verificar con división
+        uint128_t divisor(0, 1ULL << 32);
+        auto check = val.divrem(divisor);
+        assert(check->first == divisor);
+        assert(check->second == uint128_t(0));
+    }
+
+    // Test 7: Multiplicación con tipos integrales
+    for (int i = 0; i < 100; ++i) {
+        uint128_t a(0, rng() % 0xFFFFFFFFULL);
+        uint64_t b_u64 = (rng() % 0xFFFFULL) + 1;
+
+        uint128_t result = a;
+        result *= b_u64;
+
+        // Verificar con división
+        auto check = result.divrem(b_u64);
+        assert(check.has_value());
+        assert(check->first == a);
+        assert(check->second == uint128_t(0));
+    }
+
+    // Test 8: Distributividad: a * (b + c) == a * b + a * c
+    for (int i = 0; i < 100; ++i) {
+        uint128_t a(0, (rng() % 0xFFFFULL) + 1);
+        uint128_t b(0, (rng() % 0xFFFFULL) + 1);
+        uint128_t c(0, (rng() % 0xFFFFULL) + 1);
+
+        uint128_t left = a * (b + c);
+        uint128_t right = a * b + a * c;
+
+        assert(left == right);
+    }
+
+    // Test 9: Multiplicación por potencias de 2 (equivalente a shift)
+    for (int shift = 0; shift < 64; ++shift) {
+        uint128_t a(0, 12345);
+        uint128_t b(0, 1ULL << shift);
+
+        uint128_t prod = a;
+        prod *= b;
+
+        uint128_t shifted = a << shift;
+
+        assert(prod == shifted);
+    }
+
+    // Test 10: Overflow controlado (2^127 * 2 = 2^128 = 0 con wrapping)
+    {
+        uint128_t val(1ULL << 63, 0); // 2^127
+        val *= uint128_t(2);
+        assert(val == uint128_t(0)); // Overflow completo
+    }
+
+    std::cout << "test_mult_assignment_operator passed" << std::endl;
+}
+
+int main()
+{
+    std::cout << "Starting uint128_t extracted tests..." << std::endl;
+
+    // ... todos los demás tests existentes ...
+
+    // Añadir al final, justo antes de cerrar main()
+    test_mult_assignment_operator();
+
+    std::cout << "\nAll tests passed successfully!" << std::endl;
+    return 0;
+}
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -2090,6 +2274,7 @@ int main()
     test_divrem_random_integral_divisor();
     test_divrem_known_result();
     test_divrem_known_result_integral_divisor();
+    test_mult_assignment_operator();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;

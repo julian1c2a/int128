@@ -485,17 +485,15 @@ class uint128_t
      * // // si el valor de "b" es 1, "a" debe incrementarse en 1
      * // // si el valor de "b" es pequeño, vemos si es igual
      * // // a+=b, a == (++a b veces)
-     * // // vemos que a' = a, b' = b, a' += b, b' += a,  a' == b'
-     * // // // y a'' = a, a' = a, b' = b, a' += b, a' += c, b' += c,  a'' += b',
-     * // // // y a'' == b'
-     * // // // y que si a += b, a sobrepasa el máximo, el resultado es correcto (desbordamiento)
-     * // // // y que a' = a, a' += 0, a' == a
      * @endcode
      */
     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
     {
 #ifdef _MSC_VER
-        uint64_t new_low; // Este variable temporal no inicializada es necesario para _addcarry_u64
+#pragma warning(push)
+#pragma warning(disable : 4701)
+        [[maybe_unused]] uint64_t new_low;       // NOLINT(cppcoreguidelines-init-variables)
+#pragma warning(pop)
         const unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _addcarry_u64(carry, data[1], other.data[1], &data[1]);
@@ -552,7 +550,10 @@ class uint128_t
     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
     {
 #ifdef _MSC_VER
-        uint64_t new_low;
+#pragma warning(push)
+#pragma warning(disable: 4701)
+        [[maybe_unused]] uint64_t new_low;   // NOLINT(cppcoreguidelines-init-variables)
+#pragma warning(pop)
         const unsigned char borrow = _subborrow_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _subborrow_u64(borrow, data[1], other.data[1], &data[1]);
@@ -631,7 +632,10 @@ class uint128_t
     {
         if (data[0] != 0) {
 #ifdef _MSC_VER
-            unsigned long index;
+#pragma warning(push)
+#pragma warning(disable : 4701)
+            [[maybe_unused]] unsigned long index;  // NOLINT(cppcoreguidelines-init-variables)
+#pragma warning(pop)
             _BitScanForward64(&index, data[0]);
             return static_cast<int>(index);
 #else
@@ -904,12 +908,7 @@ class uint128_t
      * @pre `T` debe ser un tipo integral. Se verifica en tiempo de compilación.
      * @return El resultado de llamar a `divrem` con el divisor convertido a `uint128_t`.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem_integral_divisor)
      */
     template <typename T>
     constexpr std::optional<std::pair<uint128_t, uint128_t>> divrem(T divisor) const noexcept
@@ -924,12 +923,7 @@ class uint128_t
      * @post El valor de `*this` se actualiza con el cociente de la división.
      * @property Si `other` es cero, el resultado asignado es 0. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem)
      */
     constexpr uint128_t& operator/=(const uint128_t& other) noexcept
     {
@@ -947,12 +941,7 @@ class uint128_t
      * @tparam T Un tipo de dato integral.
      * @param other El divisor de tipo integral.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem_integral_divisor)
      */
     template <typename T> constexpr uint128_t& operator/=(T other) noexcept
     {
@@ -966,12 +955,7 @@ class uint128_t
      * @post El valor de `*this` se actualiza con el resto de la división.
      * @property Si `other` es cero, el resultado asignado es 0. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem)
      */
     constexpr uint128_t& operator%=(const uint128_t& other) noexcept
     {
@@ -989,12 +973,7 @@ class uint128_t
      * @tparam T Un tipo de dato integral.
      * @param other El divisor de tipo integral.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem_integral_divisor)
      */
     template <typename T> constexpr uint128_t& operator%=(T other) noexcept
     {
@@ -1008,12 +987,7 @@ class uint128_t
      * @return Un nuevo `uint128_t` con el resultado de la división. Devuelve 0 en caso de división
      * por cero.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem)
      */
     constexpr uint128_t operator/(const uint128_t& other) const noexcept
     {
@@ -1027,12 +1001,7 @@ class uint128_t
      * @tparam T Tipo integral del divisor.
      * @param other El divisor.
      * @return Un nuevo `uint128_t` con el resultado de la división.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem_integral_divisor)
      */
     template <typename T> constexpr uint128_t operator/(T other) const noexcept
     {
@@ -1048,12 +1017,7 @@ class uint128_t
      * @return Un nuevo `uint128_t` con el resto de la división. Devuelve 0 en caso de división por
      * cero.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem)
      */
     constexpr uint128_t operator%(const uint128_t& other) const noexcept
     {
@@ -1067,12 +1031,7 @@ class uint128_t
      * @tparam T Tipo integral del divisor.
      * @param other El divisor.
      * @return Un nuevo `uint128_t` con el resto de la división.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_divrem_integral_divisor)
      */
     template <typename T> constexpr uint128_t operator%(T other) const noexcept
     {
@@ -1338,11 +1297,23 @@ class uint128_t
      * @post El valor de `*this` se actualiza con los 128 bits inferiores del producto.
      * @property El desbordamiento (overflow) es silencioso. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
+     * @test (test_mult_assignment_operator)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // uint128_t val1(rng(), rng());
+     * // uint128_t val2(rng(), rng());
+     * // uint128_t val1' = val1;
+     * // uint128_t val2' = val2;
+     * // val1' *= val2;
+     * // val2' *= val1;
+     * // assert(val1' == val2'); // conmutatividad
+     * // elemento neutro
+     * // elemento nulo
+     * // val2 * (val1-1) == val2 * val1 - val2
+     * // val1 * (val2-1) == val1 * val2 - val1
+     * // val2 * (val1+1) == val2 * val1 + val2
+     * // val1 * (val2+1) == val1 * val2 + val1
+     * // (val2 * val1).divrem(val1) == [val2,0]
+     * // (val2 * val1).divrem(val2) == [val1,0]
      * @endcode
      */
     constexpr uint128_t& operator*=(const uint128_t& other) noexcept
