@@ -599,12 +599,7 @@ class uint128_t
      * @brief Cuenta el número de ceros iniciales (desde el bit más significativo).
      * @return El número de ceros iniciales en el rango [0, 128]. Devuelve 128 si el valor es 0.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_leading_zeros)
      */
     constexpr int leading_zeros() const noexcept
     {
@@ -629,11 +624,7 @@ class uint128_t
      * @brief Cuenta el número de ceros finales (desde el bit menos significativo).
      * @return El número de ceros finales en el rango [0, 128]. Devuelve 128 si el valor es 0.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * @test (test_trailing_zeros)
      * @endcode
      */
     constexpr int trailing_zeros() const noexcept
@@ -664,12 +655,7 @@ class uint128_t
      * @return El número de bits necesarios para representar el valor, que es `128 -
      * leading_zeros()`. Devuelve 0 para el valor 0.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_effective_length)
      */
     constexpr int effective_length() const noexcept
     {
@@ -681,7 +667,7 @@ class uint128_t
      * @return `true` si el número es mayor que 0 y solo tiene un bit establecido a 1. `false` en
      * caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_is_power_of_2)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);

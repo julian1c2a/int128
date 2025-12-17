@@ -675,6 +675,93 @@ void test_post_decrement()
     std::cout << "test_post_decrement passed" << std::endl;
 }
 
+void test_leading_zeros()
+{
+    // Test 0
+    uint128_t zero(0, 0);
+    assert(zero.leading_zeros() == 128);
+
+    // Test 1
+    uint128_t one(0, 1);
+    assert(one.leading_zeros() == 127);
+
+    // Test powers of 2
+    for (int i = 0; i < 128; ++i) {
+        uint128_t val = uint128_t(1) << i;
+        assert(val.leading_zeros() == 127 - i);
+    }
+
+    // Test max value
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    assert(max_val.leading_zeros() == 0);
+
+    std::cout << "test_leading_zeros passed" << std::endl;
+}
+
+void test_trailing_zeros()
+{
+    // Test 0
+    uint128_t zero(0, 0);
+    assert(zero.trailing_zeros() == 128);
+
+    // Test 1
+    uint128_t one(0, 1);
+    assert(one.trailing_zeros() == 0);
+
+    // Test powers of 2
+    for (int i = 0; i < 128; ++i) {
+        uint128_t val = uint128_t(1) << i;
+        assert(val.trailing_zeros() == i);
+    }
+
+    // Test max value
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    assert(max_val.trailing_zeros() == 0);
+
+    std::cout << "test_trailing_zeros passed" << std::endl;
+}
+
+void test_bitwise_operators()
+{
+    uint128_t a(0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA);
+    uint128_t b(0x5555555555555555, 0x5555555555555555);
+
+    // AND
+    assert((a & b) == uint128_t(0));
+
+    // OR
+    assert((a | b) == uint128_t(UINT64_MAX, UINT64_MAX));
+
+    // XOR
+    assert((a ^ b) == uint128_t(UINT64_MAX, UINT64_MAX));
+    assert((a ^ a) == uint128_t(0));
+
+    // NOT
+    assert(~a == b);
+    assert(~b == a);
+
+    std::cout << "test_bitwise_operators passed" << std::endl;
+}
+
+void test_shift_operators()
+{
+    uint128_t val(0, 1);
+
+    // Left shift
+    assert((val << 1) == uint128_t(0, 2));
+    assert((val << 63) == uint128_t(0, 0x8000000000000000ULL));
+    assert((val << 64) == uint128_t(1, 0));
+    assert((val << 127) == uint128_t(0x8000000000000000ULL, 0));
+
+    // Right shift
+    uint128_t val2(0x8000000000000000ULL, 0);
+    assert((val2 >> 1) == uint128_t(0x4000000000000000ULL, 0));
+    assert((val2 >> 64) == uint128_t(0, 0x8000000000000000ULL));
+    assert((val2 >> 127) == uint128_t(0, 1));
+
+    std::cout << "test_shift_operators passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -702,6 +789,10 @@ int main()
     test_post_increment();
     test_pre_decrement();
     test_post_decrement();
+    test_leading_zeros();
+    test_trailing_zeros();
+    test_bitwise_operators();
+    test_shift_operators();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
