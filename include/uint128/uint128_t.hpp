@@ -376,6 +376,7 @@ class uint128_t
      * @code{.cpp}
      * // // No solo tiene que comprobar que incrementa en 1
      * // // sino que también maneja el desbordamiento correctamente
+     * // // en ++max_uint128_t
      * // // y que el incremento es antes de la evaluación
      * @endcode
      */
@@ -407,6 +408,7 @@ class uint128_t
      * @code{.cpp}
      * // // No solo tiene que comprobar que incrementa en 1
      * // // sino que también maneja el desbordamiento correctamente
+     * // // en max_uint128_t++
      * // // y que el incremento es después de la evaluación
      * @endcode
      */
