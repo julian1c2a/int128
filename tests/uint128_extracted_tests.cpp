@@ -2219,18 +2219,6 @@ void test_mult_assignment_operator()
 
 int main()
 {
-    std::cout << "Starting uint128_t extracted tests..." << std::endl;
-
-    // ... todos los demás tests existentes ...
-
-    // Añadir al final, justo antes de cerrar main()
-    test_mult_assignment_operator();
-
-    std::cout << "\nAll tests passed successfully!" << std::endl;
-    return 0;
-}
-int main()
-{
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
 
     test_sizeof_is_16_bytes();
