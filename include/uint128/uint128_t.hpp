@@ -669,9 +669,6 @@ class uint128_t
      * @property Es `constexpr` y `noexcept`.
      * @test (test_is_power_of_2)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
      * @endcode
      */
     constexpr bool is_power_of_2() const noexcept
