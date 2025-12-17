@@ -968,7 +968,6 @@ int main()
     test_leading_zeros();
     test_trailing_zeros();
     test_bitwise_operators();
-    test_shift_operators();
     test_shift_left();
     test_shift_right();
     test_effective_length();
