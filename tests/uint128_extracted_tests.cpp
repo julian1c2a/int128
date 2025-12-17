@@ -1357,7 +1357,7 @@ void test_divrem_random_integral_divisor()
             auto b_u64(static_cast<uint64_t>(rng()));
 
             if (b_u64 == 0_u128)
-                b_u64 = 1_u128;
+                b_u64 = 1ULL;
 
             auto res_u64 = a.divrem(b_u64);
             assert(res_u64.has_value());
