@@ -1,0 +1,1044 @@
+[0;36mCompilando /c/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp con g++...[0m
+In file included from C:/msys64/ucrt64/include/c++/15.2.0/cassert:46,
+                 from C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:6:
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp: In function 'void test_divrem_large_integral_divisor()':
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1146:27: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'uint64_t' {aka 'long long unsigned int'})
+ 1146 |     assert(res_u64->first * divisor_u64 + res_u64->second == large);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |       |
+      |                     |       uint64_t {aka long long unsigned int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1146:27: note: there are 7 candidates
+ 1146 |     assert(res_u64->first * divisor_u64 + res_u64->second == large);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1146:27: note: candidate 1: 'operator*(__int128, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1146:27: note: candidate 2: 'operator*(__int128 unsigned, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1146:27: note: candidate 3: 'operator*(int, long long unsigned int)' (built-in)
+In file included from C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:5:
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1149:28: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'uint64_t' {aka 'long long unsigned int'})
+ 1149 |     assert(res_u64->second < divisor_u64);
+      |            ~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |        |
+      |                     |        uint64_t {aka long long unsigned int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1149:28: note: there are 7 candidates
+ 1149 |     assert(res_u64->second < divisor_u64);
+      |            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1149:28: note: candidate 1: 'operator<(__int128, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1149:28: note: candidate 2: 'operator<(__int128 unsigned, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1149:28: note: candidate 3: 'operator<(int, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1164:27: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'int64_t' {aka 'long long int'})
+ 1164 |     assert(res_i64->first * divisor_i64 + res_i64->second == large);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |       |
+      |                     |       int64_t {aka long long int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1164:27: note: there are 7 candidates
+ 1164 |     assert(res_i64->first * divisor_i64 + res_i64->second == large);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1164:27: note: candidate 1: 'operator*(__int128, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1164:27: note: candidate 2: 'operator*(__int128 unsigned, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1164:27: note: candidate 3: 'operator*(int, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1166:28: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'int64_t' {aka 'long long int'})
+ 1166 |     assert(res_i64->second < divisor_i64);
+      |            ~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |        |
+      |                     |        int64_t {aka long long int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1166:28: note: there are 7 candidates
+ 1166 |     assert(res_i64->second < divisor_i64);
+      |            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1166:28: note: candidate 1: 'operator<(__int128, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1166:28: note: candidate 2: 'operator<(__int128 unsigned, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1166:28: note: candidate 3: 'operator<(int, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1181:27: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'uint32_t' {aka 'unsigned int'})
+ 1181 |     assert(res_u32->first * divisor_u32 + res_u32->second == large);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |       |
+      |                     |       uint32_t {aka unsigned int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1181:27: note: there are 7 candidates
+ 1181 |     assert(res_u32->first * divisor_u32 + res_u32->second == large);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1181:27: note: candidate 1: 'operator*(__int128, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1181:27: note: candidate 2: 'operator*(__int128 unsigned, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1181:27: note: candidate 3: 'operator*(int, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1183:28: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'uint32_t' {aka 'unsigned int'})
+ 1183 |     assert(res_u32->second < divisor_u32);
+      |            ~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |        |
+      |                     |        uint32_t {aka unsigned int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1183:28: note: there are 7 candidates
+ 1183 |     assert(res_u32->second < divisor_u32);
+      |            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1183:28: note: candidate 1: 'operator<(__int128, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1183:28: note: candidate 2: 'operator<(__int128 unsigned, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1183:28: note: candidate 3: 'operator<(int, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1198:27: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'int32_t' {aka 'int'})
+ 1198 |     assert(res_i32->first * divisor_i32 + res_i32->second == large);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |       |
+      |                     |       int32_t {aka int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1198:27: note: there are 7 candidates
+ 1198 |     assert(res_i32->first * divisor_i32 + res_i32->second == large);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1198:27: note: candidate 1: 'operator*(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1198:27: note: candidate 2: 'operator*(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1198:27: note: candidate 3: 'operator*(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1200:28: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'int32_t' {aka 'int'})
+ 1200 |     assert(res_i32->second < divisor_i32);
+      |            ~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |        |
+      |                     |        int32_t {aka int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1200:28: note: there are 7 candidates
+ 1200 |     assert(res_i32->second < divisor_i32);
+      |            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1200:28: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1200:28: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1200:28: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1215:27: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'uint16_t' {aka 'short unsigned int'})
+ 1215 |     assert(res_u16->first * divisor_u16 + res_u16->second == large);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |       |
+      |                     |       uint16_t {aka short unsigned int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1215:27: note: there are 7 candidates
+ 1215 |     assert(res_u16->first * divisor_u16 + res_u16->second == large);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1215:27: note: candidate 1: 'operator*(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1215:27: note: candidate 2: 'operator*(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1215:27: note: candidate 3: 'operator*(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1217:28: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'uint16_t' {aka 'short unsigned int'})
+ 1217 |     assert(res_u16->second < divisor_u16);
+      |            ~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |        |
+      |                     |        uint16_t {aka short unsigned int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1217:28: note: there are 7 candidates
+ 1217 |     assert(res_u16->second < divisor_u16);
+      |            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1217:28: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1217:28: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1217:28: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1232:27: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'int16_t' {aka 'short int'})
+ 1232 |     assert(res_i16->first * divisor_i16 + res_i16->second == large);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |       |
+      |                     |       int16_t {aka short int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1232:27: note: there are 7 candidates
+ 1232 |     assert(res_i16->first * divisor_i16 + res_i16->second == large);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1232:27: note: candidate 1: 'operator*(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1232:27: note: candidate 2: 'operator*(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1232:27: note: candidate 3: 'operator*(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1234:28: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'int16_t' {aka 'short int'})
+ 1234 |     assert(res_i16->second < divisor_i16);
+      |            ~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~
+      |                     |        |
+      |                     |        int16_t {aka short int}
+      |                     uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1234:28: note: there are 7 candidates
+ 1234 |     assert(res_i16->second < divisor_i16);
+      |            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1234:28: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1234:28: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1234:28: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1249:26: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'uint8_t' {aka 'unsigned char'})
+ 1249 |     assert(res_u8->first * divisor_u8 + res_u8->second == large);
+      |            ~~~~~~~~~~~~~ ^ ~~~~~~~~~~
+      |                    |       |
+      |                    |       uint8_t {aka unsigned char}
+      |                    uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1249:26: note: there are 7 candidates
+ 1249 |     assert(res_u8->first * divisor_u8 + res_u8->second == large);
+      |            ~~~~~~~~~~~~~~^~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1249:26: note: candidate 1: 'operator*(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1249:26: note: candidate 2: 'operator*(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1249:26: note: candidate 3: 'operator*(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1251:27: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'uint8_t' {aka 'unsigned char'})
+ 1251 |     assert(res_u8->second < divisor_u8);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~
+      |                    |        |
+      |                    |        uint8_t {aka unsigned char}
+      |                    uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1251:27: note: there are 7 candidates
+ 1251 |     assert(res_u8->second < divisor_u8);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1251:27: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1251:27: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1251:27: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1266:26: error: ambiguous overload for 'operator*' (operand types are 'uint128_t' and 'int8_t' {aka 'signed char'})
+ 1266 |     assert(res_i8->first * divisor_i8 + res_i8->second == large);
+      |            ~~~~~~~~~~~~~ ^ ~~~~~~~~~~
+      |                    |       |
+      |                    |       int8_t {aka signed char}
+      |                    uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1266:26: note: there are 7 candidates
+ 1266 |     assert(res_i8->first * divisor_i8 + res_i8->second == large);
+      |            ~~~~~~~~~~~~~~^~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1266:26: note: candidate 1: 'operator*(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1266:26: note: candidate 2: 'operator*(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1266:26: note: candidate 3: 'operator*(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:1403:25: note: candidate 4: 'constexpr uint128_t uint128_t::operator*(const uint128_t&) const'
+ 1403 |     constexpr uint128_t operator*(const uint128_t& other) const noexcept
+      |                         ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2461:28: note: candidate 5: 'constexpr uint128_t operator*(int, const uint128_t&)'
+ 2461 | inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2483:28: note: candidate 6: 'constexpr uint128_t operator*(uint32_t, const uint128_t&)'
+ 2483 | inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2505:28: note: candidate 7: 'constexpr uint128_t operator*(uint64_t, const uint128_t&)'
+ 2505 | inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                            ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1268:27: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'int8_t' {aka 'signed char'})
+ 1268 |     assert(res_i8->second < divisor_i8);
+      |            ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~
+      |                    |        |
+      |                    |        int8_t {aka signed char}
+      |                    uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1268:27: note: there are 7 candidates
+ 1268 |     assert(res_i8->second < divisor_i8);
+      |            ~~~~~~~~~~~~~~~^~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1268:27: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1268:27: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1268:27: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp: In function 'void test_divrem_random_integral_divisor()':
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1361:21: error: conversion from 'uint128_t' to 'long long unsigned int' is ambiguous
+ 1361 |             b_u64 = 1_u128;
+      |                     ^~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1361:21: note: there are 4 candidates
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:345:15: note: candidate 1: 'constexpr uint128_t::operator __int128 unsigned() const'
+  345 |     constexpr operator __uint128_t() const noexcept
+      |               ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:362:15: note: candidate 2: 'constexpr uint128_t::operator __int128() const'
+  362 |     constexpr operator __int128_t() const noexcept
+      |               ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1367:22: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'long long unsigned int')
+ 1367 |         assert(r_u64 < b_u64);
+      |                ~~~~~ ^ ~~~~~
+      |                |       |
+      |                |       long long unsigned int
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1367:22: note: there are 7 candidates
+ 1367 |         assert(r_u64 < b_u64);
+      |                ~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1367:22: note: candidate 1: 'operator<(__int128, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1367:22: note: candidate 2: 'operator<(__int128 unsigned, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1367:22: note: candidate 3: 'operator<(int, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1391:35: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'long long unsigned int')
+ 1391 |         assert(check1_u64->second == 0ULL);
+      |                ~~~~~~~~~~~~~~~~~~ ^~ ~~~~
+      |                            |         |
+      |                            uint128_t long long unsigned int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1391:35: note: there are 7 candidates
+ 1391 |         assert(check1_u64->second == 0ULL);
+      |                ~~~~~~~~~~~~~~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1391:35: note: candidate 1: 'operator==(__int128, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1391:35: note: candidate 2: 'operator==(__int128 unsigned, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1391:35: note: candidate 3: 'operator==(int, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1397:38: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'long long unsigned int')
+ 1397 |             assert(check2_u64->first == b_u64);
+      |                    ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                |        |
+      |                                |        long long unsigned int
+      |                                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1397:38: note: there are 7 candidates
+ 1397 |             assert(check2_u64->first == b_u64);
+      |                    ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1397:38: note: candidate 1: 'operator==(__int128, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1397:38: note: candidate 2: 'operator==(__int128 unsigned, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1397:38: note: candidate 3: 'operator==(int, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1398:39: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'long long unsigned int')
+ 1398 |             assert(check2_u64->second == 0ULL);
+      |                    ~~~~~~~~~~~~~~~~~~ ^~ ~~~~
+      |                                |         |
+      |                                uint128_t long long unsigned int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1398:39: note: there are 7 candidates
+ 1398 |             assert(check2_u64->second == 0ULL);
+      |                    ~~~~~~~~~~~~~~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1398:39: note: candidate 1: 'operator==(__int128, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1398:39: note: candidate 2: 'operator==(__int128 unsigned, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1398:39: note: candidate 3: 'operator==(int, long long unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1426:22: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'long long int')
+ 1426 |         assert(r_i64 < b_i64);
+      |                ~~~~~ ^ ~~~~~
+      |                |       |
+      |                |       long long int
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1426:22: note: there are 7 candidates
+ 1426 |         assert(r_i64 < b_i64);
+      |                ~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1426:22: note: candidate 1: 'operator<(__int128, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1426:22: note: candidate 2: 'operator<(__int128 unsigned, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1426:22: note: candidate 3: 'operator<(int, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1444:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1444 |         uint128_t a_minus_r = a - r_i64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1456:38: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'long long int')
+ 1456 |             assert(check2_i64->first == b_i64);
+      |                    ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                |        |
+      |                                |        long long int
+      |                                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1456:38: note: there are 7 candidates
+ 1456 |             assert(check2_i64->first == b_i64);
+      |                    ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1456:38: note: candidate 1: 'operator==(__int128, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1456:38: note: candidate 2: 'operator==(__int128 unsigned, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1456:38: note: candidate 3: 'operator==(int, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1476:43: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'long long int')
+ 1476 |                 assert(check3_i64->second == b2_i64);
+      |                        ~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~
+      |                                    |         |
+      |                                    uint128_t long long int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1476:43: note: there are 7 candidates
+ 1476 |                 assert(check3_i64->second == b2_i64);
+      |                        ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1476:43: note: candidate 1: 'operator==(__int128, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1476:43: note: candidate 2: 'operator==(__int128 unsigned, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1476:43: note: candidate 3: 'operator==(int, long long int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1489:22: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'unsigned int')
+ 1489 |         assert(r_u32 < b_u32);
+      |                ~~~~~ ^ ~~~~~
+      |                |       |
+      |                |       unsigned int
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1489:22: note: there are 7 candidates
+ 1489 |         assert(r_u32 < b_u32);
+      |                ~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1489:22: note: candidate 1: 'operator<(__int128, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1489:22: note: candidate 2: 'operator<(__int128 unsigned, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1489:22: note: candidate 3: 'operator<(int, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1507:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1507 |         uint128_t a_minus_r = a - r_u32;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1519:38: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'unsigned int')
+ 1519 |             assert(check2_u32->first == b_u32);
+      |                    ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                |        |
+      |                                |        unsigned int
+      |                                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1519:38: note: there are 7 candidates
+ 1519 |             assert(check2_u32->first == b_u32);
+      |                    ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1519:38: note: candidate 1: 'operator==(__int128, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1519:38: note: candidate 2: 'operator==(__int128 unsigned, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1519:38: note: candidate 3: 'operator==(int, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1541:43: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'unsigned int')
+ 1541 |                 assert(check3_u32->second == b2_u32);
+      |                        ~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~
+      |                                    |         |
+      |                                    uint128_t unsigned int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1541:43: note: there are 7 candidates
+ 1541 |                 assert(check3_u32->second == b2_u32);
+      |                        ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1541:43: note: candidate 1: 'operator==(__int128, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1541:43: note: candidate 2: 'operator==(__int128 unsigned, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1541:43: note: candidate 3: 'operator==(int, unsigned int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1554:22: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'int')
+ 1554 |         assert(r_i32 < b_i32);
+      |                ~~~~~ ^ ~~~~~
+      |                |       |
+      |                |       int
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1554:22: note: there are 7 candidates
+ 1554 |         assert(r_i32 < b_i32);
+      |                ~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1554:22: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1554:22: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1554:22: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1572:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1572 |         uint128_t a_minus_r = a - r_i32;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1584:38: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'int')
+ 1584 |             assert(check2_i32->first == b_i32);
+      |                    ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                |        |
+      |                                |        int
+      |                                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1584:38: note: there are 7 candidates
+ 1584 |             assert(check2_i32->first == b_i32);
+      |                    ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1584:38: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1584:38: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1584:38: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1606:43: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'int')
+ 1606 |                 assert(check3_i32->second == b2_i32);
+      |                        ~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~
+      |                                    |         |
+      |                                    uint128_t int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1606:43: note: there are 7 candidates
+ 1606 |                 assert(check3_i32->second == b2_i32);
+      |                        ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1606:43: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1606:43: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1606:43: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1619:22: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'short unsigned int')
+ 1619 |         assert(r_u16 < b_u16);
+      |                ~~~~~ ^ ~~~~~
+      |                |       |
+      |                |       short unsigned int
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1619:22: note: there are 7 candidates
+ 1619 |         assert(r_u16 < b_u16);
+      |                ~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1619:22: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1619:22: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1619:22: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1637:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1637 |         uint128_t a_minus_r = a - r_u16;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1649:38: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'short unsigned int')
+ 1649 |             assert(check2_u16->first == b_u16);
+      |                    ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                |        |
+      |                                |        short unsigned int
+      |                                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1649:38: note: there are 7 candidates
+ 1649 |             assert(check2_u16->first == b_u16);
+      |                    ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1649:38: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1649:38: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1649:38: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1671:43: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'short unsigned int')
+ 1671 |                 assert(check3_u16->second == b2_u16);
+      |                        ~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~
+      |                                    |         |
+      |                                    uint128_t short unsigned int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1671:43: note: there are 7 candidates
+ 1671 |                 assert(check3_u16->second == b2_u16);
+      |                        ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1671:43: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1671:43: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1671:43: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1684:22: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'short int')
+ 1684 |         assert(r_i16 < b_i16);
+      |                ~~~~~ ^ ~~~~~
+      |                |       |
+      |                |       short int
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1684:22: note: there are 7 candidates
+ 1684 |         assert(r_i16 < b_i16);
+      |                ~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1684:22: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1684:22: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1684:22: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1702:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1702 |         uint128_t a_minus_r = a - r_i16;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1714:38: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'short int')
+ 1714 |             assert(check2_i16->first == b_i16);
+      |                    ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                |        |
+      |                                |        short int
+      |                                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1714:38: note: there are 7 candidates
+ 1714 |             assert(check2_i16->first == b_i16);
+      |                    ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1714:38: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1714:38: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1714:38: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1736:43: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'short int')
+ 1736 |                 assert(check3_i16->second == b2_i16);
+      |                        ~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~
+      |                                    |         |
+      |                                    uint128_t short int
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1736:43: note: there are 7 candidates
+ 1736 |                 assert(check3_i16->second == b2_i16);
+      |                        ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1736:43: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1736:43: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1736:43: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1749:21: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'unsigned char')
+ 1749 |         assert(r_u8 < b_u8);
+      |                ~~~~ ^ ~~~~
+      |                |      |
+      |                |      unsigned char
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1749:21: note: there are 7 candidates
+ 1749 |         assert(r_u8 < b_u8);
+      |                ~~~~~^~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1749:21: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1749:21: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1749:21: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1767:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1767 |         uint128_t a_minus_r = a - r_u8;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1779:37: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'unsigned char')
+ 1779 |             assert(check2_u8->first == b_u8);
+      |                    ~~~~~~~~~~~~~~~~ ^~ ~~~~
+      |                               |        |
+      |                               |        unsigned char
+      |                               uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1779:37: note: there are 7 candidates
+ 1779 |             assert(check2_u8->first == b_u8);
+      |                    ~~~~~~~~~~~~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1779:37: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1779:37: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1779:37: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1801:42: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'unsigned char')
+ 1801 |                 assert(check3_u8->second == b2_u8);
+      |                        ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                   |         |
+      |                                   uint128_t unsigned char
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1801:42: note: there are 7 candidates
+ 1801 |                 assert(check3_u8->second == b2_u8);
+      |                        ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1801:42: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1801:42: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1801:42: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1814:21: error: ambiguous overload for 'operator<' (operand types are 'uint128_t' and 'signed char')
+ 1814 |         assert(r_i8 < b_i8);
+      |                ~~~~ ^ ~~~~
+      |                |      |
+      |                |      signed char
+      |                uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1814:21: note: there are 7 candidates
+ 1814 |         assert(r_i8 < b_i8);
+      |                ~~~~~^~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1814:21: note: candidate 1: 'operator<(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1814:21: note: candidate 2: 'operator<(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1814:21: note: candidate 3: 'operator<(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:764:20: note: candidate 4: 'constexpr bool uint128_t::operator<(const uint128_t&) const'
+  764 |     constexpr bool operator<(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2527:23: note: candidate 5: 'constexpr bool operator<(int, const uint128_t&)'
+ 2527 | inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2553:23: note: candidate 6: 'constexpr bool operator<(uint32_t, const uint128_t&)'
+ 2553 | inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2579:23: note: candidate 7: 'constexpr bool operator<(uint64_t, const uint128_t&)'
+ 2579 | inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1832:19: error: redeclaration of 'uint128_t a_minus_r'
+ 1832 |         uint128_t a_minus_r = a - r_i8;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1385:19: note: 'uint128_t a_minus_r' previously declared here
+ 1385 |         uint128_t a_minus_r = a - r_u64;
+      |                   ^~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1844:37: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'signed char')
+ 1844 |             assert(check2_i8->first == b_i8);
+      |                    ~~~~~~~~~~~~~~~~ ^~ ~~~~
+      |                               |        |
+      |                               |        signed char
+      |                               uint128_t
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1844:37: note: there are 7 candidates
+ 1844 |             assert(check2_i8->first == b_i8);
+      |                    ~~~~~~~~~~~~~~~~~^~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1844:37: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1844:37: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1844:37: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1866:42: error: ambiguous overload for 'operator==' (operand types are 'uint128_t' and 'signed char')
+ 1866 |                 assert(check3_i8->second == b2_i8);
+      |                        ~~~~~~~~~~~~~~~~~ ^~ ~~~~~
+      |                                   |         |
+      |                                   uint128_t signed char
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1866:42: note: there are 7 candidates
+ 1866 |                 assert(check3_i8->second == b2_i8);
+      |                        ~~~~~~~~~~~~~~~~~~^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1866:42: note: candidate 1: 'operator==(__int128, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1866:42: note: candidate 2: 'operator==(__int128 unsigned, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1866:42: note: candidate 3: 'operator==(int, int)' (built-in)
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:740:20: note: candidate 4: 'constexpr bool uint128_t::operator==(const uint128_t&) const'
+  740 |     constexpr bool operator==(const uint128_t& other) const noexcept
+      |                    ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2519:23: note: candidate 5: 'constexpr bool operator==(int, const uint128_t&)'
+ 2519 | inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2545:23: note: candidate 6: 'constexpr bool operator==(uint32_t, const uint128_t&)'
+ 2545 | inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/include/uint128/uint128_t.hpp:2571:23: note: candidate 7: 'constexpr bool operator==(uint64_t, const uint128_t&)'
+ 2571 | inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
+      |                       ^~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp: In function 'void test_divrem_known_result()':
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1878:17: error: unable to find numeric literal operator 'operator""_u128.divrem'
+ 1878 |     auto res1 = 100_u128.divrem(3_u128);
+      |                 ^~~~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1878:17: note: use '-fext-numeric-literals' to enable more built-in suffixes
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp: In function 'void test_divrem_known_result_integral_divisor()':
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1908:17: error: unable to find numeric literal operator 'operator""_u128.divrem'
+ 1908 |     auto res1 = 100_u128.divrem(3);
+      |                 ^~~~~~~~~~~~~~~
+C:/msys64/ucrt64/home/julian/CppProjects/int128/tests/uint128_extracted_tests.cpp:1908:17: note: use '-fext-numeric-literals' to enable more built-in suffixes
+[0;31m❌ Error de compilación.[0m

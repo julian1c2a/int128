@@ -2,7 +2,7 @@
  * Test básico para int128_t
  */
 
-#include "../include/int128_t.hpp"
+#include "../include/int128/int128_t.hpp"
 #include <cassert>
 #include <iostream>
 

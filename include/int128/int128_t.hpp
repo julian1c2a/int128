@@ -678,6 +678,134 @@ inline std::istream& operator>>(std::istream& is, int128_t& value)
 }
 
 // ===============================================================================
+// OPERADORES FRIEND FUERA DE LA CLASE
+// ===============================================================================
+
+// Operadores aritméticos simétricos para int
+inline constexpr int128_t operator+(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) + rhs;
+}
+inline constexpr int128_t operator-(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) - rhs;
+}
+inline int128_t operator*(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) * rhs;
+}
+inline int128_t operator/(int lhs, const int128_t& rhs)
+{
+    return int128_t(lhs) / rhs;
+}
+inline int128_t operator%(int lhs, const int128_t& rhs)
+{
+    return int128_t(lhs) % rhs;
+}
+
+// Operadores aritméticos simétricos para int64_t
+inline constexpr int128_t operator+(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) + rhs;
+}
+inline constexpr int128_t operator-(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) - rhs;
+}
+inline int128_t operator*(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) * rhs;
+}
+inline int128_t operator/(std::int64_t lhs, const int128_t& rhs)
+{
+    return int128_t(lhs) / rhs;
+}
+inline int128_t operator%(std::int64_t lhs, const int128_t& rhs)
+{
+    return int128_t(lhs) % rhs;
+}
+
+// Operadores de comparación simétricos para int
+inline constexpr bool operator==(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) == rhs;
+}
+inline constexpr bool operator!=(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) != rhs;
+}
+inline constexpr bool operator<(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) < rhs;
+}
+inline constexpr bool operator<=(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) <= rhs;
+}
+inline constexpr bool operator>(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) > rhs;
+}
+inline constexpr bool operator>=(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) >= rhs;
+}
+
+// Operadores de comparación simétricos para int64_t
+inline constexpr bool operator==(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) == rhs;
+}
+inline constexpr bool operator!=(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) != rhs;
+}
+inline constexpr bool operator<(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) < rhs;
+}
+inline constexpr bool operator<=(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) <= rhs;
+}
+inline constexpr bool operator>(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) > rhs;
+}
+inline constexpr bool operator>=(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) >= rhs;
+}
+
+// Operadores bitwise simétricos para int
+inline constexpr int128_t operator&(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) & rhs;
+}
+inline constexpr int128_t operator|(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) | rhs;
+}
+inline constexpr int128_t operator^(int lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) ^ rhs;
+}
+
+// Operadores bitwise simétricos para int64_t
+inline constexpr int128_t operator&(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) & rhs;
+}
+inline constexpr int128_t operator|(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) | rhs;
+}
+inline constexpr int128_t operator^(std::int64_t lhs, const int128_t& rhs) noexcept
+{
+    return int128_t(lhs) ^ rhs;
+}
+
+// ===============================================================================
 // CONSTANTES
 // ===============================================================================
 
@@ -696,7 +824,7 @@ constexpr int128_t operator""_i128(unsigned long long value) noexcept
     return int128_t(static_cast<int64_t>(value));
 }
 
-int128_t operator""_i128(const char* str, std::size_t len)
+inline int128_t operator""_i128(const char* str, std::size_t len)
 {
     return int128_t::from_string(std::string(str, len));
 }

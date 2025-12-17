@@ -2493,6 +2493,28 @@ inline constexpr uint128_t operator%(std::uint32_t lhs, const uint128_t& rhs)
     return uint128_t(lhs) % rhs;
 }
 
+// Operadores aritméticos simétricos para int64_t
+inline constexpr uint128_t operator+(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) + rhs;
+}
+inline constexpr uint128_t operator-(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) - rhs;
+}
+inline constexpr uint128_t operator*(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) * rhs;
+}
+inline constexpr uint128_t operator/(std::int64_t lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) / rhs;
+}
+inline constexpr uint128_t operator%(std::int64_t lhs, const uint128_t& rhs)
+{
+    return uint128_t(lhs) % rhs;
+}
+
 // Operadores aritméticos simétricos para uint64_t
 inline constexpr uint128_t operator+(std::uint64_t lhs, const uint128_t& rhs) noexcept
 {
@@ -2567,6 +2589,32 @@ inline constexpr bool operator>=(std::uint32_t lhs, const uint128_t& rhs) noexce
     return uint128_t(lhs) >= rhs;
 }
 
+// Operadores de comparación simétricos para int64_t
+inline constexpr bool operator==(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) == rhs;
+}
+inline constexpr bool operator!=(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) != rhs;
+}
+inline constexpr bool operator<(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) < rhs;
+}
+inline constexpr bool operator<=(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) <= rhs;
+}
+inline constexpr bool operator>(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) > rhs;
+}
+inline constexpr bool operator>=(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) >= rhs;
+}
+
 // Operadores de comparación simétricos para uint64_t
 inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
 {
@@ -2617,6 +2665,20 @@ inline constexpr uint128_t operator|(std::uint32_t lhs, const uint128_t& rhs) no
     return uint128_t(lhs) | rhs;
 }
 inline constexpr uint128_t operator^(std::uint32_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) ^ rhs;
+}
+
+// Operadores bitwise simétricos para int64_t
+inline constexpr uint128_t operator&(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) & rhs;
+}
+inline constexpr uint128_t operator|(std::int64_t lhs, const uint128_t& rhs) noexcept
+{
+    return uint128_t(lhs) | rhs;
+}
+inline constexpr uint128_t operator^(std::int64_t lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) ^ rhs;
 }
