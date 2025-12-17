@@ -1914,137 +1914,137 @@ void test_divrem_known_result()
     std::cout << "test_divrem: test_divrem_known_result passed" << std::endl;
 }
 
-// void test_divrem_known_result_integral_divisor()
-// {
-//     std::cout << "test_divrem: test_divrem_known_result_integral_divisor ......" << std::endl;
+void test_divrem_known_result_integral_divisor()
+{
+    std::cout << "test_divrem: test_divrem_known_result_integral_divisor ......" << std::endl;
 
-//     // divisor como uint64_t
+    // divisor como uint64_t
 
-//     // 100 / 3 (int)
-//     auto res_u64 = 100_u128.divrem(static_cast<uint64_t>(3u));
-//     auto res_u64 = (100_u128).divrem(static_cast<uint64_t>(3u));
-//     assert(res_u64->first == 33_u128);
-//     assert(res_u64->second == 1_u128);
-//     uint128_t a1 = 100_u128;
-//     a1 /= static_cast<uint64_t>(3u);
-//     assert(a1 == 33_u128);
-//     uint128_t m1 = 100_u128;
-//     m1 %= static_cast<uint64_t>(3u);
-//     assert(m1 == 1_u128);
+    // 100 / 3 (int)
+    auto res_u64 = 100_u128.divrem(static_cast<uint64_t>(3u));
+    auto res_u64 = (100_u128).divrem(static_cast<uint64_t>(3u));
+    assert(res_u64->first == 33_u128);
+    assert(res_u64->second == 1_u128);
+    uint128_t a1 = 100_u128;
+    a1 /= static_cast<uint64_t>(3u);
+    assert(a1 == 33_u128);
+    uint128_t m1 = 100_u128;
+    m1 %= static_cast<uint64_t>(3u);
+    assert(m1 == 1_u128);
 
-//     // Max / 2 (uint64_t)
-//     uint128_t max_val(UINT64_MAX, UINT64_MAX);
-//     auto res_u64_2 = max_val.divrem(static_cast<uint64_t>(2u));
-//     assert(res_u64_2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
-//     assert(res_u64_2->second == 1_u128);
-//     uint128_t a2 = max_val;
-//     a2 /= static_cast<uint64_t>(2u);
-//     assert(a2 == res_u64_2->first);
-//     uint128_t m2 = max_val;
-//     m2 %= static_cast<uint64_t>(2u);
-//     assert(m2 == 1_u128);
+    // Max / 2 (uint64_t)
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    auto res_u64_2 = max_val.divrem(static_cast<uint64_t>(2u));
+    assert(res_u64_2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
+    assert(res_u64_2->second == 1_u128);
+    uint128_t a2 = max_val;
+    a2 /= static_cast<uint64_t>(2u);
+    assert(a2 == res_u64_2->first);
+    uint128_t m2 = max_val;
+    m2 %= static_cast<uint64_t>(2u);
+    assert(m2 == 1_u128);
 
-//     // divisor como int64_t
+    // divisor como int64_t
 
-//     // 100 / 3 (int)
-//     auto res_i64 = 100_u128.divrem(static_cast<int64_t>(3));
-//     auto res_i64 = (100_u128).divrem(static_cast<int64_t>(3));
-//     assert(res_i64->first == 33_u128);
-//     assert(res_i64->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<int64_t>(3);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<int64_t>(3);
-//     assert(m1 == 1_u128);
+    // 100 / 3 (int)
+    auto res_i64 = 100_u128.divrem(static_cast<int64_t>(3));
+    auto res_i64 = (100_u128).divrem(static_cast<int64_t>(3));
+    assert(res_i64->first == 33_u128);
+    assert(res_i64->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<int64_t>(3);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<int64_t>(3);
+    assert(m1 == 1_u128);
 
-//     // Max / 2 (int64_t)
-//     auto res_i64_2 = max_val.divrem(static_cast<int64_t>(2));
-//     assert(res_i64_2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
-//     assert(res_i64_2->second == 1_u128);
-//     a2 = max_val;
-//     a2 /= static_cast<int64_t>(2);
-//     assert(a2 == res_i64_2->first);
-//     m2 = max_val;
-//     m2 %= static_cast<int64_t>(2);
-//     assert(m2 == 1_u128);
+    // Max / 2 (int64_t)
+    auto res_i64_2 = max_val.divrem(static_cast<int64_t>(2));
+    assert(res_i64_2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
+    assert(res_i64_2->second == 1_u128);
+    a2 = max_val;
+    a2 /= static_cast<int64_t>(2);
+    assert(a2 == res_i64_2->first);
+    m2 = max_val;
+    m2 %= static_cast<int64_t>(2);
+    assert(m2 == 1_u128);
 
-//     // divisor como uint32_t
-//     auto res_u32 = 100_u128.divrem(static_cast<uint32_t>(3u));
-//     auto res_u32 = (100_u128).divrem(static_cast<uint32_t>(3u));
-//     assert(res_u32->first == 33_u128);
-//     assert(res_u32->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<uint32_t>(3u);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<uint32_t>(3u);
-//     assert(m1 == 1_u128);
+    // divisor como uint32_t
+    auto res_u32 = 100_u128.divrem(static_cast<uint32_t>(3u));
+    auto res_u32 = (100_u128).divrem(static_cast<uint32_t>(3u));
+    assert(res_u32->first == 33_u128);
+    assert(res_u32->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<uint32_t>(3u);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<uint32_t>(3u);
+    assert(m1 == 1_u128);
 
-//     // divisor como int32_t
-//     auto res_i32 = 100_u128.divrem(static_cast<int32_t>(3));
-//     auto res_i32 = (100_u128).divrem(static_cast<int32_t>(3));
-//     assert(res_i32->first == 33_u128);
-//     assert(res_i32->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<int32_t>(3);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<int32_t>(3);
-//     assert(m1 == 1_u128);
+    // divisor como int32_t
+    auto res_i32 = 100_u128.divrem(static_cast<int32_t>(3));
+    auto res_i32 = (100_u128).divrem(static_cast<int32_t>(3));
+    assert(res_i32->first == 33_u128);
+    assert(res_i32->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<int32_t>(3);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<int32_t>(3);
+    assert(m1 == 1_u128);
 
-//     // divisor como uint16_t
-//     auto res_u16 = 100_u128.divrem(static_cast<uint16_t>(3u));
-//     auto res_u16 = (100_u128).divrem(static_cast<uint16_t>(3u));
-//     assert(res_u16->first == 33_u128);
-//     assert(res_u16->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<uint16_t>(3u);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<uint16_t>(3u);
-//     assert(m1 == 1_u128);
+    // divisor como uint16_t
+    auto res_u16 = 100_u128.divrem(static_cast<uint16_t>(3u));
+    auto res_u16 = (100_u128).divrem(static_cast<uint16_t>(3u));
+    assert(res_u16->first == 33_u128);
+    assert(res_u16->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<uint16_t>(3u);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<uint16_t>(3u);
+    assert(m1 == 1_u128);
 
-//     // divisor como int16_t
-//     auto res_i16 = 100_u128.divrem(static_cast<int16_t>(3));
-//     auto res_i16 = (100_u128).divrem(static_cast<int16_t>(3));
-//     assert(res_i16->first == 33_u128);
-//     assert(res_i16->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<int16_t>(3);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<int16_t>(3);
-//     assert(m1 == 1_u128);
+    // divisor como int16_t
+    auto res_i16 = 100_u128.divrem(static_cast<int16_t>(3));
+    auto res_i16 = (100_u128).divrem(static_cast<int16_t>(3));
+    assert(res_i16->first == 33_u128);
+    assert(res_i16->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<int16_t>(3);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<int16_t>(3);
+    assert(m1 == 1_u128);
 
-//     // divisor como uint8_t
-//     auto res_u8 = 100_u128.divrem(static_cast<uint8_t>(3u));
-//     auto res_u8 = (100_u128).divrem(static_cast<uint8_t>(3u));
-//     assert(res_u8->first == 33_u128);
-//     assert(res_u8->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<uint8_t>(3u);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<uint8_t>(3u);
-//     assert(m1 == 1_u128);
+    // divisor como uint8_t
+    auto res_u8 = 100_u128.divrem(static_cast<uint8_t>(3u));
+    auto res_u8 = (100_u128).divrem(static_cast<uint8_t>(3u));
+    assert(res_u8->first == 33_u128);
+    assert(res_u8->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<uint8_t>(3u);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<uint8_t>(3u);
+    assert(m1 == 1_u128);
 
-//     // divisor como int8_t
-//     auto res_i8 = 100_u128.divrem(static_cast<int8_t>(3));
-//     auto res_i8 = (100_u128).divrem(static_cast<int8_t>(3));
-//     assert(res_i8->first == 33_u128);
-//     assert(res_i8->second == 1_u128);
-//     a1 = 100_u128;
-//     a1 /= static_cast<int8_t>(3);
-//     assert(a1 == 33_u128);
-//     m1 = 100_u128;
-//     m1 %= static_cast<int8_t>(3);
-//     assert(m1 == 1_u128);
+    // divisor como int8_t
+    auto res_i8 = 100_u128.divrem(static_cast<int8_t>(3));
+    auto res_i8 = (100_u128).divrem(static_cast<int8_t>(3));
+    assert(res_i8->first == 33_u128);
+    assert(res_i8->second == 1_u128);
+    a1 = 100_u128;
+    a1 /= static_cast<int8_t>(3);
+    assert(a1 == 33_u128);
+    m1 = 100_u128;
+    m1 %= static_cast<int8_t>(3);
+    assert(m1 == 1_u128);
 
-//     assert(m2 == 1_u128);
+    assert(m2 == 1_u128);
 
-//     std::cout << "test_divrem: test_divrem_known_result_integral_divisor passed" << std::endl;
-// }
+    std::cout << "test_divrem: test_divrem_known_result_integral_divisor passed" << std::endl;
+}
 
 int main()
 {
@@ -2090,7 +2090,7 @@ int main()
     test_divrem_random();
     // test_divrem_random_integral_divisor();
     test_divrem_known_result();
-    // test_divrem_known_result_integral_divisor();
+    test_divrem_known_result_integral_divisor();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
