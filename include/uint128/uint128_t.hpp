@@ -477,11 +477,19 @@ class uint128_t
      * @property El desbordamiento (overflow) se maneja de forma silenciosa, como en los enteros
      * estándar sin signo. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
+     * @test (test_addition_assignment)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // hacemos asignaciones aleatorias a un "uint128_t a"
+     * // // y sumamos valores aleatorios "uint128_t b"
+     * // // si el valor de "b" es 0, "a" no debe cambiar
+     * // // si el valor de "b" es 1, "a" debe incrementarse en 1
+     * // // si el valor de "b" es pequeño, vemos si es igual 
+     * // // a+=b, a == (++a b veces)
+     * // // vemos que a' = a, b' = b, a' += b, b' += a,  a' == b'
+     * // // // y a'' = a, a' = a, b' = b, a' += b, a' += c, b' += c,  a'' += b',
+     * // // // y a'' == b'
+     * // // // y que si a += b, a sobrepasa el máximo, el resultado es correcto (desbordamiento)
+     * // // // y que a' = a, a' += 0, a' == a
      * @endcode
      */
     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
@@ -535,11 +543,10 @@ class uint128_t
      * @property El subdesbordamiento (underflow) se maneja de forma silenciosa. Es `constexpr` y
      * `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
+     * @test (test_subtraction_assignment)
      * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
+     * // // similar a test_addition_assignment
+     * // // pero para restas
      * @endcode
      */
     constexpr uint128_t& operator-=(const uint128_t& other) noexcept

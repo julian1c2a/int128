@@ -491,6 +491,104 @@ void test___int128_conversion()
 #endif
 }
 
+void test_addition_assignment()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+
+        // Identidad: a += 0 no cambia a
+        uint128_t a_copy = a;
+        a_copy += uint128_t(0);
+        assert(a_copy == a);
+
+        // Conmutatividad: a + b == b + a
+        uint128_t sum1 = a;
+        sum1 += b;
+        uint128_t sum2 = b;
+        sum2 += a;
+        assert(sum1 == sum2);
+
+        // Asociatividad: (a + b) + c == a + (b + c)
+        uint128_t c(rng(), rng());
+        uint128_t s1 = sum1; // a + b
+        s1 += c;
+
+        uint128_t bc = b;
+        bc += c;
+        uint128_t s2 = a;
+        s2 += bc;
+        assert(s1 == s2);
+    }
+
+    // Overflow tests
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    max_val += 1;
+    assert(max_val == uint128_t(0));
+
+    uint128_t low_max(0, UINT64_MAX);
+    low_max += 1;
+    assert(low_max == uint128_t(1, 0));
+
+    std::cout << "test_addition_assignment passed" << std::endl;
+}
+
+void test_subtraction_assignment()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+
+        // Identidad: a -= 0 no cambia a
+        uint128_t a_copy = a;
+        a_copy -= uint128_t(0);
+        assert(a_copy == a);
+
+        // Propiedad inversa: (a - b) + b == a
+        uint128_t a_copy_inv = a;
+        a_copy_inv -= b;
+        a_copy_inv += b;
+        assert(a_copy_inv == a);
+
+        // Otra verificación: c - c = 0
+        uint128_t c(rng(), rng());
+        uint128_t c_copy = c;
+        c -= c_copy;
+        assert(c == uint128_t(0));
+
+        // Test a' -= b vs decrementing b veces
+        uint128_t a_prime = a;
+        uint128_t a_double_prime = a;
+        // Usar un valor pequeño para b para que el bucle sea factible
+        uint16_t small_b_val = static_cast<uint16_t>(rng() % 1001); // 0 to 1000
+        uint128_t small_b(small_b_val);
+
+        a_prime -= small_b;
+        for (uint16_t j = 0; j < small_b_val; ++j) {
+            --a_double_prime;
+        }
+        assert(a_prime == a_double_prime);
+
+        // Test a' != a, excepto para b == 0
+        if (b != uint128_t(0)) {
+            uint128_t a_copy_neq = a;
+            a_copy_neq -= b;
+            assert(a_copy_neq != a);
+        }
+    }
+
+    // Underflow tests
+    uint128_t zero_val(0);
+    zero_val -= 1;
+    assert(zero_val == uint128_t(UINT64_MAX, UINT64_MAX));
+
+    uint128_t high_one(1, 0);
+    high_one -= 1;
+    assert(high_one == uint128_t(0, UINT64_MAX));
+
+    std::cout << "test_subtraction_assignment passed" << std::endl;
+}
+
 void test_pre_increment()
 {
     // Simple increment
@@ -598,6 +696,8 @@ int main()
     test_integral_conversion();
     test___uint128_conversion();
     test___int128_conversion();
+    test_addition_assignment();
+    test_subtraction_assignment();
     test_pre_increment();
     test_post_increment();
     test_pre_decrement();
