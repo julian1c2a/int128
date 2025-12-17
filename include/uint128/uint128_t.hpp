@@ -487,7 +487,7 @@ class uint128_t
     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
     {
 #ifdef _MSC_VER
-        uint64_t new_low;
+        uint64_t new_low; // Este variable temporal no inicializada es necesario para _addcarry_u64
         const unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
         _addcarry_u64(carry, data[1], other.data[1], &data[1]);
