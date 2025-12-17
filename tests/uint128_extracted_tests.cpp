@@ -1921,7 +1921,6 @@ void test_divrem_known_result_integral_divisor()
     // divisor como uint64_t
 
     // 100 / 3 (int)
-    auto res_u64 = 100_u128.divrem(static_cast<uint64_t>(3u));
     auto res_u64 = (100_u128).divrem(static_cast<uint64_t>(3u));
     assert(res_u64->first == 33_u128);
     assert(res_u64->second == 1_u128);
@@ -1947,7 +1946,6 @@ void test_divrem_known_result_integral_divisor()
     // divisor como int64_t
 
     // 100 / 3 (int)
-    auto res_i64 = 100_u128.divrem(static_cast<int64_t>(3));
     auto res_i64 = (100_u128).divrem(static_cast<int64_t>(3));
     assert(res_i64->first == 33_u128);
     assert(res_i64->second == 1_u128);
@@ -1970,7 +1968,6 @@ void test_divrem_known_result_integral_divisor()
     assert(m2 == 1_u128);
 
     // divisor como uint32_t
-    auto res_u32 = 100_u128.divrem(static_cast<uint32_t>(3u));
     auto res_u32 = (100_u128).divrem(static_cast<uint32_t>(3u));
     assert(res_u32->first == 33_u128);
     assert(res_u32->second == 1_u128);
@@ -1982,7 +1979,6 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como int32_t
-    auto res_i32 = 100_u128.divrem(static_cast<int32_t>(3));
     auto res_i32 = (100_u128).divrem(static_cast<int32_t>(3));
     assert(res_i32->first == 33_u128);
     assert(res_i32->second == 1_u128);
@@ -1994,7 +1990,6 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como uint16_t
-    auto res_u16 = 100_u128.divrem(static_cast<uint16_t>(3u));
     auto res_u16 = (100_u128).divrem(static_cast<uint16_t>(3u));
     assert(res_u16->first == 33_u128);
     assert(res_u16->second == 1_u128);
@@ -2006,7 +2001,6 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como int16_t
-    auto res_i16 = 100_u128.divrem(static_cast<int16_t>(3));
     auto res_i16 = (100_u128).divrem(static_cast<int16_t>(3));
     assert(res_i16->first == 33_u128);
     assert(res_i16->second == 1_u128);
@@ -2018,7 +2012,6 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como uint8_t
-    auto res_u8 = 100_u128.divrem(static_cast<uint8_t>(3u));
     auto res_u8 = (100_u128).divrem(static_cast<uint8_t>(3u));
     assert(res_u8->first == 33_u128);
     assert(res_u8->second == 1_u128);
@@ -2030,7 +2023,6 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como int8_t
-    auto res_i8 = 100_u128.divrem(static_cast<int8_t>(3));
     auto res_i8 = (100_u128).divrem(static_cast<int8_t>(3));
     assert(res_i8->first == 33_u128);
     assert(res_i8->second == 1_u128);
