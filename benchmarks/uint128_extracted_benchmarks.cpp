@@ -20,6 +20,17 @@
 #include <string>
 #include <vector>
 
+// Para medir ciclos de CPU
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
+#ifdef _MSC_VER
+#include <intrin.h>
+#define HAS_RDTSC 1
+#elif defined(__GNUC__) || defined(__clang__)
+#include <x86intrin.h>
+#define HAS_RDTSC 1
+#endif
+#endif
+
 // Optional: Boost multiprecision for comparison
 #ifdef HAVE_BOOST
 #include <boost/multiprecision/cpp_int.hpp>
@@ -34,6 +45,7 @@ struct BenchmarkResult {
     std::string compiler;
     std::string optimization;
     double time_ns; // Tiempo promedio por operación en nanosegundos
+    double cycles;  // Ciclos de CPU promedio por operación
     size_t iterations;
     double ops_per_sec; // Operaciones por segundo
     std::string timestamp;
@@ -90,6 +102,19 @@ std::string get_optimization()
 #endif
 }
 
+// Leer ciclos de CPU
+inline uint64_t read_cpu_cycles()
+{
+#ifdef HAS_RDTSC
+    return __rdtsc();
+#else
+    // Fallback: convertir tiempo a ciclos estimados (asumiendo 2.5 GHz)
+    auto now = std::chrono::high_resolution_clock::now();
+    auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
+    return static_cast<uint64_t>(ns * 2.5); // 2.5 ciclos por nanosegundo
+#endif
+}
+
 // Template para benchmarks genéricos
 template <typename Func>
 double benchmark_operation(const std::string& op_name, const std::string& type_name, Func&& func,
@@ -100,15 +125,24 @@ double benchmark_operation(const std::string& op_name, const std::string& type_n
         func();
     }
 
-    // Benchmark real
-    auto start = std::chrono::high_resolution_clock::now();
+    // Benchmark real - Tiempo
+    auto start_time = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < iterations; ++i) {
         func();
     }
-    auto end = std::chrono::high_resolution_clock::now();
+    auto end_time = std::chrono::high_resolution_clock::now();
 
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    // Benchmark real - Ciclos (segunda ejecución para minimizar interferencia)
+    uint64_t start_cycles = read_cpu_cycles();
+    for (size_t i = 0; i < iterations; ++i) {
+        func();
+    }
+    uint64_t end_cycles = read_cpu_cycles();
+
+    auto duration =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
     double time_per_op = static_cast<double>(duration) / iterations;
+    double cycles_per_op = static_cast<double>(end_cycles - start_cycles) / iterations;
     double ops_per_sec = 1e9 / time_per_op;
 
     BenchmarkResult result;
@@ -117,6 +151,7 @@ double benchmark_operation(const std::string& op_name, const std::string& type_n
     result.compiler = get_compiler();
     result.optimization = get_optimization();
     result.time_ns = time_per_op;
+    result.cycles = cycles_per_op;
     result.iterations = iterations;
     result.ops_per_sec = ops_per_sec;
     result.timestamp = get_timestamp();
@@ -632,14 +667,16 @@ void export_csv(const std::string& filename)
     }
 
     // Header
-    file << "Operation,Type,Compiler,Optimization,Time_ns,Iterations,Ops_per_sec,Timestamp\n";
+    file
+        << "Operation,Type,Compiler,Optimization,Time_ns,Cycles,Iterations,Ops_per_sec,Timestamp\n";
 
     // Data
     for (const auto& result : all_results) {
         file << result.operation << "," << result.type << "," << result.compiler << ","
              << result.optimization << "," << std::fixed << std::setprecision(3) << result.time_ns
-             << "," << result.iterations << "," << std::fixed << std::setprecision(0)
-             << result.ops_per_sec << "," << result.timestamp << "\n";
+             << "," << std::fixed << std::setprecision(2) << result.cycles << ","
+             << result.iterations << "," << std::fixed << std::setprecision(0) << result.ops_per_sec
+             << "," << result.timestamp << "\n";
     }
 
     file.close();
@@ -665,6 +702,8 @@ void export_json(const std::string& filename)
         file << "      \"compiler\": \"" << result.compiler << "\",\n";
         file << "      \"optimization\": \"" << result.optimization << "\",\n";
         file << "      \"time_ns\": " << std::fixed << std::setprecision(3) << result.time_ns
+             << ",\n";
+        file << "      \"cycles\": " << std::fixed << std::setprecision(2) << result.cycles
              << ",\n";
         file << "      \"iterations\": " << result.iterations << ",\n";
         file << "      \"ops_per_sec\": " << std::fixed << std::setprecision(0)

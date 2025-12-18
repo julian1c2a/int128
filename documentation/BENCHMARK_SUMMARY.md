@@ -187,11 +187,14 @@ Cada benchmark registra:
 | Métrica | Descripción | Unidad |
 |---------|-------------|--------|
 | `Time_ns` | Tiempo promedio por operación | nanosegundos |
+| `Cycles` | Ciclos de CPU promedio por operación | ciclos |
 | `Iterations` | Número de repeticiones | cantidad |
 | `Ops_per_sec` | Throughput (operaciones/segundo) | ops/s |
 | `Compiler` | Compilador y versión | string |
 | `Optimization` | Nivel de optimización | O0-O3 |
 | `Timestamp` | Fecha y hora de ejecución | datetime |
+
+**Nota sobre Cycles**: Los ciclos de CPU se miden usando la instrucción `RDTSC` (x86/x64). Esta métrica es independiente de la frecuencia del CPU y más precisa que el tiempo para comparaciones de rendimiento.
 
 ## 🎯 Interpretación
 

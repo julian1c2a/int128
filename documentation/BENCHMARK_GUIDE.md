@@ -141,9 +141,9 @@ Para incluir comparaciones con Boost.Multiprecision:
 Archivo CSV con todas las mediciones:
 
 ```csv
-Operation,Type,Compiler,Optimization,Time_ns,Iterations,Ops_per_sec,Timestamp
-addition,uint128_t,GCC-13.2,O3,5.234,1000000,191057365,2024-01-15 10:30:45
-addition,uint64_t,GCC-13.2,O3,0.521,1000000,1919386796,2024-01-15 10:30:45
+Operation,Type,Compiler,Optimization,Time_ns,Cycles,Iterations,Ops_per_sec,Timestamp
+addition,uint128_t,GCC-13.2,O3,5.234,13.20,1000000,191057365,2024-01-15 10:30:45
+addition,uint64_t,GCC-13.2,O3,0.521,1.30,1000000,1919386796,2024-01-15 10:30:45
 ...
 ```
 
@@ -153,9 +153,12 @@ addition,uint64_t,GCC-13.2,O3,0.521,1000000,1919386796,2024-01-15 10:30:45
 - `Compiler`: Compilador y versión
 - `Optimization`: Nivel de optimización
 - `Time_ns`: Tiempo promedio por operación (nanosegundos)
+- `Cycles`: Ciclos de CPU promedio por operación
 - `Iterations`: Número de iteraciones ejecutadas
 - `Ops_per_sec`: Operaciones por segundo
 - `Timestamp`: Fecha y hora de ejecución
+
+**Nota sobre Cycles**: Se utiliza la instrucción `RDTSC` (x86/x64) para medir ciclos de CPU. Esta métrica es independiente de la frecuencia del CPU y más precisa para comparaciones de rendimiento entre diferentes sistemas.
 
 ### JSON
 

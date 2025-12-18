@@ -116,14 +116,16 @@ def calculate_speedup(results: List[Dict]) -> Dict:
     Usa uint64_t como baseline.
     """
     # Organizar resultados por operación y tipo
-    by_operation = defaultdict(lambda: defaultdict(list))
+    by_operation = defaultdict(lambda: defaultdict(lambda: {'times': [], 'cycles': []}))
     
     for result in results:
         op = result.get('Operation', '')
         typ = result.get('Type', '')
         time_ns = float(result.get('Time_ns', 0))
+        cycles = float(result.get('Cycles', 0))
         
-        by_operation[op][typ].append(time_ns)
+        by_operation[op][typ]['times'].append(time_ns)
+        by_operation[op][typ]['cycles'].append(cycles)
     
     # Calcular promedios
     speedups = {}
@@ -131,16 +133,21 @@ def calculate_speedup(results: List[Dict]) -> Dict:
         if 'uint64_t' not in types:
             continue
         
-        baseline = sum(types['uint64_t']) / len(types['uint64_t'])
+        baseline_time = sum(types['uint64_t']['times']) / len(types['uint64_t']['times'])
+        baseline_cycles = sum(types['uint64_t']['cycles']) / len(types['uint64_t']['cycles'])
         speedups[op] = {}
         
-        for typ, times in types.items():
-            avg_time = sum(times) / len(times)
-            speedup = baseline / avg_time if avg_time > 0 else 0
+        for typ, data in types.items():
+            avg_time = sum(data['times']) / len(data['times'])
+            avg_cycles = sum(data['cycles']) / len(data['cycles'])
+            speedup_time = baseline_time / avg_time if avg_time > 0 else 0
+            speedup_cycles = baseline_cycles / avg_cycles if avg_cycles > 0 else 0
             speedups[op][typ] = {
                 'time_ns': avg_time,
-                'speedup': speedup,
-                'relative_performance': f"{speedup:.2f}x"
+                'cycles': avg_cycles,
+                'speedup_time': speedup_time,
+                'speedup_cycles': speedup_cycles,
+                'relative_performance': f"{speedup_time:.2f}x"
             }
     
     return speedups
@@ -166,14 +173,14 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
             # Speedup analysis
             if speedups:
                 f.write("## Performance Comparison (Relative to uint64_t)\n\n")
-                f.write("| Operation | Type | Avg Time (ns) | Speedup |\n")
-                f.write("|-----------|------|---------------|----------|\n")
+                f.write("| Operation | Type | Avg Time (ns) | Avg Cycles | Speedup (Time) | Speedup (Cycles) |\n")
+                f.write("|-----------|------|---------------|------------|----------------|------------------|\n")
                 
                 for op in sorted(speedups.keys()):
                     for typ in sorted(speedups[op].keys()):
                         info = speedups[op][typ]
-                        f.write(f"| {op} | {typ} | {info['time_ns']:.2f} | "
-                               f"{info['relative_performance']} |\n")
+                        f.write(f"| {op} | {typ} | {info['time_ns']:.2f} | {info['cycles']:.2f} | "
+                               f"{info['speedup_time']:.2f}x | {info['speedup_cycles']:.2f}x |\n")
                 f.write("\n")
             
             # Detalles por operación
@@ -187,8 +194,8 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
             
             for op in sorted(by_op.keys()):
                 f.write(f"### {op}\n\n")
-                f.write("| Type | Compiler | Time (ns) | Ops/sec |\n")
-                f.write("|------|----------|-----------|----------|\n")
+                f.write("| Type | Compiler | Time (ns) | Cycles | Ops/sec |\n")
+                f.write("|------|----------|-----------|--------|----------|\n")
                 
                 # Ordenar por tiempo (más rápido primero)
                 sorted_results = sorted(by_op[op], 
@@ -198,9 +205,10 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
                     typ = result.get('Type', '')
                     compiler = result.get('Compiler', '')
                     time_ns = float(result.get('Time_ns', 0))
+                    cycles = float(result.get('Cycles', 0))
                     ops_per_sec = float(result.get('Ops_per_sec', 0))
                     
-                    f.write(f"| {typ} | {compiler} | {time_ns:.3f} | "
+                    f.write(f"| {typ} | {compiler} | {time_ns:.3f} | {cycles:.2f} | "
                            f"{ops_per_sec:,.0f} |\n")
                 f.write("\n")
             
@@ -212,13 +220,14 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
             fastest = sorted(uint128_results, 
                            key=lambda x: float(x.get('Time_ns', float('inf'))))[:10]
             
-            f.write("| Rank | Operation | Compiler | Time (ns) |\n")
-            f.write("|------|-----------|----------|----------|\n")
+            f.write("| Rank | Operation | Compiler | Time (ns) | Cycles |\n")
+            f.write("|------|-----------|----------|-----------|--------|\n")
             for i, result in enumerate(fastest, 1):
                 op = result.get('Operation', '')
                 compiler = result.get('Compiler', '')
                 time_ns = float(result.get('Time_ns', 0))
-                f.write(f"| {i} | {op} | {compiler} | {time_ns:.3f} |\n")
+                cycles = float(result.get('Cycles', 0))
+                f.write(f"| {i} | {op} | {compiler} | {time_ns:.3f} | {cycles:.2f} |\n")
             f.write("\n")
             
             # Slowest operations
@@ -227,13 +236,14 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
                            key=lambda x: float(x.get('Time_ns', 0)), 
                            reverse=True)[:10]
             
-            f.write("| Rank | Operation | Compiler | Time (ns) |\n")
-            f.write("|------|-----------|----------|----------|\n")
+            f.write("| Rank | Operation | Compiler | Time (ns) | Cycles |\n")
+            f.write("|------|-----------|----------|-----------|--------|\n")
             for i, result in enumerate(slowest, 1):
                 op = result.get('Operation', '')
                 compiler = result.get('Compiler', '')
                 time_ns = float(result.get('Time_ns', 0))
-                f.write(f"| {i} | {op} | {compiler} | {time_ns:.3f} |\n")
+                cycles = float(result.get('Cycles', 0))
+                f.write(f"| {i} | {op} | {compiler} | {time_ns:.3f} | {cycles:.2f} |\n")
             f.write("\n")
             
             # Compiler comparison

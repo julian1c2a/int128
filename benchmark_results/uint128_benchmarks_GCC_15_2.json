@@ -5,70 +5,77 @@
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.470,
+      "time_ns": 0.585,
+      "cycles": 1.46,
       "iterations": 1000000,
-      "ops_per_sec": 2126754573,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1708233686,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "construction_from_uint64",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 2.538,
+      "time_ns": 2.791,
+      "cycles": 7.73,
       "iterations": 1000000,
-      "ops_per_sec": 393948944,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 358256010,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "construction_from_two_uint64",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 4.837,
+      "time_ns": 4.667,
+      "cycles": 14.66,
       "iterations": 1000000,
-      "ops_per_sec": 206743989,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 214252046,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "construction_default",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.111,
+      "time_ns": 0.153,
+      "cycles": 0.53,
       "iterations": 1000000,
-      "ops_per_sec": 8976660682,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 6523157208,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "construction_from_uint64",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 2.371,
+      "time_ns": 2.605,
+      "cycles": 7.57,
       "iterations": 1000000,
-      "ops_per_sec": 421816341,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 383818224,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "construction_default",
       "type": "uint32_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.111,
+      "time_ns": 0.112,
+      "cycles": 0.35,
       "iterations": 1000000,
-      "ops_per_sec": 8976660682,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 8968609865,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "addition",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.960,
+      "time_ns": 1.098,
+      "cycles": 3.20,
       "iterations": 1000000,
-      "ops_per_sec": 1041341248,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 910663874,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "addition",
@@ -76,9 +83,10 @@
       "compiler": "GCC-15.2",
       "optimization": "O1",
       "time_ns": 0.223,
+      "cycles": 0.69,
       "iterations": 1000000,
-      "ops_per_sec": 4488330341,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 4484304933,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "addition",
@@ -86,19 +94,21 @@
       "compiler": "GCC-15.2",
       "optimization": "O1",
       "time_ns": 0.223,
+      "cycles": 0.70,
       "iterations": 1000000,
-      "ops_per_sec": 4486316734,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 4488330341,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "subtraction",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.948,
+      "time_ns": 0.956,
+      "cycles": 3.15,
       "iterations": 1000000,
-      "ops_per_sec": 1054741061,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1046134533,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "subtraction",
@@ -106,29 +116,32 @@
       "compiler": "GCC-15.2",
       "optimization": "O1",
       "time_ns": 0.223,
+      "cycles": 0.69,
       "iterations": 1000000,
       "ops_per_sec": 4488330341,
-      "timestamp": "2025-12-18 23:33:59"
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "subtraction",
       "type": "uint32_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.226,
+      "time_ns": 0.223,
+      "cycles": 0.69,
       "iterations": 1000000,
-      "ops_per_sec": 4420866490,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 4488330341,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "multiplication",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.926,
+      "time_ns": 0.931,
+      "cycles": 2.95,
       "iterations": 1000000,
-      "ops_per_sec": 1079913607,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1074460084,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "multiplication",
@@ -136,339 +149,373 @@
       "compiler": "GCC-15.2",
       "optimization": "O1",
       "time_ns": 0.223,
+      "cycles": 0.69,
       "iterations": 1000000,
       "ops_per_sec": 4488330341,
-      "timestamp": "2025-12-18 23:33:59"
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "multiplication",
       "type": "uint32_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.223,
+      "time_ns": 0.280,
+      "cycles": 0.76,
       "iterations": 1000000,
-      "ops_per_sec": 4488330341,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3567606136,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "division",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 61.731,
+      "time_ns": 54.891,
+      "cycles": 167.23,
       "iterations": 100000,
-      "ops_per_sec": 16199316,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 18217923,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "division",
       "type": "uint64_t",
-      "compiler": "GCC-15.2",
-      "optimization": "O1",
-      "time_ns": 0.220,
-      "iterations": 100000,
-      "ops_per_sec": 4545454545,
-      "timestamp": "2025-12-18 23:33:59"
-    },
-    {
-      "operation": "division",
-      "type": "uint32_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
       "time_ns": 0.218,
+      "cycles": 0.68,
       "iterations": 100000,
       "ops_per_sec": 4587155963,
-      "timestamp": "2025-12-18 23:33:59"
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
-      "operation": "modulo",
-      "type": "uint128_t",
-      "compiler": "GCC-15.2",
-      "optimization": "O1",
-      "time_ns": 71.817,
-      "iterations": 100000,
-      "ops_per_sec": 13924280,
-      "timestamp": "2025-12-18 23:33:59"
-    },
-    {
-      "operation": "modulo",
-      "type": "uint64_t",
-      "compiler": "GCC-15.2",
-      "optimization": "O1",
-      "time_ns": 0.220,
-      "iterations": 100000,
-      "ops_per_sec": 4545454545,
-      "timestamp": "2025-12-18 23:33:59"
-    },
-    {
-      "operation": "modulo",
+      "operation": "division",
       "type": "uint32_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
       "time_ns": 0.219,
+      "cycles": 0.68,
       "iterations": 100000,
       "ops_per_sec": 4566210046,
-      "timestamp": "2025-12-18 23:33:59"
+      "timestamp": "2025-12-18 23:37:55"
+    },
+    {
+      "operation": "modulo",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 64.281,
+      "cycles": 164.09,
+      "iterations": 100000,
+      "ops_per_sec": 15556696,
+      "timestamp": "2025-12-18 23:37:55"
+    },
+    {
+      "operation": "modulo",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.229,
+      "cycles": 0.71,
+      "iterations": 100000,
+      "ops_per_sec": 4366812227,
+      "timestamp": "2025-12-18 23:37:55"
+    },
+    {
+      "operation": "modulo",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.229,
+      "cycles": 0.71,
+      "iterations": 100000,
+      "ops_per_sec": 4366812227,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_and",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 1.123,
+      "time_ns": 1.147,
+      "cycles": 3.35,
       "iterations": 1000000,
-      "ops_per_sec": 890709896,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 871611610,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_or",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.951,
+      "time_ns": 0.992,
+      "cycles": 3.42,
       "iterations": 1000000,
-      "ops_per_sec": 1051303616,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1007658202,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_xor",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.946,
+      "time_ns": 0.996,
+      "cycles": 3.28,
       "iterations": 1000000,
-      "ops_per_sec": 1057417786,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1004217714,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_not",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.439,
+      "time_ns": 0.457,
+      "cycles": 2.00,
       "iterations": 1000000,
-      "ops_per_sec": 2277904328,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2190100745,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_and",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.218,
+      "time_ns": 0.324,
+      "cycles": 1.00,
       "iterations": 1000000,
-      "ops_per_sec": 4587155963,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3085467448,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_or",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.218,
+      "time_ns": 0.326,
+      "cycles": 1.04,
       "iterations": 1000000,
-      "ops_per_sec": 4587155963,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3067484663,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_xor",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.218,
+      "time_ns": 0.330,
+      "cycles": 1.01,
       "iterations": 1000000,
-      "ops_per_sec": 4587155963,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3029385035,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "bitwise_not",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.218,
+      "time_ns": 0.319,
+      "cycles": 1.02,
       "iterations": 1000000,
-      "ops_per_sec": 4582951421,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3133813851,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "shift_left_8",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.839,
+      "time_ns": 0.644,
+      "cycles": 2.07,
       "iterations": 1000000,
-      "ops_per_sec": 1192321450,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1553277415,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "shift_left_64",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.704,
+      "time_ns": 0.684,
+      "cycles": 2.37,
       "iterations": 1000000,
-      "ops_per_sec": 1421060111,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1462629808,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "shift_right_8",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.475,
+      "time_ns": 0.727,
+      "cycles": 1.95,
       "iterations": 1000000,
-      "ops_per_sec": 2103934357,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1374759417,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "shift_right_64",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.497,
+      "time_ns": 0.642,
+      "cycles": 1.98,
       "iterations": 1000000,
-      "ops_per_sec": 2012882448,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 1556420233,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "shift_left_8",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.219,
+      "time_ns": 0.329,
+      "cycles": 1.17,
       "iterations": 1000000,
-      "ops_per_sec": 4572473708,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3041362530,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "shift_right_8",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.219,
+      "time_ns": 0.334,
+      "cycles": 1.05,
       "iterations": 1000000,
-      "ops_per_sec": 4566210046,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2994011976,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_eq",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.263,
+      "time_ns": 0.332,
+      "cycles": 1.03,
       "iterations": 1000000,
-      "ops_per_sec": 3797949107,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3009328920,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_ne",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.218,
+      "time_ns": 0.328,
+      "cycles": 1.05,
       "iterations": 1000000,
-      "ops_per_sec": 4576659039,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3049710278,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_lt",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.237,
+      "time_ns": 0.335,
+      "cycles": 1.04,
       "iterations": 1000000,
-      "ops_per_sec": 4219409283,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2984183826,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_le",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.219,
+      "time_ns": 0.341,
+      "cycles": 1.04,
       "iterations": 1000000,
-      "ops_per_sec": 4574565416,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2933411558,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_gt",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.223,
+      "time_ns": 0.361,
+      "cycles": 1.13,
       "iterations": 1000000,
-      "ops_per_sec": 4478280340,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2772387025,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_ge",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.326,
+      "time_ns": 0.369,
+      "cycles": 1.19,
       "iterations": 1000000,
-      "ops_per_sec": 3063725490,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2706359946,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_eq",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.305,
+      "time_ns": 0.383,
+      "cycles": 1.18,
       "iterations": 1000000,
-      "ops_per_sec": 3277613897,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2608242045,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "comparison_lt",
       "type": "uint64_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 0.310,
+      "time_ns": 0.443,
+      "cycles": 0.76,
       "iterations": 1000000,
-      "ops_per_sec": 3221649485,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 2257336343,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "to_string_dec",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 4836.080,
+      "time_ns": 4779.370,
+      "cycles": 15137.28,
       "iterations": 10000,
-      "ops_per_sec": 206779,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 209233,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "to_string_hex",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 1839.800,
+      "time_ns": 1904.780,
+      "cycles": 5774.47,
       "iterations": 10000,
-      "ops_per_sec": 543537,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 524995,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "from_string_dec",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 301.080,
+      "time_ns": 300.960,
+      "cycles": 931.42,
       "iterations": 10000,
-      "ops_per_sec": 3321376,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 3322701,
+      "timestamp": "2025-12-18 23:37:55"
     },
     {
       "operation": "from_string_hex",
       "type": "uint128_t",
       "compiler": "GCC-15.2",
       "optimization": "O1",
-      "time_ns": 104.500,
+      "time_ns": 89.770,
+      "cycles": 278.68,
       "iterations": 10000,
-      "ops_per_sec": 9569378,
-      "timestamp": "2025-12-18 23:33:59"
+      "ops_per_sec": 11139579,
+      "timestamp": "2025-12-18 23:37:55"
     }
   ]
 }
