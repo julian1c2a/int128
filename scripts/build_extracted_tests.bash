@@ -10,9 +10,10 @@ CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Navegar al directorio raíz del proyecto si se ejecuta desde scripts/
+# Navegar al directorio raíz del proyecto
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 INCLUDE_DIR="include"
 SRC_FILE="tests/uint128_extracted_tests.cpp"
@@ -65,12 +66,40 @@ build_msvc() {
     echo -e "${CYAN}Compilando con MSVC (cl.exe)...${NC}"
     mkdir -p "$BUILD_DIR"
     
-    # Verificar que cl.exe esté disponible
+    # Verificar que cl.exe esté disponible, si no, intentar activar el entorno
     if ! command -v cl &> /dev/null; then
-        echo -e "${YELLOW}⚠ cl.exe no encontrado en el PATH${NC}"
-        echo "  Activa el entorno de Visual Studio primero:"
-        echo "  source activate_msvc.bash"
-        return 1
+        echo -e "${YELLOW}⚠ cl.exe no encontrado, activando entorno de Visual Studio...${NC}"
+        
+        # Verificar que Python esté disponible
+        if ! command -v python &> /dev/null; then
+            echo -e "${RED}✗ Error: Python no encontrado. Se necesita para activar MSVC.${NC}"
+            return 1
+        fi
+        
+        # Verificar que vcvarsall.py exista
+        if [ ! -f "vcvarsall.py" ]; then
+            echo -e "${RED}✗ Error: vcvarsall.py no encontrado en el directorio actual.${NC}"
+            return 1
+        fi
+        
+        # Activar el entorno de MSVC
+        local MSVC_ENV=$(python vcvarsall.py x64 2>&1)
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}✗ Error al obtener entorno de MSVC:${NC}"
+            echo "$MSVC_ENV"
+            return 1
+        fi
+        
+        # Evaluar las variables de entorno
+        eval "$MSVC_ENV"
+        
+        # Verificar nuevamente
+        if ! command -v cl &> /dev/null; then
+            echo -e "${RED}✗ Error: cl.exe sigue sin estar disponible después de activar el entorno.${NC}"
+            return 1
+        fi
+        
+        echo -e "${GREEN}✓ Entorno de Visual Studio activado${NC}"
     fi
     
     cl -nologo -std:c++20 -EHsc -O2 -I "$INCLUDE_DIR" "$SRC_FILE" -Fe"$OUTPUT_EXE" -Fo"$BUILD_DIR/" 2>&1 | grep -v "Creating library"

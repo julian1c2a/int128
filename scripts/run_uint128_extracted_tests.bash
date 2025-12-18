@@ -12,7 +12,8 @@ NC='\033[0m' # No Color
 
 # Navegar al directorio raíz del proyecto
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 # Función para ejecutar tests con GCC
 run_gcc() {
