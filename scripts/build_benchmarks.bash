@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
 # build_benchmarks.bash
-# Script para compilar los benchmarks con GCC, Clang y MSVC
+# Script para compilar los benchmarks con GCC, Clang, MSVC e Intel
 #
 # Uso:
-#   ./scripts/build_benchmarks.bash [gcc|clang|msvc|all]
+#   ./scripts/build_benchmarks.bash [gcc|clang|msvc|intel|all]
 #
 
 set -euo pipefail
@@ -31,6 +31,7 @@ BENCHMARK_SRC="${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp"
 BENCHMARK_EXEC_GCC="${BUILD_DIR}/uint128_benchmarks_gcc"
 BENCHMARK_EXEC_CLANG="${BUILD_DIR}/uint128_benchmarks_clang"
 BENCHMARK_EXEC_MSVC="${BUILD_DIR}/uint128_benchmarks_msvc.exe"
+BENCHMARK_EXEC_INTEL="${BUILD_DIR}/uint128_benchmarks_intel"
 
 # Flags comunes
 INCLUDE_FLAGS="-I${ROOT_DIR}/include"
@@ -151,6 +152,38 @@ build_msvc() {
     fi
 }
 
+# Función para compilar con Intel C++ (icpx o icx)
+build_intel() {
+    echo -e "\n${YELLOW}Building with Intel C++...${NC}"
+    
+    # Intentar icpx primero (oneAPI), luego icx (legacy)
+    local intel_compiler=""
+    if command -v icpx &> /dev/null; then
+        intel_compiler="icpx"
+    elif command -v icx &> /dev/null; then
+        intel_compiler="icx"
+    else
+        echo -e "${RED}Error: Intel C++ compiler (icpx/icx) not found${NC}"
+        echo -e "${YELLOW}Hint: Source Intel oneAPI environment (setvars.sh)${NC}"
+        return 1
+    fi
+    
+    echo -e "${BLUE}Using Intel compiler: ${intel_compiler}${NC}"
+    
+    ${intel_compiler} ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
+        "${BENCHMARK_SRC}" \
+        -o "${BENCHMARK_EXEC_INTEL}"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✓ Intel build successful${NC}"
+        echo -e "  Executable: ${BENCHMARK_EXEC_INTEL}"
+        return 0
+    else
+        echo -e "${RED}✗ Intel build failed${NC}"
+        return 1
+    fi
+}
+
 # Función para compilar todos
 build_all() {
     local success=0
@@ -169,6 +202,12 @@ build_all() {
     fi
     
     if build_msvc; then
+        ((success++))
+    else
+        ((failed++))
+    fi
+    
+    if build_intel; then
         ((success++))
     else
         ((failed++))
@@ -201,12 +240,15 @@ main() {
         msvc)
             build_msvc
             ;;
+        intel)
+            build_intel
+            ;;
         all)
             build_all
             ;;
         *)
             echo -e "${RED}Error: Unknown target '${target}'${NC}"
-            echo -e "Usage: $0 [gcc|clang|msvc|all]"
+            echo -e "Usage: $0 [gcc|clang|msvc|intel|all]"
             exit 1
             ;;
     esac

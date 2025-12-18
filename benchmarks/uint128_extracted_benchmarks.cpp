@@ -353,12 +353,37 @@ void benchmark_subtraction()
         (void)result;
     });
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+    __uint128_t b128 = (__uint128_t)rng() << 64 | rng();
+    benchmark_operation("subtraction", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 - b128;
+        (void)result;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng());
     benchmark_operation("subtraction", "boost_uint128", [&]() {
         volatile boost_uint128 result = ab - bb;
         (void)result;
     });
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng());
+    benchmark_operation("subtraction", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp - bb_gmp;
+        (void)result;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng());
+    benchmark_operation("subtraction", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm - bb_tm;
+        (void)result;
+    });
+#endif
 #endif
 }
 
@@ -384,12 +409,37 @@ void benchmark_multiplication()
         (void)result;
     });
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = rng();
+    __uint128_t b128 = rng();
+    benchmark_operation("multiplication", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 * b128;
+        (void)result;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng());
     benchmark_operation("multiplication", "boost_uint128", [&]() {
         volatile boost_uint128 result = ab * bb;
         (void)result;
     });
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng());
+    benchmark_operation("multiplication", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp * bb_gmp;
+        (void)result;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng());
+    benchmark_operation("multiplication", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm * bb_tm;
+        (void)result;
+    });
+#endif
 #endif
 }
 
@@ -424,6 +474,18 @@ void benchmark_division()
         },
         100000);
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+    __uint128_t b128 = rng() | 1;
+    benchmark_operation(
+        "division", "__uint128_t",
+        [&]() {
+            volatile __uint128_t result = a128 / b128;
+            (void)result;
+        },
+        100000);
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng() | 1);
     benchmark_operation(
@@ -433,6 +495,28 @@ void benchmark_division()
             (void)result;
         },
         100000);
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng() | 1);
+    benchmark_operation(
+        "division", "boost_gmp",
+        [&]() {
+            volatile boost_uint128_gmp result = ab_gmp / bb_gmp;
+            (void)result;
+        },
+        100000);
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng() | 1);
+    benchmark_operation(
+        "division", "boost_tommath",
+        [&]() {
+            volatile boost_uint128_tommath result = ab_tm / bb_tm;
+            (void)result;
+        },
+        100000);
+#endif
 #endif
 }
 
@@ -467,6 +551,18 @@ void benchmark_modulo()
         },
         100000);
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+    __uint128_t b128 = rng() | 1;
+    benchmark_operation(
+        "modulo", "__uint128_t",
+        [&]() {
+            volatile __uint128_t result = a128 % b128;
+            (void)result;
+        },
+        100000);
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng() | 1);
     benchmark_operation(
@@ -476,6 +572,28 @@ void benchmark_modulo()
             (void)result;
         },
         100000);
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng() | 1);
+    benchmark_operation(
+        "modulo", "boost_gmp",
+        [&]() {
+            volatile boost_uint128_gmp result = ab_gmp % bb_gmp;
+            (void)result;
+        },
+        100000);
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng() | 1);
+    benchmark_operation(
+        "modulo", "boost_tommath",
+        [&]() {
+            volatile boost_uint128_tommath result = ab_tm % bb_tm;
+            (void)result;
+        },
+        100000);
+#endif
 #endif
 }
 
@@ -530,6 +648,31 @@ void benchmark_bitwise()
         (void)result;
     });
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+    __uint128_t b128 = (__uint128_t)rng() << 64 | rng();
+
+    benchmark_operation("bitwise_and", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 & b128;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_or", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 | b128;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_xor", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 ^ b128;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_not", "__uint128_t", [&]() {
+        volatile __uint128_t result = ~a128;
+        (void)result;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng());
 
@@ -552,6 +695,54 @@ void benchmark_bitwise()
         volatile boost_uint128 result = ~ab;
         (void)result;
     });
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng());
+
+    benchmark_operation("bitwise_and", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp & bb_gmp;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_or", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp | bb_gmp;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_xor", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp ^ bb_gmp;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_not", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ~ab_gmp;
+        (void)result;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng());
+
+    benchmark_operation("bitwise_and", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm & bb_tm;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_or", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm | bb_tm;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_xor", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm ^ bb_tm;
+        (void)result;
+    });
+
+    benchmark_operation("bitwise_not", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ~ab_tm;
+        (void)result;
+    });
+#endif
 #endif
 }
 
@@ -594,6 +785,30 @@ void benchmark_shifts()
         (void)result;
     });
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+
+    benchmark_operation("shift_left_8", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 << 8;
+        (void)result;
+    });
+
+    benchmark_operation("shift_left_64", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 << 64;
+        (void)result;
+    });
+
+    benchmark_operation("shift_right_8", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 >> 8;
+        (void)result;
+    });
+
+    benchmark_operation("shift_right_64", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 >> 64;
+        (void)result;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng());
 
@@ -616,6 +831,54 @@ void benchmark_shifts()
         volatile boost_uint128 result = ab >> 64;
         (void)result;
     });
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng());
+
+    benchmark_operation("shift_left_8", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp << 8;
+        (void)result;
+    });
+
+    benchmark_operation("shift_left_64", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp << 64;
+        (void)result;
+    });
+
+    benchmark_operation("shift_right_8", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp >> 8;
+        (void)result;
+    });
+
+    benchmark_operation("shift_right_64", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp >> 64;
+        (void)result;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng());
+
+    benchmark_operation("shift_left_8", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm << 8;
+        (void)result;
+    });
+
+    benchmark_operation("shift_left_64", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm << 64;
+        (void)result;
+    });
+
+    benchmark_operation("shift_right_8", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm >> 8;
+        (void)result;
+    });
+
+    benchmark_operation("shift_right_64", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm >> 64;
+        (void)result;
+    });
+#endif
 #endif
 }
 
@@ -670,6 +933,41 @@ void benchmark_comparisons()
         (void)result;
     });
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+    __uint128_t b128 = (__uint128_t)rng() << 64 | rng();
+
+    benchmark_operation("comparison_eq", "__uint128_t", [&]() {
+        volatile bool result = (a128 == b128);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_ne", "__uint128_t", [&]() {
+        volatile bool result = (a128 != b128);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_lt", "__uint128_t", [&]() {
+        volatile bool result = (a128 < b128);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_le", "__uint128_t", [&]() {
+        volatile bool result = (a128 <= b128);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_gt", "__uint128_t", [&]() {
+        volatile bool result = (a128 > b128);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_ge", "__uint128_t", [&]() {
+        volatile bool result = (a128 >= b128);
+        (void)result;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng());
 
@@ -682,6 +980,34 @@ void benchmark_comparisons()
         volatile bool result = (ab < bb);
         (void)result;
     });
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng());
+
+    benchmark_operation("comparison_eq", "boost_gmp", [&]() {
+        volatile bool result = (ab_gmp == bb_gmp);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_lt", "boost_gmp", [&]() {
+        volatile bool result = (ab_gmp < bb_gmp);
+        (void)result;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng());
+
+    benchmark_operation("comparison_eq", "boost_tommath", [&]() {
+        volatile bool result = (ab_tm == bb_tm);
+        (void)result;
+    });
+
+    benchmark_operation("comparison_lt", "boost_tommath", [&]() {
+        volatile bool result = (ab_tm < bb_tm);
+        (void)result;
+    });
+#endif
 #endif
 }
 
@@ -735,6 +1061,30 @@ void benchmark_string_conversion()
             (void)result;
         },
         10000);
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp bvalue_gmp(rng());
+
+    benchmark_operation(
+        "to_string_dec", "boost_gmp",
+        [&]() {
+            volatile auto result = bvalue_gmp.str();
+            (void)result;
+        },
+        10000);
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath bvalue_tm(rng());
+
+    benchmark_operation(
+        "to_string_dec", "boost_tommath",
+        [&]() {
+            volatile auto result = bvalue_tm.str();
+            (void)result;
+        },
+        10000);
+#endif
 #endif
 }
 

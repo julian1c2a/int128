@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
 # run_benchmarks.bash
-# Script para ejecutar los benchmarks compilados con GCC, Clang y MSVC
+# Script para ejecutar los benchmarks compilados con GCC, Clang, MSVC e Intel
 #
 # Uso:
-#   ./scripts/run_benchmarks.bash [gcc|clang|msvc|all]
+#   ./scripts/run_benchmarks.bash [gcc|clang|msvc|intel|all]
 #
 
 set -euo pipefail
@@ -26,6 +26,7 @@ BENCHMARK_RESULTS_DIR="${ROOT_DIR}/benchmark_results"
 BENCHMARK_EXEC_GCC="${BUILD_DIR}/uint128_benchmarks_gcc"
 BENCHMARK_EXEC_CLANG="${BUILD_DIR}/uint128_benchmarks_clang"
 BENCHMARK_EXEC_MSVC="${BUILD_DIR}/uint128_benchmarks_msvc.exe"
+BENCHMARK_EXEC_INTEL="${BUILD_DIR}/uint128_benchmarks_intel"
 
 # Crear directorio de resultados si no existe
 mkdir -p "${BENCHMARK_RESULTS_DIR}"
@@ -97,6 +98,27 @@ run_msvc() {
     fi
 }
 
+# Función para ejecutar con Intel
+run_intel() {
+    echo -e "${BLUE}Running Intel benchmark...${NC}"
+    
+    if [ ! -f "${BENCHMARK_EXEC_INTEL}" ]; then
+        echo -e "${RED}Intel benchmark executable not found: ${BENCHMARK_EXEC_INTEL}${NC}"
+        echo -e "${YELLOW}Run build_benchmarks.bash intel first${NC}"
+        return 1
+    fi
+    
+    "${BENCHMARK_EXEC_INTEL}"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✓ Intel benchmark completed${NC}"
+        return 0
+    else
+        echo -e "${RED}✗ Intel benchmark failed${NC}"
+        return 1
+    fi
+}
+
 # Función para ejecutar todos
 run_all() {
     local success=0
@@ -115,6 +137,12 @@ run_all() {
     fi
     
     if run_msvc; then
+        ((success++))
+    else
+        ((failed++))
+    fi
+    
+    if run_intel; then
         ((success++))
     else
         ((failed++))
@@ -154,12 +182,15 @@ main() {
         msvc)
             run_msvc
             ;;
+        intel)
+            run_intel
+            ;;
         all)
             run_all
             ;;
         *)
             echo -e "${RED}Error: Unknown target '${target}'${NC}"
-            echo -e "Usage: $0 [gcc|clang|msvc|all]"
+            echo -e "Usage: $0 [gcc|clang|msvc|intel|all]"
             exit 1
             ;;
     esac

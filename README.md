@@ -102,12 +102,62 @@ int128/
 
 ## 📊 Benchmarks
 
-Los resultados de performance se almacenan en `documentation/benchmarks/` como archivos CSV:
+### Sistema de Benchmarks Completo
 
-- `arithmetic_operations.csv` - Operaciones aritméticas
-- `bitwise_operations.csv` - Operaciones bit a bit
-- `string_conversion.csv` - Conversiones string ↔ uint128_t
-- `comparison_operations.csv` - Operaciones de comparación
+El proyecto incluye un **sistema avanzado de benchmarks** con las siguientes capacidades:
+
+#### 🎯 Características
+- ✅ **Múltiples compiladores**: GCC, Clang, MSVC, Intel (icpx/icx)
+- ✅ **Comparación de tipos**:
+  - `uint128_t` (nuestra implementación)
+  - `uint64_t` y `uint32_t` (baseline)
+  - `__uint128_t` (tipo nativo GCC/Clang)
+  - `boost::multiprecision` (cpp_int, GMP, tommath)
+- ✅ **Mediciones duales**:
+  - Tiempo (nanosegundos)
+  - Ciclos de CPU (RDTSC)
+- ✅ **Visualización profesional**:
+  - Gráficos matplotlib (PNG)
+  - Reportes Markdown
+  - CSV/JSON export
+- ✅ **Backends opcionales**:
+  - Boost.Multiprecision pure
+  - Boost + GMP backend
+  - Boost + tommath backend
+
+#### 📈 Ejecutar Benchmarks
+
+```bash
+# Benchmark básico (solo tipos nativos)
+./scripts/build_benchmarks.bash gcc
+./scripts/run_benchmarks.bash gcc
+
+# Benchmark con todos los backends
+./scripts/build_with_backends.bash gcc --all-backends
+./build/benchmarks/benchmark_gcc
+
+# Generar gráficos
+python scripts/plot_benchmark_results.py
+
+# Ver resultados
+cat benchmark_results/benchmark_summary.md
+ls benchmark_results/plots/
+```
+
+#### 📚 Documentación
+
+- [BENCHMARK_IMPROVEMENTS.md](documentation/BENCHMARK_IMPROVEMENTS.md) - Guía completa de mejoras
+- [BENCHMARK_GUIDE.md](documentation/BENCHMARK_GUIDE.md) - Manual de uso
+- [BENCHMARK_SUMMARY.md](documentation/BENCHMARK_SUMMARY.md) - Resumen ejecutivo
+
+#### 📊 Resultados
+
+Los resultados se almacenan en `benchmark_results/`:
+
+- `benchmark_*.csv` - Resultados raw por compilador
+- `consolidated_*.csv` - Resultados agregados
+- `benchmark_summary.md` - Reporte en Markdown
+- `plots/` - Gráficos PNG (time, cycles, speedup, etc.)
 
 ## �️ Arquitectura Modular
 
