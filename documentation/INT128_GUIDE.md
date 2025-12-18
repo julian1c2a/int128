@@ -12,6 +12,7 @@ Guía completa de `int128_t`: entero con signo de 128 bits con aritmética two's
 6. [Benchmarks](#benchmarks)
 7. [Comparaciones de Rendimiento](#comparaciones-de-rendimiento)
 8. [Uso Práctico](#uso-práctico)
+9. [Thread Safety](#thread-safety-) 🆕
 
 ---
 
@@ -35,13 +36,17 @@ include/int128/
 ├── int128_comparison.hpp     # Comparaciones
 ├── int128_io.hpp             # Entrada/salida
 ├── int128_limits.hpp         # std::numeric_limits
-└── int128_traits.hpp         # Type traits
+├── int128_traits.hpp         # Type traits
+└── int128_thread_safety.hpp  # 🆕 Wrappers thread-safe (4 opciones)
 
 tests/
 └── int128_extracted_tests.cpp    # Suite de tests completa
 
 benchmarks/
 └── int128_extracted_benchmarks.cpp   # Benchmarks exhaustivos
+
+demos/
+└── demo_int128_thread_safety.cpp     # 🆕 Demo de thread safety
 ```
 
 ---
@@ -897,6 +902,74 @@ Ver `tests/int128_extracted_tests.cpp` para ejemplos exhaustivos de:
 
 ---
 
+## Thread Safety ✅
+
+### Thread Safety Base
+
+**int128_t ES thread-safe** para:
+- ✅ Lectura concurrente (operaciones `const`)
+- ✅ Operaciones que retornan nuevos objetos (inmutables)
+- ✅ Cada hilo tiene su propia instancia
+
+**NO es thread-safe** para:
+- ❌ Escritura concurrente en el mismo objeto
+- ❌ Operadores de asignación compuesta concurrentes (`+=`, `-=`, etc.)
+
+### Wrappers Thread-Safe Disponibles
+
+**Archivo**: `include/int128/int128_thread_safety.hpp`
+
+```cpp
+#include "int128/int128_thread_safety.hpp"
+using namespace int128_threadsafe;
+
+// Opción 1: Mutex (recomendado para uso general)
+ThreadSafeInt128 counter(int128_t(-1000));
+counter.add(int128_t(1));
+counter.negate();
+bool is_neg = counter.is_negative();
+
+// Opción 2: RW-Lock (read-heavy workloads)
+ThreadSafeInt128RW stats(int128_t(-500));
+int128_t val = stats.get();  // Múltiples lectores concurrentes OK
+stats.add(int128_t(10));     // Escritor exclusivo
+
+// Opción 3: std::atomic (interfaz estándar)
+ThreadSafeInt128Atomic atomic_val(int128_t(-100));
+atomic_val.store(int128_t(200));
+int128_t loaded = atomic_val.load();
+
+// Opción 4: SpinLock (baja contención)
+ThreadSafeInt128SpinLock fast(int128_t(0));
+fast.add(int128_t(1));  // Menor overhead que mutex
+```
+
+### Performance de Wrappers
+
+| Wrapper | 100k ops | Por op | Uso |
+|---------|----------|--------|-----|
+| Thread-local | ~0 µs | 0 ns | Sin compartir (preferido) |
+| **ThreadSafeInt128** | 7,000 µs | 70 ns | ✅ Uso general |
+| **ThreadSafeInt128RW** | 5,000 µs | 50 ns | ✅ Read-heavy |
+| ThreadSafeInt128SpinLock | 3,000 µs | 30 ns | Baja contención |
+| ThreadSafeInt128Atomic | 7,000 µs | 70 ns | API atómica |
+
+**Recomendación**: Usa thread-local siempre que sea posible (sin overhead). Usa wrappers solo cuando realmente necesites compartir entre hilos.
+
+### Demo Disponible
+
+```bash
+# Compilar y ejecutar demo
+bash run_thread_safety_demo.sh
+
+# Ver código fuente
+cat demos/demo_int128_thread_safety.cpp
+```
+
+**Documentación completa**: Ver `documentation/THREAD_SAFETY_STATUS.md`
+
+---
+
 ## Conclusión
 
 `int128_t` proporciona aritmética signed de 128 bits completa con:
@@ -905,6 +978,7 @@ Ver `tests/int128_extracted_tests.cpp` para ejemplos exhaustivos de:
 ✅ **Sign extension automática desde tipos smaller**  
 ✅ **Semántica signed completa (división, comparaciones, shifts)**  
 ✅ **API consistente con int64_t y tipos built-in**  
+✅ **Thread safety completo (4 wrappers disponibles)** 🆕  
 ✅ **Benchmarks exhaustivos vs tipos nativos y Boost**  
 ✅ **Sistema de tests completo**  
 

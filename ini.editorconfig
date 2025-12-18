@@ -20,7 +20,7 @@ end_of_line = crlf
 indent_style = space
 indent_size = 2
 
-# Archivos de soluci�n
+# Archivos de solución
 [*.{sln,slnx}]
 indent_style = tab
 tab_width = 4
@@ -30,7 +30,7 @@ tab_width = 4
 trim_trailing_whitespace = false
 indent_size = 2
 
-# Archivos de configuraci�n
+# Archivos de configuración
 [*.{json,yml,yaml}]
 indent_size = 2
 

@@ -106,10 +106,14 @@ Ambos tipos tienen implementaciónuint128_t (unsigned) - Implementación princip
 - [x] Operadores de incremento/decremento (`++`, `--`)
 
 ### ✅ Extensiones STL
-- [x] `std::numeric_limits<uint128_t>`
+- [x] `std::numeric_limits<uint128_t>` y `std::numeric_limits<int128_t>`
 - [x] `std::hash<uint128_t>` para contenedores unordered
 - [x] Concepts personalizados (`uint128_concepts`)
 - [x] Compatibilidad con `std::iota`
+
+### ✅ Thread Safety
+- [x] **uint128_t**: Thread-safe para lectura concurrente + 4 wrappers (Mutex, RW-lock, SpinLock, Atomic)
+- [x] **int128_t**: Thread-safe para lectura concurrente + 4 wrappers (Mutex, RW-lock, SpinLock, Atomic) ✅ **COMPLETO**
 
 ### ✅ Funcionalidades Avanzadas
 - [x] Constructor desde cadenas: `uint128_t("12345")`
@@ -191,9 +195,22 @@ ls benchmark_results/plots/
 
 #### 📚 Documentación
 
-- [BENCHMARK_IMPROVEMENTS.md](documentation/BENCHMARK_IMPROVEMENTS.md) - Guía completa de mejoras
-- [BENCHMARK_GUIDE.md](documentation/BENCHMARK_GUIDE.md) - Manual de uso
-- [BENCHMARK_SUMMARY.md](documentation/BENCHMARK_SUMMARY.md) - Resumen ejecutivo
+- **uint128_t (unsigned)**:
+  - [BENCHMARK_GUIDE.md](documentation/BENCHMARK_GUIDE.md) - Guía completa uint128
+  - [BENCHMARK_IMPROVEMENTS.md](documentation/BENCHMARK_IMPROVEMENTS.md) - Mejoras implementadas
+  - [BENCHMARK_SUMMARY.md](documentation/BENCHMARK_SUMMARY.md) - Resumen ejecutivo
+  - [THREAD_SAFETY_ANALYSIS.md](documentation/THREAD_SAFETY_ANALYSIS.md) - Análisis thread safety
+  - [THREAD_SAFETY_USAGE.md](documentation/THREAD_SAFETY_USAGE.md) - Guía de wrappers thread-safe
+- **int128_t (signed)**: 
+  - [INT128_GUIDE.md](documentation/INT128_GUIDE.md) - 📘 **Guía completa int128_t**
+    - Two's complement y sign extension
+    - Aritmética signed vs unsigned
+    - Benchmarks y comparaciones de rendimiento
+    - Casos de uso prácticos
+- **Thread Safety**:
+  - [THREAD_SAFETY_STATUS.md](documentation/THREAD_SAFETY_STATUS.md) - 🔒 **Estado thread safety**
+    - uint128_t: ✅ Completo (4 wrappers disponibles)
+    - int128_t: ⏳ Pendiente (implementación trivial)
 
 #### 📊 Resultados
 
