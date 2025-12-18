@@ -116,3 +116,6 @@ external/*/*/*/*/*/*
 */*/*/*/*/*.swp
 */*/*/*/*/*/*.swp
 log_build.md
+include/uint128/uint128_t.hpp
+log_build_gcc.txt
+log_build_msvc.txt
