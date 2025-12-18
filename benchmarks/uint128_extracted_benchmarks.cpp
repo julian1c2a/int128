@@ -587,7 +587,7 @@ void benchmark_string_conversion()
     benchmark_operation(
         "to_string_hex", "uint128_t",
         [&]() {
-            volatile auto result = value.to_string(16);
+            volatile auto result = value.to_string_base(16);
             (void)result;
         },
         10000);

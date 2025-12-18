@@ -1,0 +1,474 @@
+{
+  "benchmark_results": [
+    {
+      "operation": "construction_default",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.470,
+      "iterations": 1000000,
+      "ops_per_sec": 2126754573,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "construction_from_uint64",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 2.538,
+      "iterations": 1000000,
+      "ops_per_sec": 393948944,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "construction_from_two_uint64",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 4.837,
+      "iterations": 1000000,
+      "ops_per_sec": 206743989,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "construction_default",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.111,
+      "iterations": 1000000,
+      "ops_per_sec": 8976660682,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "construction_from_uint64",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 2.371,
+      "iterations": 1000000,
+      "ops_per_sec": 421816341,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "construction_default",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.111,
+      "iterations": 1000000,
+      "ops_per_sec": 8976660682,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "addition",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.960,
+      "iterations": 1000000,
+      "ops_per_sec": 1041341248,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "addition",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.223,
+      "iterations": 1000000,
+      "ops_per_sec": 4488330341,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "addition",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.223,
+      "iterations": 1000000,
+      "ops_per_sec": 4486316734,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "subtraction",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.948,
+      "iterations": 1000000,
+      "ops_per_sec": 1054741061,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "subtraction",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.223,
+      "iterations": 1000000,
+      "ops_per_sec": 4488330341,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "subtraction",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.226,
+      "iterations": 1000000,
+      "ops_per_sec": 4420866490,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "multiplication",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.926,
+      "iterations": 1000000,
+      "ops_per_sec": 1079913607,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "multiplication",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.223,
+      "iterations": 1000000,
+      "ops_per_sec": 4488330341,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "multiplication",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.223,
+      "iterations": 1000000,
+      "ops_per_sec": 4488330341,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "division",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 61.731,
+      "iterations": 100000,
+      "ops_per_sec": 16199316,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "division",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.220,
+      "iterations": 100000,
+      "ops_per_sec": 4545454545,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "division",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.218,
+      "iterations": 100000,
+      "ops_per_sec": 4587155963,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "modulo",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 71.817,
+      "iterations": 100000,
+      "ops_per_sec": 13924280,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "modulo",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.220,
+      "iterations": 100000,
+      "ops_per_sec": 4545454545,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "modulo",
+      "type": "uint32_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.219,
+      "iterations": 100000,
+      "ops_per_sec": 4566210046,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_and",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 1.123,
+      "iterations": 1000000,
+      "ops_per_sec": 890709896,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_or",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.951,
+      "iterations": 1000000,
+      "ops_per_sec": 1051303616,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_xor",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.946,
+      "iterations": 1000000,
+      "ops_per_sec": 1057417786,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_not",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.439,
+      "iterations": 1000000,
+      "ops_per_sec": 2277904328,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_and",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.218,
+      "iterations": 1000000,
+      "ops_per_sec": 4587155963,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_or",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.218,
+      "iterations": 1000000,
+      "ops_per_sec": 4587155963,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_xor",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.218,
+      "iterations": 1000000,
+      "ops_per_sec": 4587155963,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "bitwise_not",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.218,
+      "iterations": 1000000,
+      "ops_per_sec": 4582951421,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "shift_left_8",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.839,
+      "iterations": 1000000,
+      "ops_per_sec": 1192321450,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "shift_left_64",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.704,
+      "iterations": 1000000,
+      "ops_per_sec": 1421060111,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "shift_right_8",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.475,
+      "iterations": 1000000,
+      "ops_per_sec": 2103934357,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "shift_right_64",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.497,
+      "iterations": 1000000,
+      "ops_per_sec": 2012882448,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "shift_left_8",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.219,
+      "iterations": 1000000,
+      "ops_per_sec": 4572473708,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "shift_right_8",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.219,
+      "iterations": 1000000,
+      "ops_per_sec": 4566210046,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_eq",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.263,
+      "iterations": 1000000,
+      "ops_per_sec": 3797949107,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_ne",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.218,
+      "iterations": 1000000,
+      "ops_per_sec": 4576659039,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_lt",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.237,
+      "iterations": 1000000,
+      "ops_per_sec": 4219409283,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_le",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.219,
+      "iterations": 1000000,
+      "ops_per_sec": 4574565416,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_gt",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.223,
+      "iterations": 1000000,
+      "ops_per_sec": 4478280340,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_ge",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.326,
+      "iterations": 1000000,
+      "ops_per_sec": 3063725490,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_eq",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.305,
+      "iterations": 1000000,
+      "ops_per_sec": 3277613897,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "comparison_lt",
+      "type": "uint64_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 0.310,
+      "iterations": 1000000,
+      "ops_per_sec": 3221649485,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "to_string_dec",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 4836.080,
+      "iterations": 10000,
+      "ops_per_sec": 206779,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "to_string_hex",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 1839.800,
+      "iterations": 10000,
+      "ops_per_sec": 543537,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "from_string_dec",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 301.080,
+      "iterations": 10000,
+      "ops_per_sec": 3321376,
+      "timestamp": "2025-12-18 23:33:59"
+    },
+    {
+      "operation": "from_string_hex",
+      "type": "uint128_t",
+      "compiler": "GCC-15.2",
+      "optimization": "O1",
+      "time_ns": 104.500,
+      "iterations": 10000,
+      "ops_per_sec": 9569378,
+      "timestamp": "2025-12-18 23:33:59"
+    }
+  ]
+}
