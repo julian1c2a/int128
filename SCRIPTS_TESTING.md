@@ -1,5 +1,11 @@
 # Scripts de Compilación y Ejecución - uint128_extracted_tests
 
+## Tests Integrados
+
+El archivo `tests/uint128_extracted_tests.cpp` ahora incluye **84 tests en total**:
+- **66 tests originales** extraídos de la documentación
+- **18 tests adicionales** de robustez (copy/move, UDL, streams, edge cases, constexpr)
+
 ## Scripts Disponibles
 
 Los scripts están ubicados en el directorio `scripts/`. También hay un wrapper conveniente `test.bash` en la raíz.
@@ -82,18 +88,33 @@ Este es el script más conveniente para uso rápido.
 
 ---
 
-## Configuración Especial para MSVC
+## Configuración para MSVC
 
-Para compilar con MSVC, primero debes activar el entorno de Visual Studio:
+### Activación Automática (Recomendado)
+
+Los scripts intentan activar automáticamente el entorno de Visual Studio usando `vcvarsall.py`.
+
+**Desde terminal bash de MSYS64/UCRT64:**
+```bash
+./test.bash msvc
+# o
+scripts/test_extracted.bash msvc
+```
+
+El script detectará automáticamente si `cl.exe` no está disponible y activará el entorno.
+
+### Activación Manual (Alternativa)
+
+Si la activación automática no funciona, puedes activar manualmente:
 
 ```bash
 source activate_msvc.bash
 ```
 
-Luego puedes usar cualquiera de los scripts:
+Luego ejecuta los scripts normalmente:
 
 ```bash
-./test_extracted.bash msvc
+./test.bash msvc
 ```
 
 ---
@@ -147,3 +168,53 @@ Los scripts usan colores para facilitar la lectura:
 4. El argumento `all` es el valor por defecto si no se especifica ninguno
 5. Si un compilador no está disponible, se mostrará una advertencia pero los otros continuarán
 6. Para MSVC, el script intentará activar automáticamente el entorno de Visual Studio
+
+---
+
+## Estado de Pruebas
+
+✅ **Todos los compiladores funcionan correctamente:**
+- GCC: Compilación y ejecución exitosas (84/84 tests pasan)
+- Clang: Compilación y ejecución exitosas (84/84 tests pasan, 1 warning esperado en self-assignment)
+- MSVC: Compilación y ejecución exitosas (con activación automática desde bash MSYS64/UCRT64)
+
+## Cobertura de Tests
+
+### Tests Originales (66)
+- Constructores y asignaciones
+- Operadores aritméticos y bitwise
+- Operadores de comparación
+- División y resto (divrem)
+- Conversiones de/a string
+- Funciones auxiliares (leading_zeros, trailing_zeros, etc.)
+
+### Tests Adicionales (18)
+1. **Semántica de Copia/Movimiento** (5 tests)
+   - Copy/move constructors
+   - Copy/move assignment
+   - Compatibilidad con `std::vector`
+
+2. **Literales Definidos por Usuario** (3 tests)
+   - Literales enteros: `1000_u128`
+   - Literales de string: `"12345"_u128`
+   - Formatos específicos: `_u128_hex`, `_u128_bin`, `_u128_oct`
+
+3. **Operadores de Flujo** (2 tests)
+   - Output stream: `operator<<`
+   - Input stream: `operator>>`
+
+4. **Casos Extremos y Límites** (4 tests)
+   - Overflow behavior (wrap-around)
+   - Underflow behavior
+   - Valores límite (0, max)
+   - División por cero
+
+5. **Constexpr y Type Traits** (2 tests)
+   - Operaciones constexpr
+   - Validación de type traits
+
+6. **Casos Extremos Adicionales** (2 tests)
+   - Desplazamientos extremos (64, 128+ bits)
+   - Operaciones con tipos mixtos
+
+**Total: 84 tests** cubriendo todas las funcionalidades críticas de `uint128_t`.

@@ -1,5 +1,6 @@
 /*
  * Test file generated from Doxygen @test and @code{.cpp} tags in uint128_t.hpp
+ * Plus additional tests for robustness (copy/move, UDL, streams, edge cases, constexpr)
  */
 
 #include "../include/uint128/uint128_t.hpp"
@@ -7,7 +8,9 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#include <sstream>
 #include <type_traits>
+#include <vector>
 
 // Helper for random generation
 std::mt19937_64 rng(std::random_device{}());
@@ -2593,9 +2596,503 @@ void test_from_string_base()
     std::cout << "test_from_string_base passed" << std::endl;
 }
 
+// ========================= COPY AND MOVE SEMANTICS =========================
+
+void test_copy_constructor()
+{
+    std::cout << "test_copy_constructor: ";
+
+    // Test basic copy
+    uint128_t original(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
+    uint128_t copy(original);
+
+    assert(copy.high() == original.high());
+    assert(copy.low() == original.low());
+    assert(copy == original);
+
+    // Test that modifications to copy don't affect original
+    copy += uint128_t(1);
+    assert(copy != original);
+    assert(original.low() == 0xFEDCBA0987654321ULL);
+
+    // Test copy of zero
+    uint128_t zero;
+    uint128_t zero_copy(zero);
+    assert(zero_copy == uint128_t(0));
+
+    // Test copy of max value
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    uint128_t max_copy(max_val);
+    assert(max_copy == max_val);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_move_constructor()
+{
+    std::cout << "test_move_constructor: ";
+
+    // Test basic move
+    uint128_t original(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
+    uint64_t orig_high = original.high();
+    uint64_t orig_low = original.low();
+
+    uint128_t moved(std::move(original));
+
+    assert(moved.high() == orig_high);
+    assert(moved.low() == orig_low);
+
+    // Test moving from temporary
+    uint128_t from_temp(uint128_t(0xAAAA, 0xBBBB));
+    assert(from_temp.high() == 0xAAAA);
+    assert(from_temp.low() == 0xBBBB);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_copy_assignment()
+{
+    std::cout << "test_copy_assignment: ";
+
+    // Test basic copy assignment
+    uint128_t original(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
+    uint128_t target;
+
+    target = original;
+
+    assert(target.high() == original.high());
+    assert(target.low() == original.low());
+    assert(target == original);
+
+    // Test that modifications to target don't affect original
+    target += uint128_t(1);
+    assert(target != original);
+
+    // Test self-assignment
+    uint128_t self(0x1111, 0x2222);
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
+    self = self;
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+    assert(self.high() == 0x1111);
+    assert(self.low() == 0x2222);
+
+    // Test chained assignment
+    uint128_t a, b, c;
+    a = b = c = uint128_t(0x9999, 0x8888);
+    assert(a == uint128_t(0x9999, 0x8888));
+    assert(b == uint128_t(0x9999, 0x8888));
+    assert(c == uint128_t(0x9999, 0x8888));
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_move_assignment()
+{
+    std::cout << "test_move_assignment: ";
+
+    // Test basic move assignment
+    uint128_t original(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
+    uint64_t orig_high = original.high();
+    uint64_t orig_low = original.low();
+
+    uint128_t target;
+    target = std::move(original);
+
+    assert(target.high() == orig_high);
+    assert(target.low() == orig_low);
+
+    // Test moving from temporary
+    uint128_t from_temp;
+    from_temp = uint128_t(0xCCCC, 0xDDDD);
+    assert(from_temp.high() == 0xCCCC);
+    assert(from_temp.low() == 0xDDDD);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_vector_of_uint128()
+{
+    std::cout << "test_vector_of_uint128: ";
+
+    // Test that uint128_t works correctly with STL containers
+    std::vector<uint128_t> vec;
+
+    // Push back some values
+    vec.push_back(uint128_t(1, 2));
+    vec.push_back(uint128_t(3, 4));
+    vec.push_back(uint128_t(5, 6));
+
+    assert(vec.size() == 3);
+    assert(vec[0] == uint128_t(1, 2));
+    assert(vec[1] == uint128_t(3, 4));
+    assert(vec[2] == uint128_t(5, 6));
+
+    // Test resize
+    vec.resize(10);
+    assert(vec.size() == 10);
+    assert(vec[9] == uint128_t(0)); // Default constructed
+
+    // Test copy in vector
+    std::vector<uint128_t> vec_copy = vec;
+    assert(vec_copy.size() == vec.size());
+    assert(vec_copy[0] == vec[0]);
+
+    std::cout << "passed" << std::endl;
+}
+
+// ========================= USER-DEFINED LITERALS =========================
+
+void test_udl_integer()
+{
+    std::cout << "test_udl_integer: ";
+
+    using namespace uint128_literals;
+
+    // Test integer literal
+    auto val = 12345_u128;
+    assert(val.low() == 12345ULL);
+    assert(val.high() == 0);
+
+    // Test zero
+    auto zero = 0_u128;
+    assert(zero == uint128_t(0));
+
+    // Test max uint64
+    auto max64 = 18446744073709551615_u128;
+    assert(max64.low() == UINT64_MAX);
+    assert(max64.high() == 0);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_udl_string()
+{
+    std::cout << "test_udl_string: ";
+
+    using namespace uint128_literals;
+
+    // Test string literals
+    auto hex = "0xFF"_u128;
+    assert(hex.low() == 0xFF);
+
+    auto dec = "12345"_u128;
+    assert(dec.low() == 12345);
+
+    auto bin = "0b1010"_u128;
+    assert(bin.low() == 0b1010);
+
+    auto oct = "0777"_u128;
+    assert(oct.low() == 0777);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_udl_specific_formats()
+{
+    std::cout << "test_udl_specific_formats: ";
+
+    using namespace uint128_literals;
+
+    // Test format-specific literals
+    auto hex = "FF"_u128_hex;
+    assert(hex.low() == 0xFF);
+
+    auto bin = "1010"_u128_bin;
+    assert(bin.low() == 0b1010);
+
+    auto oct = "777"_u128_oct;
+    assert(oct.low() == 0777);
+
+    std::cout << "passed" << std::endl;
+}
+
+// ========================= STREAM OPERATORS =========================
+
+void test_ostream_operator()
+{
+    std::cout << "test_ostream_operator: ";
+
+    std::ostringstream oss;
+
+    // Test zero
+    uint128_t zero(0);
+    oss << zero;
+    assert(oss.str() == "0");
+
+    // Test small value
+    oss.str("");
+    uint128_t small(0, 123);
+    oss << small;
+    assert(oss.str() == "123");
+
+    // Test larger value
+    oss.str("");
+    uint128_t large(1, 0);
+    oss << large;
+    assert(oss.str() == "18446744073709551616"); // 2^64
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_istream_operator()
+{
+    std::cout << "test_istream_operator: ";
+
+    // Test reading decimal
+    std::istringstream iss("12345");
+    uint128_t val;
+    iss >> val;
+    assert(val.low() == 12345);
+
+    // Test reading hex
+    iss.str("0xFF");
+    iss.clear();
+    iss >> val;
+    assert(val.low() == 0xFF);
+
+    // Test reading binary
+    iss.str("0b1010");
+    iss.clear();
+    iss >> val;
+    assert(val.low() == 0b1010);
+
+    std::cout << "passed" << std::endl;
+}
+
+// ========================= EDGE CASES AND LIMITS =========================
+
+void test_overflow_behavior()
+{
+    std::cout << "test_overflow_behavior: ";
+
+    // Test addition overflow
+    uint128_t max(UINT64_MAX, UINT64_MAX);
+    uint128_t one(0, 1);
+    uint128_t result = max + one;
+    assert(result == uint128_t(0, 0)); // Should wrap to zero
+
+    // Test increment overflow
+    uint128_t almost_max(UINT64_MAX, UINT64_MAX);
+    ++almost_max;
+    assert(almost_max == uint128_t(0, 0));
+
+    // Test multiplication overflow (silent)
+    uint128_t half_max(UINT64_MAX >> 1, UINT64_MAX);
+    uint128_t mult_result = half_max * uint128_t(0, 4);
+    // Just verify it computes without crashing
+    assert(mult_result.high() != 0 || mult_result.low() != 0);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_underflow_behavior()
+{
+    std::cout << "test_underflow_behavior: ";
+
+    // Test subtraction underflow
+    uint128_t zero(0);
+    uint128_t one(0, 1);
+    uint128_t result = zero - one;
+    assert(result == uint128_t(UINT64_MAX, UINT64_MAX)); // Should wrap to max
+
+    // Test decrement underflow
+    uint128_t min(0);
+    --min;
+    assert(min == uint128_t(UINT64_MAX, UINT64_MAX));
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_boundary_values()
+{
+    std::cout << "test_boundary_values: ";
+
+    // Test zero
+    uint128_t zero(0);
+    assert(zero.high() == 0);
+    assert(zero.low() == 0);
+    assert(!static_cast<bool>(zero));
+
+    // Test max value
+    uint128_t max(UINT64_MAX, UINT64_MAX);
+    assert(max.high() == UINT64_MAX);
+    assert(max.low() == UINT64_MAX);
+    assert(static_cast<bool>(max));
+
+    // Test powers of 2
+    uint128_t power64(1, 0); // 2^64
+    assert(power64.high() == 1);
+    assert(power64.low() == 0);
+
+    // Test one less than power of 2
+    uint128_t almost_power64(0, UINT64_MAX); // 2^64 - 1
+    assert(almost_power64.high() == 0);
+    assert(almost_power64.low() == UINT64_MAX);
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_division_by_zero()
+{
+    std::cout << "test_division_by_zero: ";
+
+    uint128_t dividend(100, 200);
+    uint128_t zero(0);
+
+    // Division by zero behavior (noexcept - returns zero or max, implementation defined)
+    // The operators are marked noexcept, so they don't throw
+    // Just verify the operation completes without crashing
+    uint128_t result1 = dividend / zero;
+    (void)result1; // Should not crash
+
+    uint128_t result2 = dividend % zero;
+    (void)result2; // Should not crash
+
+    // Division by non-zero should work
+    uint128_t result3 = dividend / uint128_t(0, 2);
+    assert(result3.high() == 50 && result3.low() == 100);
+
+    std::cout << "passed" << std::endl;
+}
+
+// ========================= CONSTEXPR VERIFICATION =========================
+
+void test_constexpr_operations()
+{
+    std::cout << "test_constexpr_operations: ";
+
+    // These should all be evaluated at compile time
+    constexpr uint128_t zero(0);
+    constexpr uint128_t one(0, 1);
+    constexpr uint128_t two(0, 2);
+
+    // Test constexpr arithmetic
+    constexpr uint128_t sum = one + one;
+    static_assert(sum.low() == 2, "Constexpr addition failed");
+
+    constexpr uint128_t diff = two - one;
+    static_assert(diff.low() == 1, "Constexpr subtraction failed");
+
+    // Test constexpr comparison
+    static_assert(one < two, "Constexpr comparison failed");
+    static_assert(zero != one, "Constexpr inequality failed");
+    static_assert(one == one, "Constexpr equality failed");
+
+    // Test constexpr bitwise
+    constexpr uint128_t val(0, 0xFF);
+    constexpr uint128_t shifted = val << 8;
+    static_assert(shifted.low() == 0xFF00, "Constexpr shift failed");
+
+    std::cout << "passed (compile-time)" << std::endl;
+}
+
+// ========================= TYPE TRAITS =========================
+
+void test_type_traits()
+{
+    std::cout << "test_type_traits: ";
+
+    // Test that uint128_t satisfies expected traits
+    static_assert(std::is_default_constructible<uint128_t>::value,
+                  "Should be default constructible");
+    static_assert(std::is_copy_constructible<uint128_t>::value, "Should be copy constructible");
+    static_assert(std::is_move_constructible<uint128_t>::value, "Should be move constructible");
+    static_assert(std::is_copy_assignable<uint128_t>::value, "Should be copy assignable");
+    static_assert(std::is_move_assignable<uint128_t>::value, "Should be move assignable");
+
+    // Test triviality (for performance)
+    // Note: These may not be trivial due to constructors, but let's check
+    static_assert(std::is_trivially_copyable<uint128_t>::value, "Should be trivially copyable");
+
+    // Test size
+    static_assert(sizeof(uint128_t) == 16, "Should be 16 bytes");
+    static_assert(alignof(uint128_t) <= 16, "Alignment should be reasonable");
+
+    std::cout << "passed (compile-time)" << std::endl;
+}
+
+// ========================= ADDITIONAL EDGE CASES =========================
+
+void test_shift_edge_cases()
+{
+    std::cout << "test_shift_edge_cases: ";
+
+    uint128_t val(0x1234, 0x5678);
+
+    // Test shift by 0
+    uint128_t shift0 = val << 0;
+    assert(shift0 == val);
+
+    shift0 = val >> 0;
+    assert(shift0 == val);
+
+    // Test shift by 64 (boundary between high and low)
+    uint128_t shift64 = uint128_t(0, 0xFF) << 64;
+    assert(shift64.high() == 0xFF);
+    assert(shift64.low() == 0);
+
+    uint128_t shift64r = uint128_t(0xFF, 0) >> 64;
+    assert(shift64r.high() == 0);
+    assert(shift64r.low() == 0xFF);
+
+    // Test shift by 128 (should zero out)
+    uint128_t shift128 = val << 128;
+    assert(shift128 == uint128_t(0));
+
+    uint128_t shift128r = val >> 128;
+    assert(shift128r == uint128_t(0));
+
+    // Test shift by large value
+    uint128_t shift200 = val << 200;
+    assert(shift200 == uint128_t(0));
+
+    std::cout << "passed" << std::endl;
+}
+
+void test_mixed_type_operations()
+{
+    std::cout << "test_mixed_type_operations: ";
+
+    uint128_t small(0, 200); // Only low part, easier to test
+
+    // Test operations with different integral types
+    uint128_t result1 = small + 50;
+    assert(result1.low() == 250);
+
+    uint128_t result2 = small - 100;
+    assert(result2.low() == 100);
+
+    uint128_t result3 = small * 2;
+    assert(result3.low() == 400);
+
+    uint128_t result4 = small / 2;
+    assert(result4.low() == 100);
+
+    // Test symmetric operations
+    uint128_t result5 = 50 + small;
+    assert(result5.low() == 250);
+
+    uint128_t result6 = 1000 - small;
+    assert(result6.low() == 800);
+    assert(result6.high() == 0);
+
+    // Test with negative int (sign extension)
+    uint128_t result7 = small + (-10);
+    assert(result7.low() == 190);
+
+    std::cout << "passed" << std::endl;
+}
+
 int main()
 {
-    std::cout << "Running extracted tests for uint128_t..." << std::endl;
+    std::cout << "Running comprehensive tests for uint128_t (66 original + 18 additional)..."
+              << std::endl;
+    std::cout << std::endl;
 
     test_sizeof_is_16_bytes();
     test_bits_is_128();
@@ -2664,6 +3161,41 @@ int main()
     test_from_string();
     test_from_string_base();
 
-    std::cout << "All tests passed successfully." << std::endl;
+    std::cout << std::endl;
+    std::cout << "=== Additional Robustness Tests ===" << std::endl;
+
+    // Copy and Move Semantics
+    test_copy_constructor();
+    test_move_constructor();
+    test_copy_assignment();
+    test_move_assignment();
+    test_vector_of_uint128();
+
+    // User-Defined Literals
+    test_udl_integer();
+    test_udl_string();
+    test_udl_specific_formats();
+
+    // Stream Operators
+    test_ostream_operator();
+    test_istream_operator();
+
+    // Edge Cases and Limits
+    test_overflow_behavior();
+    test_underflow_behavior();
+    test_boundary_values();
+    test_division_by_zero();
+
+    // Constexpr and Type Traits
+    test_constexpr_operations();
+    test_type_traits();
+
+    // Additional Edge Cases
+    test_shift_edge_cases();
+    test_mixed_type_operations();
+
+    std::cout << std::endl;
+    std::cout << "All tests (66 original + 18 additional = 84 total) passed successfully."
+              << std::endl;
     return 0;
 }
