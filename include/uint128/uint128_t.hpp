@@ -492,7 +492,7 @@ class uint128_t
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4701)
-        [[maybe_unused]] uint64_t new_low;       // NOLINT(cppcoreguidelines-init-variables)
+        [[maybe_unused]] uint64_t new_low; // NOLINT(cppcoreguidelines-init-variables)
 #pragma warning(pop)
         const unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
@@ -551,8 +551,8 @@ class uint128_t
     {
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4701)
-        [[maybe_unused]] uint64_t new_low;   // NOLINT(cppcoreguidelines-init-variables)
+#pragma warning(disable : 4701)
+        [[maybe_unused]] uint64_t new_low; // NOLINT(cppcoreguidelines-init-variables)
 #pragma warning(pop)
         const unsigned char borrow = _subborrow_u64(0, data[0], other.data[0], &new_low);
         data[0] = new_low;
@@ -634,7 +634,7 @@ class uint128_t
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4701)
-            [[maybe_unused]] unsigned long index;  // NOLINT(cppcoreguidelines-init-variables)
+            [[maybe_unused]] unsigned long index; // NOLINT(cppcoreguidelines-init-variables)
 #pragma warning(pop)
             _BitScanForward64(&index, data[0]);
             return static_cast<int>(index);
@@ -1257,12 +1257,7 @@ class uint128_t
      * @param other El sumando.
      * @return Un nuevo `uint128_t` con el resultado de la suma. El desbordamiento es silencioso.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_add_operator)
      */
     constexpr uint128_t operator+(const uint128_t& other) const noexcept
     {
@@ -1277,12 +1272,7 @@ class uint128_t
      * @return Un nuevo `uint128_t` con el resultado de la resta. El subdesbordamiento es
      * silencioso.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_sub_operator)
      */
     constexpr uint128_t operator-(const uint128_t& other) const noexcept
     {
@@ -1364,12 +1354,7 @@ class uint128_t
      * @return Un nuevo `uint128_t` con los 128 bits inferiores del producto. El desbordamiento es
      * silencioso.
      * @property Es `constexpr` y `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_mult_operator)
      */
     constexpr uint128_t operator*(const uint128_t& other) const noexcept
     {
@@ -1383,12 +1368,7 @@ class uint128_t
      * @brief Operador de desplazamiento a la izquierda y asignación (a <<= b).
      * @param shift El número de bits a desplazar.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_shift_left)
      */
     constexpr uint128_t& operator<<=(int shift) noexcept
     {
@@ -1400,12 +1380,7 @@ class uint128_t
      * @brief Operador de desplazamiento a la derecha y asignación (a >>= b).
      * @param shift El número de bits a desplazar.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_shift_right)
      */
     constexpr uint128_t& operator>>=(int shift) noexcept
     {
@@ -1417,12 +1392,7 @@ class uint128_t
      * @brief Operador de desplazamiento a la izquierda (a << b).
      * @param shift El número de bits a desplazar.
      * @return Un nuevo `uint128_t` con el resultado del desplazamiento.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_shift_left)
      */
     constexpr uint128_t operator<<(int shift) const noexcept
     {
@@ -1433,12 +1403,7 @@ class uint128_t
      * @brief Operador de desplazamiento a la derecha (a >> b).
      * @param shift El número de bits a desplazar.
      * @return Un nuevo `uint128_t` con el resultado del desplazamiento.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_shift_right)
      */
     constexpr uint128_t operator>>(int shift) const noexcept
     {
@@ -1449,12 +1414,7 @@ class uint128_t
      * @brief Operador AND a nivel de bits y asignación (a &= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_and_assign)
      */
     constexpr uint128_t& operator&=(const uint128_t& other) noexcept
     {
@@ -1467,12 +1427,7 @@ class uint128_t
      * @brief Operador OR a nivel de bits y asignación (a |= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_or_assign)
      */
     constexpr uint128_t& operator|=(const uint128_t& other) noexcept
     {
@@ -1485,12 +1440,7 @@ class uint128_t
      * @brief Operador XOR a nivel de bits y asignación (a ^= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_xor_assign)
      */
     constexpr uint128_t& operator^=(const uint128_t& other) noexcept
     {
@@ -1503,12 +1453,7 @@ class uint128_t
      * @brief Operador AND a nivel de bits (a & b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_and_operator)
      */
     constexpr uint128_t operator&(const uint128_t& other) const noexcept
     {
@@ -1521,12 +1466,7 @@ class uint128_t
      * @brief Operador OR a nivel de bits (a | b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_or_operator)
      */
     constexpr uint128_t operator|(const uint128_t& other) const noexcept
     {
@@ -1539,12 +1479,7 @@ class uint128_t
      * @brief Operador XOR a nivel de bits (a ^ b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_xor_operator)
      */
     constexpr uint128_t operator^(const uint128_t& other) const noexcept
     {
@@ -1556,7 +1491,7 @@ class uint128_t
     /**
      * @brief Operador NOT a nivel de bits (~a).
      * @return Un nuevo `uint128_t` con todos los bits invertidos.
-     * @test (Caso de prueba)
+     * @test (test_bitwise_not_operator)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);

@@ -587,6 +587,60 @@ void test_subtraction_assignment()
     std::cout << "test_subtraction_assignment passed" << std::endl;
 }
 
+void test_add_operator()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+        uint128_t c(rng(), rng());
+
+        // Conmutatividad
+        assert(a + b == b + a);
+
+        // Asociatividad
+        assert((a + b) + c == a + (b + c));
+
+        // Identidad
+        assert(a + uint128_t(0) == a);
+
+        // Consistencia con +=
+        uint128_t sum = a;
+        sum += b;
+        assert(sum == a + b);
+    }
+
+    // Overflow tests
+    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    assert(max_val + uint128_t(1) == uint128_t(0));
+
+    std::cout << "test_add_operator passed" << std::endl;
+}
+
+void test_sub_operator()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+
+        // Identidad
+        assert(a - uint128_t(0) == a);
+
+        // Inversa
+        assert((a - b) + b == a);
+
+        // Consistencia con -=
+        uint128_t diff = a;
+        diff -= b;
+        assert(diff == a - b);
+    }
+
+    // Underflow tests
+    uint128_t zero(0);
+    assert(zero - uint128_t(1) == uint128_t(UINT64_MAX, UINT64_MAX));
+
+    std::cout << "test_sub_operator passed" << std::endl;
+}
+
 void test_pre_increment()
 {
     // Simple increment
@@ -721,6 +775,7 @@ void test_trailing_zeros()
 
 void test_bitwise_operators()
 {
+    // Static tests
     uint128_t a(0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA);
     uint128_t b(0x5555555555555555, 0x5555555555555555);
 
@@ -738,7 +793,71 @@ void test_bitwise_operators()
     assert(~a == b);
     assert(~b == a);
 
+    // Random tests
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t r1(rng(), rng());
+        uint128_t r2(rng(), rng());
+        uint128_t r3(rng(), rng());
+
+        // Commutativity
+        assert((r1 & r2) == (r2 & r1));
+        assert((r1 | r2) == (r2 | r1));
+        assert((r1 ^ r2) == (r2 ^ r1));
+
+        // Associativity
+        assert(((r1 & r2) & r3) == (r1 & (r2 & r3)));
+        assert(((r1 | r2) | r3) == (r1 | (r2 | r3)));
+        assert(((r1 ^ r2) ^ r3) == (r1 ^ (r2 ^ r3)));
+
+        // Distributivity
+        assert((r1 & (r2 | r3)) == ((r1 & r2) | (r1 & r3)));
+        assert((r1 | (r2 & r3)) == ((r1 | r2) & (r1 | r3)));
+
+        // Identity / Annihilator
+        assert((r1 & uint128_t(0)) == uint128_t(0));
+        assert((r1 | uint128_t(0)) == r1);
+        assert((r1 ^ uint128_t(0)) == r1);
+        assert((r1 & uint128_t(UINT64_MAX, UINT64_MAX)) == r1);
+        assert((r1 | uint128_t(UINT64_MAX, UINT64_MAX)) == uint128_t(UINT64_MAX, UINT64_MAX));
+
+        // Self
+        assert((r1 & r1) == r1);
+        assert((r1 | r1) == r1);
+        assert((r1 ^ r1) == uint128_t(0));
+
+        // Double negation
+        assert(~~r1 == r1);
+
+        // De Morgan's laws
+        assert(~(r1 & r2) == (~r1 | ~r2));
+        assert(~(r1 | r2) == (~r1 & ~r2));
+    }
+
     std::cout << "test_bitwise_operators passed" << std::endl;
+}
+
+void test_bitwise_assignment_operators()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+
+        // AND assignment
+        uint128_t a_and = a;
+        a_and &= b;
+        assert(a_and == (a & b));
+
+        // OR assignment
+        uint128_t a_or = a;
+        a_or |= b;
+        assert(a_or == (a | b));
+
+        // XOR assignment
+        uint128_t a_xor = a;
+        a_xor ^= b;
+        assert(a_xor == (a ^ b));
+    }
+    std::cout << "test_bitwise_assignment_operators passed" << std::endl;
 }
 
 void test_shift_left()
@@ -756,15 +875,9 @@ void test_shift_left()
     assert((val << 127) == uint128_t(0x8000000000000000ULL, 0));
     assert((val << 127) == uint128_t(1ULL << 63, 0));
 
-    // Right shift
-    uint128_t val2(0x8000000000000000ULL, 0);
-    assert((val2 >> 1) == uint128_t(0x4000000000000000ULL, 0));
-    assert((val2 >> 64) == uint128_t(0, 0x8000000000000000ULL));
-    assert((val2 >> 127) == uint128_t(0, 1));
     // Test shift by 0
     assert((val << 0) == val);
 
-    std::cout << "test_shift_operators passed" << std::endl;
     // Test shift by >= 128
     assert((val << 128) == uint128_t(0, 0));
     assert((val << 200) == uint128_t(0, 0));
@@ -2217,6 +2330,93 @@ void test_mult_assignment_operator()
     std::cout << "test_mult_assignment_operator passed" << std::endl;
 }
 
+void test_mult_operator()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+        uint128_t c(rng(), rng());
+
+        // Conmutatividad
+        assert(a * b == b * a);
+
+        // Asociatividad
+        assert((a * b) * c == a * (b * c));
+
+        // Identidad
+        assert(a * uint128_t(1) == a);
+
+        // Elemento cero
+        assert(a * uint128_t(0) == uint128_t(0));
+
+        // Consistencia con *=
+        uint128_t prod = a;
+        prod *= b;
+        assert(prod == a * b);
+    }
+
+    std::cout << "test_mult_operator passed" << std::endl;
+}
+
+void test_div_operator()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+
+        if (b == uint128_t(0)) {
+            // Division by zero returns 0 in this implementation
+            assert((a / b) == uint128_t(0));
+            continue;
+        }
+
+        // Identity
+        assert((a / uint128_t(1)) == a);
+
+        // Self division
+        if (a != uint128_t(0)) {
+            assert((a / a) == uint128_t(1));
+        }
+
+        // Consistency with /=
+        uint128_t quot = a;
+        quot /= b;
+        assert(quot == (a / b));
+    }
+
+    std::cout << "test_div_operator passed" << std::endl;
+}
+
+void test_mod_operator()
+{
+    for (int i = 0; i < 1000; ++i) {
+        uint128_t a(rng(), rng());
+        uint128_t b(rng(), rng());
+
+        if (b == uint128_t(0)) {
+            // Modulo by zero returns 0 in this implementation
+            assert((a % b) == uint128_t(0));
+            continue;
+        }
+
+        // Modulo 1
+        assert((a % uint128_t(1)) == uint128_t(0));
+
+        // Consistency with %=
+        uint128_t rem = a;
+        rem %= b;
+        assert(rem == (a % b));
+
+        // Range check
+        assert((a % b) < b);
+
+        // Fundamental division property: a = (a/b)*b + (a%b)
+        assert((a / b) * b + (a % b) == a);
+    }
+
+    std::cout << "test_mod_operator passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -2240,6 +2440,8 @@ int main()
     test___int128_conversion();
     test_addition_assignment();
     test_subtraction_assignment();
+    test_add_operator();
+    test_sub_operator();
     test_pre_increment();
     test_post_increment();
     test_pre_decrement();
@@ -2247,6 +2449,7 @@ int main()
     test_leading_zeros();
     test_trailing_zeros();
     test_bitwise_operators();
+    test_bitwise_assignment_operators();
     test_shift_left();
     test_shift_right();
     test_effective_length();
@@ -2263,6 +2466,9 @@ int main()
     test_divrem_known_result();
     test_divrem_known_result_integral_divisor();
     test_mult_assignment_operator();
+    test_mult_operator();
+    test_div_operator();
+    test_mod_operator();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
