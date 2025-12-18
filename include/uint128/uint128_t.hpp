@@ -103,7 +103,7 @@ class uint128_t
      * @pre T debe ser un tipo integral. Esta condición se verifica en tiempo de compilación.
      * @post La parte alta del `uint128_t` se actualiza con `static_cast<uint64_t>(value)`.
      * @property Es `constexpr` y `noexcept`.
-     * @test (set_high_test)
+     * @test (test_set_high)
      * @code{.cpp}
      * uint128_t val;
      * val.set_high(0xABCD);
@@ -123,7 +123,7 @@ class uint128_t
      * @pre T debe ser un tipo integral. Esta condición se verifica en tiempo de compilación.
      * @post La parte baja del `uint128_t` se actualiza con `static_cast<uint64_t>(value)`.
      * @property Es `constexpr` y `noexcept`.
-     * @test (set_low_test)
+     * @test (test_set_low)
      * @code{.cpp}
      * uint128_t val;
      * val.set_low(0x1234);
@@ -140,7 +140,7 @@ class uint128_t
      * @brief Constructor por defecto.
      * @post Inicializa el `uint128_t` a 0.
      * @property Es `constexpr` y `noexcept`.
-     * @test (default_constructor_test)
+     * @test (test_default_constructor)
      * @code{.cpp}
      * uint128_t val;
      * assert(val.low() == 0 && val.high() == 0);
@@ -739,7 +739,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si ambos valores son idénticos, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_equal_operator)
+     * @test (test_comparison_operators)
      */
     constexpr bool operator==(const uint128_t& other) const noexcept
     {
@@ -751,7 +751,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si los valores no son idénticos, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_not_equal_operator)
+     * @test (test_comparison_operators)
      */
     constexpr bool operator!=(const uint128_t& other) const noexcept
     {
@@ -763,7 +763,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es estrictamente menor que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_less_operator)
+     * @test (test_comparison_operators)
      */
     constexpr bool operator<(const uint128_t& other) const noexcept
     {
@@ -778,7 +778,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es menor o igual que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_less_equal_operator)
+     * @test (test_comparison_operators)
      */
     constexpr bool operator<=(const uint128_t& other) const noexcept
     {
@@ -790,7 +790,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es estrictamente mayor que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_greater_operator)
+     * @test (test_comparison_operators)
      */
     constexpr bool operator>(const uint128_t& other) const noexcept
     {
@@ -802,7 +802,7 @@ class uint128_t
      * @param other El otro valor a comparar.
      * @return `true` si `*this` es mayor o igual que `other`, `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_greater_equal_operator)
+     * @test (test_comparison_operators)
      */
     constexpr bool operator>=(const uint128_t& other) const noexcept
     {
@@ -839,7 +839,7 @@ class uint128_t
      * @return Un `std::optional` que contiene un `std::pair` con el cociente (`first`) y el resto
      * (`second`). El `optional` está vacío si ocurre una división por cero.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_divrem)
+     * @test (test_divrem_basic)
      * @code{.cpp}
      * // // Tanto para esta método como para los operadores / y %
      * // // como para divisores de todos los tipos integrales soportados
@@ -923,7 +923,7 @@ class uint128_t
      * @post El valor de `*this` se actualiza con el cociente de la división.
      * @property Si `other` es cero, el resultado asignado es 0. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (test_divrem)
+     * @test (test_divrem_basic)
      */
     constexpr uint128_t& operator/=(const uint128_t& other) noexcept
     {
@@ -941,7 +941,7 @@ class uint128_t
      * @tparam T Un tipo de dato integral.
      * @param other El divisor de tipo integral.
      * @return Una referencia a `*this`.
-     * @test (test_divrem_integral_divisor)
+     * @test (test_divrem_basic_integral_divisor)
      */
     template <typename T> constexpr uint128_t& operator/=(T other) noexcept
     {
@@ -955,7 +955,7 @@ class uint128_t
      * @post El valor de `*this` se actualiza con el resto de la división.
      * @property Si `other` es cero, el resultado asignado es 0. Es `constexpr` y `noexcept`.
      * @return Una referencia a `*this`.
-     * @test (test_divrem)
+     * @test (test_divrem_basic)
      */
     constexpr uint128_t& operator%=(const uint128_t& other) noexcept
     {
@@ -973,7 +973,7 @@ class uint128_t
      * @tparam T Un tipo de dato integral.
      * @param other El divisor de tipo integral.
      * @return Una referencia a `*this`.
-     * @test (test_divrem_integral_divisor)
+     * @test (test_divrem_basic_integral_divisor)
      */
     template <typename T> constexpr uint128_t& operator%=(T other) noexcept
     {
@@ -987,7 +987,7 @@ class uint128_t
      * @return Un nuevo `uint128_t` con el resultado de la división. Devuelve 0 en caso de división
      * por cero.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_divrem)
+     * @test (test_divrem_basic)
      */
     constexpr uint128_t operator/(const uint128_t& other) const noexcept
     {
@@ -1001,7 +1001,7 @@ class uint128_t
      * @tparam T Tipo integral del divisor.
      * @param other El divisor.
      * @return Un nuevo `uint128_t` con el resultado de la división.
-     * @test (test_divrem_integral_divisor)
+     * @test (test_divrem_basic_integral_divisor)
      */
     template <typename T> constexpr uint128_t operator/(T other) const noexcept
     {
@@ -1017,7 +1017,7 @@ class uint128_t
      * @return Un nuevo `uint128_t` con el resto de la división. Devuelve 0 en caso de división por
      * cero.
      * @property Es `constexpr` y `noexcept`.
-     * @test (test_divrem)
+     * @test (test_divrem_basic)
      */
     constexpr uint128_t operator%(const uint128_t& other) const noexcept
     {
@@ -1031,7 +1031,7 @@ class uint128_t
      * @tparam T Tipo integral del divisor.
      * @param other El divisor.
      * @return Un nuevo `uint128_t` con el resto de la división.
-     * @test (test_divrem_integral_divisor)
+     * @test (test_divrem_basic_integral_divisor)
      */
     template <typename T> constexpr uint128_t operator%(T other) const noexcept
     {
@@ -1414,7 +1414,7 @@ class uint128_t
      * @brief Operador AND a nivel de bits y asignación (a &= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
-     * @test (test_bitwise_and_assign)
+     * @test (test_bitwise_assignment_operators)
      */
     constexpr uint128_t& operator&=(const uint128_t& other) noexcept
     {
@@ -1427,7 +1427,7 @@ class uint128_t
      * @brief Operador OR a nivel de bits y asignación (a |= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
-     * @test (test_bitwise_or_assign)
+     * @test (test_bitwise_assignment_operators)
      */
     constexpr uint128_t& operator|=(const uint128_t& other) noexcept
     {
@@ -1440,7 +1440,7 @@ class uint128_t
      * @brief Operador XOR a nivel de bits y asignación (a ^= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
-     * @test (test_bitwise_xor_assign)
+     * @test (test_bitwise_assignment_operators)
      */
     constexpr uint128_t& operator^=(const uint128_t& other) noexcept
     {
@@ -1453,7 +1453,7 @@ class uint128_t
      * @brief Operador AND a nivel de bits (a & b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
-     * @test (test_bitwise_and_operator)
+     * @test (test_bitwise_operators)
      */
     constexpr uint128_t operator&(const uint128_t& other) const noexcept
     {
@@ -1466,7 +1466,7 @@ class uint128_t
      * @brief Operador OR a nivel de bits (a | b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
-     * @test (test_bitwise_or_operator)
+     * @test (test_bitwise_operators)
      */
     constexpr uint128_t operator|(const uint128_t& other) const noexcept
     {
@@ -1479,7 +1479,7 @@ class uint128_t
      * @brief Operador XOR a nivel de bits (a ^ b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
-     * @test (test_bitwise_xor_operator)
+     * @test (test_bitwise_operators)
      */
     constexpr uint128_t operator^(const uint128_t& other) const noexcept
     {
@@ -1491,12 +1491,7 @@ class uint128_t
     /**
      * @brief Operador NOT a nivel de bits (~a).
      * @return Un nuevo `uint128_t` con todos los bits invertidos.
-     * @test (test_bitwise_not_operator)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_bitwise_operators)
      */
     constexpr uint128_t operator~() const noexcept
     {
@@ -1693,12 +1688,7 @@ class uint128_t
      * @post No modifica el estado de `*this`.
      * @return Los 64 bits más significativos del resultado de la multiplicación de 192 bits.
      * @property Es `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_fullmult_times_uint64)
      */
     uint64_t fullmult_times_uint64(uint64_t multiplier) const noexcept
     {
@@ -1745,12 +1735,7 @@ class uint128_t
      * @return Un `std::optional<std::pair<uint128_t, uint128_t>>` con `{cociente, resto}`.
      *         Si `v_in` es 0, devuelve `std::nullopt`.
      * @property Es `noexcept`.
-     * @test (Caso de prueba)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @test (test_knuth_D_divrem)
      */
     std::optional<std::pair<uint128_t, uint128_t>>
     knuth_D_divrem(const uint128_t& v_in) const noexcept
@@ -1909,7 +1894,7 @@ class uint128_t
      * @param divisor El valor integral a usar como divisor.
      * @return El resultado de llamar a `knuth_D_divrem` con el divisor convertido a `uint128_t`.
      * @property Es `noexcept`.
-     * @test (Caso de prueba)
+     * @test (test_knuth_D_divrem_integral)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -1927,7 +1912,7 @@ class uint128_t
     /**
      * @brief Convierte el número a su representación en `std::string` en base 10.
      * @return Una `std::string` con el valor en formato decimal.
-     * @test (Caso de prueba)
+     * @test (test_to_string)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -1946,7 +1931,7 @@ class uint128_t
      * @post No modifica el estado de `*this`.
      * @return Una `std::string` con el valor en la base especificada.
      * @throws std::invalid_argument si la base está fuera del rango permitido.
-     * @test (Caso de prueba)
+     * @test (test_to_string_base)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -1985,7 +1970,7 @@ class uint128_t
      * @brief Convierte el número a su representación hexadecimal en `std::string`.
      * @param with_prefix Si es `true`, antepone "0x" a la cadena resultante.
      * @return Una `std::string` con el valor en formato hexadecimal.
-     * @test (Caso de prueba)
+     * @test (test_to_string_hex)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2002,7 +1987,7 @@ class uint128_t
      * @brief Convierte el número a su representación binaria en `std::string`.
      * @param with_prefix Si es `true`, antepone "0b" a la cadena resultante.
      * @return Una `std::string` con el valor en formato binario.
-     * @test (Caso de prueba)
+     * @test (test_to_string_bin)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2019,7 +2004,7 @@ class uint128_t
      * @brief Convierte el número a su representación octal en `std::string`.
      * @param with_prefix Si es `true`, antepone "0" a la cadena resultante si no es solo "0".
      * @return Una `std::string` con el valor en formato octal.
-     * @test (Caso de prueba)
+     * @test (test_to_string_oct)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2040,7 +2025,7 @@ class uint128_t
      * @param str La cadena de entrada.
      * @return El `uint128_t` resultante. Devuelve 0 si la cadena es nula o vacía.
      * @property Es `static` y `constexpr`.
-     * @test (Caso de prueba)
+     * @test (test_from_cstr)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2089,7 +2074,7 @@ class uint128_t
      * @param base La base numérica (entre 2 y 36).
      * @return El `uint128_t` resultante. Devuelve 0 si los parámetros son inválidos.
      * @property Es `static` y `constexpr`.
-     * @test (Caso de prueba)
+     * @test (test_from_cstr_base)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2133,7 +2118,7 @@ class uint128_t
      * sobrescribirá en la siguiente llamada a `to_cstr` o `to_cstr_base` en el mismo hilo. No es
      * seguro almacenar este puntero para uso futuro.
      * @return Un puntero a una cadena de caracteres null-terminated.
-     * @test (Caso de prueba)
+     * @test (test_to_cstr)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2152,7 +2137,7 @@ class uint128_t
      * se invalida en llamadas posteriores en el mismo hilo.
      * @return Un puntero a una cadena de caracteres null-terminated. Si la base es inválida,
      * devuelve "0".
-     * @test (Caso de prueba)
+     * @test (test_to_cstr_base)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2213,7 +2198,7 @@ class uint128_t
      * @brief Convierte el número a su representación hexadecimal en C-string.
      * @warning El puntero devuelto es a un buffer estático `thread_local`.
      * @return Un puntero a una cadena de caracteres null-terminated.
-     * @test (Caso de prueba)
+     * @test (test_to_cstr_hex)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2228,7 +2213,7 @@ class uint128_t
      * @brief Convierte el número a su representación binaria en C-string.
      * @warning El puntero devuelto es a un buffer estático `thread_local`.
      * @return Un puntero a una cadena de caracteres null-terminated.
-     * @test (Caso de prueba)
+     * @test (test_to_cstr_bin)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2243,7 +2228,7 @@ class uint128_t
      * @brief Convierte el número a su representación octal en C-string.
      * @warning El puntero devuelto es a un buffer estático `thread_local`.
      * @return Un puntero a una cadena de caracteres null-terminated.
-     * @test (Caso de prueba)
+     * @test (test_to_cstr_oct)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2261,7 +2246,7 @@ class uint128_t
      * @param str La `std::string` de entrada.
      * @return El `uint128_t` resultante.
      * @property Es `static`.
-     * @test (Caso de prueba)
+     * @test (test_from_string)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);
@@ -2312,7 +2297,7 @@ class uint128_t
      * @param base La base numérica (entre 2 y 36).
      * @return El `uint128_t` resultante. Devuelve 0 si los parámetros son inválidos.
      * @property Es `static`.
-     * @test (Caso de prueba)
+     * @test (test_from_string_base)
      * @code{.cpp}
      * // uint128_t val;
      * // val.set_low(0x1234);

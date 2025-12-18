@@ -87,6 +87,13 @@ void test_set_low()
     std::cout << "test_set_low passed" << std::endl;
 }
 
+void test_default_constructor()
+{
+    uint128_t val;
+    assert(val.low() == 0 && val.high() == 0);
+    std::cout << "test_default_constructor passed" << std::endl;
+}
+
 void test_integral_constructor()
 {
     // Test for various integral types as specified in documentation
@@ -2417,6 +2424,175 @@ void test_mod_operator()
     std::cout << "test_mod_operator passed" << std::endl;
 }
 
+void test_fullmult_times_uint64()
+{
+    // Test basic multiplication
+    uint128_t val(0, 10);
+    uint64_t mult = 10;
+    // 10 * 10 = 100. High part of 192-bit result is 0.
+    assert(val.fullmult_times_uint64(mult) == 0);
+
+    // Test with large numbers to ensure high part is used
+    // (2^64 - 1) * (2^64 - 1) = 2^128 - 2^65 + 1
+    // This fits in 128 bits, so high part of 192 bits (bits 128-191) is 0.
+    uint128_t max64(0, UINT64_MAX);
+    assert(max64.fullmult_times_uint64(UINT64_MAX) == 0);
+
+    // We need a case where the result exceeds 128 bits.
+    // val = 2^127 (high bit set)
+    // mult = 2
+    // result = 2^128.
+    // 2^128 in 192 bits: bit 128 is 1.
+    // So fullmult should return 1.
+    uint128_t large(0x8000000000000000ULL, 0);
+    assert(large.fullmult_times_uint64(2) == 1);
+
+    std::cout << "test_fullmult_times_uint64 passed" << std::endl;
+}
+
+void test_knuth_D_divrem()
+{
+    // Basic test
+    uint128_t a(0, 100);
+    uint128_t b(0, 3);
+    auto res = a.knuth_D_divrem(b);
+    assert(res.has_value());
+    assert(res->first == uint128_t(0, 33));
+    assert(res->second == uint128_t(0, 1));
+
+    // Test optimization paths (e.g. power of 2)
+    uint128_t c(0, 100);
+    uint128_t d(0, 4);
+    auto res2 = c.knuth_D_divrem(d);
+    assert(res2.has_value());
+    assert(res2->first == uint128_t(0, 25));
+    assert(res2->second == uint128_t(0, 0));
+
+    std::cout << "test_knuth_D_divrem passed" << std::endl;
+}
+
+void test_knuth_D_divrem_integral()
+{
+    uint128_t a(0, 100);
+    uint64_t b = 3;
+    auto res = a.knuth_D_divrem(b);
+    assert(res.has_value());
+    assert(res->first == uint128_t(0, 33));
+    assert(res->second == uint128_t(0, 1));
+    std::cout << "test_knuth_D_divrem_integral passed" << std::endl;
+}
+
+void test_to_string()
+{
+    uint128_t val(0, 12345);
+    assert(val.to_string() == "12345");
+    uint128_t val2(1, 0); // 2^64
+    assert(val2.to_string() == "18446744073709551616");
+    std::cout << "test_to_string passed" << std::endl;
+}
+
+void test_to_string_base()
+{
+    uint128_t val(0, 255);
+    assert(val.to_string_base(16) == "FF");
+    assert(val.to_string_base(2) == "11111111");
+    assert(val.to_string_base(8) == "377");
+    std::cout << "test_to_string_base passed" << std::endl;
+}
+
+void test_to_string_hex()
+{
+    uint128_t val(0, 255);
+    assert(val.to_string_hex() == "FF");
+    assert(val.to_string_hex(true) == "0xFF");
+    std::cout << "test_to_string_hex passed" << std::endl;
+}
+
+void test_to_string_bin()
+{
+    uint128_t val(0, 15);
+    assert(val.to_string_bin() == "1111");
+    assert(val.to_string_bin(true) == "0b1111");
+    std::cout << "test_to_string_bin passed" << std::endl;
+}
+
+void test_to_string_oct()
+{
+    uint128_t val(0, 8);
+    assert(val.to_string_oct() == "10");
+    assert(val.to_string_oct(true) == "010");
+    std::cout << "test_to_string_oct passed" << std::endl;
+}
+
+void test_from_cstr()
+{
+    assert(uint128_t::from_cstr("123") == uint128_t(0, 123));
+    assert(uint128_t::from_cstr("0xFF") == uint128_t(0, 255));
+    assert(uint128_t::from_cstr("0b101") == uint128_t(0, 5));
+    std::cout << "test_from_cstr passed" << std::endl;
+}
+
+void test_from_cstr_base()
+{
+    assert(uint128_t::from_cstr_base("FF", 16) == uint128_t(0, 255));
+    assert(uint128_t::from_cstr_base("101", 2) == uint128_t(0, 5));
+    std::cout << "test_from_cstr_base passed" << std::endl;
+}
+
+void test_to_cstr()
+{
+    uint128_t val(0, 123);
+    std::string s = val.to_cstr();
+    assert(s == "123");
+    std::cout << "test_to_cstr passed" << std::endl;
+}
+
+void test_to_cstr_base()
+{
+    uint128_t val(0, 255);
+    std::string s = val.to_cstr_base(16);
+    assert(s == "FF");
+    std::cout << "test_to_cstr_base passed" << std::endl;
+}
+
+void test_to_cstr_hex()
+{
+    uint128_t val(0, 255);
+    std::string s = val.to_cstr_hex();
+    assert(s == "FF");
+    std::cout << "test_to_cstr_hex passed" << std::endl;
+}
+
+void test_to_cstr_bin()
+{
+    uint128_t val(0, 5);
+    std::string s = val.to_cstr_bin();
+    assert(s == "101");
+    std::cout << "test_to_cstr_bin passed" << std::endl;
+}
+
+void test_to_cstr_oct()
+{
+    uint128_t val(0, 8);
+    std::string s = val.to_cstr_oct();
+    assert(s == "10");
+    std::cout << "test_to_cstr_oct passed" << std::endl;
+}
+
+void test_from_string()
+{
+    std::string s = "123";
+    assert(uint128_t::from_string(s) == uint128_t(0, 123));
+    std::cout << "test_from_string passed" << std::endl;
+}
+
+void test_from_string_base()
+{
+    std::string s = "FF";
+    assert(uint128_t::from_string_base(s, 16) == uint128_t(0, 255));
+    std::cout << "test_from_string_base passed" << std::endl;
+}
+
 int main()
 {
     std::cout << "Running extracted tests for uint128_t..." << std::endl;
@@ -2429,6 +2605,7 @@ int main()
     test_self_rem_2_64_equ_low();
     test_set_high();
     test_set_low();
+    test_default_constructor();
     test_integral_constructor();
     test_integral_assignment();
     test_high_low_constructor();
@@ -2469,6 +2646,23 @@ int main()
     test_mult_operator();
     test_div_operator();
     test_mod_operator();
+    test_fullmult_times_uint64();
+    test_knuth_D_divrem();
+    test_knuth_D_divrem_integral();
+    test_to_string();
+    test_to_string_base();
+    test_to_string_hex();
+    test_to_string_bin();
+    test_to_string_oct();
+    test_from_cstr();
+    test_from_cstr_base();
+    test_to_cstr();
+    test_to_cstr_base();
+    test_to_cstr_hex();
+    test_to_cstr_bin();
+    test_to_cstr_oct();
+    test_from_string();
+    test_from_string_base();
 
     std::cout << "All tests passed successfully." << std::endl;
     return 0;
