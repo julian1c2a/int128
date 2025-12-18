@@ -5,7 +5,7 @@
 | Tipo | Thread Safety Base | Wrappers Thread-Safe | Tests | Documentación |
 |------|-------------------|---------------------|-------|---------------|
 | **uint128_t** | ✅ SÍ (lectura concurrente) | ✅ SÍ (4 opciones) | ✅ Completos | ✅ Completa |
-| **int128_t** | ✅ SÍ (lectura concurrente) | ✅ SÍ (4 opciones) | ⏳ Pendientes | ✅ Completa |
+| **int128_t** | ✅ SÍ (lectura concurrente) | ✅ SÍ (4 opciones) | ✅ **Completos** | ✅ Completa |
 
 ---
 
@@ -251,20 +251,29 @@ counter.modulo(int128_t(3));         // -50%3 = -2 (mismo signo que dividendo)
 - Métodos adicionales: `negate()`, `is_negative()`, `get_abs()`
 - Lógica de signo preservada correctamente
 
-### 6. Tests (Pendientes)
+### 6. Tests Completos ✅
 
-**⏳ Crear**: `tests/int128_thread_safety_tests.cpp`
+**Archivo**: `tests/int128_thread_safety_tests.cpp` (550 líneas)
 
-Basado en `uint128_thread_safety_tests.cpp`, incluir:
-- Test lectura concurrente segura
-- Test escritura concurrente (debe ser NO segura sin wrapper)
-- Tests para cada wrapper (Mutex, RW, Atomic, SpinLock)
-- Tests de métodos signed específicos (negate, is_negative, get_abs)
+Incluye:
+- ✅ Test lectura concurrente segura
+- ✅ Test modificaciones thread-local seguras
+- ✅ Test construcción por copia concurrente
+- ✅ Test operaciones signed concurrentes (negate, is_negative)
+- ✅ Test demostración de condiciones de carrera (unsafe)
+- ✅ Tests para wrappers: Mutex (básico y signed)
+- ✅ Tests para wrapper RW-lock
+- ✅ Tests para std::atomic<int128_t>
+- ✅ Tests de compare-exchange atómico
+- ✅ Comparación de performance (mutex vs thread-local vs atomic)
+- ✅ Performance de operaciones signed (negate, is_negative)
 
 **Compilar y ejecutar**:
 ```bash
-./scripts/test_thread_safety_int128.bash  # (a crear)
+bash run_int128_thread_safety_tests.sh
 ```
+
+**Resultado**: ✅ Todos los tests pasan exitosamente
 
 ---
 
@@ -302,16 +311,17 @@ Basado en `uint128_thread_safety_tests.cpp`, incluir:
 | Aspecto | uint128_t | int128_t |
 |---------|-----------|----------|
 | **Thread safety base** | ✅ Completo | ✅ Completo |
-| **Wrappers disponibles** | ✅ 4 opciones | ✅ 4 opciones (**COMPLETO**) |
-| **Tests** | ✅ Exhaustivos | ⏳ Pendientes (trivial adaptar) |
-| **Documentación** | ✅ Completa | ✅ Completa (en header) |
+| **Wrappers disponibles** | ✅ 4 opciones | ✅ 4 opciones |
+| **Tests** | ✅ Exhaustivos | ✅ **Exhaustivos** |
+| **Documentación** | ✅ Completa | ✅ Completa |
 | **Implementación** | ✅ Production-ready | ✅ **Production-ready** |
 
 **✅ PARIDAD COMPLETA ALCANZADA**
 - int128_t ahora tiene las mismas capacidades thread-safe que uint128_t
 - 4 wrappers implementados y documentados
+- Tests completos y verificados (550 líneas)
 - Performance idéntica
-- Solo faltan tests específicos (trivial de adaptar)
+- **100% feature parity**
 
 ---
 

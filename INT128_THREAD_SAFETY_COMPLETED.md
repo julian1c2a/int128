@@ -188,7 +188,11 @@ Mediciones de la demo (4 hilos, operaciones add):
 - [x] **Demo funcional**: 410 líneas, 6 demos, compila y ejecuta ✅
 - [x] **Script de compilación**: run_thread_safety_demo.sh con -latomic
 - [x] **Verificación**: Demo ejecutada exitosamente, resultados correctos
-- [ ] **Tests unitarios**: Pendiente (trivial adaptar de uint128_thread_safety_tests.cpp)
+- [x] **Tests unitarios**: ✅ **COMPLETADOS** - int128_thread_safety_tests.cpp (550 líneas)
+  - ✅ 13 tests implementados
+  - ✅ Todos los tests pasan
+  - ✅ Cobertura completa (lectura, escritura, signed ops, wrappers, atomic, performance)
+  - ✅ Script de ejecución: run_int128_thread_safety_tests.sh
 
 ---
 
