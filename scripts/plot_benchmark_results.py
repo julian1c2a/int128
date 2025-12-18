@@ -50,12 +50,12 @@ def read_csv_results(csv_file: Path) -> List[Dict]:
         print(f"{Colors.RED}Error reading {csv_file}: {e}{Colors.NC}")
     return results
 
-def plot_time_comparison(results: List[Dict], output_dir: Path):
+def plot_time_comparison(results: List[Dict], output_dir: Path, prefix: str = ""):
     """Gráfico de barras: Tiempo por operación y tipo."""
     if not HAS_MATPLOTLIB:
         return
     
-    print(f"{Colors.CYAN}Generating time comparison chart...{Colors.NC}")
+    print(f"{Colors.CYAN}Generating time comparison charts{' (' + prefix + ')' if prefix else ''}...{Colors.NC}")
     
     # Agrupar por operación
     by_operation = defaultdict(lambda: defaultdict(list))
@@ -102,18 +102,19 @@ def plot_time_comparison(results: List[Dict], output_dir: Path):
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         
-        output_file = output_dir / f'time_{op}.png'
+        filename = f'{prefix}_time_{op}.png' if prefix else f'time_{op}.png'
+        output_file = output_dir / filename
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         plt.close()
         
         print(f"  {Colors.GREEN}✓{Colors.NC} {output_file.name}")
 
-def plot_cycles_comparison(results: List[Dict], output_dir: Path):
+def plot_cycles_comparison(results: List[Dict], output_dir: Path, prefix: str = ""):
     """Gráfico de barras: Ciclos por operación y tipo."""
     if not HAS_MATPLOTLIB:
         return
     
-    print(f"{Colors.CYAN}Generating cycles comparison chart...{Colors.NC}")
+    print(f"{Colors.CYAN}Generating cycles comparison charts{' (' + prefix + ')' if prefix else ''}...{Colors.NC}")
     
     # Agrupar por operación
     by_operation = defaultdict(lambda: defaultdict(list))
@@ -160,26 +161,27 @@ def plot_cycles_comparison(results: List[Dict], output_dir: Path):
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         
-        output_file = output_dir / f'cycles_{op}.png'
+        filename = f'{prefix}_cycles_{op}.png' if prefix else f'cycles_{op}.png'
+        output_file = output_dir / filename
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         plt.close()
         
         print(f"  {Colors.GREEN}✓{Colors.NC} {output_file.name}")
 
-def plot_compiler_comparison(results: List[Dict], output_dir: Path):
-    """Gráfico: Comparación entre compiladores (solo uint128_t)."""
+def plot_compiler_comparison(results: List[Dict], output_dir: Path, prefix: str = "", int_type: str = "uint128_t"):
+    f"""Gráfico: Comparación entre compiladores (solo {int_type})."""
     if not HAS_MATPLOTLIB:
         return
     
-    print(f"{Colors.CYAN}Generating compiler comparison chart...{Colors.NC}")
+    print(f"{Colors.CYAN}Generating compiler comparison charts{' (' + prefix + ')' if prefix else ''}...{Colors.NC}")
     
-    # Filtrar solo uint128_t
-    uint128_results = [r for r in results if r.get('Type') == 'uint128_t']
+    # Filtrar por tipo
+    type_results = [r for r in results if r.get('Type') == int_type]
     
     # Agrupar por operación y compilador
     by_op_compiler = defaultdict(lambda: defaultdict(list))
     
-    for result in uint128_results:
+    for result in type_results:
         op = result.get('Operation', '')
         compiler = result.get('Compiler', '').split('-')[0]  # Solo nombre (GCC, Clang, MSVC)
         time_ns = float(result.get('Time_ns', 0))
@@ -210,7 +212,7 @@ def plot_compiler_comparison(results: List[Dict], output_dir: Path):
         
         ax.set_xlabel('Compiler', fontsize=12, fontweight='bold')
         ax.set_ylabel('Time (nanoseconds)', fontsize=12, fontweight='bold')
-        ax.set_title(f'Compiler Comparison (uint128_t): {op}', fontsize=14, fontweight='bold')
+        ax.set_title(f'Compiler Comparison ({int_type}): {op}', fontsize=14, fontweight='bold')
         ax.grid(axis='y', alpha=0.3)
         
         # Añadir valores sobre barras
@@ -222,18 +224,19 @@ def plot_compiler_comparison(results: List[Dict], output_dir: Path):
         
         plt.tight_layout()
         
-        output_file = output_dir / f'compiler_{op}.png'
+        filename = f'{prefix}_compiler_{op}.png' if prefix else f'compiler_{op}.png'
+        output_file = output_dir / filename
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
         plt.close()
         
         print(f"  {Colors.GREEN}✓{Colors.NC} {output_file.name}")
 
-def plot_speedup_heatmap(results: List[Dict], output_dir: Path):
-    """Heatmap: Speedup relativo vs uint64_t."""
+def plot_speedup_heatmap(results: List[Dict], output_dir: Path, prefix: str = "", baseline_type: str = "uint64_t"):
+    f"""Heatmap: Speedup relativo vs {baseline_type}."""
     if not HAS_MATPLOTLIB or not HAS_NUMPY:
         return
     
-    print(f"{Colors.CYAN}Generating speedup heatmap...{Colors.NC}")
+    print(f"{Colors.CYAN}Generating speedup heatmap{' (' + prefix + ')' if prefix else ''}...{Colors.NC}")
     
     # Calcular speedups
     by_operation = defaultdict(lambda: defaultdict(list))
@@ -247,8 +250,13 @@ def plot_speedup_heatmap(results: List[Dict], output_dir: Path):
     
     # Operaciones y tipos
     operations = sorted([op for op in by_operation.keys() 
-                        if 'uint64_t' in by_operation[op] and len(by_operation[op]) > 1])[:10]
-    types = ['uint128_t', '__uint128_t', 'boost_uint128', 'boost_gmp', 'boost_tommath']
+                        if baseline_type in by_operation[op] and len(by_operation[op]) > 1])[:10]
+    
+    # Tipos según el baseline
+    if 'int128' in prefix.lower():
+        types = ['int128_t', '__int128_t', 'boost_int128', 'boost_gmp', 'boost_tommath']
+    else:
+        types = ['uint128_t', '__uint128_t', 'boost_uint128', 'boost_gmp', 'boost_tommath']
     types = [t for t in types if any(t in by_operation[op] for op in operations)]
     
     if not operations or not types:
@@ -259,10 +267,10 @@ def plot_speedup_heatmap(results: List[Dict], output_dir: Path):
     speedup_matrix = []
     
     for op in operations:
-        if 'uint64_t' not in by_operation[op]:
+        if baseline_type not in by_operation[op]:
             continue
         
-        baseline = sum(by_operation[op]['uint64_t']) / len(by_operation[op]['uint64_t'])
+        baseline = sum(by_operation[op][baseline_type]) / len(by_operation[op][baseline_type])
         row = []
         
         for typ in types:
@@ -298,7 +306,7 @@ def plot_speedup_heatmap(results: List[Dict], output_dir: Path):
                 text = ax.text(j, i, f'{value:.2f}',
                              ha="center", va="center", color="black", fontsize=8)
     
-    ax.set_title('Speedup Relative to uint64_t (1.0 = equal performance)', 
+    ax.set_title(f'Speedup Relative to {baseline_type} (1.0 = equal performance)', 
                 fontsize=14, fontweight='bold', pad=20)
     ax.set_xlabel('Type', fontsize=12, fontweight='bold')
     ax.set_ylabel('Operation', fontsize=12, fontweight='bold')
@@ -308,26 +316,27 @@ def plot_speedup_heatmap(results: List[Dict], output_dir: Path):
     
     plt.tight_layout()
     
-    output_file = output_dir / 'speedup_heatmap.png'
+    filename = f'{prefix}_speedup_heatmap.png' if prefix else 'speedup_heatmap.png'
+    output_file = output_dir / filename
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.close()
     
     print(f"  {Colors.GREEN}✓{Colors.NC} {output_file.name}")
 
-def plot_operations_overview(results: List[Dict], output_dir: Path):
-    """Gráfico de resumen: Todas las operaciones para uint128_t."""
+def plot_operations_overview(results: List[Dict], output_dir: Path, prefix: str = "", int_type: str = "uint128_t"):
+    f"""Gráfico de resumen: Todas las operaciones para {int_type}."""
     if not HAS_MATPLOTLIB:
         return
     
-    print(f"{Colors.CYAN}Generating operations overview...{Colors.NC}")
+    print(f"{Colors.CYAN}Generating operations overview{' (' + prefix + ')' if prefix else ''}...{Colors.NC}")
     
-    # Filtrar solo uint128_t
-    uint128_results = [r for r in results if r.get('Type') == 'uint128_t']
+    # Filtrar por tipo
+    type_results = [r for r in results if r.get('Type') == int_type]
     
     # Agrupar por operación
     by_operation = defaultdict(list)
     
-    for result in uint128_results:
+    for result in type_results:
         op = result.get('Operation', '')
         time_ns = float(result.get('Time_ns', 0))
         by_operation[op].append(time_ns)
@@ -347,7 +356,7 @@ def plot_operations_overview(results: List[Dict], output_dir: Path):
     
     ax.set_xlabel('Time (nanoseconds)', fontsize=12, fontweight='bold')
     ax.set_ylabel('Operation', fontsize=12, fontweight='bold')
-    ax.set_title('uint128_t Performance Overview (Top 20 Fastest Operations)', 
+    ax.set_title(f'{int_type} Performance Overview (Top 20 Fastest Operations)', 
                 fontsize=14, fontweight='bold')
     ax.grid(axis='x', alpha=0.3)
     
@@ -360,7 +369,8 @@ def plot_operations_overview(results: List[Dict], output_dir: Path):
     
     plt.tight_layout()
     
-    output_file = output_dir / 'operations_overview.png'
+    filename = f'{prefix}_operations_overview.png' if prefix else 'operations_overview.png'
+    output_file = output_dir / filename
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
     plt.close()
     
@@ -384,46 +394,64 @@ def main():
     print(f"{Colors.BLUE}Benchmark Plotting Tool{Colors.NC}")
     print(f"{Colors.BLUE}========================================{Colors.NC}\n")
     
-    # Determinar archivo de entrada
+    # Determinar archivos de entrada
+    results_dir = Path('benchmark_results')
+    
     if args.input:
-        input_file = Path(args.input)
+        input_files = [(Path(args.input), '')]
     else:
-        # Buscar último CSV consolidado
-        results_dir = Path('benchmark_results')
-        csv_files = sorted(results_dir.glob('consolidated_benchmarks_*.csv'), 
-                          key=lambda x: x.stat().st_mtime, reverse=True)
-        if csv_files:
-            input_file = csv_files[0]
-        else:
+        # Buscar últimos CSVs consolidados
+        uint128_files = sorted(results_dir.glob('consolidated_uint128_*.csv'), 
+                              key=lambda x: x.stat().st_mtime, reverse=True)
+        int128_files = sorted(results_dir.glob('consolidated_int128_*.csv'), 
+                             key=lambda x: x.stat().st_mtime, reverse=True)
+        
+        input_files = []
+        if uint128_files:
+            input_files.append((uint128_files[0], 'uint128'))
+        if int128_files:
+            input_files.append((int128_files[0], 'int128'))
+        
+        if not input_files:
             print(f"{Colors.RED}Error: No benchmark CSV found{Colors.NC}")
             return 1
-    
-    if not input_file.exists():
-        print(f"{Colors.RED}Error: File not found: {input_file}{Colors.NC}")
-        return 1
-    
-    print(f"Input: {input_file}")
     
     # Crear directorio de salida
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
     print(f"Output: {output_dir}\n")
     
-    # Leer resultados
-    results = read_csv_results(input_file)
-    
-    if not results:
-        print(f"{Colors.RED}Error: No results found in CSV{Colors.NC}")
-        return 1
-    
-    print(f"{Colors.CYAN}Loaded {len(results)} benchmark results{Colors.NC}\n")
-    
-    # Generar gráficos
-    plot_time_comparison(results, output_dir)
-    plot_cycles_comparison(results, output_dir)
-    plot_compiler_comparison(results, output_dir)
-    plot_speedup_heatmap(results, output_dir)
-    plot_operations_overview(results, output_dir)
+    # Procesar cada archivo
+    for input_file, prefix in input_files:
+        if not input_file.exists():
+            print(f"{Colors.YELLOW}Warning: File not found: {input_file}{Colors.NC}")
+            continue
+        
+        print(f"\n{Colors.BLUE}Processing: {input_file.name}{Colors.NC}")
+        
+        # Leer resultados
+        results = read_csv_results(input_file)
+        
+        if not results:
+            print(f"{Colors.YELLOW}Warning: No results in {input_file.name}{Colors.NC}")
+            continue
+        
+        print(f"{Colors.CYAN}Loaded {len(results)} benchmark results{Colors.NC}")
+        
+        # Determinar int_type y baseline
+        if 'int128' in prefix:
+            int_type = 'int128_t'
+            baseline = 'int64_t'
+        else:
+            int_type = 'uint128_t'
+            baseline = 'uint64_t'
+        
+        # Generar gráficos
+        plot_time_comparison(results, output_dir, prefix)
+        plot_cycles_comparison(results, output_dir, prefix)
+        plot_compiler_comparison(results, output_dir, prefix, int_type)
+        plot_speedup_heatmap(results, output_dir, prefix, baseline)
+        plot_operations_overview(results, output_dir, prefix, int_type)
     
     print(f"\n{Colors.GREEN}========================================{Colors.NC}")
     print(f"{Colors.GREEN}Plotting Complete!{Colors.NC}")

@@ -65,8 +65,9 @@ done
 mkdir -p "${BUILD_DIR}"
 mkdir -p "${BENCHMARK_RESULTS_DIR}"
 
-# Nombre del ejecutable
-OUTPUT_EXE="${BUILD_DIR}/benchmark_${COMPILER}"
+# Nombres de los ejecutables
+OUTPUT_EXE_UINT128="${BUILD_DIR}/uint128_benchmark_${COMPILER}"
+OUTPUT_EXE_INT128="${BUILD_DIR}/int128_benchmark_${COMPILER}"
 
 # Flags comunes
 COMMON_FLAGS="-std=c++20 -O3 -Wall -I${PROJECT_ROOT}/include"
@@ -75,8 +76,8 @@ DEFINES=""
 # Agregar defines según backends habilitados
 if [ $ENABLE_UINT128 -eq 1 ]; then
     if [[ "$COMPILER" == "gcc" || "$COMPILER" == "clang" ]]; then
-        DEFINES="$DEFINES -DHAS_UINT128_T"
-        echo -e "${GREEN}Enabled: __uint128_t native type${NC}"
+        DEFINES="$DEFINES -DHAS_UINT128_T -DHAS_INT128_T"
+        echo -e "${GREEN}Enabled: __uint128_t and __int128_t native types${NC}"
     fi
 fi
 
@@ -116,17 +117,44 @@ case "$COMPILER" in
             exit 1
         fi
         
+        local success=0
+        local failed=0
+        
+        # uint128
+        echo -e "${BLUE}  Building uint128 benchmark...${NC}"
         g++ $COMMON_FLAGS $DEFINES \
             "${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp" \
-            -o "${OUTPUT_EXE}" \
+            -o "${OUTPUT_EXE_UINT128}" \
             $LIBS
         
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}✓ GCC build successful${NC}"
-            echo -e "Executable: ${OUTPUT_EXE}"
+            echo -e "${GREEN}  ✓ uint128 benchmark successful${NC}"
+            ((success++))
         else
-            echo -e "${RED}✗ GCC build failed${NC}"
+            echo -e "${RED}  ✗ uint128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        # int128
+        echo -e "${BLUE}  Building int128 benchmark...${NC}"
+        g++ $COMMON_FLAGS $DEFINES \
+            "${BENCHMARK_DIR}/int128_extracted_benchmarks.cpp" \
+            -o "${OUTPUT_EXE_INT128}" \
+            $LIBS
+        
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128 benchmark successful${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        if [ $failed -gt 0 ]; then
+            echo -e "${RED}✗ GCC builds complete: ${success} successful, ${failed} failed${NC}"
             exit 1
+        else
+            echo -e "${GREEN}✓ GCC builds complete: ${success} successful${NC}"
         fi
         ;;
         
@@ -136,17 +164,44 @@ case "$COMPILER" in
             exit 1
         fi
         
+        local success=0
+        local failed=0
+        
+        # uint128
+        echo -e "${BLUE}  Building uint128 benchmark...${NC}"
         clang++ $COMMON_FLAGS $DEFINES \
             "${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp" \
-            -o "${OUTPUT_EXE}" \
+            -o "${OUTPUT_EXE_UINT128}" \
             $LIBS
         
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}✓ Clang build successful${NC}"
-            echo -e "Executable: ${OUTPUT_EXE}"
+            echo -e "${GREEN}  ✓ uint128 benchmark successful${NC}"
+            ((success++))
         else
-            echo -e "${RED}✗ Clang build failed${NC}"
+            echo -e "${RED}  ✗ uint128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        # int128
+        echo -e "${BLUE}  Building int128 benchmark...${NC}"
+        clang++ $COMMON_FLAGS $DEFINES \
+            "${BENCHMARK_DIR}/int128_extracted_benchmarks.cpp" \
+            -o "${OUTPUT_EXE_INT128}" \
+            $LIBS
+        
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128 benchmark successful${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        if [ $failed -gt 0 ]; then
+            echo -e "${RED}✗ Clang builds complete: ${success} successful, ${failed} failed${NC}"
             exit 1
+        else
+            echo -e "${GREEN}✓ Clang builds complete: ${success} successful${NC}"
         fi
         ;;
         
@@ -160,19 +215,47 @@ case "$COMPILER" in
         # MSVC usa diferentes flags
         MSVC_FLAGS="/std:c++20 /O2 /EHsc /W4 /I${PROJECT_ROOT}/include"
         MSVC_DEFINES=$(echo "$DEFINES" | sed 's/-D/\/D/g')
-        OUTPUT_EXE_WIN="${OUTPUT_EXE}.exe"
+        OUTPUT_EXE_UINT128_WIN="${OUTPUT_EXE_UINT128}.exe"
+        OUTPUT_EXE_INT128_WIN="${OUTPUT_EXE_INT128}.exe"
         
+        local success=0
+        local failed=0
+        
+        # uint128
+        echo -e "${BLUE}  Building uint128 benchmark...${NC}"
         cl.exe $MSVC_FLAGS $MSVC_DEFINES \
             "${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp" \
-            /Fe:"${OUTPUT_EXE_WIN}" \
+            /Fe:"${OUTPUT_EXE_UINT128_WIN}" \
             $LIBS
         
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}✓ MSVC build successful${NC}"
-            echo -e "Executable: ${OUTPUT_EXE_WIN}"
+            echo -e "${GREEN}  ✓ uint128 benchmark successful${NC}"
+            ((success++))
         else
-            echo -e "${RED}✗ MSVC build failed${NC}"
+            echo -e "${RED}  ✗ uint128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        # int128
+        echo -e "${BLUE}  Building int128 benchmark...${NC}"
+        cl.exe $MSVC_FLAGS $MSVC_DEFINES \
+            "${BENCHMARK_DIR}/int128_extracted_benchmarks.cpp" \
+            /Fe:"${OUTPUT_EXE_INT128_WIN}" \
+            $LIBS
+        
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128 benchmark successful${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        if [ $failed -gt 0 ]; then
+            echo -e "${RED}✗ MSVC builds complete: ${success} successful, ${failed} failed${NC}"
             exit 1
+        else
+            echo -e "${GREEN}✓ MSVC builds complete: ${success} successful${NC}"
         fi
         ;;
         
@@ -188,16 +271,44 @@ case "$COMPILER" in
             exit 1
         fi
         
+        local success=0
+        local failed=0
+        
+        # uint128
+        echo -e "${BLUE}  Building uint128 benchmark...${NC}"
         $INTEL_CXX $COMMON_FLAGS $DEFINES \
             "${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp" \
-            -o "${OUTPUT_EXE}" \
+            -o "${OUTPUT_EXE_UINT128}" \
             $LIBS
         
         if [ $? -eq 0 ]; then
-            echo -e "${GREEN}✓ Intel build successful ($INTEL_CXX)${NC}"
-            echo -e "Executable: ${OUTPUT_EXE}"
+            echo -e "${GREEN}  ✓ uint128 benchmark successful${NC}"
+            ((success++))
         else
-            echo -e "${RED}✗ Intel build failed${NC}"
+            echo -e "${RED}  ✗ uint128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        # int128
+        echo -e "${BLUE}  Building int128 benchmark...${NC}"
+        $INTEL_CXX $COMMON_FLAGS $DEFINES \
+            "${BENCHMARK_DIR}/int128_extracted_benchmarks.cpp" \
+            -o "${OUTPUT_EXE_INT128}" \
+            $LIBS
+        
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128 benchmark successful${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128 benchmark failed${NC}"
+            ((failed++))
+        fi
+        
+        if [ $failed -gt 0 ]; then
+            echo -e "${RED}✗ Intel builds complete ($INTEL_CXX): ${success} successful, ${failed} failed${NC}"
+            exit 1
+        else
+            echo -e "${GREEN}✓ Intel builds complete ($INTEL_CXX): ${success} successful${NC}"
             exit 1
         fi
         ;;
@@ -216,4 +327,5 @@ case "$COMPILER" in
 esac
 
 echo -e "\n${GREEN}Build complete!${NC}"
-echo -e "Run: ${OUTPUT_EXE}"
+echo -e "Run uint128: ${OUTPUT_EXE_UINT128}"
+echo -e "Run int128: ${OUTPUT_EXE_INT128}"

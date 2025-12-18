@@ -28,10 +28,11 @@ class Colors:
     CYAN = '\033[0;36m'
     NC = '\033[0m'  # No Color
 
-def find_benchmark_results(results_dir: Path) -> List[Path]:
+def find_benchmark_results(results_dir: Path) -> Tuple[List[Path], List[Path]]:
     """Encuentra todos los archivos CSV de benchmarks en el directorio."""
-    csv_files = list(results_dir.glob("uint128_benchmarks_*.csv"))
-    return csv_files
+    uint128_files = list(results_dir.glob("uint128_benchmarks_*.csv"))
+    int128_files = list(results_dir.glob("int128_benchmarks_*.csv"))
+    return uint128_files, int128_files
 
 def read_csv_results(csv_file: Path) -> List[Dict]:
     """Lee un archivo CSV de resultados y retorna una lista de diccionarios."""
@@ -45,32 +46,48 @@ def read_csv_results(csv_file: Path) -> List[Dict]:
         print(f"{Colors.RED}Error reading {csv_file}: {e}{Colors.NC}")
     return results
 
-def aggregate_results(results_dir: Path) -> Tuple[List[Dict], Dict]:
+def aggregate_results(results_dir: Path) -> Tuple[List[Dict], List[Dict], Dict, Dict]:
     """Agrega todos los resultados de benchmarks."""
-    csv_files = find_benchmark_results(results_dir)
+    uint128_files, int128_files = find_benchmark_results(results_dir)
     
-    if not csv_files:
+    if not uint128_files and not int128_files:
         print(f"{Colors.YELLOW}No benchmark CSV files found in {results_dir}{Colors.NC}")
-        return [], {}
+        return [], [], {}, {}
     
-    print(f"{Colors.BLUE}Found {len(csv_files)} benchmark files:{Colors.NC}")
-    for csv_file in csv_files:
-        print(f"  - {csv_file.name}")
+    print(f"{Colors.BLUE}Found benchmark files:{Colors.NC}")
+    if uint128_files:
+        print(f"  uint128: {len(uint128_files)} files")
+        for csv_file in uint128_files:
+            print(f"    - {csv_file.name}")
+    if int128_files:
+        print(f"  int128: {len(int128_files)} files")
+        for csv_file in int128_files:
+            print(f"    - {csv_file.name}")
     
-    all_results = []
-    compiler_stats = defaultdict(lambda: {"count": 0, "operations": set()})
+    uint128_results = []
+    int128_results = []
+    uint128_compiler_stats = defaultdict(lambda: {"count": 0, "operations": set()})
+    int128_compiler_stats = defaultdict(lambda: {"count": 0, "operations": set()})
     
-    for csv_file in csv_files:
+    # Procesar uint128
+    for csv_file in uint128_files:
         results = read_csv_results(csv_file)
-        all_results.extend(results)
-        
-        # Estadísticas por compilador
+        uint128_results.extend(results)
         for result in results:
             compiler = result.get('Compiler', 'Unknown')
-            compiler_stats[compiler]["count"] += 1
-            compiler_stats[compiler]["operations"].add(result.get('Operation', ''))
+            uint128_compiler_stats[compiler]["count"] += 1
+            uint128_compiler_stats[compiler]["operations"].add(result.get('Operation', ''))
     
-    return all_results, dict(compiler_stats)
+    # Procesar int128
+    for csv_file in int128_files:
+        results = read_csv_results(csv_file)
+        int128_results.extend(results)
+        for result in results:
+            compiler = result.get('Compiler', 'Unknown')
+            int128_compiler_stats[compiler]["count"] += 1
+            int128_compiler_stats[compiler]["operations"].add(result.get('Operation', ''))
+    
+    return uint128_results, int128_results, dict(uint128_compiler_stats), dict(int128_compiler_stats)
 
 def write_consolidated_csv(results: List[Dict], output_file: Path):
     """Escribe todos los resultados en un CSV consolidado."""
@@ -153,11 +170,11 @@ def calculate_speedup(results: List[Dict]) -> Dict:
     return speedups
 
 def write_markdown_report(results: List[Dict], compiler_stats: Dict, 
-                         speedups: Dict, output_file: Path):
+                         speedups: Dict, output_file: Path, int_type: str = "uint128_t"):
     """Genera un reporte en Markdown con análisis de resultados."""
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
-            f.write("# uint128_t Benchmark Results\n\n")
+            f.write(f"# {int_type} Benchmark Results\n\n")
             f.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
             f.write(f"**Total Results:** {len(results)}\n\n")
             
@@ -214,10 +231,10 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
             
             # Top performers
             f.write("## Top Performers\n\n")
-            f.write("### Fastest Operations (uint128_t)\n\n")
+            f.write(f"### Fastest Operations ({int_type})\n\n")
             
-            uint128_results = [r for r in results if r.get('Type') == 'uint128_t']
-            fastest = sorted(uint128_results, 
+            type_results = [r for r in results if r.get('Type') == int_type]
+            fastest = sorted(type_results, 
                            key=lambda x: float(x.get('Time_ns', float('inf'))))[:10]
             
             f.write("| Rank | Operation | Compiler | Time (ns) | Cycles |\n")
@@ -231,8 +248,8 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
             f.write("\n")
             
             # Slowest operations
-            f.write("### Slowest Operations (uint128_t)\n\n")
-            slowest = sorted(uint128_results, 
+            f.write(f"### Slowest Operations ({int_type})\n\n")
+            slowest = sorted(type_results, 
                            key=lambda x: float(x.get('Time_ns', 0)), 
                            reverse=True)[:10]
             
@@ -247,11 +264,11 @@ def write_markdown_report(results: List[Dict], compiler_stats: Dict,
             f.write("\n")
             
             # Compiler comparison
-            f.write("## Compiler Comparison (uint128_t only)\n\n")
+            f.write(f"## Compiler Comparison ({int_type} only)\n\n")
             
             # Agrupar por operación y compilador
             op_compiler = defaultdict(lambda: defaultdict(list))
-            for result in uint128_results:
+            for result in type_results:
                 op = result.get('Operation', '')
                 compiler = result.get('Compiler', '')
                 time_ns = float(result.get('Time_ns', 0))
@@ -306,27 +323,46 @@ def main():
     print(f"{Colors.BLUE}========================================{Colors.NC}\n")
     
     # Agregar resultados
-    all_results, compiler_stats = aggregate_results(results_dir)
+    uint128_results, int128_results, uint128_stats, int128_stats = aggregate_results(results_dir)
     
-    if not all_results:
+    if not uint128_results and not int128_results:
         print(f"{Colors.YELLOW}No results to aggregate{Colors.NC}")
         return 0
     
-    print(f"\n{Colors.CYAN}Total results collected: {len(all_results)}{Colors.NC}\n")
+    print(f"\n{Colors.CYAN}Results collected:{Colors.NC}")
+    if uint128_results:
+        print(f"  uint128_t: {len(uint128_results)} results")
+    if int128_results:
+        print(f"  int128_t: {len(int128_results)} results")
+    print()
     
-    # Calcular speedups
-    speedups = calculate_speedup(all_results)
-    
-    # Escribir resultados consolidados
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    csv_output = results_dir / f"consolidated_benchmarks_{timestamp}.csv"
-    json_output = results_dir / f"consolidated_benchmarks_{timestamp}.json"
-    md_output = results_dir / f"benchmark_report_{timestamp}.md"
+    # Procesar uint128
+    if uint128_results:
+        print(f"{Colors.YELLOW}Processing uint128_t results...{Colors.NC}")
+        speedups_uint128 = calculate_speedup(uint128_results)
+        
+        csv_output = results_dir / f"consolidated_uint128_{timestamp}.csv"
+        json_output = results_dir / f"consolidated_uint128_{timestamp}.json"
+        md_output = results_dir / f"benchmark_report_uint128_{timestamp}.md"
+        
+        write_consolidated_csv(uint128_results, csv_output)
+        write_consolidated_json(uint128_results, json_output)
+        write_markdown_report(uint128_results, uint128_stats, speedups_uint128, md_output, "uint128_t")
     
-    write_consolidated_csv(all_results, csv_output)
-    write_consolidated_json(all_results, json_output)
-    write_markdown_report(all_results, compiler_stats, speedups, md_output)
+    # Procesar int128
+    if int128_results:
+        print(f"\n{Colors.YELLOW}Processing int128_t results...{Colors.NC}")
+        speedups_int128 = calculate_speedup(int128_results)
+        
+        csv_output = results_dir / f"consolidated_int128_{timestamp}.csv"
+        json_output = results_dir / f"consolidated_int128_{timestamp}.json"
+        md_output = results_dir / f"benchmark_report_int128_{timestamp}.md"
+        
+        write_consolidated_csv(int128_results, csv_output)
+        write_consolidated_json(int128_results, json_output)
+        write_markdown_report(int128_results, int128_stats, speedups_int128, md_output, "int128_t")
     
     print(f"\n{Colors.GREEN}========================================{Colors.NC}")
     print(f"{Colors.GREEN}Aggregation Complete!{Colors.NC}")
