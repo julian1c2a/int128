@@ -3,8 +3,8 @@
  * @brief Comprehensive benchmarks for uint128_t comparing with built-in types and Boost
  *
  * This file benchmarks all major operations of uint128_t and compares with:
- * - Built-in types: uint64_t, uint32_t
- * - Boost multiprecision: cpp_int (pure C++, no GMP/tommath backend)
+ * - Built-in types: uint64_t, uint32_t, __uint128_t (GCC/Clang)
+ * - Boost multiprecision: cpp_int (pure C++), cpp_int with GMP, cpp_int with tommath
  *
  * Results are exported in CSV and JSON format for analysis
  */
@@ -31,10 +31,31 @@
 #endif
 #endif
 
+// __uint128_t nativo (GCC/Clang)
+#if defined(__GNUC__) || defined(__clang__)
+#ifndef _MSC_VER
+#define HAS_UINT128_T 1
+#endif
+#endif
+
 // Optional: Boost multiprecision for comparison
 #ifdef HAVE_BOOST
 #include <boost/multiprecision/cpp_int.hpp>
 using boost_uint128 = boost::multiprecision::uint128_t;
+
+// Boost con GMP backend
+#ifdef HAVE_BOOST_GMP
+#include <boost/multiprecision/gmp.hpp>
+using boost_uint128_gmp =
+    boost::multiprecision::number<boost::multiprecision::gmp_int, boost::multiprecision::et_off>;
+#endif
+
+// Boost con tommath backend
+#ifdef HAVE_BOOST_TOMMATH
+#include <boost/multiprecision/tommath.hpp>
+using boost_uint128_tommath = boost::multiprecision::number<boost::multiprecision::tommath_int,
+                                                            boost::multiprecision::et_off>;
+#endif
 #endif
 
 // ========================= BENCHMARK INFRASTRUCTURE =========================
@@ -200,6 +221,18 @@ void benchmark_construction()
         (void)v;
     });
 
+#ifdef HAS_UINT128_T
+    benchmark_operation("construction_default", "__uint128_t", []() {
+        volatile __uint128_t v;
+        (void)v;
+    });
+
+    benchmark_operation("construction_from_uint64", "__uint128_t", []() {
+        volatile __uint128_t v = rng();
+        (void)v;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     benchmark_operation("construction_default", "boost_uint128", []() {
         volatile boost_uint128 v;
@@ -210,6 +243,30 @@ void benchmark_construction()
         volatile boost_uint128 v(rng());
         (void)v;
     });
+
+#ifdef HAVE_BOOST_GMP
+    benchmark_operation("construction_default", "boost_gmp", []() {
+        volatile boost_uint128_gmp v;
+        (void)v;
+    });
+
+    benchmark_operation("construction_from_uint64", "boost_gmp", []() {
+        volatile boost_uint128_gmp v(rng());
+        (void)v;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    benchmark_operation("construction_default", "boost_tommath", []() {
+        volatile boost_uint128_tommath v;
+        (void)v;
+    });
+
+    benchmark_operation("construction_from_uint64", "boost_tommath", []() {
+        volatile boost_uint128_tommath v(rng());
+        (void)v;
+    });
+#endif
 #endif
 }
 
@@ -240,12 +297,37 @@ void benchmark_addition()
         (void)result;
     });
 
+#ifdef HAS_UINT128_T
+    __uint128_t a128 = (__uint128_t)rng() << 64 | rng();
+    __uint128_t b128 = (__uint128_t)rng() << 64 | rng();
+    benchmark_operation("addition", "__uint128_t", [&]() {
+        volatile __uint128_t result = a128 + b128;
+        (void)result;
+    });
+#endif
+
 #ifdef HAVE_BOOST
     boost_uint128 ab(rng()), bb(rng());
     benchmark_operation("addition", "boost_uint128", [&]() {
         volatile boost_uint128 result = ab + bb;
         (void)result;
     });
+
+#ifdef HAVE_BOOST_GMP
+    boost_uint128_gmp ab_gmp(rng()), bb_gmp(rng());
+    benchmark_operation("addition", "boost_gmp", [&]() {
+        volatile boost_uint128_gmp result = ab_gmp + bb_gmp;
+        (void)result;
+    });
+#endif
+
+#ifdef HAVE_BOOST_TOMMATH
+    boost_uint128_tommath ab_tm(rng()), bb_tm(rng());
+    benchmark_operation("addition", "boost_tommath", [&]() {
+        volatile boost_uint128_tommath result = ab_tm + bb_tm;
+        (void)result;
+    });
+#endif
 #endif
 }
 
