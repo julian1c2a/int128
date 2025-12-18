@@ -22,101 +22,211 @@ ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 BUILD_DIR="${ROOT_DIR}/build"
 BENCHMARK_RESULTS_DIR="${ROOT_DIR}/benchmark_results"
 
-# Ejecutables
-BENCHMARK_EXEC_GCC="${BUILD_DIR}/uint128_benchmarks_gcc"
-BENCHMARK_EXEC_CLANG="${BUILD_DIR}/uint128_benchmarks_clang"
-BENCHMARK_EXEC_MSVC="${BUILD_DIR}/uint128_benchmarks_msvc.exe"
-BENCHMARK_EXEC_INTEL="${BUILD_DIR}/uint128_benchmarks_intel"
+# Ejecutables - uint128_t
+BENCHMARK_EXEC_GCC_UINT128="${BUILD_DIR}/uint128_benchmarks_gcc"
+BENCHMARK_EXEC_CLANG_UINT128="${BUILD_DIR}/uint128_benchmarks_clang"
+BENCHMARK_EXEC_MSVC_UINT128="${BUILD_DIR}/uint128_benchmarks_msvc.exe"
+BENCHMARK_EXEC_INTEL_UINT128="${BUILD_DIR}/uint128_benchmarks_intel"
+
+# Ejecutables - int128_t
+BENCHMARK_EXEC_GCC_INT128="${BUILD_DIR}/int128_benchmarks_gcc"
+BENCHMARK_EXEC_CLANG_INT128="${BUILD_DIR}/int128_benchmarks_clang"
+BENCHMARK_EXEC_MSVC_INT128="${BUILD_DIR}/int128_benchmarks_msvc.exe"
+BENCHMARK_EXEC_INTEL_INT128="${BUILD_DIR}/int128_benchmarks_intel"
 
 # Crear directorio de resultados si no existe
 mkdir -p "${BENCHMARK_RESULTS_DIR}"
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}Running uint128 Benchmarks${NC}"
+echo -e "${BLUE}Running int128/uint128 Benchmarks${NC}"
 echo -e "${BLUE}========================================${NC}"
 
 # Función para ejecutar benchmark con GCC
 run_gcc() {
-    echo -e "\n${YELLOW}Running GCC benchmark...${NC}"
+    echo -e "\n${YELLOW}Running GCC benchmarks...${NC}"
     
-    if [ ! -f "${BENCHMARK_EXEC_GCC}" ]; then
-        echo -e "${RED}Error: GCC benchmark not found${NC}"
+    local success=0
+    local failed=0
+    
+    # uint128_t
+    if [ -f "${BENCHMARK_EXEC_GCC_UINT128}" ]; then
+        echo -e "${BLUE}  Running uint128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_GCC_UINT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ uint128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ uint128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    # int128_t
+    if [ -f "${BENCHMARK_EXEC_GCC_INT128}" ]; then
+        echo -e "${BLUE}  Running int128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_GCC_INT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ int128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    if [ $success -eq 0 ]; then
+        echo -e "${RED}Error: No GCC benchmarks found${NC}"
         echo -e "${YELLOW}Hint: Run ./scripts/build_benchmarks.bash gcc first${NC}"
         return 1
     fi
     
-    "${BENCHMARK_EXEC_GCC}"
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ GCC benchmark completed${NC}"
-        return 0
-    else
-        echo -e "${RED}✗ GCC benchmark failed${NC}"
-        return 1
-    fi
+    echo -e "${GREEN}✓ GCC benchmarks complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para ejecutar benchmark con Clang
 run_clang() {
-    echo -e "\n${YELLOW}Running Clang benchmark...${NC}"
+    echo -e "\n${YELLOW}Running Clang benchmarks...${NC}"
     
-    if [ ! -f "${BENCHMARK_EXEC_CLANG}" ]; then
-        echo -e "${RED}Error: Clang benchmark not found${NC}"
+    local success=0
+    local failed=0
+    
+    # uint128_t
+    if [ -f "${BENCHMARK_EXEC_CLANG_UINT128}" ]; then
+        echo -e "${BLUE}  Running uint128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_CLANG_UINT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ uint128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ uint128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    # int128_t
+    if [ -f "${BENCHMARK_EXEC_CLANG_INT128}" ]; then
+        echo -e "${BLUE}  Running int128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_CLANG_INT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ int128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    if [ $success -eq 0 ]; then
+        echo -e "${RED}Error: No Clang benchmarks found${NC}"
         echo -e "${YELLOW}Hint: Run ./scripts/build_benchmarks.bash clang first${NC}"
         return 1
     fi
     
-    "${BENCHMARK_EXEC_CLANG}"
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ Clang benchmark completed${NC}"
-        return 0
-    else
-        echo -e "${RED}✗ Clang benchmark failed${NC}"
-        return 1
-    fi
+    echo -e "${GREEN}✓ Clang benchmarks complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para ejecutar benchmark con MSVC
 run_msvc() {
-    echo -e "\n${YELLOW}Running MSVC benchmark...${NC}"
+    echo -e "\n${YELLOW}Running MSVC benchmarks...${NC}"
     
-    if [ ! -f "${BENCHMARK_EXEC_MSVC}" ]; then
-        echo -e "${RED}Error: MSVC benchmark not found${NC}"
+    local success=0
+    local failed=0
+    
+    # uint128_t
+    if [ -f "${BENCHMARK_EXEC_MSVC_UINT128}" ]; then
+        echo -e "${BLUE}  Running uint128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_MSVC_UINT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ uint128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ uint128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    # int128_t
+    if [ -f "${BENCHMARK_EXEC_MSVC_INT128}" ]; then
+        echo -e "${BLUE}  Running int128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_MSVC_INT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ int128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    if [ $success -eq 0 ]; then
+        echo -e "${RED}Error: No MSVC benchmarks found${NC}"
         echo -e "${YELLOW}Hint: Run ./scripts/build_benchmarks.bash msvc first${NC}"
         return 1
     fi
     
-    "${BENCHMARK_EXEC_MSVC}"
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ MSVC benchmark completed${NC}"
-        return 0
-    else
-        echo -e "${RED}✗ MSVC benchmark failed${NC}"
-        return 1
-    fi
+    echo -e "${GREEN}✓ MSVC benchmarks complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para ejecutar con Intel
 run_intel() {
-    echo -e "${BLUE}Running Intel benchmark...${NC}"
+    echo -e "\n${YELLOW}Running Intel benchmarks...${NC}"
     
-    if [ ! -f "${BENCHMARK_EXEC_INTEL}" ]; then
-        echo -e "${RED}Intel benchmark executable not found: ${BENCHMARK_EXEC_INTEL}${NC}"
-        echo -e "${YELLOW}Run build_benchmarks.bash intel first${NC}"
-        return 1
-    fi
+    local success=0
+    local failed=0
     
-    "${BENCHMARK_EXEC_INTEL}"
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ Intel benchmark completed${NC}"
-        return 0
+    # uint128_t
+    if [ -f "${BENCHMARK_EXEC_INTEL_UINT128}" ]; then
+        echo -e "${BLUE}  Running uint128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_INTEL_UINT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ uint128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+            ((failed++))
+        fi
     else
-        echo -e "${RED}✗ Intel benchmark failed${NC}"
+        echo -e "${YELLOW}  ⚠ uint128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    # int128_t
+    if [ -f "${BENCHMARK_EXEC_INTEL_INT128}" ]; then
+        echo -e "${BLUE}  Running int128_t benchmark...${NC}"
+        "${BENCHMARK_EXEC_INTEL_INT128}"
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}  ✓ int128_t benchmark completed${NC}"
+            ((success++))
+        else
+            echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+            ((failed++))
+        fi
+    else
+        echo -e "${YELLOW}  ⚠ int128_t benchmark not found (skipping)${NC}"
+    fi
+    
+    if [ $success -eq 0 ]; then
+        echo -e "${RED}Error: No Intel benchmarks found${NC}"
+        echo -e "${YELLOW}Hint: Run ./scripts/build_benchmarks.bash intel first${NC}"
         return 1
     fi
+    
+    echo -e "${GREEN}✓ Intel benchmarks complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para ejecutar todos
@@ -149,10 +259,11 @@ run_all() {
     fi
     
     echo -e "\n${BLUE}========================================${NC}"
-    echo -e "${BLUE}Benchmark Summary${NC}"
+    echo -e "${BLUE}Benchmark Execution Summary${NC}"
     echo -e "${BLUE}========================================${NC}"
-    echo -e "${GREEN}Successful: ${success}${NC}"
-    echo -e "${RED}Failed: ${failed}${NC}"
+    echo -e "${GREEN}Compilers successful: ${success}/4${NC}"
+    echo -e "${RED}Compilers failed: ${failed}/4${NC}"
+    echo -e "${YELLOW}(Each compiler runs uint128_t + int128_t benchmarks)${NC}"
     
     # Si se ejecutaron todos, generar reporte consolidado
     if [ ${success} -gt 0 ]; then

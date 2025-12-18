@@ -26,12 +26,19 @@ BENCHMARK_RESULTS_DIR="${ROOT_DIR}/benchmark_results"
 # Crear directorio de resultados si no existe
 mkdir -p "${BENCHMARK_RESULTS_DIR}"
 
-# Archivos
-BENCHMARK_SRC="${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp"
-BENCHMARK_EXEC_GCC="${BUILD_DIR}/uint128_benchmarks_gcc"
-BENCHMARK_EXEC_CLANG="${BUILD_DIR}/uint128_benchmarks_clang"
-BENCHMARK_EXEC_MSVC="${BUILD_DIR}/uint128_benchmarks_msvc.exe"
-BENCHMARK_EXEC_INTEL="${BUILD_DIR}/uint128_benchmarks_intel"
+# Archivos - uint128_t
+BENCHMARK_SRC_UINT128="${BENCHMARK_DIR}/uint128_extracted_benchmarks.cpp"
+BENCHMARK_EXEC_GCC_UINT128="${BUILD_DIR}/uint128_benchmarks_gcc"
+BENCHMARK_EXEC_CLANG_UINT128="${BUILD_DIR}/uint128_benchmarks_clang"
+BENCHMARK_EXEC_MSVC_UINT128="${BUILD_DIR}/uint128_benchmarks_msvc.exe"
+BENCHMARK_EXEC_INTEL_UINT128="${BUILD_DIR}/uint128_benchmarks_intel"
+
+# Archivos - int128_t
+BENCHMARK_SRC_INT128="${BENCHMARK_DIR}/int128_extracted_benchmarks.cpp"
+BENCHMARK_EXEC_GCC_INT128="${BUILD_DIR}/int128_benchmarks_gcc"
+BENCHMARK_EXEC_CLANG_INT128="${BUILD_DIR}/int128_benchmarks_clang"
+BENCHMARK_EXEC_MSVC_INT128="${BUILD_DIR}/int128_benchmarks_msvc.exe"
+BENCHMARK_EXEC_INTEL_INT128="${BUILD_DIR}/int128_benchmarks_intel"
 
 # Flags comunes
 INCLUDE_FLAGS="-I${ROOT_DIR}/include"
@@ -45,7 +52,7 @@ BOOST_FLAGS=""
 # BOOST_FLAGS="-DHAVE_BOOST -I/path/to/boost/include"
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}Building uint128 Benchmarks${NC}"
+echo -e "${BLUE}Building int128/uint128 Benchmarks${NC}"
 echo -e "${BLUE}========================================${NC}"
 
 # Función para compilar con GCC
@@ -57,18 +64,39 @@ build_gcc() {
         return 1
     fi
     
+    local success=0
+    local failed=0
+    
+    # Build uint128_t benchmarks
+    echo -e "${BLUE}  Building uint128_t benchmarks...${NC}"
     g++ ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
-        "${BENCHMARK_SRC}" \
-        -o "${BENCHMARK_EXEC_GCC}"
+        "${BENCHMARK_SRC_UINT128}" \
+        -o "${BENCHMARK_EXEC_GCC_UINT128}"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ GCC build successful${NC}"
-        echo -e "  Executable: ${BENCHMARK_EXEC_GCC}"
-        return 0
+        echo -e "${GREEN}  ✓ uint128_t benchmark successful${NC}"
+        ((success++))
     else
-        echo -e "${RED}✗ GCC build failed${NC}"
-        return 1
+        echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+        ((failed++))
     fi
+    
+    # Build int128_t benchmarks
+    echo -e "${BLUE}  Building int128_t benchmarks...${NC}"
+    g++ ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
+        "${BENCHMARK_SRC_INT128}" \
+        -o "${BENCHMARK_EXEC_GCC_INT128}"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ int128_t benchmark successful${NC}"
+        ((success++))
+    else
+        echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+        ((failed++))
+    fi
+    
+    echo -e "${GREEN}✓ GCC build complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para compilar con Clang
@@ -80,18 +108,39 @@ build_clang() {
         return 1
     fi
     
+    local success=0
+    local failed=0
+    
+    # Build uint128_t benchmarks
+    echo -e "${BLUE}  Building uint128_t benchmarks...${NC}"
     clang++ ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
-        "${BENCHMARK_SRC}" \
-        -o "${BENCHMARK_EXEC_CLANG}"
+        "${BENCHMARK_SRC_UINT128}" \
+        -o "${BENCHMARK_EXEC_CLANG_UINT128}"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ Clang build successful${NC}"
-        echo -e "  Executable: ${BENCHMARK_EXEC_CLANG}"
-        return 0
+        echo -e "${GREEN}  ✓ uint128_t benchmark successful${NC}"
+        ((success++))
     else
-        echo -e "${RED}✗ Clang build failed${NC}"
-        return 1
+        echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+        ((failed++))
     fi
+    
+    # Build int128_t benchmarks
+    echo -e "${BLUE}  Building int128_t benchmarks...${NC}"
+    clang++ ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
+        "${BENCHMARK_SRC_INT128}" \
+        -o "${BENCHMARK_EXEC_CLANG_INT128}"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ int128_t benchmark successful${NC}"
+        ((success++))
+    else
+        echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+        ((failed++))
+    fi
+    
+    echo -e "${GREEN}✓ Clang build complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para compilar con MSVC
@@ -133,23 +182,46 @@ build_msvc() {
     # Descomentar si Boost está disponible:
     # MSVC_BOOST="/DHAVE_BOOST /I/path/to/boost/include"
     
+    local success=0
+    local failed=0
+    
+    # Build uint128_t benchmarks
+    echo -e "${BLUE}  Building uint128_t benchmarks...${NC}"
+    MSVC_OUT_UINT128="/Fe${BENCHMARK_EXEC_MSVC_UINT128}"
     cl.exe ${MSVC_STD} ${MSVC_OPT} ${MSVC_WARN} ${MSVC_EHsc} ${MSVC_INCLUDE} ${MSVC_BOOST} \
-        "${BENCHMARK_SRC}" \
-        ${MSVC_OUT} \
+        "${BENCHMARK_SRC_UINT128}" \
+        ${MSVC_OUT_UINT128} \
         > /dev/null 2>&1
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ MSVC build successful${NC}"
-        echo -e "  Executable: ${BENCHMARK_EXEC_MSVC}"
-        
-        # Limpiar archivos temporales de MSVC
-        rm -f "${BUILD_DIR}"/*.obj "${BUILD_DIR}"/*.pdb
-        
-        return 0
+        echo -e "${GREEN}  ✓ uint128_t benchmark successful${NC}"
+        ((success++))
     else
-        echo -e "${RED}✗ MSVC build failed${NC}"
-        return 1
+        echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+        ((failed++))
     fi
+    
+    # Build int128_t benchmarks
+    echo -e "${BLUE}  Building int128_t benchmarks...${NC}"
+    MSVC_OUT_INT128="/Fe${BENCHMARK_EXEC_MSVC_INT128}"
+    cl.exe ${MSVC_STD} ${MSVC_OPT} ${MSVC_WARN} ${MSVC_EHsc} ${MSVC_INCLUDE} ${MSVC_BOOST} \
+        "${BENCHMARK_SRC_INT128}" \
+        ${MSVC_OUT_INT128} \
+        > /dev/null 2>&1
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ int128_t benchmark successful${NC}"
+        ((success++))
+    else
+        echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+        ((failed++))
+    fi
+    
+    # Limpiar archivos temporales de MSVC
+    rm -f "${BUILD_DIR}"/*.obj "${BUILD_DIR}"/*.pdb
+    
+    echo -e "${GREEN}✓ MSVC build complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para compilar con Intel C++ (icpx o icx)
@@ -170,18 +242,39 @@ build_intel() {
     
     echo -e "${BLUE}Using Intel compiler: ${intel_compiler}${NC}"
     
+    local success=0
+    local failed=0
+    
+    # Build uint128_t benchmarks
+    echo -e "${BLUE}  Building uint128_t benchmarks...${NC}"
     ${intel_compiler} ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
-        "${BENCHMARK_SRC}" \
-        -o "${BENCHMARK_EXEC_INTEL}"
+        "${BENCHMARK_SRC_UINT128}" \
+        -o "${BENCHMARK_EXEC_INTEL_UINT128}"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ Intel build successful${NC}"
-        echo -e "  Executable: ${BENCHMARK_EXEC_INTEL}"
-        return 0
+        echo -e "${GREEN}  ✓ uint128_t benchmark successful${NC}"
+        ((success++))
     else
-        echo -e "${RED}✗ Intel build failed${NC}"
-        return 1
+        echo -e "${RED}  ✗ uint128_t benchmark failed${NC}"
+        ((failed++))
     fi
+    
+    # Build int128_t benchmarks
+    echo -e "${BLUE}  Building int128_t benchmarks...${NC}"
+    ${intel_compiler} ${STD_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS} ${INCLUDE_FLAGS} ${BOOST_FLAGS} \
+        "${BENCHMARK_SRC_INT128}" \
+        -o "${BENCHMARK_EXEC_INTEL_INT128}"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}  ✓ int128_t benchmark successful${NC}"
+        ((success++))
+    else
+        echo -e "${RED}  ✗ int128_t benchmark failed${NC}"
+        ((failed++))
+    fi
+    
+    echo -e "${GREEN}✓ Intel build complete: ${success} successful, ${failed} failed${NC}"
+    return ${failed}
 }
 
 # Función para compilar todos
