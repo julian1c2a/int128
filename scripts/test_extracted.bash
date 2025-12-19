@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script combinado para compilar y ejecutar uint128_extracted_tests
-# Uso: ./test_extracted.bash [gcc|clang|msvc|all]
+# Uso: ./test_extracted.bash [gcc|clang|msvc|intel|all]
 
 # Colores para output
 RED='\033[0;31m'

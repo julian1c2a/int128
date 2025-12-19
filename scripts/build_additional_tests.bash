@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script unificado para compilar uint128_additional_tests.cpp
-# Uso: ./build_additional_tests.bash [gcc|clang|msvc|all]
+# Uso: ./build_additional_tests.bash [gcc|clang|msvc|intel|all]
 
 # Colores para output
 RED='\033[0;31m'
@@ -114,6 +114,40 @@ build_msvc() {
     fi
 }
 
+# Función para compilar con Intel C++
+build_intel() {
+    local BUILD_DIR="build/build_tests/intel/release"
+    local OUTPUT_EXE="$BUILD_DIR/uint128_additional_tests.exe"
+    
+    echo -e "${CYAN}Compilando tests adicionales con Intel C++...${NC}"
+    mkdir -p "$BUILD_DIR"
+    
+    # Verificar disponibilidad de compilador Intel
+    local intel_compiler=""
+    if command -v icpx &> /dev/null; then
+        intel_compiler="icpx"
+    elif command -v icx &> /dev/null; then
+        intel_compiler="icx"
+    else
+        echo -e "${RED}✗ Error: Intel C++ compiler (icpx/icx) no encontrado${NC}"
+        echo -e "${YELLOW}   Hint: Ejecute \"C:\\Program Files (x86)\\Intel\\oneAPI\\setvars.bat\"${NC}"
+        return 1
+    fi
+    
+    echo -e "${BLUE}  Usando compilador: ${intel_compiler}${NC}"
+    
+    ${intel_compiler} -std=c++20 -O2 -Wall -Wextra -I "$INCLUDE_DIR" "$SRC_FILE" -o "$OUTPUT_EXE"
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✓ Compilación Intel exitosa${NC}"
+        echo "  Ejecutable: $OUTPUT_EXE"
+        return 0
+    else
+        echo -e "${RED}✗ Error en compilación Intel${NC}"
+        return 1
+    fi
+}
+
 # Función principal
 main() {
     local COMPILER="${1:-all}"
@@ -137,6 +171,10 @@ main() {
             build_msvc
             EXIT_CODE=$?
             ;;
+        intel)
+            build_intel
+            EXIT_CODE=$?
+            ;;
         all)
             echo -e "${CYAN}Compilando con todos los compiladores...${NC}"
             echo ""
@@ -151,6 +189,10 @@ main() {
             
             build_msvc
             local msvc_result=$?
+            echo ""
+            
+            build_intel
+            local intel_result=$?
             echo ""
             
             # Resumen
@@ -177,11 +219,18 @@ main() {
                 echo -e "${RED}✗ MSVC${NC}"
                 EXIT_CODE=1
             fi
+            
+            if [ $intel_result -eq 0 ]; then
+                echo -e "${GREEN}✓ Intel${NC}"
+            else
+                echo -e "${RED}✗ Intel${NC}"
+                EXIT_CODE=1
+            fi
             ;;
         *)
             echo -e "${RED}Error: Compilador no válido '$COMPILER'${NC}"
             echo ""
-            echo "Uso: $0 [gcc|clang|msvc|all]"
+            echo "Uso: $0 [gcc|clang|msvc|intel|all]"
             exit 1
             ;;
     esac

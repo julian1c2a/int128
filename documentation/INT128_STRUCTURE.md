@@ -218,7 +218,7 @@ sources/
 - **MSVC 19.50+** (Visual Studio 2022)
 - **GCC 11+** (con `-std=c++20`)
 - **Clang 13+** (con `-std=c++20`)
-- **Intel oneAPI** (icpx/icx)
+- **Intel oneAPI** (icpx/icx) - ⚠️ Ver [scripts/README_INTEL.md](../scripts/README_INTEL.md) para configuración correcta
 
 ### 📊 Sistema de Benchmarks Completo
 - **Múltiples compiladores**: GCC, Clang, MSVC, Intel oneAPI

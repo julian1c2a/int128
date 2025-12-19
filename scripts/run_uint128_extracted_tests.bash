@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script unificado para ejecutar uint128_extracted_tests
-# Uso: ./run_uint128_extracted_tests.bash [gcc|clang|msvc|all]
+# Uso: ./run_uint128_extracted_tests.bash [gcc|clang|msvc|intel|all]
 
 # Colores para output
 RED='\033[0;31m'
@@ -96,6 +96,33 @@ run_msvc() {
     return $result
 }
 
+# Función para ejecutar tests con Intel
+run_intel() {
+    local BUILD_DIR="build/build_tests/intel/release"
+    local OUTPUT_EXE="$BUILD_DIR/uint128_extracted_tests.exe"
+    
+    echo -e "${CYAN}Ejecutando tests compilados con Intel...${NC}"
+    echo "================================"
+    
+    if [ ! -f "$OUTPUT_EXE" ]; then
+        echo -e "${YELLOW}⚠ Ejecutable no encontrado: $OUTPUT_EXE${NC}"
+        echo "  Compílalo primero con: ./build_extracted_tests.bash intel"
+        return 1
+    fi
+    
+    "$OUTPUT_EXE"
+    local result=$?
+    
+    echo ""
+    if [ $result -eq 0 ]; then
+        echo -e "${GREEN}✓ Tests Intel: PASSED${NC}"
+    else
+        echo -e "${RED}✗ Tests Intel: FAILED (código de salida: $result)${NC}"
+    fi
+    
+    return $result
+}
+
 # Función principal
 main() {
     local COMPILER="${1:-all}"
@@ -119,6 +146,10 @@ main() {
             run_msvc
             EXIT_CODE=$?
             ;;
+        intel)
+            run_intel
+            EXIT_CODE=$?
+            ;;
         all)
             echo -e "${CYAN}Ejecutando tests con todos los compiladores...${NC}"
             echo ""
@@ -135,6 +166,11 @@ main() {
             
             run_msvc
             local msvc_result=$?
+            echo ""
+            echo ""
+            
+            run_intel
+            local intel_result=$?
             echo ""
             
             # Resumen
@@ -162,6 +198,13 @@ main() {
                 EXIT_CODE=1
             fi
             
+            if [ $intel_result -eq 0 ]; then
+                echo -e "${GREEN}✓ Intel: PASSED${NC}"
+            else
+                echo -e "${RED}✗ Intel: FAILED${NC}"
+                EXIT_CODE=1
+            fi
+            
             echo ""
             if [ $EXIT_CODE -eq 0 ]; then
                 echo -e "${GREEN}🎉 Todos los tests pasaron exitosamente${NC}"
@@ -172,12 +215,13 @@ main() {
         *)
             echo -e "${RED}Error: Compilador no válido '$COMPILER'${NC}"
             echo ""
-            echo "Uso: $0 [gcc|clang|msvc|all]"
+            echo "Uso: $0 [gcc|clang|msvc|intel|all]"
             echo ""
             echo "Ejemplos:"
             echo "  $0 gcc     # Ejecutar tests compilados con GCC"
             echo "  $0 clang   # Ejecutar tests compilados con Clang"
             echo "  $0 msvc    # Ejecutar tests compilados con MSVC"
+            echo "  $0 intel   # Ejecutar tests compilados con Intel"
             echo "  $0 all     # Ejecutar todos los tests (por defecto)"
             exit 1
             ;;
