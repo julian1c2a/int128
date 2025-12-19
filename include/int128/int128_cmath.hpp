@@ -17,7 +17,7 @@ namespace std
  * @brief Greatest Common Divisor for signed 128-bit integers
  * Uses binary GCD algorithm with sign handling
  */
-constexpr int128_t gcd(const int128_t& a, const int128_t& b) noexcept
+inline int128_t gcd(const int128_t& a, const int128_t& b) noexcept
 {
     // gcd(-a, b) = gcd(a, -b) = gcd(-a, -b) = gcd(a, b)
     int128_t abs_a = a.abs();
@@ -73,13 +73,13 @@ constexpr int128_t gcd(const int128_t& a, const int128_t& b) noexcept
 }
 
 template <typename T>
-constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> gcd(const int128_t& a, T b) noexcept
+inline std::enable_if_t<std::is_integral_v<T>, int128_t> gcd(const int128_t& a, T b) noexcept
 {
     return gcd(a, int128_t(b));
 }
 
 template <typename T>
-constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> gcd(T a, const int128_t& b) noexcept
+inline std::enable_if_t<std::is_integral_v<T>, int128_t> gcd(T a, const int128_t& b) noexcept
 {
     return gcd(int128_t(a), b);
 }
@@ -88,7 +88,7 @@ constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> gcd(T a, const int12
 // std::lcm specializations for int128_t
 // =============================================================================
 
-constexpr int128_t lcm(const int128_t& a, const int128_t& b) noexcept
+inline int128_t lcm(const int128_t& a, const int128_t& b) noexcept
 {
     int128_t abs_a = a.abs();
     int128_t abs_b = b.abs();
@@ -101,13 +101,13 @@ constexpr int128_t lcm(const int128_t& a, const int128_t& b) noexcept
 }
 
 template <typename T>
-constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> lcm(const int128_t& a, T b) noexcept
+inline std::enable_if_t<std::is_integral_v<T>, int128_t> lcm(const int128_t& a, T b) noexcept
 {
     return lcm(a, int128_t(b));
 }
 
 template <typename T>
-constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> lcm(T a, const int128_t& b) noexcept
+inline std::enable_if_t<std::is_integral_v<T>, int128_t> lcm(T a, const int128_t& b) noexcept
 {
     return lcm(int128_t(a), b);
 }
@@ -116,7 +116,7 @@ constexpr std::enable_if_t<std::is_integral_v<T>, int128_t> lcm(T a, const int12
 // std::abs specialization for int128_t
 // =============================================================================
 
-constexpr int128_t abs(const int128_t& x) noexcept
+inline int128_t abs(const int128_t& x) noexcept
 {
     return x.abs();
 }
@@ -284,7 +284,7 @@ constexpr int128_t clamp(const int128_t& value, const int128_t& min_val,
 /**
  * @brief Punto medio sin overflow
  */
-constexpr int128_t midpoint(const int128_t& a, const int128_t& b) noexcept
+inline int128_t midpoint(const int128_t& a, const int128_t& b) noexcept
 {
     // Evitar overflow: usar a + (b - a) / 2
     if (a <= b) {
@@ -306,7 +306,7 @@ constexpr int128_t midpoint(const int128_t& a, const int128_t& b) noexcept
  * @param divisor Divisor (no puede ser 0)
  * @return Par (cociente, resto)
  */
-constexpr std::pair<int128_t, int128_t> divmod(const int128_t& dividend, const int128_t& divisor)
+inline std::pair<int128_t, int128_t> divmod(const int128_t& dividend, const int128_t& divisor)
 {
     int128_t quotient = dividend / divisor;
     int128_t remainder = dividend % divisor;

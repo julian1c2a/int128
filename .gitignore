@@ -119,3 +119,6 @@ log_build.md
 include/uint128/uint128_t.hpp
 log_build_gcc.txt
 log_build_msvc.txt
+log_build_int128_extracted_tests.txt
+temp_int128_alg.txt
+log_build_uint128_algo_bench.txt

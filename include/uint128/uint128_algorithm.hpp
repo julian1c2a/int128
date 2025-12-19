@@ -40,18 +40,18 @@
  * @brief Algoritmos optimizados y especializados para uint128_t
  *
  * Este archivo proporciona implementaciones optimizadas de algoritmos
- * estándar específicamente diseñados para trabajar con uint128_t.
+ * estandar especificamente disenados para trabajar con uint128_t.
  */
 
 namespace uint128_algorithm
 {
 
 // ===============================================================================
-// ALGORITMOS DE BÚSQUEDA
+// ALGORITMOS DE BuSQUEDA
 // ===============================================================================
 
 /**
- * @brief Búsqueda binaria optimizada para rangos de uint128_t
+ * @brief Busqueda binaria optimizada para rangos de uint128_t
  *
  * @tparam ForwardIt Tipo de iterador
  * @param first Iterador al inicio del rango
@@ -59,11 +59,11 @@ namespace uint128_algorithm
  * @param value Valor a buscar
  * @return true si se encuentra el valor, false en caso contrario
  *
- * Optimizada para aprovechar las características específicas de uint128_t.
+ * Optimizada para aprovechar las caracteristicas especificas de uint128_t.
  *
  * @test test_binary_search_uint128
  * @code{.cpp}
- * // Verifica búsqueda de valores existentes e inexistentes
+ * // Verifica busqueda de valores existentes e inexistentes
  * std::vector<uint128_t> vec = {10, 20, 30, 40, 50};
  * assert(binary_search_uint128(vec.begin(), vec.end(), uint128_t(30)));
  * assert(!binary_search_uint128(vec.begin(), vec.end(), uint128_t(15)));
@@ -89,7 +89,7 @@ bool binary_search_uint128(ForwardIt first, ForwardIt last, const uint128_t& val
  *
  * @test test_find_if_uint128
  * @code{.cpp}
- * // Encuentra primer elemento mayor que 12, números pares, etc.
+ * // Encuentra primer elemento mayor que 12, numeros pares, etc.
  * auto it = find_if_uint128(vec.begin(), vec.end(),
  *     [](const uint128_t& x) { return x > uint128_t(12); });
  * assert(it != vec.end() && *it == uint128_t(15));
@@ -104,19 +104,19 @@ ForwardIt find_if_uint128(ForwardIt first, ForwardIt last,
 }
 
 // ===============================================================================
-// ALGORITMOS DE TRANSFORMACIÓN
+// ALGORITMOS DE TRANSFORMACIoN
 // ===============================================================================
 
 /**
- * @brief Transforma un rango aplicando una operación a cada elemento
+ * @brief Transforma un rango aplicando una operacion a cada elemento
  *
  * @tparam InputIt Tipo de iterador de entrada
  * @tparam OutputIt Tipo de iterador de salida
- * @tparam UnaryOp Tipo de operación unaria
+ * @tparam UnaryOp Tipo de operacion unaria
  * @param first Iterador al inicio del rango de entrada
  * @param last Iterador al final del rango de entrada
  * @param result Iterador al inicio del rango de salida
- * @param op Operación a aplicar
+ * @param op Operacion a aplicar
  * @return Iterador al final del rango de salida
  *
  * @test test_transform_uint128
@@ -135,17 +135,17 @@ OutputIt transform_uint128(InputIt first, InputIt last, OutputIt result, auto op
 }
 
 /**
- * @brief Aplica una función a cada elemento del rango
+ * @brief Aplica una funcion a cada elemento del rango
  *
  * @tparam ForwardIt Tipo de iterador
- * @tparam Function Tipo de función
+ * @tparam Function Tipo de funcion
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @param f Función a aplicar
+ * @param f Funcion a aplicar
  *
  * @test test_for_each_uint128
  * @code{.cpp}
- * // Aplica función a cada elemento (contar, sumar)
+ * // Aplica funcion a cada elemento (contar, sumar)
  * uint128_t sum = 0;
  * for_each_uint128(vec.begin(), vec.end(),
  *     [&sum](const uint128_t& x) { sum += x; });
@@ -160,20 +160,20 @@ void for_each_uint128(ForwardIt first, ForwardIt last, uint128_concepts::uint128
 }
 
 // ===============================================================================
-// ALGORITMOS DE REDUCCIÓN
+// ALGORITMOS DE REDUCCIoN
 // ===============================================================================
 
 /**
- * @brief Acumula valores en un rango usando una operación específica
+ * @brief Acumula valores en un rango usando una operacion especifica
  *
  * @tparam InputIt Tipo de iterador de entrada
  * @tparam T Tipo del valor inicial
- * @tparam BinaryOp Tipo de operación binaria
+ * @tparam BinaryOp Tipo de operacion binaria
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @param init Valor inicial
- * @param op Operación binaria
- * @return Resultado de la acumulación
+ * @param op Operacion binaria
+ * @return Resultado de la acumulacion
  *
  * @test test_accumulate_uint128
  * @code{.cpp}
@@ -201,7 +201,7 @@ T accumulate_uint128(InputIt first, InputIt last, T init,
  *
  * @test test_sum_uint128
  * @code{.cpp}
- * // Suma elementos del rango, verifica rango vacío
+ * // Suma elementos del rango, verifica rango vacio
  * std::vector<uint128_t> vec = {5, 10, 15, 20};
  * auto sum = sum_uint128(vec.begin(), vec.end());
  * assert(sum == uint128_t(50));
@@ -238,21 +238,21 @@ uint128_t product_uint128(InputIt first, InputIt last)
 }
 
 // ===============================================================================
-// ALGORITMOS DE PARTICIÓN Y ORDENAMIENTO
+// ALGORITMOS DE PARTICIoN Y ORDENAMIENTO
 // ===============================================================================
 
 /**
- * @brief Particiona un rango según un predicado
+ * @brief Particiona un rango segun un predicado
  *
  * @tparam ForwardIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @param pred Predicado de partición
+ * @param pred Predicado de particion
  * @return Iterador al primer elemento que no satisface el predicado
  *
  * @test test_partition_uint128
  * @code{.cpp}
- * // Particiona en pares/impares, verifica separación correcta
+ * // Particiona en pares/impares, verifica separacion correcta
  * auto middle = partition_uint128(vec.begin(), vec.end(),
  *     [](const uint128_t& x) { return (x % uint128_t(2)) == uint128_t(0); });
  * // Verifica que elementos antes de middle son pares
@@ -267,13 +267,13 @@ ForwardIt partition_uint128(ForwardIt first, ForwardIt last,
 }
 
 /**
- * @brief Ordena un rango de uint128_t usando una comparación personalizada
+ * @brief Ordena un rango de uint128_t usando una comparacion personalizada
  *
  * @tparam RandomIt Tipo de iterador de acceso aleatorio
- * @tparam Compare Tipo de función de comparación
+ * @tparam Compare Tipo de funcion de comparacion
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @param comp Función de comparación
+ * @param comp Funcion de comparacion
  *
  * @test test_sort_uint128
  * @code{.cpp}
@@ -302,16 +302,16 @@ void sort_uint128(RandomIt first, RandomIt last, Compare comp)
 // ===============================================================================
 
 /**
- * @brief Encuentra el máximo común divisor de todos los elementos en un rango
+ * @brief Encuentra el maximo comun divisor de todos los elementos en un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @return GCD de todos los elementos (0 si el rango está vacío)
+ * @return GCD de todos los elementos (0 si el rango esta vacio)
  *
  * @test test_gcd_range
  * @code{.cpp}
- * // Calcula GCD de múltiples números, verifica coprimos
+ * // Calcula GCD de multiples numeros, verifica coprimos
  * std::vector<uint128_t> vec = {12, 18, 24};
  * auto gcd = gcd_range(vec.begin(), vec.end());
  * assert(gcd == uint128_t(6));
@@ -328,22 +328,22 @@ uint128_t gcd_range(InputIt first, InputIt last)
     while (first != last) {
         result = std::gcd(result, *first++);
         if (result == uint128_t(1))
-            break; // Optimización: si GCD es 1, no puede mejorar
+            break; // Optimizacion: si GCD es 1, no puede mejorar
     }
     return result;
 }
 
 /**
- * @brief Encuentra el mínimo común múltiplo de todos los elementos en un rango
+ * @brief Encuentra el minimo comun multiplo de todos los elementos en un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @return LCM de todos los elementos (0 si algún elemento es 0)
+ * @return LCM de todos los elementos (0 si algun elemento es 0)
  *
  * @test test_lcm_range
  * @code{.cpp}
- * // Calcula LCM de múltiples números, verifica con cero
+ * // Calcula LCM de multiples numeros, verifica con cero
  * std::vector<uint128_t> vec = {4, 6, 8};
  * auto lcm = lcm_range(vec.begin(), vec.end());
  * assert(lcm == uint128_t(24));
@@ -364,11 +364,11 @@ uint128_t lcm_range(InputIt first, InputIt last)
 }
 
 /**
- * @brief Genera una secuencia aritmética de uint128_t
+ * @brief Genera una secuencia aritmetica de uint128_t
  *
  * @tparam OutputIt Tipo de iterador de salida
  * @param first Iterador al inicio del rango de salida
- * @param count Número de elementos a generar
+ * @param count Numero de elementos a generar
  * @param start Valor inicial
  * @param step Paso de la secuencia
  *
@@ -391,17 +391,17 @@ void generate_arithmetic_sequence(OutputIt first, std::size_t count, const uint1
 }
 
 /**
- * @brief Genera una secuencia geométrica de uint128_t
+ * @brief Genera una secuencia geometrica de uint128_t
  *
  * @tparam OutputIt Tipo de iterador de salida
  * @param first Iterador al inicio del rango de salida
- * @param count Número de elementos a generar
+ * @param count Numero de elementos a generar
  * @param start Valor inicial
- * @param ratio Razón de la secuencia
+ * @param ratio Razon de la secuencia
  *
  * @test test_generate_geometric_sequence
  * @code{.cpp}
- * // Genera progresiones geométricas (2,4,8,16,...)
+ * // Genera progresiones geometricas (2,4,8,16,...)
  * generate_geometric_sequence(seq.begin(), 5, uint128_t(2), uint128_t(2));
  * assert(seq[0] == uint128_t(2) && seq[4] == uint128_t(32));
  * @endcode
@@ -418,11 +418,11 @@ void generate_geometric_sequence(OutputIt first, std::size_t count, const uint12
 }
 
 // ===============================================================================
-// UTILIDADES DE ANÁLISIS
+// UTILIDADES DE ANaLISIS
 // ===============================================================================
 
 /**
- * @brief Estadísticas básicas de un rango de uint128_t
+ * @brief Estadisticas basicas de un rango de uint128_t
  */
 struct uint128_stats {
     uint128_t min_value;
@@ -437,12 +437,12 @@ struct uint128_stats {
 };
 
 /**
- * @brief Calcula estadísticas básicas de un rango
+ * @brief Calcula estadisticas basicas de un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @return Estructura con estadísticas básicas
+ * @return Estructura con estadisticas basicas
  *
  * @test test_calculate_stats
  * @code{.cpp}

@@ -40,19 +40,19 @@
  * @brief Algoritmos optimizados y especializados para int128_t
  *
  * Este archivo proporciona implementaciones optimizadas de algoritmos
- * estándar específicamente diseñados para trabajar con int128_t.
- * Incluye manejo especial para valores negativos y aritmética signada.
+ * estandar especificamente disenados para trabajar con int128_t.
+ * Incluye manejo especial para valores negativos y aritmetica signada.
  */
 
 namespace int128_algorithm
 {
 
 // ===============================================================================
-// ALGORITMOS DE BÚSQUEDA
+// ALGORITMOS DE BuSQUEDA
 // ===============================================================================
 
 /**
- * @brief Búsqueda binaria optimizada para rangos de int128_t
+ * @brief Busqueda binaria optimizada para rangos de int128_t
  *
  * @tparam ForwardIt Tipo de iterador
  * @param first Iterador al inicio del rango
@@ -60,8 +60,16 @@ namespace int128_algorithm
  * @param value Valor a buscar
  * @return true si se encuentra el valor, false en caso contrario
  *
- * Optimizada para aprovechar las características específicas de int128_t.
+ * Optimizada para aprovechar las caracteristicas especificas de int128_t.
  * Maneja correctamente valores negativos en el ordenamiento.
+ *
+ * @test test_binary_search_int128
+ * @code{.cpp}
+ * // Verifica busqueda de valores existentes, inexistentes y negativos
+ * std::vector<int128_t> vec = {int128_t(-50), int128_t(-20), int128_t(10), int128_t(30),
+ * int128_t(50)}; assert(binary_search_int128(vec.begin(), vec.end(), int128_t(30)));
+ * assert(!binary_search_int128(vec.begin(), vec.end(), int128_t(15)));
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 bool binary_search_int128(ForwardIt first, ForwardIt last, const int128_t& value)
@@ -80,6 +88,14 @@ bool binary_search_int128(ForwardIt first, ForwardIt last, const int128_t& value
  * @param last Iterador al final del rango
  * @param pred Predicado a aplicar
  * @return Iterador al primer elemento que satisface el predicado
+ *
+ * @test test_find_if_int128
+ * @code{.cpp}
+ * // Encuentra primer elemento mayor que 7, primer negativo, etc.
+ * auto it = find_if_int128(vec.begin(), vec.end(),
+ *     [](const int128_t& x) { return x > int128_t(7); });
+ * assert(it != vec.end() && *it == int128_t(10));
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 ForwardIt find_if_int128(ForwardIt first, ForwardIt last,
@@ -90,20 +106,28 @@ ForwardIt find_if_int128(ForwardIt first, ForwardIt last,
 }
 
 // ===============================================================================
-// ALGORITMOS DE TRANSFORMACIÓN
+// ALGORITMOS DE TRANSFORMACIoN
 // ===============================================================================
 
 /**
- * @brief Transforma un rango aplicando una operación a cada elemento
+ * @brief Transforma un rango aplicando una operacion a cada elemento
  *
  * @tparam InputIt Tipo de iterador de entrada
  * @tparam OutputIt Tipo de iterador de salida
- * @tparam UnaryOp Tipo de operación unaria
+ * @tparam UnaryOp Tipo de operacion unaria
  * @param first Iterador al inicio del rango de entrada
  * @param last Iterador al final del rango de entrada
  * @param result Iterador al inicio del rango de salida
- * @param op Operación a aplicar
+ * @param op Operacion a aplicar
  * @return Iterador al final del rango de salida
+ *
+ * @test test_transform_int128
+ * @code{.cpp}
+ * // Aplica transformaciones (duplicar, valor absoluto)
+ * transform_int128(input.begin(), input.end(), output.begin(),
+ *     [](const int128_t& x) { return x * int128_t(2); });
+ * assert(output[0] == int128_t(-10) && output[1] == int128_t(20));
+ * @endcode
  */
 template <std::input_iterator InputIt, std::output_iterator<int128_t> OutputIt>
 OutputIt transform_int128(InputIt first, InputIt last, OutputIt result, auto op)
@@ -113,13 +137,22 @@ OutputIt transform_int128(InputIt first, InputIt last, OutputIt result, auto op)
 }
 
 /**
- * @brief Aplica una función a cada elemento del rango
+ * @brief Aplica una funcion a cada elemento del rango
  *
  * @tparam ForwardIt Tipo de iterador
- * @tparam Function Tipo de función
+ * @tparam Function Tipo de funcion
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @param f Función a aplicar
+ * @param f Funcion a aplicar
+ *
+ * @test test_for_each_int128
+ * @code{.cpp}
+ * // Aplica funcion a cada elemento (contar, sumar)
+ * int128_t sum = 0;
+ * for_each_int128(vec.begin(), vec.end(),
+ *     [&sum](const int128_t& x) { sum += x; });
+ * assert(sum == int128_t(2));
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 void for_each_int128(ForwardIt first, ForwardIt last, int128_concepts::int128_function<> auto f)
@@ -129,20 +162,28 @@ void for_each_int128(ForwardIt first, ForwardIt last, int128_concepts::int128_fu
 }
 
 // ===============================================================================
-// ALGORITMOS DE REDUCCIÓN
+// ALGORITMOS DE REDUCCIoN
 // ===============================================================================
 
 /**
- * @brief Acumula valores en un rango usando una operación específica
+ * @brief Acumula valores en un rango usando una operacion especifica
  *
  * @tparam InputIt Tipo de iterador de entrada
  * @tparam T Tipo del valor inicial
- * @tparam BinaryOp Tipo de operación binaria
+ * @tparam BinaryOp Tipo de operacion binaria
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @param init Valor inicial
- * @param op Operación binaria
- * @return Resultado de la acumulación
+ * @param op Operacion binaria
+ * @return Resultado de la acumulacion
+ *
+ * @test test_accumulate_int128
+ * @code{.cpp}
+ * // Acumula con operaciones de suma y producto
+ * auto sum = accumulate_int128(vec.begin(), vec.end(),
+ *     int128_t(100), std::plus<int128_t>());
+ * assert(sum == int128_t(120));
+ * @endcode
  */
 template <std::input_iterator InputIt, typename T>
 T accumulate_int128(InputIt first, InputIt last, T init,
@@ -159,6 +200,14 @@ T accumulate_int128(InputIt first, InputIt last, T init,
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Suma de todos los elementos (puede ser negativa)
+ *
+ * @test test_sum_int128
+ * @code{.cpp}
+ * // Suma elementos del rango, verifica rango vacio y negativos
+ * std::vector<int128_t> vec = {int128_t(-5), int128_t(10), int128_t(-15), int128_t(20)};
+ * auto sum = sum_int128(vec.begin(), vec.end());
+ * assert(sum == int128_t(10));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 int128_t sum_int128(InputIt first, InputIt last)
@@ -174,6 +223,14 @@ int128_t sum_int128(InputIt first, InputIt last)
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Producto de todos los elementos (puede ser negativo)
+ *
+ * @test test_product_int128
+ * @code{.cpp}
+ * // Calcula producto, verifica comportamiento con cero y negativos
+ * std::vector<int128_t> vec = {int128_t(-2), int128_t(3), int128_t(-4)};
+ * auto product = product_int128(vec.begin(), vec.end());
+ * assert(product == int128_t(24));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 int128_t product_int128(InputIt first, InputIt last)
@@ -183,17 +240,25 @@ int128_t product_int128(InputIt first, InputIt last)
 }
 
 // ===============================================================================
-// ALGORITMOS DE PARTICIÓN Y ORDENAMIENTO
+// ALGORITMOS DE PARTICIoN Y ORDENAMIENTO
 // ===============================================================================
 
 /**
- * @brief Particiona un rango según un predicado
+ * @brief Particiona un rango segun un predicado
  *
  * @tparam ForwardIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @param pred Predicado de partición
+ * @param pred Predicado de particion
  * @return Iterador al primer elemento que no satisface el predicado
+ *
+ * @test test_partition_int128
+ * @code{.cpp}
+ * // Particiona en negativos/positivos, verifica separacion correcta
+ * auto middle = partition_int128(vec.begin(), vec.end(),
+ *     [](const int128_t& x) { return x < int128_t(0); });
+ * // Verifica que elementos antes de middle son negativos
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 ForwardIt partition_int128(ForwardIt first, ForwardIt last,
@@ -204,16 +269,31 @@ ForwardIt partition_int128(ForwardIt first, ForwardIt last,
 }
 
 /**
- * @brief Ordena un rango de int128_t usando una comparación personalizada
+ * @brief Ordena un rango de int128_t usando una comparacion personalizada
  *
  * @tparam RandomIt Tipo de iterador de acceso aleatorio
- * @tparam Compare Tipo de función de comparación
+ * @tparam Compare Tipo de funcion de comparacion
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @param comp Función de comparación (por defecto: ascendente)
+ * @param comp Funcion de comparacion
+ *
+ * @test test_sort_int128
+ * @code{.cpp}
+ * // Ordena ascendente y descendente, verifica orden correcto con negativos
+ * sort_int128(vec.begin(), vec.end());
+ * assert(vec[0] == int128_t(-20) && vec[4] == int128_t(50));
+ * sort_int128(vec.begin(), vec.end(), std::greater<int128_t>());
+ * @endcode
  */
 template <std::random_access_iterator RandomIt>
-void sort_int128(RandomIt first, RandomIt last, auto comp = std::less<int128_t>())
+void sort_int128(RandomIt first, RandomIt last)
+    requires std::same_as<typename std::iterator_traits<RandomIt>::value_type, int128_t>
+{
+    std::sort(first, last);
+}
+
+template <std::random_access_iterator RandomIt, typename Compare>
+void sort_int128(RandomIt first, RandomIt last, Compare comp)
     requires std::same_as<typename std::iterator_traits<RandomIt>::value_type, int128_t>
 {
     std::sort(first, last, comp);
@@ -224,14 +304,22 @@ void sort_int128(RandomIt first, RandomIt last, auto comp = std::less<int128_t>(
 // ===============================================================================
 
 /**
- * @brief Encuentra el máximo común divisor de todos los elementos en un rango
+ * @brief Encuentra el maximo comun divisor de todos los elementos en un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @return GCD de todos los elementos (siempre positivo, 0 si rango vacío)
+ * @return GCD de todos los elementos (siempre positivo, 0 si rango vacio)
  *
  * Nota: Para int128_t signados, el GCD se calcula sobre valores absolutos.
+ *
+ * @test test_gcd_range
+ * @code{.cpp}
+ * // Calcula GCD de multiples numeros con negativos
+ * std::vector<int128_t> vec = {int128_t(12), int128_t(-18), int128_t(24)};
+ * auto gcd = gcd_range(vec.begin(), vec.end());
+ * assert(gcd == int128_t(6));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 int128_t gcd_range(InputIt first, InputIt last)
@@ -244,20 +332,28 @@ int128_t gcd_range(InputIt first, InputIt last)
     while (first != last) {
         result = std::gcd(result, (*first++).abs());
         if (result == int128_t(1))
-            break; // Optimización: si GCD es 1, no puede mejorar
+            break; // Optimizacion: si GCD es 1, no puede mejorar
     }
     return result;
 }
 
 /**
- * @brief Encuentra el mínimo común múltiplo de todos los elementos en un rango
+ * @brief Encuentra el minimo comun multiplo de todos los elementos en un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @return LCM de todos los elementos (siempre positivo, 0 si algún elemento es 0)
+ * @return LCM de todos los elementos (siempre positivo, 0 si algun elemento es 0)
  *
  * Nota: Para int128_t signados, el LCM se calcula sobre valores absolutos.
+ *
+ * @test test_lcm_range
+ * @code{.cpp}
+ * // Calcula LCM de multiples numeros con negativos y cero
+ * std::vector<int128_t> vec = {int128_t(4), int128_t(-6), int128_t(8)};
+ * auto lcm = lcm_range(vec.begin(), vec.end());
+ * assert(lcm == int128_t(24));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 int128_t lcm_range(InputIt first, InputIt last)
@@ -274,13 +370,21 @@ int128_t lcm_range(InputIt first, InputIt last)
 }
 
 /**
- * @brief Genera una secuencia aritmética de int128_t
+ * @brief Genera una secuencia aritmetica de int128_t
  *
  * @tparam OutputIt Tipo de iterador de salida
  * @param first Iterador al inicio del rango de salida
- * @param count Número de elementos a generar
+ * @param count Numero de elementos a generar
  * @param start Valor inicial
  * @param step Paso de la secuencia (puede ser negativo)
+ *
+ * @test test_generate_arithmetic_sequence
+ * @code{.cpp}
+ * // Genera secuencias ascendentes/descendentes con negativos
+ * generate_arithmetic_sequence(seq.begin(), 5, int128_t(10), int128_t(5));
+ * assert(seq[0] == int128_t(10) && seq[4] == int128_t(30));
+ * generate_arithmetic_sequence(seq.begin(), 5, int128_t(20), int128_t(-10));
+ * @endcode
  */
 template <std::output_iterator<int128_t> OutputIt>
 void generate_arithmetic_sequence(OutputIt first, std::size_t count, const int128_t& start,
@@ -294,13 +398,21 @@ void generate_arithmetic_sequence(OutputIt first, std::size_t count, const int12
 }
 
 /**
- * @brief Genera una secuencia geométrica de int128_t
+ * @brief Genera una secuencia geometrica de int128_t
  *
  * @tparam OutputIt Tipo de iterador de salida
  * @param first Iterador al inicio del rango de salida
- * @param count Número de elementos a generar
+ * @param count Numero de elementos a generar
  * @param start Valor inicial
- * @param ratio Razón de la secuencia (puede ser negativa)
+ * @param ratio Razon de la secuencia (puede ser negativa)
+ *
+ * @test test_generate_geometric_sequence
+ * @code{.cpp}
+ * // Genera progresiones geometricas con ratio negativo
+ * generate_geometric_sequence(seq.begin(), 5, int128_t(2), int128_t(2));
+ * assert(seq[0] == int128_t(2) && seq[4] == int128_t(32));
+ * generate_geometric_sequence(seq.begin(), 5, int128_t(3), int128_t(-2));
+ * @endcode
  */
 template <std::output_iterator<int128_t> OutputIt>
 void generate_geometric_sequence(OutputIt first, std::size_t count, const int128_t& start,
@@ -314,7 +426,7 @@ void generate_geometric_sequence(OutputIt first, std::size_t count, const int128
 }
 
 // ===============================================================================
-// ALGORITMOS ESPECÍFICOS PARA VALORES SIGNADOS
+// ALGORITMOS ESPECiFICOS PARA VALORES SIGNADOS
 // ===============================================================================
 
 /**
@@ -324,6 +436,15 @@ void generate_geometric_sequence(OutputIt first, std::size_t count, const int128
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Iterador que separa valores negativos (izquierda) de positivos/cero (derecha)
+ *
+ * @test test_partition_by_sign
+ * @code{.cpp}
+ * // Particiona por signo, verifica negativos a la izquierda
+ * auto middle = partition_by_sign(vec.begin(), vec.end());
+ * for (auto it = vec.begin(); it != middle; ++it) {
+ *     assert(*it < int128_t(0));
+ * }
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 ForwardIt partition_by_sign(ForwardIt first, ForwardIt last)
@@ -333,12 +454,20 @@ ForwardIt partition_by_sign(ForwardIt first, ForwardIt last)
 }
 
 /**
- * @brief Encuentra el valor absoluto máximo en un rango
+ * @brief Encuentra el valor absoluto maximo en un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Valor con el mayor valor absoluto (mantiene signo original)
+ *
+ * @test test_max_abs_value
+ * @code{.cpp}
+ * // Encuentra valor con mayor magnitud, mantiene signo original
+ * std::vector<int128_t> vec = {int128_t(10), int128_t(-50), int128_t(30), int128_t(-20)};
+ * auto max_abs = max_abs_value(vec.begin(), vec.end());
+ * assert(max_abs == int128_t(-50));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 int128_t max_abs_value(InputIt first, InputIt last)
@@ -352,11 +481,11 @@ int128_t max_abs_value(InputIt first, InputIt last)
 }
 
 // ===============================================================================
-// UTILIDADES DE ANÁLISIS
+// UTILIDADES DE ANaLISIS
 // ===============================================================================
 
 /**
- * @brief Estadísticas básicas de un rango de int128_t
+ * @brief Estadisticas basicas de un rango de int128_t
  */
 struct int128_stats {
     int128_t min_value;
@@ -371,10 +500,10 @@ struct int128_stats {
     {
         if (count == 0)
             return 0.0;
-        // Conversión simple evitando problemas de casting
+        // Conversion simple evitando problemas de casting
         bool is_negative = sum < int128_t(0);
         int128_t abs_sum = is_negative ? -sum : sum;
-        // Usar conversión a double directamente
+        // Usar conversion a double directamente
         double sum_as_double = static_cast<double>(abs_sum.low());
         double result = sum_as_double / count;
         return is_negative ? -result : result;
@@ -395,12 +524,20 @@ struct int128_stats {
 };
 
 /**
- * @brief Calcula estadísticas básicas de un rango
+ * @brief Calcula estadisticas basicas de un rango
  *
  * @tparam InputIt Tipo de iterador
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
- * @return Estructura con estadísticas básicas
+ * @return Estructura con estadisticas basicas
+ *
+ * @test test_calculate_stats
+ * @code{.cpp}
+ * // Calcula min, max, sum, count, contadores de signo y mean
+ * auto stats = calculate_stats(vec.begin(), vec.end());
+ * assert(stats.min_value == int128_t(-30) && stats.max_value == int128_t(40));
+ * assert(stats.negative_count == 2 && stats.positive_count == 2);
+ * @endcode
  */
 template <std::input_iterator InputIt>
 int128_stats calculate_stats(InputIt first, InputIt last)
