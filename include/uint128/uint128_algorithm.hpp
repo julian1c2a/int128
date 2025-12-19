@@ -27,6 +27,7 @@
 #ifndef UINT128_ALGORITHM_HPP
 #define UINT128_ALGORITHM_HPP
 
+#include "uint128_cmath.hpp"
 #include "uint128_concepts.hpp"
 #include "uint128_t.hpp"
 #include <algorithm>
@@ -59,6 +60,14 @@ namespace uint128_algorithm
  * @return true si se encuentra el valor, false en caso contrario
  *
  * Optimizada para aprovechar las características específicas de uint128_t.
+ *
+ * @test test_binary_search_uint128
+ * @code{.cpp}
+ * // Verifica búsqueda de valores existentes e inexistentes
+ * std::vector<uint128_t> vec = {10, 20, 30, 40, 50};
+ * assert(binary_search_uint128(vec.begin(), vec.end(), uint128_t(30)));
+ * assert(!binary_search_uint128(vec.begin(), vec.end(), uint128_t(15)));
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 bool binary_search_uint128(ForwardIt first, ForwardIt last, const uint128_t& value)
@@ -77,6 +86,14 @@ bool binary_search_uint128(ForwardIt first, ForwardIt last, const uint128_t& val
  * @param last Iterador al final del rango
  * @param pred Predicado a aplicar
  * @return Iterador al primer elemento que satisface el predicado
+ *
+ * @test test_find_if_uint128
+ * @code{.cpp}
+ * // Encuentra primer elemento mayor que 12, números pares, etc.
+ * auto it = find_if_uint128(vec.begin(), vec.end(),
+ *     [](const uint128_t& x) { return x > uint128_t(12); });
+ * assert(it != vec.end() && *it == uint128_t(15));
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 ForwardIt find_if_uint128(ForwardIt first, ForwardIt last,
@@ -101,6 +118,14 @@ ForwardIt find_if_uint128(ForwardIt first, ForwardIt last,
  * @param result Iterador al inicio del rango de salida
  * @param op Operación a aplicar
  * @return Iterador al final del rango de salida
+ *
+ * @test test_transform_uint128
+ * @code{.cpp}
+ * // Aplica transformaciones (duplicar, elevar al cuadrado)
+ * transform_uint128(input.begin(), input.end(), output.begin(),
+ *     [](const uint128_t& x) { return x * uint128_t(2); });
+ * assert(output[0] == uint128_t(2) && output[1] == uint128_t(4));
+ * @endcode
  */
 template <std::input_iterator InputIt, std::output_iterator<uint128_t> OutputIt>
 OutputIt transform_uint128(InputIt first, InputIt last, OutputIt result, auto op)
@@ -117,6 +142,15 @@ OutputIt transform_uint128(InputIt first, InputIt last, OutputIt result, auto op
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @param f Función a aplicar
+ *
+ * @test test_for_each_uint128
+ * @code{.cpp}
+ * // Aplica función a cada elemento (contar, sumar)
+ * uint128_t sum = 0;
+ * for_each_uint128(vec.begin(), vec.end(),
+ *     [&sum](const uint128_t& x) { sum += x; });
+ * assert(sum == uint128_t(6));
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 void for_each_uint128(ForwardIt first, ForwardIt last, uint128_concepts::uint128_function<> auto f)
@@ -140,6 +174,14 @@ void for_each_uint128(ForwardIt first, ForwardIt last, uint128_concepts::uint128
  * @param init Valor inicial
  * @param op Operación binaria
  * @return Resultado de la acumulación
+ *
+ * @test test_accumulate_uint128
+ * @code{.cpp}
+ * // Acumula con operaciones de suma y producto
+ * auto sum = accumulate_uint128(vec.begin(), vec.end(),
+ *     uint128_t(0), std::plus<uint128_t>());
+ * assert(sum == uint128_t(60));
+ * @endcode
  */
 template <std::input_iterator InputIt, typename T>
 T accumulate_uint128(InputIt first, InputIt last, T init,
@@ -156,6 +198,14 @@ T accumulate_uint128(InputIt first, InputIt last, T init,
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Suma de todos los elementos
+ *
+ * @test test_sum_uint128
+ * @code{.cpp}
+ * // Suma elementos del rango, verifica rango vacío
+ * std::vector<uint128_t> vec = {5, 10, 15, 20};
+ * auto sum = sum_uint128(vec.begin(), vec.end());
+ * assert(sum == uint128_t(50));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 uint128_t sum_uint128(InputIt first, InputIt last)
@@ -171,6 +221,14 @@ uint128_t sum_uint128(InputIt first, InputIt last)
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Producto de todos los elementos
+ *
+ * @test test_product_uint128
+ * @code{.cpp}
+ * // Calcula producto, verifica comportamiento con cero
+ * std::vector<uint128_t> vec = {2, 3, 4};
+ * auto product = product_uint128(vec.begin(), vec.end());
+ * assert(product == uint128_t(24));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 uint128_t product_uint128(InputIt first, InputIt last)
@@ -191,6 +249,14 @@ uint128_t product_uint128(InputIt first, InputIt last)
  * @param last Iterador al final del rango
  * @param pred Predicado de partición
  * @return Iterador al primer elemento que no satisface el predicado
+ *
+ * @test test_partition_uint128
+ * @code{.cpp}
+ * // Particiona en pares/impares, verifica separación correcta
+ * auto middle = partition_uint128(vec.begin(), vec.end(),
+ *     [](const uint128_t& x) { return (x % uint128_t(2)) == uint128_t(0); });
+ * // Verifica que elementos antes de middle son pares
+ * @endcode
  */
 template <std::forward_iterator ForwardIt>
 ForwardIt partition_uint128(ForwardIt first, ForwardIt last,
@@ -208,9 +274,24 @@ ForwardIt partition_uint128(ForwardIt first, ForwardIt last,
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @param comp Función de comparación
+ *
+ * @test test_sort_uint128
+ * @code{.cpp}
+ * // Ordena ascendente y descendente, verifica orden correcto
+ * sort_uint128(vec.begin(), vec.end());
+ * assert(vec[0] == uint128_t(10) && vec[4] == uint128_t(80));
+ * sort_uint128(vec.begin(), vec.end(), std::greater<uint128_t>());
+ * @endcode
  */
 template <std::random_access_iterator RandomIt>
-void sort_uint128(RandomIt first, RandomIt last, auto comp = std::less<uint128_t>())
+void sort_uint128(RandomIt first, RandomIt last)
+    requires std::same_as<typename std::iterator_traits<RandomIt>::value_type, uint128_t>
+{
+    std::sort(first, last);
+}
+
+template <std::random_access_iterator RandomIt, typename Compare>
+void sort_uint128(RandomIt first, RandomIt last, Compare comp)
     requires std::same_as<typename std::iterator_traits<RandomIt>::value_type, uint128_t>
 {
     std::sort(first, last, comp);
@@ -227,6 +308,14 @@ void sort_uint128(RandomIt first, RandomIt last, auto comp = std::less<uint128_t
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return GCD de todos los elementos (0 si el rango está vacío)
+ *
+ * @test test_gcd_range
+ * @code{.cpp}
+ * // Calcula GCD de múltiples números, verifica coprimos
+ * std::vector<uint128_t> vec = {12, 18, 24};
+ * auto gcd = gcd_range(vec.begin(), vec.end());
+ * assert(gcd == uint128_t(6));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 uint128_t gcd_range(InputIt first, InputIt last)
@@ -237,7 +326,7 @@ uint128_t gcd_range(InputIt first, InputIt last)
 
     uint128_t result = *first++;
     while (first != last) {
-        result = gcd(result, *first++);
+        result = std::gcd(result, *first++);
         if (result == uint128_t(1))
             break; // Optimización: si GCD es 1, no puede mejorar
     }
@@ -251,6 +340,14 @@ uint128_t gcd_range(InputIt first, InputIt last)
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return LCM de todos los elementos (0 si algún elemento es 0)
+ *
+ * @test test_lcm_range
+ * @code{.cpp}
+ * // Calcula LCM de múltiples números, verifica con cero
+ * std::vector<uint128_t> vec = {4, 6, 8};
+ * auto lcm = lcm_range(vec.begin(), vec.end());
+ * assert(lcm == uint128_t(24));
+ * @endcode
  */
 template <std::input_iterator InputIt>
 uint128_t lcm_range(InputIt first, InputIt last)
@@ -261,7 +358,7 @@ uint128_t lcm_range(InputIt first, InputIt last)
 
     uint128_t result = *first++;
     while (first != last && result != uint128_t(0)) {
-        result = lcm(result, *first++);
+        result = std::lcm(result, *first++);
     }
     return result;
 }
@@ -274,6 +371,13 @@ uint128_t lcm_range(InputIt first, InputIt last)
  * @param count Número de elementos a generar
  * @param start Valor inicial
  * @param step Paso de la secuencia
+ *
+ * @test test_generate_arithmetic_sequence
+ * @code{.cpp}
+ * // Genera secuencias ascendentes/descendentes (10,15,20,...)
+ * generate_arithmetic_sequence(seq.begin(), 5, uint128_t(10), uint128_t(5));
+ * assert(seq[0] == uint128_t(10) && seq[4] == uint128_t(30));
+ * @endcode
  */
 template <std::output_iterator<uint128_t> OutputIt>
 void generate_arithmetic_sequence(OutputIt first, std::size_t count, const uint128_t& start,
@@ -294,6 +398,13 @@ void generate_arithmetic_sequence(OutputIt first, std::size_t count, const uint1
  * @param count Número de elementos a generar
  * @param start Valor inicial
  * @param ratio Razón de la secuencia
+ *
+ * @test test_generate_geometric_sequence
+ * @code{.cpp}
+ * // Genera progresiones geométricas (2,4,8,16,...)
+ * generate_geometric_sequence(seq.begin(), 5, uint128_t(2), uint128_t(2));
+ * assert(seq[0] == uint128_t(2) && seq[4] == uint128_t(32));
+ * @endcode
  */
 template <std::output_iterator<uint128_t> OutputIt>
 void generate_geometric_sequence(OutputIt first, std::size_t count, const uint128_t& start,
@@ -332,6 +443,14 @@ struct uint128_stats {
  * @param first Iterador al inicio del rango
  * @param last Iterador al final del rango
  * @return Estructura con estadísticas básicas
+ *
+ * @test test_calculate_stats
+ * @code{.cpp}
+ * // Calcula min, max, sum, count y mean de un rango
+ * auto stats = calculate_stats(vec.begin(), vec.end());
+ * assert(stats.min_value == uint128_t(10) && stats.max_value == uint128_t(50));
+ * assert(stats.sum == uint128_t(150) && stats.mean() == 30.0);
+ * @endcode
  */
 template <std::input_iterator InputIt>
 uint128_stats calculate_stats(InputIt first, InputIt last)
