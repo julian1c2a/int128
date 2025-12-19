@@ -1,0 +1,267 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  # ============================================================================
+  # GCC Build & Test
+  # ============================================================================
+  gcc-build:
+    name: GCC - Build & Test
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSYS2 with GCC
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: >-
+          mingw-w64-ucrt-x86_64-gcc
+          mingw-w64-ucrt-x86_64-cmake
+          mingw-w64-ucrt-x86_64-ninja
+          make
+    
+    - name: Build tests with GCC
+      shell: msys2 {0}
+      run: |
+        chmod +x scripts/build_extracted_tests.bash
+        ./scripts/build_extracted_tests.bash gcc
+    
+    - name: Run tests with GCC
+      shell: msys2 {0}
+      run: |
+        chmod +x scripts/run_uint128_extracted_tests.bash
+        ./scripts/run_uint128_extracted_tests.bash gcc
+    
+    - name: Upload GCC artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: gcc-binaries
+        path: build/build_tests/gcc/release/
+        retention-days: 7
+
+  # ============================================================================
+  # Clang Build & Test
+  # ============================================================================
+  clang-build:
+    name: Clang - Build & Test
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSYS2 with Clang
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: CLANG64
+        update: true
+        install: >-
+          mingw-w64-clang-x86_64-clang
+          mingw-w64-clang-x86_64-cmake
+          mingw-w64-clang-x86_64-ninja
+          make
+    
+    - name: Build tests with Clang
+      shell: msys2 {0}
+      run: |
+        chmod +x scripts/build_extracted_tests.bash
+        ./scripts/build_extracted_tests.bash clang
+    
+    - name: Run tests with Clang
+      shell: msys2 {0}
+      run: |
+        chmod +x scripts/run_uint128_extracted_tests.bash
+        ./scripts/run_uint128_extracted_tests.bash clang
+    
+    - name: Upload Clang artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: clang-binaries
+        path: build/build_tests/clang/release/
+        retention-days: 7
+
+  # ============================================================================
+  # MSVC Build & Test
+  # ============================================================================
+  msvc-build:
+    name: MSVC - Build & Test
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: false
+    
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v2
+    
+    - name: Configure MSVC environment
+      shell: pwsh
+      run: |
+        # Usar el script Python para obtener vcvarsall.bat
+        $vcvarsPath = python scripts/vcvars.py
+        if ($vcvarsPath) {
+          Write-Host "Found vcvarsall.bat at: $vcvarsPath"
+        }
+    
+    - name: Build tests with MSVC
+      shell: msys2 {0}
+      run: |
+        # Configurar MSVC usando Python helper
+        source <(python scripts/vcvarsall.py)
+        chmod +x scripts/build_extracted_tests.bash
+        ./scripts/build_extracted_tests.bash msvc
+    
+    - name: Run tests with MSVC
+      shell: msys2 {0}
+      run: |
+        source <(python scripts/vcvarsall.py)
+        chmod +x scripts/run_uint128_extracted_tests.bash
+        ./scripts/run_uint128_extracted_tests.bash msvc
+    
+    - name: Upload MSVC artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: msvc-binaries
+        path: build/build_tests/msvc/release/
+        retention-days: 7
+
+  # ============================================================================
+  # Intel oneAPI Build & Test
+  # ============================================================================
+  intel-build:
+    name: Intel oneAPI - Build & Test
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: false
+        install: python
+    
+    - name: Setup Intel oneAPI
+      uses: rscohn2/setup-oneapi@v0
+      with:
+        components: |
+          icx
+          dpcpp
+    
+    - name: Build tests with Intel
+      shell: msys2 {0}
+      run: |
+        # Configurar Intel usando Python helper
+        source <(python scripts/setvarsall_intel.py)
+        chmod +x scripts/build_extracted_tests.bash
+        ./scripts/build_extracted_tests.bash intel
+    
+    - name: Run tests with Intel
+      shell: msys2 {0}
+      run: |
+        source <(python scripts/setvarsall_intel.py)
+        chmod +x scripts/run_uint128_extracted_tests.bash
+        ./scripts/run_uint128_extracted_tests.bash intel
+    
+    - name: Upload Intel artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: intel-binaries
+        path: build/build_tests/intel/release/
+        retention-days: 7
+
+  # ============================================================================
+  # Benchmarks (GCC only for CI speed)
+  # ============================================================================
+  benchmarks:
+    name: Benchmarks - GCC
+    runs-on: windows-latest
+    needs: gcc-build
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSYS2 with GCC
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: >-
+          mingw-w64-ucrt-x86_64-gcc
+          mingw-w64-ucrt-x86_64-cmake
+          mingw-w64-ucrt-x86_64-ninja
+    
+    - name: Build benchmarks
+      shell: msys2 {0}
+      run: |
+        chmod +x scripts/build_benchmarks.bash
+        ./scripts/build_benchmarks.bash gcc
+    
+    - name: Run benchmarks
+      shell: msys2 {0}
+      run: |
+        chmod +x scripts/run_benchmarks.bash
+        ./scripts/run_benchmarks.bash gcc
+    
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: benchmark-results
+        path: |
+          build/build_benchmarks/gcc/release/
+          benchmark_results/
+        retention-days: 30
+
+  # ============================================================================
+  # Summary Job
+  # ============================================================================
+  ci-summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [gcc-build, clang-build, msvc-build, intel-build, benchmarks]
+    if: always()
+    
+    steps:
+    - name: Check build results
+      run: |
+        echo "## CI Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Compiler | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| GCC      | ${{ needs.gcc-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Clang    | ${{ needs.clang-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| MSVC     | ${{ needs.msvc-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Intel    | ${{ needs.intel-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Benchmarks | ${{ needs.benchmarks.result }} |" >> $GITHUB_STEP_SUMMARY
+    
+    - name: Fail if any job failed
+      if: |
+        needs.gcc-build.result == 'failure' ||
+        needs.clang-build.result == 'failure' ||
+        needs.msvc-build.result == 'failure' ||
+        needs.intel-build.result == 'failure'
+      run: exit 1
