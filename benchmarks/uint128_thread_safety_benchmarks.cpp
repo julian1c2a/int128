@@ -239,6 +239,7 @@ BenchmarkResult bench_mutex_wrapper(size_t num_threads, size_t ops_per_thread)
     ThreadSafeUint128Mutex counter(uint128_t(0));
 
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -255,12 +256,19 @@ BenchmarkResult bench_mutex_wrapper(size_t num_threads, size_t ops_per_thread)
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"Mutex wrapper", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"Mutex wrapper",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // Benchmark 3: RW-lock wrapper (write-heavy)
@@ -269,6 +277,7 @@ BenchmarkResult bench_rwlock_write_heavy(size_t num_threads, size_t ops_per_thre
     ThreadSafeUint128RW counter(uint128_t(0));
 
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -285,12 +294,19 @@ BenchmarkResult bench_rwlock_write_heavy(size_t num_threads, size_t ops_per_thre
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"RW-lock (write-heavy)", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"RW-lock (write-heavy)",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // Benchmark 4: RW-lock wrapper (read-heavy)
@@ -299,6 +315,7 @@ BenchmarkResult bench_rwlock_read_heavy(size_t num_threads, size_t ops_per_threa
     ThreadSafeUint128RW counter(uint128_t(0, 12345));
 
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -328,12 +345,19 @@ BenchmarkResult bench_rwlock_read_heavy(size_t num_threads, size_t ops_per_threa
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"RW-lock (read-heavy 90%)", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"RW-lock (read-heavy 90%)",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // Benchmark 5: Spin-lock wrapper
@@ -342,6 +366,7 @@ BenchmarkResult bench_spinlock_wrapper(size_t num_threads, size_t ops_per_thread
     ThreadSafeUint128SpinLock counter(uint128_t(0));
 
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -358,12 +383,19 @@ BenchmarkResult bench_spinlock_wrapper(size_t num_threads, size_t ops_per_thread
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"Spin-lock wrapper", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"Spin-lock wrapper",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // Benchmark 6: std::atomic (if lock-free)
@@ -372,10 +404,11 @@ BenchmarkResult bench_atomic_wrapper(size_t num_threads, size_t ops_per_thread)
     std::atomic<uint128_t> counter(uint128_t(0));
 
     if (!counter.is_lock_free()) {
-        return {"std::atomic (NOT lock-free)", 0, 0, 0, 0};
+        return {"std::atomic (NOT lock-free)", 0, 0, 0, 0, 0, 0};
     }
 
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -395,12 +428,19 @@ BenchmarkResult bench_atomic_wrapper(size_t num_threads, size_t ops_per_thread)
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"std::atomic (lock-free)", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"std::atomic (lock-free)",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // Benchmark 7: Read-only concurrent access (const operations)
@@ -409,6 +449,7 @@ BenchmarkResult bench_concurrent_reads(size_t num_threads, size_t ops_per_thread
     const uint128_t shared_value(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
 
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -428,12 +469,19 @@ BenchmarkResult bench_concurrent_reads(size_t num_threads, size_t ops_per_thread
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"Concurrent reads (const)", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"Concurrent reads (const)",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // ========================= CONTENTION ANALYSIS =========================

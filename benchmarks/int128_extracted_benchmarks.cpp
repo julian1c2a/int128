@@ -24,6 +24,10 @@
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 #ifdef _MSC_VER
 #include <intrin.h>
+#pragma intrinsic(__rdtsc)
+#define HAS_RDTSC 1
+#elif defined(__INTEL_COMPILER)
+#include <ia32intrin.h>
 #define HAS_RDTSC 1
 #elif defined(__GNUC__) || defined(__clang__)
 #include <x86intrin.h>
