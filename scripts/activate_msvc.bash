@@ -12,7 +12,7 @@ if ! command -v python &> /dev/null; then
 fi
 
 # Generamos las variables de entorno
-OUTPUT=$(python vcvarsall.py "$ARCH")
+OUTPUT=$(python scripts/vcvarsall.py "$ARCH")
 
 if [ $? -ne 0 ]; then
     echo "Error al obtener entorno de MSVC."

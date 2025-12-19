@@ -9,8 +9,31 @@
 #include <iostream>
 #include <random>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#pragma intrinsic(__rdtsc)
+#endif
+
+#ifdef __INTEL_COMPILER
+#include <ia32intrin.h>
+#endif
+
 using namespace int128_bits;
 using namespace std::chrono;
+
+// Función para leer ciclos de CPU (rdtsc)
+inline uint64_t rdtsc()
+{
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+    return __rdtsc();
+#elif defined(__x86_64__) || defined(__i386__)
+    uint32_t hi, lo;
+    __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+    return ((uint64_t)hi << 32) | lo;
+#else
+    return 0; // Fallback para arquitecturas no soportadas
+#endif
+}
 
 // Generador de numeros aleatorios
 std::mt19937_64 rng(std::random_device{}());
@@ -23,17 +46,22 @@ int128_t random_int128(int64_t max_high = INT64_MAX, uint64_t max_low = UINT64_M
     return int128_t(high, low);
 }
 
-// Macro para benchmark
+// Macro para benchmark con tiempo y ciclos de CPU
 #define BENCHMARK(name, iterations, code)                                                          \
     {                                                                                              \
-        auto start = high_resolution_clock::now();                                                 \
+        auto start_time = high_resolution_clock::now();                                            \
+        uint64_t start_cycles = rdtsc();                                                           \
         for (size_t i = 0; i < iterations; ++i) {                                                  \
             code;                                                                                  \
         }                                                                                          \
-        auto end = high_resolution_clock::now();                                                   \
-        auto duration = duration_cast<microseconds>(end - start).count();                          \
+        uint64_t end_cycles = rdtsc();                                                             \
+        auto end_time = high_resolution_clock::now();                                              \
+        auto duration = duration_cast<microseconds>(end_time - start_time).count();                \
         double avg_us = static_cast<double>(duration) / iterations;                                \
-        std::cout << "  " << name << ": " << avg_us << " us/op (" << iterations << " ops)\n";      \
+        uint64_t total_cycles = end_cycles - start_cycles;                                         \
+        double avg_cycles = static_cast<double>(total_cycles) / iterations;                        \
+        std::cout << "  " << name << ": " << avg_us << " us/op, " << avg_cycles << " cycles/op ("  \
+                  << iterations << " ops)\n";                                                      \
     }
 
 // ===============================================================================
@@ -47,7 +75,10 @@ void benchmark_popcount()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("popcount", ITERATIONS, { volatile int result = std::popcount(value); });
+    BENCHMARK("popcount", ITERATIONS, {
+        volatile int result = std::popcount(value);
+        (void)result;
+    });
 }
 
 void benchmark_countl_zero()
@@ -57,7 +88,10 @@ void benchmark_countl_zero()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("countl_zero", ITERATIONS, { volatile int result = std::countl_zero(value); });
+    BENCHMARK("countl_zero", ITERATIONS, {
+        volatile int result = std::countl_zero(value);
+        (void)result;
+    });
 }
 
 void benchmark_countr_zero()
@@ -67,7 +101,10 @@ void benchmark_countr_zero()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("countr_zero", ITERATIONS, { volatile int result = std::countr_zero(value); });
+    BENCHMARK("countr_zero", ITERATIONS, {
+        volatile int result = std::countr_zero(value);
+        (void)result;
+    });
 }
 
 void benchmark_countl_one()
@@ -77,7 +114,10 @@ void benchmark_countl_one()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("countl_one", ITERATIONS, { volatile int result = std::countl_one(value); });
+    BENCHMARK("countl_one", ITERATIONS, {
+        volatile int result = std::countl_one(value);
+        (void)result;
+    });
 }
 
 void benchmark_countr_one()
@@ -87,7 +127,10 @@ void benchmark_countr_one()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("countr_one", ITERATIONS, { volatile int result = std::countr_one(value); });
+    BENCHMARK("countr_one", ITERATIONS, {
+        volatile int result = std::countr_one(value);
+        (void)result;
+    });
 }
 
 void benchmark_bit_width()
@@ -97,7 +140,10 @@ void benchmark_bit_width()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("bit_width", ITERATIONS, { volatile int result = std::bit_width(value); });
+    BENCHMARK("bit_width", ITERATIONS, {
+        volatile int result = std::bit_width(value);
+        (void)result;
+    });
 }
 
 void benchmark_has_single_bit()
@@ -107,7 +153,10 @@ void benchmark_has_single_bit()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("has_single_bit", ITERATIONS, { volatile bool result = std::has_single_bit(value); });
+    BENCHMARK("has_single_bit", ITERATIONS, {
+        volatile bool result = std::has_single_bit(value);
+        (void)result;
+    });
 }
 
 void benchmark_bit_floor()
@@ -117,7 +166,10 @@ void benchmark_bit_floor()
     const size_t ITERATIONS = 500000;
     int128_t value = random_int128();
 
-    BENCHMARK("bit_floor", ITERATIONS, { volatile int128_t result = std::bit_floor(value); });
+    BENCHMARK("bit_floor", ITERATIONS, {
+        volatile int128_t result = std::bit_floor(value);
+        (void)result;
+    });
 }
 
 void benchmark_bit_ceil()
@@ -127,7 +179,10 @@ void benchmark_bit_ceil()
     const size_t ITERATIONS = 500000;
     int128_t value = random_int128();
 
-    BENCHMARK("bit_ceil", ITERATIONS, { volatile int128_t result = std::bit_ceil(value); });
+    BENCHMARK("bit_ceil", ITERATIONS, {
+        volatile int128_t result = std::bit_ceil(value);
+        (void)result;
+    });
 }
 
 // ===============================================================================
@@ -142,7 +197,10 @@ void benchmark_rotl()
     int128_t value = random_int128();
     int shift = std::uniform_int_distribution<int>(1, 127)(rng);
 
-    BENCHMARK("rotl", ITERATIONS, { volatile int128_t result = rotl(value, shift); });
+    BENCHMARK("rotl", ITERATIONS, {
+        volatile int128_t result = rotl(value, shift);
+        (void)result;
+    });
 }
 
 void benchmark_rotr()
@@ -153,7 +211,10 @@ void benchmark_rotr()
     int128_t value = random_int128();
     int shift = std::uniform_int_distribution<int>(1, 127)(rng);
 
-    BENCHMARK("rotr", ITERATIONS, { volatile int128_t result = rotr(value, shift); });
+    BENCHMARK("rotr", ITERATIONS, {
+        volatile int128_t result = rotr(value, shift);
+        (void)result;
+    });
 }
 
 void benchmark_reverse_bits()
@@ -163,7 +224,10 @@ void benchmark_reverse_bits()
     const size_t ITERATIONS = 100000;
     int128_t value = random_int128();
 
-    BENCHMARK("reverse_bits", ITERATIONS, { volatile int128_t result = reverse_bits(value); });
+    BENCHMARK("reverse_bits", ITERATIONS, {
+        volatile int128_t result = reverse_bits(value);
+        (void)result;
+    });
 }
 
 void benchmark_byteswap()
@@ -173,7 +237,10 @@ void benchmark_byteswap()
     const size_t ITERATIONS = 1000000;
     int128_t value = random_int128();
 
-    BENCHMARK("byteswap", ITERATIONS, { volatile int128_t result = byteswap(value); });
+    BENCHMARK("byteswap", ITERATIONS, {
+        volatile int128_t result = byteswap(value);
+        (void)result;
+    });
 }
 
 void benchmark_extract_bits()
@@ -185,8 +252,10 @@ void benchmark_extract_bits()
     int offset = std::uniform_int_distribution<int>(0, 100)(rng);
     int width = std::uniform_int_distribution<int>(1, 28)(rng);
 
-    BENCHMARK("extract_bits", ITERATIONS,
-              { volatile int128_t result = extract_bits(value, offset, width); });
+    BENCHMARK("extract_bits", ITERATIONS, {
+        volatile int128_t result = extract_bits(value, offset, width);
+        (void)result;
+    });
 }
 
 void benchmark_insert_bits()
@@ -199,8 +268,10 @@ void benchmark_insert_bits()
     int offset = std::uniform_int_distribution<int>(0, 100)(rng);
     int width = std::uniform_int_distribution<int>(1, 28)(rng);
 
-    BENCHMARK("insert_bits", ITERATIONS,
-              { volatile int128_t result = insert_bits(dest, src, offset, width); });
+    BENCHMARK("insert_bits", ITERATIONS, {
+        volatile int128_t result = insert_bits(dest, src, offset, width);
+        (void)result;
+    });
 }
 
 void benchmark_test_bit()
@@ -211,7 +282,10 @@ void benchmark_test_bit()
     int128_t value = random_int128();
     int pos = std::uniform_int_distribution<int>(0, 127)(rng);
 
-    BENCHMARK("test_bit", ITERATIONS, { volatile bool result = test_bit(value, pos); });
+    BENCHMARK("test_bit", ITERATIONS, {
+        volatile bool result = test_bit(value, pos);
+        (void)result;
+    });
 }
 
 void benchmark_set_bit()
@@ -222,7 +296,10 @@ void benchmark_set_bit()
     int128_t value = random_int128();
     int pos = std::uniform_int_distribution<int>(0, 127)(rng);
 
-    BENCHMARK("set_bit", ITERATIONS, { volatile int128_t result = set_bit(value, pos); });
+    BENCHMARK("set_bit", ITERATIONS, {
+        volatile int128_t result = set_bit(value, pos);
+        (void)result;
+    });
 }
 
 void benchmark_clear_bit()
@@ -233,7 +310,10 @@ void benchmark_clear_bit()
     int128_t value = random_int128();
     int pos = std::uniform_int_distribution<int>(0, 127)(rng);
 
-    BENCHMARK("clear_bit", ITERATIONS, { volatile int128_t result = clear_bit(value, pos); });
+    BENCHMARK("clear_bit", ITERATIONS, {
+        volatile int128_t result = clear_bit(value, pos);
+        (void)result;
+    });
 }
 
 void benchmark_flip_bit()
@@ -244,7 +324,10 @@ void benchmark_flip_bit()
     int128_t value = random_int128();
     int pos = std::uniform_int_distribution<int>(0, 127)(rng);
 
-    BENCHMARK("flip_bit", ITERATIONS, { volatile int128_t result = flip_bit(value, pos); });
+    BENCHMARK("flip_bit", ITERATIONS, {
+        volatile int128_t result = flip_bit(value, pos);
+        (void)result;
+    });
 }
 
 void benchmark_find_first_set()
@@ -254,7 +337,10 @@ void benchmark_find_first_set()
     const size_t ITERATIONS = 500000;
     int128_t value = random_int128();
 
-    BENCHMARK("find_first_set", ITERATIONS, { volatile int result = find_first_set(value); });
+    BENCHMARK("find_first_set", ITERATIONS, {
+        volatile int result = find_first_set(value);
+        (void)result;
+    });
 }
 
 void benchmark_find_last_set()
@@ -264,7 +350,10 @@ void benchmark_find_last_set()
     const size_t ITERATIONS = 500000;
     int128_t value = random_int128();
 
-    BENCHMARK("find_last_set", ITERATIONS, { volatile int result = find_last_set(value); });
+    BENCHMARK("find_last_set", ITERATIONS, {
+        volatile int result = find_last_set(value);
+        (void)result;
+    });
 }
 
 // ===============================================================================

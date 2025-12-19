@@ -125,3 +125,7 @@ log_build_uint128_algo_bench.txt
 log_msvc_build.txt
 log_uint128_bits_msvc_full.txt
 log_uint128_bits_msvc.txt
+algorithm_benchmarks_intel.txt
+algorithm_benchmarks_msvc.txt
+CRASH
+log_run_bits_bench.txt

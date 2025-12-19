@@ -13,8 +13,31 @@
 #include <random>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#pragma intrinsic(__rdtsc)
+#endif
+
+#ifdef __INTEL_COMPILER
+#include <ia32intrin.h>
+#endif
+
 using namespace uint128_algorithm;
 using namespace std::chrono;
+
+// Función para leer ciclos de CPU (rdtsc)
+inline uint64_t rdtsc()
+{
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+    return __rdtsc();
+#elif defined(__x86_64__) || defined(__i386__)
+    uint32_t hi, lo;
+    __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+    return ((uint64_t)hi << 32) | lo;
+#else
+    return 0; // Fallback para arquitecturas no soportadas
+#endif
+}
 
 // Generador de numeros aleatorios
 std::mt19937_64 rng(std::random_device{}());
@@ -27,17 +50,22 @@ uint128_t random_uint128(uint64_t max_high = 1000000, uint64_t max_low = UINT64_
     return uint128_t(high, low);
 }
 
-// Macro para benchmark
+// Macro para benchmark con tiempo y ciclos de CPU
 #define BENCHMARK(name, iterations, code)                                                          \
     {                                                                                              \
-        auto start = high_resolution_clock::now();                                                 \
+        auto start_time = high_resolution_clock::now();                                            \
+        uint64_t start_cycles = rdtsc();                                                           \
         for (size_t i = 0; i < iterations; ++i) {                                                  \
             code;                                                                                  \
         }                                                                                          \
-        auto end = high_resolution_clock::now();                                                   \
-        auto duration = duration_cast<microseconds>(end - start).count();                          \
+        uint64_t end_cycles = rdtsc();                                                             \
+        auto end_time = high_resolution_clock::now();                                              \
+        auto duration = duration_cast<microseconds>(end_time - start_time).count();                \
         double avg_us = static_cast<double>(duration) / iterations;                                \
-        std::cout << "  " << name << ": " << avg_us << " us/op (" << iterations << " ops)\n";      \
+        uint64_t total_cycles = end_cycles - start_cycles;                                         \
+        double avg_cycles = static_cast<double>(total_cycles) / iterations;                        \
+        std::cout << "  " << name << ": " << avg_us << " us/op, " << avg_cycles << " cycles/op ("  \
+                  << iterations << " ops)\n";                                                      \
     }
 
 // ===============================================================================

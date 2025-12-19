@@ -24,6 +24,29 @@
 #include <thread>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#pragma intrinsic(__rdtsc)
+#endif
+
+#ifdef __INTEL_COMPILER
+#include <ia32intrin.h>
+#endif
+
+// Función para leer ciclos de CPU (rdtsc)
+inline uint64_t rdtsc()
+{
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+    return __rdtsc();
+#elif defined(__x86_64__) || defined(__i386__)
+    uint32_t hi, lo;
+    __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+    return ((uint64_t)hi << 32) | lo;
+#else
+    return 0; // Fallback para arquitecturas no soportadas
+#endif
+}
+
 // ========================= THREAD-SAFE WRAPPERS =========================
 
 // Wrapper 1: Mutex-based
@@ -144,17 +167,19 @@ class ThreadSafeUint128SpinLock
 struct BenchmarkResult {
     std::string name;
     long long duration_us;
+    uint64_t total_cycles;
     size_t operations;
     double ops_per_sec;
     double ns_per_op;
+    double cycles_per_op;
 };
 
 void print_header()
 {
     std::cout << std::left << std::setw(35) << "Benchmark" << std::right << std::setw(12)
               << "Time (µs)" << std::setw(15) << "Ops" << std::setw(15) << "Ops/sec"
-              << std::setw(12) << "ns/op" << std::endl;
-    std::cout << std::string(89, '-') << std::endl;
+              << std::setw(12) << "ns/op" << std::setw(14) << "cycles/op" << std::endl;
+    std::cout << std::string(103, '-') << std::endl;
 }
 
 void print_result(const BenchmarkResult& result)
@@ -162,7 +187,8 @@ void print_result(const BenchmarkResult& result)
     std::cout << std::left << std::setw(35) << result.name << std::right << std::setw(12)
               << result.duration_us << std::setw(15) << result.operations << std::setw(15)
               << std::fixed << std::setprecision(0) << result.ops_per_sec << std::setw(12)
-              << std::setprecision(2) << result.ns_per_op << std::endl;
+              << std::setprecision(2) << result.ns_per_op << std::setw(14) << std::setprecision(1)
+              << result.cycles_per_op << std::endl;
 }
 
 // ========================= BENCHMARKS =========================
@@ -171,6 +197,7 @@ void print_result(const BenchmarkResult& result)
 BenchmarkResult bench_thread_local(size_t num_threads, size_t ops_per_thread)
 {
     auto start = std::chrono::high_resolution_clock::now();
+    uint64_t start_cycles = rdtsc();
 
     std::vector<std::thread> threads;
     threads.reserve(num_threads);
@@ -191,12 +218,19 @@ BenchmarkResult bench_thread_local(size_t num_threads, size_t ops_per_thread)
         t.join();
     }
 
+    uint64_t end_cycles = rdtsc();
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    uint64_t total_cycles = end_cycles - start_cycles;
 
     size_t total_ops = num_threads * ops_per_thread;
-    return {"Thread-local (baseline)", duration, total_ops, total_ops * 1e6 / duration,
-            duration * 1000.0 / total_ops};
+    return {"Thread-local (baseline)",
+            duration,
+            total_cycles,
+            total_ops,
+            total_ops * 1e6 / duration,
+            duration * 1000.0 / total_ops,
+            static_cast<double>(total_cycles) / total_ops};
 }
 
 // Benchmark 2: Mutex wrapper
