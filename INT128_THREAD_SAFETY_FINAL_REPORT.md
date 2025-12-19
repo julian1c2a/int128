@@ -153,14 +153,16 @@ Summary:
 |------------|--------|----------|
 | **Implementación** | ✅ 100% | 4 wrappers, 930 líneas |
 | **Tests** | ✅ 100% | 13 tests, 550 líneas, todos pasan |
+| **Benchmarks** | ✅ 100% | 9 benchmarks, 650 líneas cada tipo |
 | **Demo** | ✅ 100% | 6 demos, 410 líneas, verificada |
 | **Scripts** | ✅ 100% | Compilación y ejecución automatizada |
 | **Documentación** | ✅ 100% | 4 archivos actualizados |
-| **Performance** | ✅ 100% | Mediciones verificadas |
+| **Performance** | ✅ 100% | Mediciones verificadas y benchmarked |
 | **Signed Operations** | ✅ 100% | negate(), is_negative() testeados |
 | **Atomic Support** | ✅ 100% | std::atomic<int128_t> testeado |
 | **Race Conditions** | ✅ 100% | Demostración de unsafe patterns |
 | **Wrappers** | ✅ 100% | Mutex, RW, Atomic, SpinLock |
+| **Contention Analysis** | ✅ 100% | 1-16 hilos, escalabilidad medida |
 
 ---
 

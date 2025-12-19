@@ -112,8 +112,8 @@ Ambos tipos tienen implementaciónuint128_t (unsigned) - Implementación princip
 - [x] Compatibilidad con `std::iota`
 
 ### ✅ Thread Safety
-- [x] **uint128_t**: Thread-safe para lectura concurrente + 4 wrappers (Mutex, RW-lock, SpinLock, Atomic) + Tests ✅
-- [x] **int128_t**: Thread-safe para lectura concurrente + 4 wrappers (Mutex, RW-lock, SpinLock, Atomic) + Tests ✅ **COMPLETO**
+- [x] **uint128_t**: Thread-safe para lectura concurrente + 4 wrappers + Tests ✅ + Benchmarks ✅
+- [x] **int128_t**: Thread-safe para lectura concurrente + 4 wrappers + Tests ✅ + Benchmarks ✅ **COMPLETO**
 
 ### ✅ Funcionalidades Avanzadas
 - [x] Constructor desde cadenas: `uint128_t("12345")`
