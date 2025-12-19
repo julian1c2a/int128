@@ -195,8 +195,8 @@ Success Rate: 100.0%
 **Validado con**:
 - ✅ **GCC 15.2.0** - 96/96 tests passed (100% success)
 - ✅ **Clang 19.0** - 96/96 tests passed (100% success)
-- ⏳ **MSVC 19.50** - Pendiente (requiere activación de entorno)
-- ⏳ **Intel 2025.3.0** - Pendiente (requiere activación de entorno)
+- ✅ **MSVC 19.50.35720** - 96/96 tests passed (100% success)
+- ✅ **Intel oneAPI 2025.3.0** - 96/96 tests passed (100% success)
 
 ### Benchmarks
 
@@ -204,23 +204,27 @@ Success Rate: 100.0%
 
 **Resumen Ejecutivo**:
 
-| Operación | GCC Mejor Caso | Clang Mejor Caso | Ganador |
-|-----------|----------------|------------------|---------|
-| gcd(uint128_t) | 0.6 ns (2 cycles) | 3.2 ns (10 cycles) | **GCC 5x más rápido** |
-| lcm(uint128_t) | 0.5 ns (1.5 cycles) | 14.2 ns (44 cycles) | **GCC 28x más rápido** |
-| pow(uint128_t) | 0.5 ns (1.5 cycles) | 0.0 ns (0 cycles) | **Clang perfecto** |
-| sqrt(uint128_t) | 0.5 ns (1.4 cycles) | 51.6 ns (160 cycles) | **GCC 100x más rápido** |
-| min/max(uint128_t) | 0.5 ns (1.5 cycles) | 0.0 ns (0 cycles) | **Clang perfecto** |
-| bezout_coeffs | 5.7 ns (18 cycles) | 34.9 ns (108 cycles) | **GCC 6x más rápido** |
+| Operación | GCC | Clang | MSVC | Intel | Ganador |
+|-----------|-----|-------|------|-------|---------|
+| gcd(uint128_t) | 0.6 ns (2 cycles) | 3.2 ns (10 cycles) | 8.3 ns (26 cycles) | 4.2 ns (13 cycles) | **GCC** |
+| lcm(uint128_t) | 0.5 ns (1.5 cycles) | 14.2 ns (44 cycles) | 39.6 ns (123 cycles) | 16.8 ns (52 cycles) | **GCC** |
+| pow(uint128_t) | 0.5 ns (1.5 cycles) | 0.0 ns (0 cycles) | 5.4 ns (17 cycles) | 0.0 ns (0 cycles) | **Clang/Intel** |
+| sqrt(uint128_t) | 0.5 ns (1.4 cycles) | 51.6 ns (160 cycles) | 112 ns (347 cycles) | 54.7 ns (169 cycles) | **GCC** |
+| min/max(uint128_t) | 0.5 ns (1.5 cycles) | 0.0 ns (0 cycles) | 3.8 ns (12 cycles) | 0.0 ns (0 cycles) | **Clang/Intel** |
+| bezout_coeffs | 5.7 ns (18 cycles) | 34.9 ns (108 cycles) | 53.5 ns (166 cycles) | 43.5 ns (135 cycles) | **GCC** |
 
 **Análisis**:
-- **GCC 15.2.0**: Optimizaciones extremadamente agresivas, especialmente en gcd, sqrt, bezout
+- **GCC 15.2.0**: Optimizaciones extremadamente agresivas, especialmente en gcd, sqrt, bezout - **CAMPEÓN**
 - **Clang 19.0**: Optimización perfecta de operaciones simples (pow, min/max), ejecuta algoritmos completos en sqrt
-- **Diferencia principal**: GCC transforma algoritmos (instrucciones nativas), Clang es más conservador
+- **MSVC 19.50**: Rendimiento consistente y predecible, 2-10x más lento que GCC, respeta complejidad algorítmica
+- **Intel 2025.3.0**: Similar a Clang, optimización perfecta en pow/min/max (0 cycles), intermedio en operaciones complejas
+- **Diferencia principal**: GCC transforma algoritmos (instrucciones nativas), Clang/Intel optimizan selectivamente, MSVC conservador
 
 **Archivos generados**:
 - `benchmark_results/uint128_cmath_benchmarks_gcc.txt` - Resultados completos GCC
 - `benchmark_results/uint128_cmath_benchmarks_clang.txt` - Resultados completos Clang
+- `benchmark_results/uint128_cmath_benchmarks_msvc.txt` - Resultados completos MSVC
+- `benchmark_results/uint128_cmath_benchmarks_intel.txt` - Resultados completos Intel
 
 **Observaciones sobre Optimización**:
 - Output muestra tiempo y ciclos para cada operación

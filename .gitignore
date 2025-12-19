@@ -131,3 +131,5 @@ CRASH
 log_run_bits_bench.txt
 benchmark_results/uint128_cmath_benchmarks_clang.txt
 benchmark_results/uint128_cmath_benchmarks_gcc.txt
+benchmark_results/uint128_cmath_benchmarks_intel.txt
+benchmark_results/uint128_cmath_benchmarks_msvc.txt
