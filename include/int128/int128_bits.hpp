@@ -6,6 +6,10 @@
 #include <bitset>
 #include <type_traits>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
+
 // =============================================================================
 // Bit manipulation functions for int128_t
 // =============================================================================
@@ -17,16 +21,20 @@ namespace std
  * @brief Count the number of set bits (population count)
  * Para números con signo, cuenta todos los bits establecidos
  */
-constexpr int popcount(const int128_t& value) noexcept
+inline int popcount(const int128_t& value) noexcept
 {
+#ifdef _MSC_VER
+    return static_cast<int>(__popcnt64(value.high()) + __popcnt64(value.low()));
+#else
     return __builtin_popcountll(value.high()) + __builtin_popcountll(value.low());
+#endif
 }
 
 /**
  * @brief Count leading zeros
  * Para int128_t, cuenta ceros a la izquierda considerando el bit de signo
  */
-constexpr int countl_zero(const int128_t& value) noexcept
+inline int countl_zero(const int128_t& value) noexcept
 {
     if (value.is_negative()) {
         // Números negativos empiezan con 1 (bit de signo)
@@ -34,9 +42,21 @@ constexpr int countl_zero(const int128_t& value) noexcept
     }
 
     if (value.high() != 0) {
+#ifdef _MSC_VER
+        unsigned long index;
+        _BitScanReverse64(&index, value.high());
+        return static_cast<int>(63 - index);
+#else
         return __builtin_clzll(value.high());
+#endif
     } else if (value.low() != 0) {
+#ifdef _MSC_VER
+        unsigned long index;
+        _BitScanReverse64(&index, value.low());
+        return static_cast<int>(127 - index);
+#else
         return 64 + __builtin_clzll(value.low());
+#endif
     } else {
         return 128;
     }
@@ -45,12 +65,24 @@ constexpr int countl_zero(const int128_t& value) noexcept
 /**
  * @brief Count trailing zeros
  */
-constexpr int countr_zero(const int128_t& value) noexcept
+inline int countr_zero(const int128_t& value) noexcept
 {
     if (value.low() != 0) {
+#ifdef _MSC_VER
+        unsigned long index;
+        _BitScanForward64(&index, value.low());
+        return static_cast<int>(index);
+#else
         return __builtin_ctzll(value.low());
+#endif
     } else if (value.high() != 0) {
+#ifdef _MSC_VER
+        unsigned long index;
+        _BitScanForward64(&index, value.high());
+        return static_cast<int>(64 + index);
+#else
         return 64 + __builtin_ctzll(value.high());
+#endif
     } else {
         return 128;
     }
@@ -60,7 +92,7 @@ constexpr int countr_zero(const int128_t& value) noexcept
  * @brief Count leading ones
  * Para números negativos, cuenta los 1s consecutivos desde el MSB
  */
-constexpr int countl_one(const int128_t& value) noexcept
+inline int countl_one(const int128_t& value) noexcept
 {
     if (!value.is_negative()) {
         // Números positivos/cero empiezan con 0
@@ -71,26 +103,50 @@ constexpr int countl_one(const int128_t& value) noexcept
         if (value.low() == UINT64_MAX) {
             return 128; // Todo unos (-1)
         } else {
+#ifdef _MSC_VER
+            unsigned long index;
+            _BitScanReverse64(&index, ~value.low());
+            return static_cast<int>(127 - index);
+#else
             return 64 + __builtin_clzll(~value.low());
+#endif
         }
     } else {
+#ifdef _MSC_VER
+        unsigned long index;
+        _BitScanReverse64(&index, ~value.high());
+        return static_cast<int>(63 - index);
+#else
         return __builtin_clzll(~value.high());
+#endif
     }
 }
 
 /**
  * @brief Count trailing ones
  */
-constexpr int countr_one(const int128_t& value) noexcept
+inline int countr_one(const int128_t& value) noexcept
 {
     if (value.low() == UINT64_MAX) {
         if (value.high() == UINT64_MAX) {
             return 128;
         } else {
+#ifdef _MSC_VER
+            unsigned long index;
+            _BitScanForward64(&index, ~value.high());
+            return static_cast<int>(64 + index);
+#else
             return 64 + __builtin_ctzll(~value.high());
+#endif
         }
     } else {
+#ifdef _MSC_VER
+        unsigned long index;
+        _BitScanForward64(&index, ~value.low());
+        return static_cast<int>(index);
+#else
         return __builtin_ctzll(~value.low());
+#endif
     }
 }
 
@@ -98,7 +154,7 @@ constexpr int countr_one(const int128_t& value) noexcept
  * @brief Bit width (número de bits necesarios para representar el valor)
  * Para números negativos, usa todos los 128 bits
  */
-constexpr int bit_width(const int128_t& value) noexcept
+inline int bit_width(const int128_t& value) noexcept
 {
     if (value.is_negative()) {
         return 128; // Los números negativos usan todos los bits
@@ -110,7 +166,7 @@ constexpr int bit_width(const int128_t& value) noexcept
  * @brief Check if value has only a single bit set
  * Solo válido para números positivos
  */
-constexpr bool has_single_bit(const int128_t& value) noexcept
+inline bool has_single_bit(const int128_t& value) noexcept
 {
     if (value.is_negative() || value.is_zero())
         return false;
@@ -122,7 +178,7 @@ constexpr bool has_single_bit(const int128_t& value) noexcept
  * @brief Find the largest power of 2 not greater than value
  * Solo válido para números positivos
  */
-constexpr int128_t bit_floor(const int128_t& value) noexcept
+inline int128_t bit_floor(const int128_t& value) noexcept
 {
     if (value.is_negative() || value.is_zero()) {
         return int128_t(0);
@@ -138,7 +194,7 @@ constexpr int128_t bit_floor(const int128_t& value) noexcept
  * @brief Find the smallest power of 2 not less than value
  * Solo válido para números positivos
  */
-constexpr int128_t bit_ceil(const int128_t& value) noexcept
+inline int128_t bit_ceil(const int128_t& value) noexcept
 {
     if (value.is_negative()) {
         return int128_t(0); // No definido para negativos
@@ -218,9 +274,13 @@ constexpr int128_t reverse_bits(const int128_t& value) noexcept
 /**
  * @brief Reverse bytes (endianness swap)
  */
-constexpr int128_t byteswap(const int128_t& value) noexcept
+inline int128_t byteswap(const int128_t& value) noexcept
 {
+#ifdef _MSC_VER
+    auto swap64 = [](uint64_t v) -> uint64_t { return _byteswap_uint64(v); };
+#else
     auto swap64 = [](uint64_t v) -> uint64_t { return __builtin_bswap64(v); };
+#endif
 
     return int128_t(swap64(value.low()), swap64(value.high()));
 }
@@ -373,7 +433,12 @@ constexpr int find_last_set(const int128_t& value) noexcept
         return -1;
     }
 
-    return 127 - std::countl_zero(value.is_negative() ? ~value : value);
+    // Para negativos, el bit de signo siempre está en 1 (posición 127)
+    if (value.is_negative()) {
+        return 127;
+    }
+
+    return 127 - std::countl_zero(value);
 }
 
 } // namespace int128_bits

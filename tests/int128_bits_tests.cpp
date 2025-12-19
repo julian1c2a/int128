@@ -318,9 +318,15 @@ bool test_extract_bits()
     ASSERT_TEST(extracted == int128_t(0xFF), "extract_bits de 8 bits debe ser 0xFF");
 
     // Test con offset
+    // Valor: 0x00FF00FF00FF00FF
+    // bits 0-7: 0xFF, bits 8-15: 0x00, bits 16-23: 0xFF, bits 24-31: 0x00, ...
     int128_t value2(0x0, 0x00FF00FF00FF00FFULL);
     extracted = extract_bits(value2, 8, 8);
-    ASSERT_TEST(extracted == int128_t(0xFF), "extract_bits con offset debe funcionar");
+    ASSERT_TEST(extracted == int128_t(0x00), "extract_bits con offset debe funcionar");
+
+    // Test extraccion de bits 0-7 (debe ser 0xFF)
+    extracted = extract_bits(value2, 0, 8);
+    ASSERT_TEST(extracted == int128_t(0xFF), "extract_bits bits 0-7 debe ser 0xFF");
 
     // Test limites invalidos
     ASSERT_TEST(extract_bits(value, -1, 8) == int128_t(0),

@@ -4,10 +4,6 @@
 #include <bitset>
 #include <type_traits>
 
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
-
 // =============================================================================
 // Bit manipulation functions for uint128_t
 // =============================================================================
@@ -18,36 +14,20 @@ namespace std
 /**
  * @brief Count the number of set bits (population count)
  */
-inline int popcount(const uint128_t& value) noexcept
+constexpr int popcount(const uint128_t& value) noexcept
 {
-#ifdef _MSC_VER
-    return static_cast<int>(__popcnt64(value.high()) + __popcnt64(value.low()));
-#else
     return __builtin_popcountll(value.high()) + __builtin_popcountll(value.low());
-#endif
 }
 
 /**
  * @brief Count leading zeros
  */
-inline int countl_zero(const uint128_t& value) noexcept
+constexpr int countl_zero(const uint128_t& value) noexcept
 {
     if (value.high() != 0) {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanReverse64(&index, value.high());
-        return static_cast<int>(63 - index);
-#else
         return __builtin_clzll(value.high());
-#endif
     } else if (value.low() != 0) {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanReverse64(&index, value.low());
-        return static_cast<int>(127 - index);
-#else
         return 64 + __builtin_clzll(value.low());
-#endif
     } else {
         return 128;
     }
@@ -56,24 +36,12 @@ inline int countl_zero(const uint128_t& value) noexcept
 /**
  * @brief Count trailing zeros
  */
-inline int countr_zero(const uint128_t& value) noexcept
+constexpr int countr_zero(const uint128_t& value) noexcept
 {
     if (value.low() != 0) {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanForward64(&index, value.low());
-        return static_cast<int>(index);
-#else
         return __builtin_ctzll(value.low());
-#endif
     } else if (value.high() != 0) {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanForward64(&index, value.high());
-        return static_cast<int>(64 + index);
-#else
         return 64 + __builtin_ctzll(value.high());
-#endif
     } else {
         return 128;
     }
@@ -82,63 +50,39 @@ inline int countr_zero(const uint128_t& value) noexcept
 /**
  * @brief Count leading ones
  */
-inline int countl_one(const uint128_t& value) noexcept
+constexpr int countl_one(const uint128_t& value) noexcept
 {
     if (value.high() == UINT64_MAX) {
         if (value.low() == UINT64_MAX) {
             return 128;
         } else {
-#ifdef _MSC_VER
-            unsigned long index;
-            _BitScanReverse64(&index, ~value.low());
-            return static_cast<int>(63 - index);
-#else
             return __builtin_clzll(~value.low());
-#endif
         }
     } else {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanReverse64(&index, ~value.high());
-        return static_cast<int>(63 - index);
-#else
         return __builtin_clzll(~value.high());
-#endif
     }
 }
 
 /**
  * @brief Count trailing ones
  */
-inline int countr_one(const uint128_t& value) noexcept
+constexpr int countr_one(const uint128_t& value) noexcept
 {
     if (value.low() == UINT64_MAX) {
         if (value.high() == UINT64_MAX) {
             return 128;
         } else {
-#ifdef _MSC_VER
-            unsigned long index;
-            _BitScanForward64(&index, ~value.high());
-            return static_cast<int>(64 + index);
-#else
             return 64 + __builtin_ctzll(~value.high());
-#endif
         }
     } else {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanForward64(&index, ~value.low());
-        return static_cast<int>(index);
-#else
         return __builtin_ctzll(~value.low());
-#endif
     }
 }
 
 /**
  * @brief Bit width (number of bits needed to represent the value)
  */
-inline int bit_width(const uint128_t& value) noexcept
+constexpr int bit_width(const uint128_t& value) noexcept
 {
     return 128 - countl_zero(value);
 }
@@ -146,7 +90,7 @@ inline int bit_width(const uint128_t& value) noexcept
 /**
  * @brief Check if value has only a single bit set
  */
-inline bool has_single_bit(const uint128_t& value) noexcept
+constexpr bool has_single_bit(const uint128_t& value) noexcept
 {
     return value != uint128_t(0) && popcount(value) == 1;
 }
@@ -154,7 +98,7 @@ inline bool has_single_bit(const uint128_t& value) noexcept
 /**
  * @brief Find the largest power of 2 not greater than value
  */
-inline uint128_t bit_floor(const uint128_t& value) noexcept
+constexpr uint128_t bit_floor(const uint128_t& value) noexcept
 {
     if (value == uint128_t(0)) {
         return uint128_t(0);
@@ -166,7 +110,7 @@ inline uint128_t bit_floor(const uint128_t& value) noexcept
 /**
  * @brief Find the smallest power of 2 not less than value
  */
-inline uint128_t bit_ceil(const uint128_t& value) noexcept
+constexpr uint128_t bit_ceil(const uint128_t& value) noexcept
 {
     if (value <= uint128_t(1)) {
         return uint128_t(1);
@@ -234,13 +178,9 @@ constexpr uint128_t reverse_bits(const uint128_t& value) noexcept
 /**
  * @brief Reverse bytes (endianness swap)
  */
-inline uint128_t byteswap(const uint128_t& value) noexcept
+constexpr uint128_t byteswap(const uint128_t& value) noexcept
 {
-#ifdef _MSC_VER
-    auto swap64 = [](uint64_t v) -> uint64_t { return _byteswap_uint64(v); };
-#else
     auto swap64 = [](uint64_t v) -> uint64_t { return __builtin_bswap64(v); };
-#endif
 
     return uint128_t(swap64(value.low()), swap64(value.high()));
 }
