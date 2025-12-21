@@ -31,12 +31,24 @@
 #include <functional>
 #include <type_traits>
 
+// Detectar si estamos usando libc++ (Clang)
+// libc++ no permite especializar ciertos type traits
+#ifdef _LIBCPP_VERSION
+#define INT128_USING_LIBCPP 1
+#else
+#define INT128_USING_LIBCPP 0
+#endif
+
 namespace std
 {
 
 // ===============================================================================
 // TYPE TRAITS FUNDAMENTALES
 // ===============================================================================
+// NOTA: libc++ (Clang) no permite especializar estos traits con _LIBCPP_NO_SPECIALIZATIONS
+// Por lo tanto, solo los especializamos para GCC/MSVC (libstdc++/MS STL)
+
+#if !INT128_USING_LIBCPP
 
 /**
  * @brief Especialización para is_integral
@@ -157,9 +169,13 @@ template <> struct is_standard_layout<int128_t> : true_type {
 template <> struct is_pod<int128_t> : true_type {
 };
 
+#endif // !INT128_USING_LIBCPP
+
 // ===============================================================================
 // TRANSFORMACIÓN DE TIPOS
 // ===============================================================================
+
+#if !INT128_USING_LIBCPP
 
 /**
  * @brief Especialización para make_signed
@@ -179,6 +195,8 @@ template <> struct make_signed<int128_t> {
 template <> struct make_unsigned<int128_t> {
     using type = uint128_t;
 };
+
+#endif // !INT128_USING_LIBCPP
 
 // ===============================================================================
 // TIPOS COMUNES (COMMON TYPES)

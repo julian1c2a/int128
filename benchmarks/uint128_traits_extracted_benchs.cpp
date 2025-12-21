@@ -49,13 +49,15 @@ BenchmarkResult bench_is_integral()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile bool result = false;
+    bool result = false;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         result = std::is_integral_v<uint128_t>;
     }
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -73,13 +75,15 @@ BenchmarkResult bench_is_arithmetic()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile bool result = false;
+    bool result = false;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         result = std::is_arithmetic_v<uint128_t>;
     }
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -313,8 +317,8 @@ BenchmarkResult bench_numeric_limits_minmax()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile uint128_t min_val;
-    volatile uint128_t max_val;
+    uint128_t min_val;
+    uint128_t max_val;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         min_val = std::numeric_limits<uint128_t>::min();
         max_val = std::numeric_limits<uint128_t>::max();
@@ -322,6 +326,8 @@ BenchmarkResult bench_numeric_limits_minmax()
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(min_val), "r,m"(max_val) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;

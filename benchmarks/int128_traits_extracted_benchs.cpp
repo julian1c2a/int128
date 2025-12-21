@@ -21,6 +21,13 @@
 #include <iostream>
 #include <type_traits>
 
+// Detectar si estamos usando libc++ (Clang)
+#ifdef _LIBCPP_VERSION
+#define INT128_USING_LIBCPP 1
+#else
+#define INT128_USING_LIBCPP 0
+#endif
+
 // =============================================================================
 // MEDICIÓN DE CICLOS CON RDTSC
 // =============================================================================
@@ -278,7 +285,7 @@ BenchmarkResult bench_hash_varying_values()
 BenchmarkResult bench_copy_int128()
 {
     int128_t src(0x123456789ABCDEF0ULL, 0xFEDCBA9876543210ULL);
-    volatile int128_t dst;
+    int128_t dst;
 
     // Warmup
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
@@ -295,7 +302,8 @@ BenchmarkResult bench_copy_int128()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)dst;
+    // Prevent optimization
+    asm volatile("" : : "r,m"(dst) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -308,7 +316,7 @@ BenchmarkResult bench_copy_int128()
  */
 BenchmarkResult bench_move_int128()
 {
-    volatile int128_t dst;
+    int128_t dst;
 
     // Warmup
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
@@ -327,7 +335,7 @@ BenchmarkResult bench_move_int128()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)dst;
+    asm volatile("" : : "r,m"(dst) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -346,7 +354,7 @@ BenchmarkResult bench_move_int128()
 BenchmarkResult bench_common_type_usage()
 {
     using common_t = std::common_type<int128_t, int64_t>::type;
-    volatile common_t result;
+    common_t result;
 
     int128_t a(1000, 2000);
     int64_t b = 42;
@@ -366,7 +374,7 @@ BenchmarkResult bench_common_type_usage()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -379,6 +387,7 @@ BenchmarkResult bench_common_type_usage()
  */
 BenchmarkResult bench_make_unsigned_usage()
 {
+#if !INT128_USING_LIBCPP
     using unsigned_t = std::make_unsigned<int128_t>::type;
     volatile unsigned_t result;
 
@@ -405,6 +414,9 @@ BenchmarkResult bench_make_unsigned_usage()
 
     return BenchmarkResult{elapsed_ns / ITERATIONS, (end_cycles - start_cycles) / ITERATIONS,
                            "make_unsigned_usage"};
+#else
+    return BenchmarkResult{0.0, 0, "make_unsigned_usage [SKIP - libc++]"};
+#endif
 }
 
 // =============================================================================
