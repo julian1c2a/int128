@@ -212,6 +212,67 @@ ls benchmark_results/plots/
     - uint128_t: ✅ Completo (4 wrappers disponibles)
     - int128_t: ⏳ Pendiente (implementación trivial)
 
+### 🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp
+
+**Sistema completo de tests y benchmarks individualizados** para cada función/especialización de `uint128_traits.hpp`:
+
+#### 📝 Características
+
+- ✅ **18 tests individuales** - Una función de test por cada trait/especialización
+- ✅ **11 benchmarks individuales** - Medición precisa de cada operación
+- ✅ **4 compiladores** - GCC (UCRT64), Clang (CLANG64), Intel OneAPI, MSVC
+- ✅ **Métricas duales** - Tiempo (nanosegundos) + Ciclos de reloj (RDTSC)
+- ✅ **Automatización completa** - Scripts para compilar, ejecutar y analizar
+
+#### 📂 Archivos
+
+- **Tests**: `tests/uint128_traits_extracted_tests.cpp`
+- **Benchmarks**: `benchmarks/uint128_traits_extracted_benchs.cpp`
+- **Scripts de compilación**: `scripts/compile_uint128_traits_extracted.{sh,bat}`
+- **Scripts de ejecución**: `scripts/run_uint128_traits_benchmarks.{sh,bat}`
+- **Script maestro**: `scripts/master_uint128_traits_all.{sh,bat}` - Ejecuta todo automáticamente
+
+#### 🚀 Uso Rápido
+
+```bash
+# Ejecutar TODO automáticamente (compilar + tests + benchmarks + reportes)
+./scripts/master_uint128_traits_all.sh
+```
+
+```cmd
+REM Versión Windows
+scripts\master_uint128_traits_all.bat
+```
+
+#### 📊 Tests Incluidos
+
+1. **Type Traits Fundamentales**: `is_integral`, `is_arithmetic`, `is_unsigned`, `is_signed`
+2. **Traits de Trivialidad**: `is_trivially_copyable`, `is_trivially_copy_constructible`, etc.
+3. **Transformación de Tipos**: `make_unsigned`
+4. **Common Type**: `common_type<uint128_t, T>` con múltiples tipos T
+5. **Hash**: `std::hash<uint128_t>` y uso en `unordered_map`
+6. **Numeric Limits**: Todas las propiedades de `std::numeric_limits<uint128_t>`
+
+#### ⚡ Benchmarks Incluidos
+
+1. **Compile-Time Traits** (5) - Overhead de verificación de traits
+2. **Runtime Operations** (4) - Copia trivial, hash computation, map insert/lookup
+3. **Numeric Limits** (2) - Query de propiedades y min/max
+
+#### 📚 Documentación
+
+- [uint128_traits_extracted_README.md](documentation/uint128_traits_extracted_README.md) - 📘 **Documentación completa**
+- [UINT128_TRAITS_EXTRACTED_SUMMARY.md](UINT128_TRAITS_EXTRACTED_SUMMARY.md) - Resumen de implementación
+- [QUICKSTART_UINT128_TRAITS.md](QUICKSTART_UINT128_TRAITS.md) - Guía rápida de uso
+
+#### 📈 Resultados
+
+Los resultados se guardan en `benchmark_results/uint128_traits_extracted/`:
+- `summary_[timestamp].csv` - CSV consolidado con todos los resultados
+- `report_[timestamp].txt` - Reporte completo con análisis
+- `benchmarks_[compiler]_[timestamp].txt` - Resultados por compilador
+- `tests_[compiler]_[timestamp].txt` - Logs de tests por compilador
+
 #### 📊 Resultados
 
 Los resultados se almacenan en `benchmark_results/`:
