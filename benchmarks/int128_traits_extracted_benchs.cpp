@@ -92,7 +92,7 @@ void print_result(const BenchmarkResult& result)
  */
 BenchmarkResult bench_is_integral()
 {
-    volatile bool result = false;
+    bool result = false;
 
     // Warmup
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
@@ -109,7 +109,7 @@ BenchmarkResult bench_is_integral()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result; // Evitar optimización
+    asm volatile("" : : "r,m"(result) : "memory"); // Evitar optimización
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -122,7 +122,7 @@ BenchmarkResult bench_is_integral()
  */
 BenchmarkResult bench_is_arithmetic()
 {
-    volatile bool result = false;
+    bool result = false;
 
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
         result = std::is_arithmetic<int128_t>::value;
@@ -138,7 +138,7 @@ BenchmarkResult bench_is_arithmetic()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -151,7 +151,7 @@ BenchmarkResult bench_is_arithmetic()
  */
 BenchmarkResult bench_is_signed()
 {
-    volatile bool result = false;
+    bool result = false;
 
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
         result = std::is_signed<int128_t>::value;
@@ -167,7 +167,7 @@ BenchmarkResult bench_is_signed()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -180,7 +180,7 @@ BenchmarkResult bench_is_signed()
  */
 BenchmarkResult bench_is_trivially_copyable()
 {
-    volatile bool result = false;
+    bool result = false;
 
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
         result = std::is_trivially_copyable<int128_t>::value;
@@ -196,7 +196,7 @@ BenchmarkResult bench_is_trivially_copyable()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -216,7 +216,7 @@ BenchmarkResult bench_hash_computation()
 {
     std::hash<int128_t> hasher;
     int128_t value(0x123456789ABCDEF0ULL, 0xFEDCBA9876543210ULL);
-    volatile size_t result = 0;
+    size_t result = 0;
 
     // Warmup
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
@@ -233,7 +233,7 @@ BenchmarkResult bench_hash_computation()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -247,7 +247,7 @@ BenchmarkResult bench_hash_computation()
 BenchmarkResult bench_hash_varying_values()
 {
     std::hash<int128_t> hasher;
-    volatile size_t result = 0;
+    size_t result = 0;
 
     // Warmup
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
@@ -266,7 +266,7 @@ BenchmarkResult bench_hash_varying_values()
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 
@@ -389,26 +389,27 @@ BenchmarkResult bench_make_unsigned_usage()
 {
 #if !INT128_USING_LIBCPP
     using unsigned_t = std::make_unsigned<int128_t>::type;
-    volatile unsigned_t result;
+    unsigned_t result;
 
     int128_t src(-1000, 2000);
 
     // Warmup
     for (size_t i = 0; i < WARMUP_ITERATIONS; ++i) {
-        result = static_cast<unsigned_t>(src);
+        // Conversión bit a bit de int128_t a uint128_t
+        result = unsigned_t(src.low(), src.high());
     }
 
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        result = static_cast<unsigned_t>(src);
+        result = unsigned_t(src.low(), src.high());
     }
 
     uint64_t end_cycles = rdtsc();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    (void)result;
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
 

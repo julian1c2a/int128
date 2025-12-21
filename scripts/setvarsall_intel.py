@@ -20,7 +20,7 @@ El script ejecuta setvars.bat y retorna comandos de exportación para bash/MSYS2
 import os
 import subprocess
 import sys
-from setvars_intel import find_setvars_bat, find_intel_oneapi_root
+from setvars_intel import find_setvars_bat, find_setvars_vcvarsall_bat, find_intel_oneapi_root
 
 def win_to_unix_path(win_path):
     """
@@ -38,6 +38,7 @@ def win_to_unix_path(win_path):
 def get_intel_environment(args=None):
     """
     Ejecuta setvars.bat y captura TODAS las variables de entorno resultantes.
+    Intenta usar setvars-vcvarsall.bat primero (incluye MSVC), si falla o no existe, usa setvars.bat.
     
     Args:
         args: Lista de argumentos adicionales para setvars.bat
@@ -45,32 +46,56 @@ def get_intel_environment(args=None):
     Returns:
         Diccionario con las variables de entorno
     """
-    setvars_path = find_setvars_bat()
-    if not setvars_path:
+    # Intentar primero setvars-vcvarsall.bat (incluye VS)
+    setvars_vcvarsall_path = find_setvars_vcvarsall_bat()
+    setvars_normal_path = find_setvars_bat()
+    
+    if not setvars_normal_path:
         sys.stderr.write("Error: No se pudo encontrar setvars.bat de Intel oneAPI\n")
         sys.stderr.write("Buscar en: C:\\Program Files (x86)\\Intel\\oneAPI\n")
         sys.exit(1)
     
-    # Construir comando para ejecutar setvars.bat y luego imprimir TODAS las variables
-    cmd_parts = [f'"{setvars_path}"']
+    # Función auxiliar para intentar ejecutar un setvars
+    def try_setvars(path, description):
+        cmd_parts = [f'"{path}"']
+        
+        # Añadir argumentos adicionales si existen
+        if args:
+            cmd_parts.extend(args)
+        else:
+            # Por defecto, configurar para intel64
+            cmd_parts.append("intel64")
+        
+        # Añadir comando para imprimir TODAS las variables de entorno
+        cmd_parts.append("&& set")
+        
+        full_cmd = " ".join(cmd_parts)
+        
+        sys.stderr.write(f"Usando {description}...\n")
+        
+        # Ejecutar comando
+        result = subprocess.run(full_cmd, shell=True, capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            return result
+        else:
+            return None
     
-    # Añadir argumentos adicionales si existen
-    if args:
-        cmd_parts.extend(args)
-    else:
-        # Por defecto, configurar para intel64
-        cmd_parts.append("intel64")
+    # Intentar con vcvarsall primero si existe
+    result = None
+    if setvars_vcvarsall_path:
+        result = try_setvars(setvars_vcvarsall_path, "setvars-vcvarsall.bat (incluye Visual Studio)")
+        if not result:
+            sys.stderr.write("setvars-vcvarsall.bat falló, intentando con setvars.bat normal...\n")
     
-    # Añadir comando para imprimir TODAS las variables de entorno
-    cmd_parts.append("&& set")
-    
-    full_cmd = " ".join(cmd_parts)
-    
-    # Ejecutar comando
-    result = subprocess.run(full_cmd, shell=True, capture_output=True, text=True)
-    
-    if result.returncode != 0:
-        sys.stderr.write(f"Error ejecutando setvars.bat:\n{result.stderr}\n")
+    # Si falló o no existe vcvarsall, usar setvars normal
+    if not result:
+        result = try_setvars(setvars_normal_path, "setvars.bat (solo Intel)")
+        
+    if not result or result.returncode != 0:
+        sys.stderr.write(f"Error ejecutando setvars.bat\n")
+        if result:
+            sys.stderr.write(f"{result.stderr}\n")
         sys.exit(1)
     
     # Procesar la salida - capturar TODAS las variables después del '&& set'

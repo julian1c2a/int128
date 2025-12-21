@@ -111,27 +111,32 @@ fi
 if should_compile "intel"; then
     echo -e "\n${YELLOW}[3/4] Compilando con Intel OneAPI...${NC}"
 
-    # Configurar Intel OneAPI
-    if [ -f "/c/Program Files (x86)/Intel/oneAPI/setvars.sh" ]; then
-        source "/c/Program Files (x86)/Intel/oneAPI/setvars.sh" intel64 vs2022
+    # Verificar si icx está disponible en el PATH
+    if command -v icx &> /dev/null || command -v icpx &> /dev/null; then
+        # Determinar qué compilador usar (icpx preferido, icx como fallback)
+        ICX_COMPILER="icx"
+        if command -v icpx &> /dev/null; then
+            ICX_COMPILER="icpx"
+        fi
         
         # Tests
-        echo -e "${GREEN}  - Compilando tests...${NC}"
-        icx -std=c++20 -O3 -xHost -Wall \
+        echo -e "${GREEN}  - Compilando tests con $ICX_COMPILER...${NC}"
+        "$ICX_COMPILER" -std=c++20 -O3 -xHost -Wall \
             -I"$PROJECT_DIR/include" \
             tests/uint128_traits_extracted_tests.cpp \
             -o build/build_tests/intel/release/uint128_traits_tests_intel.exe
         
         # Benchmarks
-        echo -e "${GREEN}  - Compilando benchmarks...${NC}"
-        icx -std=c++20 -O3 -xHost -Wall \
+        echo -e "${GREEN}  - Compilando benchmarks con $ICX_COMPILER...${NC}"
+        "$ICX_COMPILER" -std=c++20 -O3 -xHost -Wall \
             -I"$PROJECT_DIR/include" \
             benchmarks/uint128_traits_extracted_benchs.cpp \
             -o build/build_benchmarks/intel/release/uint128_traits_benchs_intel.exe
         
         echo -e "${GREEN}  ✅ Intel OneAPI compilación completada${NC}"
     else
-        echo -e "${RED}  ⚠️  Intel OneAPI no encontrado, saltando...${NC}"
+        echo -e "${RED}  ⚠️  Intel OneAPI no encontrado en PATH${NC}"
+        echo -e "${YELLOW}      Use: source scripts/setup_intel_env.bash${NC}"
     fi
 fi
 

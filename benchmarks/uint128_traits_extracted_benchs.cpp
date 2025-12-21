@@ -101,13 +101,15 @@ BenchmarkResult bench_is_unsigned()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile bool result = false;
+    bool result = false;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         result = std::is_unsigned_v<uint128_t>;
     }
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -125,13 +127,15 @@ BenchmarkResult bench_is_trivially_copyable()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile bool result = false;
+    bool result = false;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         result = std::is_trivially_copyable_v<uint128_t>;
     }
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -178,13 +182,15 @@ BenchmarkResult bench_common_type()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile bool result = false;
+    bool result = false;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         result = std::is_same_v<std::common_type_t<uint128_t, uint64_t>, uint128_t>;
     }
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(result) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -291,8 +297,8 @@ BenchmarkResult bench_numeric_limits()
     auto start_time = std::chrono::high_resolution_clock::now();
     uint64_t start_cycles = RDTSC();
 
-    volatile bool result = false;
-    volatile int digits = 0;
+    bool result = false;
+    int digits = 0;
     for (size_t i = 0; i < ITERATIONS; ++i) {
         result = std::numeric_limits<uint128_t>::is_specialized;
         digits = std::numeric_limits<uint128_t>::digits;
@@ -300,6 +306,8 @@ BenchmarkResult bench_numeric_limits()
 
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
+
+    asm volatile("" : : "r,m"(result), "r,m"(digits) : "memory");
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
