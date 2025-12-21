@@ -267,15 +267,77 @@ scripts\master_uint128_traits_all.bat
 
 #### 📈 Resultados
 
-Los resultados se guardan en `benchmark_results/uint128_traits_extracted/`:
+Los resultados se guardan en `benchmark_results/`:
 - `summary_[timestamp].csv` - CSV consolidado con todos los resultados
 - `report_[timestamp].txt` - Reporte completo con análisis
 - `benchmarks_[compiler]_[timestamp].txt` - Resultados por compilador
 - `tests_[compiler]_[timestamp].txt` - Logs de tests por compilador
 
-#### 📊 Resultados
+---
 
-Los resultados se almacenan en `benchmark_results/`:
+### 🧬 int128_traits.hpp - Tests y Benchmarks Extraídos
+
+Suite completa de pruebas y benchmarks para `int128_traits.hpp` (tipo signed).
+
+- ✅ **19 tests individuales** - Una función de test por cada trait/especialización
+- ✅ **11 benchmarks individuales** - Medición precisa de cada operación
+- ✅ **4 compiladores** - GCC (UCRT64), Clang (CLANG64), Intel OneAPI, MSVC
+- ✅ **Métricas duales** - Tiempo (nanosegundos) + Ciclos de reloj (RDTSC)
+- ✅ **Automatización completa** - Scripts para compilar, ejecutar y analizar
+
+#### 📂 Archivos
+
+- **Tests**: `tests/int128_traits_extracted_tests.cpp`
+- **Benchmarks**: `benchmarks/int128_traits_extracted_benchs.cpp`
+- **Scripts de compilación**: `scripts/compile_int128_traits_extracted.{sh,bat}`
+- **Scripts de ejecución**: `scripts/run_int128_traits_benchmarks.{sh,bat}`
+- **Script maestro**: `scripts/master_int128_traits_all.{sh,bat}` - Ejecuta todo automáticamente
+
+#### 🚀 Uso Rápido
+
+```bash
+# Ejecutar TODO automáticamente (compilar + tests + benchmarks + reportes)
+./scripts/master_int128_traits_all.sh
+```
+
+```cmd
+REM Versión Windows
+scripts\master_int128_traits_all.bat
+```
+
+#### 📊 Tests Incluidos
+
+1. **Type Traits Fundamentales**: `is_integral`, `is_arithmetic`, `is_unsigned` (false), `is_signed` (true)
+2. **Traits de Trivialidad**: `is_trivially_copyable`, `is_trivially_copy_constructible`, `is_trivial` (false), etc.
+3. **Transformación de Tipos**: `make_signed` (devuelve int128_t), `make_unsigned` (devuelve uint128_t)
+4. **Common Type**: `common_type<int128_t, T>` con múltiples tipos T, `common_type<int128_t, uint128_t>` (devuelve uint128_t)
+5. **Hash**: `std::hash<int128_t>` con valores signed
+6. **POD y Layout**: Verificación de `is_pod` y `is_standard_layout`
+
+#### ⚡ Benchmarks Incluidos
+
+1. **Type Traits** (4) - Overhead de verificación: `is_integral`, `is_arithmetic`, `is_signed`, `is_trivially_copyable`
+2. **Hash Operations** (2) - Hash computation y hash con valores variables (incluye negativos)
+3. **Copy/Move Operations** (2) - Rendimiento de copia y movimiento triviales
+4. **Type Transformations** (2) - Uso de `common_type` y `make_unsigned` en contextos reales
+
+#### 📚 Documentación
+
+- [INT128_TRAITS_EXTRACTED_TESTS.md](documentation/INT128_TRAITS_EXTRACTED_TESTS.md) - 📘 **Documentación completa**
+
+#### 📈 Resultados
+
+Los resultados se guardan en `benchmark_results/`:
+- `summary_[timestamp].csv` - CSV consolidado con todos los resultados
+- `report_[timestamp].txt` - Reporte completo con análisis
+- `benchmarks_[compiler]_[timestamp].txt` - Resultados por compilador
+- `tests_[compiler]_[timestamp].txt` - Logs de tests por compilador
+
+---
+
+#### 📊 Resultados Generales
+
+Los resultados de benchmarks generales se almacenan en `benchmark_results/`:
 
 - `benchmark_*.csv` - Resultados raw por compilador
 - `consolidated_*.csv` - Resultados agregados
