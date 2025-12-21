@@ -137,3 +137,6 @@ benchmark_results/int128_cmath_benchmarks_clang.txt
 benchmark_results/int128_cmath_benchmarks_gcc.txt
 benchmark_results/int128_cmath_benchmarks_intel.txt
 benchmark_results/int128_cmath_benchmarks_msvc.txt
+log_compile_intel.txt
+log_intel_full.txt
+scripts/__pycache__/setvars_intel.cpython-314.pyc
