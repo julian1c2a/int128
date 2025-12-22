@@ -4,6 +4,7 @@
  * Mide tanto tiempos como ciclos de reloj
  */
 
+#include "../include/uint128/uint128_limits.hpp"
 #include "../include/uint128/uint128_t.hpp"
 #include "../include/uint128/uint128_traits.hpp"
 #include <chrono>
