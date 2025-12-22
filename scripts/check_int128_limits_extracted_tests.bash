@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Script para ejecutar los tests de int128_limits_extracted_tests
 
+# Detectar directorio del script y directorio raíz del proyecto
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
 echo "========================================="
 echo " EJECUTANDO: int128_limits_extracted_tests"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
@@ -46,12 +50,12 @@ passed=0
 # 1. GCC
 # ---------------------------------------
 ((total++))
-if run_test "GCC" "Debug" "../build/int128_limits_extracted_tests/gcc/debug/int128_limits_extracted_tests"; then
+if run_test "GCC" "Debug" "$PROJECT_ROOT/build/int128_limits_extracted_tests/gcc/debug/int128_limits_extracted_tests"; then
     ((passed++))
 fi
 
 ((total++))
-if run_test "GCC" "Release" "../build/int128_limits_extracted_tests/gcc/release/int128_limits_extracted_tests"; then
+if run_test "GCC" "Release" "$PROJECT_ROOT/build/int128_limits_extracted_tests/gcc/release/int128_limits_extracted_tests"; then
     ((passed++))
 fi
 
@@ -59,12 +63,12 @@ fi
 # 2. Clang
 # ---------------------------------------
 ((total++))
-if run_test "Clang" "Debug" "../build/int128_limits_extracted_tests/clang/debug/int128_limits_extracted_tests"; then
+if run_test "Clang" "Debug" "$PROJECT_ROOT/build/int128_limits_extracted_tests/clang/debug/int128_limits_extracted_tests"; then
     ((passed++))
 fi
 
 ((total++))
-if run_test "Clang" "Release" "../build/int128_limits_extracted_tests/clang/release/int128_limits_extracted_tests"; then
+if run_test "Clang" "Release" "$PROJECT_ROOT/build/int128_limits_extracted_tests/clang/release/int128_limits_extracted_tests"; then
     ((passed++))
 fi
 

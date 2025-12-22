@@ -3,14 +3,24 @@
 
 set -e
 
+# Detectar directorio del script y directorio raíz del proyecto
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# Compilador a usar (por defecto: all)
+COMPILER="${1:-all}"
+
 # Mostrar timestamp
 echo "========================================="
 echo " BUILD: uint128_limits_extracted_benchs"
+if [ "$COMPILER" != "all" ]; then
+    echo " Compilador: $COMPILER"
+fi
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================="
 
 # Archivo fuente
-SOURCE_FILE="../benchmarks/uint128_limits_extracted_benchs.cpp"
+SOURCE_FILE="$PROJECT_ROOT/benchmarks/uint128_limits_extracted_benchs.cpp"
 
 # Verificar que existe el archivo
 if [ ! -f "$SOURCE_FILE" ]; then
@@ -26,42 +36,45 @@ echo ""
 
 # Flags comunes
 COMMON_FLAGS="-std=c++20 -Wall -Wextra"
-INCLUDE_DIR="-I../include"
+INCLUDE_DIR="-I$PROJECT_ROOT/include"
 
 # ---------------------------------------
 # 1. GCC
 # ---------------------------------------
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "gcc" ]; then
 echo "🔨 [1/4] Compilando con GCC..."
-mkdir -p ../build/uint128_limits_extracted_benchs/gcc/debug
-mkdir -p ../build/uint128_limits_extracted_benchs/gcc/release
+mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/debug"
+mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/release"
 
 g++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
-    -o ../build/uint128_limits_extracted_benchs/gcc/debug/uint128_limits_extracted_benchs
+    -o "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/debug/uint128_limits_extracted_benchs"
 echo "   ✅ GCC Debug: build/uint128_limits_extracted_benchs/gcc/debug/uint128_limits_extracted_benchs"
 
-g++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
-    -o ../build/uint128_limits_extracted_benchs/gcc/release/uint128_limits_extracted_benchs
+g++ $SO"$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/release/uint128_limits_extracted_benchs"
 echo "   ✅ GCC Release: build/uint128_limits_extracted_benchs/gcc/release/uint128_limits_extracted_benchs"
+fi
 
 # ---------------------------------------
 # 2. Clang
 # ---------------------------------------
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
 echo ""
 echo "🔨 [2/4] Compilando con Clang..."
-mkdir -p ../build/uint128_limits_extracted_benchs/clang/debug
-mkdir -p ../build/uint128_limits_extracted_benchs/clang/release
+mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/debug"
+mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/release"
 
 clang++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
+    -o "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/debug/uint128_limits_extracted_benchs"
     -o ../build/uint128_limits_extracted_benchs/clang/debug/uint128_limits_extracted_benchs
 echo "   ✅ Clang Debug: build/uint128_limits_extracted_benchs/clang/debug/uint128_limits_extracted_benchs"
-
-clang++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
-    -o ../build/uint128_limits_extracted_benchs/clang/release/uint128_limits_extracted_benchs
+"$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/release/uint128_limits_extracted_benchs"
 echo "   ✅ Clang Release: build/uint128_limits_extracted_benchs/clang/release/uint128_limits_extracted_benchs"
+fi
 
 # ---------------------------------------
 # 3. Intel ICX
 # ---------------------------------------
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
 echo ""
 echo "🔨 [3/4] Compilando con Intel ICX..."
 
@@ -69,29 +82,30 @@ echo "🔨 [3/4] Compilando con Intel ICX..."
 if ! command -v icx &> /dev/null; then
     echo "   ⚠️  Intel ICX no disponible, omitiendo..."
 else
-    # Intel ICX necesita path con \ en Windows
-    # Usamos paths relativos sin comillas
-    INTEL_SOURCE=../benchmarks/uint128_limits_extracted_benchs.cpp
-    INTEL_INCLUDE=-I../include
+    # Intel ICX necesita rutas sin espacios y formato Windows
+    cd "$PROJECT_ROOT"
     
-    mkdir -p ../build/uint128_limits_extracted_benchs/intel/debug
-    mkdir -p ../build/uint128_limits_extracted_benchs/intel/release
+    mkdir -p "build/uint128_limits_extracted_benchs/intel/debug"
+    mkdir -p "build/uint128_limits_extracted_benchs/intel/release"
     
-    # Evitar conversión de paths de MSYS2
     export MSYS2_ARG_CONV_EXCL="*"
     
-    icx $INTEL_SOURCE $INTEL_INCLUDE /std:c++20 /W4 /Zi /Od /EHsc \
-        /Fe:../build/uint128_limits_extracted_benchs/intel/debug/uint128_limits_extracted_benchs.exe
+    icx benchmarks/uint128_limits_extracted_benchs.cpp -Iinclude /std:c++20 /W4 /Zi /Od /EHsc \
+        /Fe:build/uint128_limits_extracted_benchs/intel/debug/uint128_limits_extracted_benchs.exe
     echo "   ✅ Intel ICX Debug: build/uint128_limits_extracted_benchs/intel/debug/uint128_limits_extracted_benchs.exe"
     
-    icx $INTEL_SOURCE $INTEL_INCLUDE /std:c++20 /W4 /O3 /DNDEBUG /EHsc \
-        /Fe:../build/uint128_limits_extracted_benchs/intel/release/uint128_limits_extracted_benchs.exe
+    icx benchmarks/uint128_limits_extracted_benchs.cpp -Iinclude /std:c++20 /W4 /O3 /DNDEBUG /EHsc \
+        /Fe:build/uint128_limits_extracted_benchs/intel/release/uint128_limits_extracted_benchs.exe
     echo "   ✅ Intel ICX Release: build/uint128_limits_extracted_benchs/intel/release/uint128_limits_extracted_benchs.exe"
+    
+    cd "$SCRIPT_DIR"
+fi
 fi
 
 # ---------------------------------------
 # 4. MSVC (cl.exe)
 # ---------------------------------------
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
 echo ""
 echo "🔨 [4/4] Compilando con MSVC..."
 
@@ -99,20 +113,23 @@ echo "🔨 [4/4] Compilando con MSVC..."
 if ! command -v cl &> /dev/null; then
     echo "   ⚠️  MSVC no disponible, omitiendo..."
 else
-    MSVC_SOURCE=../benchmarks/uint128_limits_extracted_benchs.cpp
-    MSVC_INCLUDE=/I../include
+    cd "$PROJECT_ROOT"
     
-    mkdir -p ../build/uint128_limits_extracted_benchs/msvc/debug
-    mkdir -p ../build/uint128_limits_extracted_benchs/msvc/release
+    mkdir -p "build/uint128_limits_extracted_benchs/msvc/debug"
+    mkdir -p "build/uint128_limits_extracted_benchs/msvc/release"
     
-    # Evitar conversión de paths
     export MSYS2_ARG_CONV_EXCL="*"
     
-    cl $MSVC_SOURCE $MSVC_INCLUDE /std:c++20 /W4 /Zi /Od /EHsc \
-        /Fe:../build/uint128_limits_extracted_benchs/msvc/debug/uint128_limits_extracted_benchs.exe
+    cl benchmarks/uint128_limits_extracted_benchs.cpp /Iinclude /std:c++20 /W4 /Zi /Od /EHsc \
+        /Fe:build/uint128_limits_extracted_benchs/msvc/debug/uint128_limits_extracted_benchs.exe
     echo "   ✅ MSVC Debug: build/uint128_limits_extracted_benchs/msvc/debug/uint128_limits_extracted_benchs.exe"
     
-    cl $MSVC_SOURCE $MSVC_INCLUDE /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
+    cl benchmarks/uint128_limits_extracted_benchs.cpp /Iinclude /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
+        /Fe:build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe
+    echo "   ✅ MSVC Release: build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe"
+    
+    cd "$SCRIPT_DIR"
+fi
         /Fe:../build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe
     echo "   ✅ MSVC Release: build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe"
 fi

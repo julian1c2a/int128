@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Script para ejecutar los benchmarks de int128_limits_extracted_benchs
 
+# Detectar directorio del script y directorio raíz del proyecto
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+
 echo "========================================="
 echo " EJECUTANDO: int128_limits_extracted_benchs"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
@@ -13,7 +17,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Crear directorio para resultados
-RESULTS_DIR="../benchmark_results"
+RESULTS_DIR="$PROJECT_ROOT/benchmark_results"
 mkdir -p "$RESULTS_DIR"
 
 # Función para ejecutar un benchmark
@@ -60,12 +64,12 @@ passed=0
 # 1. GCC
 # ---------------------------------------
 ((total++))
-if run_benchmark "GCC" "Debug" "../build/int128_limits_extracted_benchs/gcc/debug/int128_limits_extracted_benchs"; then
+if run_benchmark "GCC" "Debug" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/gcc/debug/int128_limits_extracted_benchs"; then
     ((passed++))
 fi
 
 ((total++))
-if run_benchmark "GCC" "Release" "../build/int128_limits_extracted_benchs/gcc/release/int128_limits_extracted_benchs"; then
+if run_benchmark "GCC" "Release" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/gcc/release/int128_limits_extracted_benchs"; then
     ((passed++))
 fi
 
@@ -73,26 +77,26 @@ fi
 # 2. Clang
 # ---------------------------------------
 ((total++))
-if run_benchmark "Clang" "Debug" "../build/int128_limits_extracted_benchs/clang/debug/int128_limits_extracted_benchs"; then
+if run_benchmark "Clang" "Debug" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/clang/debug/int128_limits_extracted_benchs"; then
     ((passed++))
 fi
 
 ((total++))
-if run_benchmark "Clang" "Release" "../build/int128_limits_extracted_benchs/clang/release/int128_limits_extracted_benchs"; then
+if run_benchmark "Clang" "Release" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/clang/release/int128_limits_extracted_benchs"; then
     ((passed++))
 fi
 
 # ---------------------------------------
 # 3. Intel ICX
 # ---------------------------------------
-if [ -f "../build/int128_limits_extracted_benchs/intel/debug/int128_limits_extracted_benchs.exe" ]; then
+if [ -f "$PROJECT_ROOT/build/int128_limits_extracted_benchs/intel/debug/int128_limits_extracted_benchs.exe" ]; then
     ((total++))
-    if run_benchmark "Intel ICX" "Debug" "../build/int128_limits_extracted_benchs/intel/debug/int128_limits_extracted_benchs.exe"; then
+    if run_benchmark "Intel ICX" "Debug" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/intel/debug/int128_limits_extracted_benchs.exe"; then
         ((passed++))
     fi
     
     ((total++))
-    if run_benchmark "Intel ICX" "Release" "../build/int128_limits_extracted_benchs/intel/release/int128_limits_extracted_benchs.exe"; then
+    if run_benchmark "Intel ICX" "Release" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/intel/release/int128_limits_extracted_benchs.exe"; then
         ((passed++))
     fi
 fi
@@ -100,14 +104,14 @@ fi
 # ---------------------------------------
 # 4. MSVC
 # ---------------------------------------
-if [ -f "../build/int128_limits_extracted_benchs/msvc/debug/int128_limits_extracted_benchs.exe" ]; then
+if [ -f "$PROJECT_ROOT/build/int128_limits_extracted_benchs/msvc/debug/int128_limits_extracted_benchs.exe" ]; then
     ((total++))
-    if run_benchmark "MSVC" "Debug" "../build/int128_limits_extracted_benchs/msvc/debug/int128_limits_extracted_benchs.exe"; then
+    if run_benchmark "MSVC" "Debug" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/msvc/debug/int128_limits_extracted_benchs.exe"; then
         ((passed++))
     fi
     
     ((total++))
-    if run_benchmark "MSVC" "Release" "../build/int128_limits_extracted_benchs/msvc/release/int128_limits_extracted_benchs.exe"; then
+    if run_benchmark "MSVC" "Release" "$PROJECT_ROOT/build/int128_limits_extracted_benchs/msvc/release/int128_limits_extracted_benchs.exe"; then
         ((passed++))
     fi
 fi
