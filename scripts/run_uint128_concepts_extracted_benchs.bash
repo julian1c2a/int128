@@ -1,12 +1,46 @@
 #!/usr/bin/env bash
 # Script para ejecutar los benchmarks de uint128_concepts_extracted_benchs
 
+set -u
+
 # Detectar directorio del script y directorio raíz del proyecto
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
+# Validar argumentos
+if [ $# -lt 2 ]; then
+    echo "❌ ERROR: Se requieren al menos 2 argumentos"
+    echo "Uso: $0 [compiler] [mode]"
+    echo "  compiler: intel, msvc, gcc, clang, all"
+    echo "  mode: debug, release, all"
+    exit 1
+fi
+
+# Compilador y modo
+COMPILER="${1}"
+MODE="${2}"
+
+COMPILER=$(echo "$COMPILER" | tr '[:upper:]' '[:lower:]')
+MODE=$(echo "$MODE" | tr '[:upper:]' '[:lower:]')
+
+# Validar compilador
+if [[ ! "$COMPILER" =~ ^(intel|msvc|gcc|clang|all)$ ]]; then
+    echo "❌ ERROR: Compilador inválido: $COMPILER"
+    echo "Compiladores válidos: intel, msvc, gcc, clang, all"
+    exit 1
+fi
+
+# Validar modo
+if [[ ! "$MODE" =~ ^(debug|release|all)$ ]]; then
+    echo "❌ ERROR: Modo inválido: $MODE"
+    echo "Modos válidos: debug, release, all"
+    exit 1
+fi
+
 echo "========================================="
 echo " EJECUTANDO: uint128_concepts_extracted_benchs"
+echo " Compilador: $COMPILER"
+echo " Modo: $MODE"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================="
 
@@ -14,11 +48,10 @@ echo "========================================="
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Crear directorio para resultados
-RESULTS_DIR="$PROJECT_ROOT/benchmark_results"
-mkdir -p "$RESULTS_DIR"
+# Directorio para resultados (siempre se guardan)
+RESULTS_DIR="$PROJECT_ROOT/benchmarks_results"
 
 # Función para ejecutar un benchmark
 run_benchmark() {
@@ -32,7 +65,7 @@ run_benchmark() {
     echo "───────────────────────────────────────"
     
     if [ ! -f "$executable" ]; then
-        echo -e "${YELLOW}⚠️  Ejecutable no encontrado: $executable${NC}"
+        echo -e "${YELLOW}⚠️  Ejecutable no encontrado${NC}"
         return 1
     fi
     
@@ -48,7 +81,7 @@ run_benchmark() {
     if "$executable" | tee "$output_file"; then
         echo ""
         echo -e "${GREEN}✅ Benchmark completado${NC}"
-        echo -e "📊 Resultados guardados en: $output_file"
+        echo "   Resultados guardados en: $output_file"
         return 0
     else
         echo -e "${RED}❌ Benchmark falló${NC}"
@@ -61,58 +94,86 @@ total=0
 passed=0
 
 # ---------------------------------------
-# 1. GCC
+# GCC
 # ---------------------------------------
-((total++))
-if run_benchmark "GCC" "Debug" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/gcc/debug/uint128_concepts_extracted_benchs.exe"; then
-    ((passed++))
-fi
-
-((total++))
-if run_benchmark "GCC" "Release" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/gcc/release/uint128_concepts_extracted_benchs.exe"; then
-    ((passed++))
-fi
-
-# ---------------------------------------
-# 2. Clang
-# ---------------------------------------
-((total++))
-if run_benchmark "Clang" "Debug" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/clang/debug/uint128_concepts_extracted_benchs.exe"; then
-    ((passed++))
-fi
-
-((total++))
-if run_benchmark "Clang" "Release" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/clang/release/uint128_concepts_extracted_benchs.exe"; then
-    ((passed++))
-fi
-
-# ---------------------------------------
-# 3. Intel ICX
-# ---------------------------------------
-if [ -f "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/intel/debug/uint128_concepts_extracted_benchs.exe" ]; then
-    ((total++))
-    if run_benchmark "Intel ICX" "Debug" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/intel/debug/uint128_concepts_extracted_benchs.exe"; then
-        ((passed++))
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "gcc" ]; then
+    if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
+        ((total++))
+        if run_benchmark "GCC" "Debug" "$PROJECT_ROOT/build/build_benchmarks/gcc/debug/uint128_concepts_extracted_benchs.exe"; then
+            ((passed++))
+        fi
     fi
     
-    ((total++))
-    if run_benchmark "Intel ICX" "Release" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/intel/release/uint128_concepts_extracted_benchs.exe"; then
-        ((passed++))
+    if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
+        ((total++))
+        if run_benchmark "GCC" "Release" "$PROJECT_ROOT/build/build_benchmarks/gcc/release/uint128_concepts_extracted_benchs.exe"; then
+            ((passed++))
+        fi
     fi
 fi
 
 # ---------------------------------------
-# 4. MSVC
+# Clang
 # ---------------------------------------
-if [ -f "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/msvc/debug/uint128_concepts_extracted_benchs.exe" ]; then
-    ((total++))
-    if run_benchmark "MSVC" "Debug" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/msvc/debug/uint128_concepts_extracted_benchs.exe"; then
-        ((passed++))
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
+    if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
+        ((total++))
+        if run_benchmark "Clang" "Debug" "$PROJECT_ROOT/build/build_benchmarks/clang/debug/uint128_concepts_extracted_benchs.exe"; then
+            ((passed++))
+        fi
     fi
     
-    ((total++))
-    if run_benchmark "MSVC" "Release" "$PROJECT_ROOT/build/uint128_concepts_extracted_benchs/msvc/release/uint128_concepts_extracted_benchs.exe"; then
-        ((passed++))
+    if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
+        ((total++))
+        if run_benchmark "Clang" "Release" "$PROJECT_ROOT/build/build_benchmarks/clang/release/uint128_concepts_extracted_benchs.exe"; then
+            ((passed++))
+        fi
+    fi
+fi
+
+# ---------------------------------------
+# Intel
+# ---------------------------------------
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
+    if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
+        if [ -f "$PROJECT_ROOT/build/build_benchmarks/intel/debug/uint128_concepts_extracted_benchs.exe" ]; then
+            ((total++))
+            if run_benchmark "Intel" "Debug" "$PROJECT_ROOT/build/build_benchmarks/intel/debug/uint128_concepts_extracted_benchs.exe"; then
+                ((passed++))
+            fi
+        fi
+    fi
+    
+    if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
+        if [ -f "$PROJECT_ROOT/build/build_benchmarks/intel/release/uint128_concepts_extracted_benchs.exe" ]; then
+            ((total++))
+            if run_benchmark "Intel" "Release" "$PROJECT_ROOT/build/build_benchmarks/intel/release/uint128_concepts_extracted_benchs.exe"; then
+                ((passed++))
+            fi
+        fi
+    fi
+fi
+
+# ---------------------------------------
+# MSVC
+# ---------------------------------------
+if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
+    if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
+        if [ -f "$PROJECT_ROOT/build/build_benchmarks/msvc/debug/uint128_concepts_extracted_benchs.exe" ]; then
+            ((total++))
+            if run_benchmark "MSVC" "Debug" "$PROJECT_ROOT/build/build_benchmarks/msvc/debug/uint128_concepts_extracted_benchs.exe"; then
+                ((passed++))
+            fi
+        fi
+    fi
+    
+    if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
+        if [ -f "$PROJECT_ROOT/build/build_benchmarks/msvc/release/uint128_concepts_extracted_benchs.exe" ]; then
+            ((total++))
+            if run_benchmark "MSVC" "Release" "$PROJECT_ROOT/build/build_benchmarks/msvc/release/uint128_concepts_extracted_benchs.exe"; then
+                ((passed++))
+            fi
+        fi
     fi
 fi
 
@@ -121,11 +182,9 @@ fi
 # ---------------------------------------
 echo ""
 echo "========================================="
-echo " RESUMEN: $passed/$total benchmarks ejecutados"
+echo " RESUMEN: $passed/$total benchmarks completados"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================="
-echo ""
-echo "📁 Resultados guardados en: $RESULTS_DIR"
 
 if [ $passed -eq $total ]; then
     echo -e "${GREEN}✅ TODOS LOS BENCHMARKS COMPLETADOS${NC}"
