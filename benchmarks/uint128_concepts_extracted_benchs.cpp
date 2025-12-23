@@ -3,6 +3,7 @@
  * Mediciones de rendimiento de conceptos C++20 para uint128_t
  */
 
+#include "../include/uint128/uint128_algorithm.hpp"
 #include "../include/uint128/uint128_concepts.hpp"
 #include "../include/uint128/uint128_t.hpp"
 #include <algorithm>

@@ -304,8 +304,7 @@ bool test_int128_binary_operation()
                   "Operación de suma debe satisfacer el concepto");
 
     // Prueba en tiempo de ejecución
-    int128_t result = add(int128_t(10), int128_t(-20));
-    assert(result == int128_t(-10) && "10 + (-20) debe ser -10");
+    assert(add(int128_t(10), int128_t(-20)) == int128_t(-10) && "10 + (-20) debe ser -10");
 
     std::cout << "  ✅ PASS - Concept int128_binary_operation funciona correctamente\n";
     return true;
@@ -319,13 +318,14 @@ bool test_int128_reduce_operation()
     std::cout << "\n=== TEST: int128_reduce_operation ===\n";
 
     // Operación de reducción que satisface el concepto
-    auto sum_op = [](int64_t acc, int128_t i) { return acc + static_cast<int64_t>(i); };
+    auto sum_op = [](int64_t acc, int128_t i) -> int64_t {
+        return acc + static_cast<int64_t>(i.low());
+    };
     static_assert(int128_concepts::int128_reduce_operation<decltype(sum_op), int64_t>,
                   "Operación de reducción debe satisfacer el concepto");
 
     // Prueba en tiempo de ejecución
-    int64_t result = sum_op(100, int128_t(-50));
-    assert(result == 50 && "Reducción debe dar 50");
+    assert(sum_op(100, int128_t(-50)) == 50 && "Reducción debe dar 50");
 
     std::cout << "  ✅ PASS - Concept int128_reduce_operation funciona correctamente\n";
     return true;
@@ -344,8 +344,8 @@ bool test_int128_safe_operation()
                   "Operación segura debe satisfacer el concepto");
 
     // Prueba en tiempo de ejecución
-    int128_t result = safe_add(int128_t(1000), int128_t(-500));
-    assert(result == int128_t(500) && "1000 + (-500) debe ser 500");
+    assert(safe_add(int128_t(1000), int128_t(-500)) == int128_t(500) &&
+           "1000 + (-500) debe ser 500");
 
     std::cout << "  ✅ PASS - Concept int128_safe_operation funciona correctamente\n";
     return true;

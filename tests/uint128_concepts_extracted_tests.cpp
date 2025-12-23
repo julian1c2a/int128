@@ -271,13 +271,14 @@ bool test_uint128_reduce_operation()
     std::cout << "\n=== TEST: uint128_reduce_operation ===\n";
 
     // Operación de reducción que satisface el concepto
-    auto sum_op = [](uint64_t acc, uint128_t u) { return acc + static_cast<uint64_t>(u); };
+    auto sum_op = [](uint64_t acc, uint128_t u) -> uint64_t {
+        return acc + static_cast<uint64_t>(u.low());
+    };
     static_assert(uint128_concepts::uint128_reduce_operation<decltype(sum_op), uint64_t>,
                   "Operación de reducción debe satisfacer el concepto");
 
     // Prueba en tiempo de ejecución
-    uint64_t result = sum_op(100, uint128_t(50));
-    assert(result == 150 && "Reducción debe dar 150");
+    assert(sum_op(100, uint128_t(50)) == 150 && "Reducción debe dar 150");
 
     std::cout << "  ✅ PASS - Concept uint128_reduce_operation funciona correctamente\n";
     return true;
