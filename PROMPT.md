@@ -70,5 +70,7 @@ Las compilaciones con el compilador del intel son especialmente críticas ya que
          build/build_benchmarks/[compiler]/[mode]/[name header]_extracted_benchs.exe
     11.7. Corremos los benchmarks con: 
          scripts/run_[name header]_extracted_benchs.bash [compiler] [mode]
+         11.7.1. Este script genera resultados de benchmarks con tiempos y ciclos de reloj, para el compiler y el mode expresamente indicados (y no los demás).
+         11.7.2. También muestra los resultados en terminal en tiempos y ciclos de reloj, y solo para el compiler y el mode expresamente indicados (y no los demás).
     11.8. Los resultados de los benchmarks se almacenan en:
          benchmarks_results/[compiler]/[mode]/[name header]_extracted_benchs_results.txt
