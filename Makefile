@@ -1,185 +1,119 @@
 #!/usr/bin/make -f
-# Makefile unificado para int128/uint128 - Todas las features
-# Uso: make [type] [feature] [action] [compiler] [mode] [print]
-#
-# Ejemplos:
-#   make uint128 concepts build_tests gcc debug
-#   make int128 concepts check all all print
-#   make uint128 concepts run gcc release
-#   make int128 limits build_benchs intel debug
+# Makefile unificado para int128/uint128
+# Uso: make [action] TYPE=[type] FEATURE=[feature] COMPILER=[compiler] MODE=[mode] PRINT=[print]
 
-.PHONY: help all clean
+.PHONY: help build_tests build_benchs check run clean
 .DEFAULT_GOAL := help
 
 # =============================================================================
 # VARIABLES
 # =============================================================================
 
-PROJECT_ROOT := $(shell pwd)
+# Valores por defecto
+TYPE ?=
+FEATURE ?=
+COMPILER ?= all
+MODE ?= all
+PRINT ?=
 
-# Tipos válidos
+# Validación
 VALID_TYPES := uint128 int128
-# Features válidas
 VALID_FEATURES := concepts limits algorithm cmath traits bits thread_safety
-# Acciones válidas
-VALID_ACTIONS := build_tests build_benchs check run
-# Compiladores válidos
 VALID_COMPILERS := gcc clang intel msvc all
-# Modos válidos
 VALID_MODES := debug release all
 
 # =============================================================================
-# VALIDACIÓN DE ARGUMENTOS
+# VALIDACIÓN
 # =============================================================================
 
-# Función para validar argumentos
-define validate_arg
-$(if $(filter $(2),$(3)),,$(error Error: $(1) inválido: '$(2)'. Válidos: $(3)))
+define validate
+	@if [ -z "$(TYPE)" ]; then \
+		echo "❌ ERROR: Falta TYPE"; \
+		echo "Uso: make $(1) TYPE=[uint128|int128] FEATURE=[concepts|limits|...] COMPILER=[gcc|clang|intel|msvc|all] MODE=[debug|release|all]"; \
+		exit 1; \
+	fi; \
+	if [ -z "$(FEATURE)" ]; then \
+		echo "❌ ERROR: Falta FEATURE"; \
+		echo "Uso: make $(1) TYPE=[uint128|int128] FEATURE=[concepts|limits|...] COMPILER=[gcc|clang|intel|msvc|all] MODE=[debug|release|all]"; \
+		exit 1; \
+	fi
 endef
 
 # =============================================================================
-# TARGET PRINCIPAL
+# TARGETS PRINCIPALES
 # =============================================================================
 
-# Pattern rule para capturar los argumentos
-$(VALID_TYPES): TYPE := $@
-$(VALID_TYPES):
-	@if [ -z "$(word 2,$(MAKECMDGOALS))" ]; then \
-		echo "❌ ERROR: Faltan argumentos"; \
-		echo "Uso: make [type] [feature] [action] [compiler] [mode] [print]"; \
-		echo ""; \
-		echo "Tipos:       $(VALID_TYPES)"; \
-		echo "Features:    $(VALID_FEATURES)"; \
-		echo "Acciones:    $(VALID_ACTIONS)"; \
-		echo "Compiladores: $(VALID_COMPILERS)"; \
-		echo "Modos:       $(VALID_MODES)"; \
-		echo "Print:       print (opcional)"; \
-		exit 1; \
-	fi
+build_tests:
+	$(call validate,build_tests)
+	@echo "🔨 Compilando tests: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/build_$(TYPE)_$(FEATURE)_extracted_tests.bash $(COMPILER) $(MODE) $(PRINT)
 
-# Capturar feature como segundo argumento
-$(VALID_FEATURES): FEATURE := $@
-$(VALID_FEATURES):
-	@# No hacer nada, solo capturar
+build_benchs:
+	$(call validate,build_benchs)
+	@echo "🔨 Compilando benchmarks: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/build_$(TYPE)_$(FEATURE)_extracted_benchs.bash $(COMPILER) $(MODE) $(PRINT)
 
-# Capturar action como tercer argumento
-$(VALID_ACTIONS): ACTION := $@
-$(VALID_ACTIONS):
-	@# No hacer nada, solo capturar
+check:
+	$(call validate,check)
+	@echo "🧪 Ejecutando tests: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/check_$(TYPE)_$(FEATURE)_extracted_tests.bash $(COMPILER) $(MODE) $(PRINT)
 
-# Capturar compiler como cuarto argumento
-$(VALID_COMPILERS): COMPILER := $@
-$(VALID_COMPILERS):
-	@# No hacer nada, solo capturar
-
-# Capturar mode como quinto argumento
-$(VALID_MODES): MODE := $@
-$(VALID_MODES):
-	@# No hacer nada, solo capturar
-
-# Capturar print como sexto argumento opcional
-print: PRINT := print
-print:
-	@# No hacer nada, solo capturar
+run:
+	$(call validate,run)
+	@echo "⚡ Ejecutando benchmarks: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/run_$(TYPE)_$(FEATURE)_extracted_benchs.bash $(COMPILER) $(MODE)
 
 # =============================================================================
-# REGLAS DE EJECUCIÓN
+# ATAJOS ÚTILES PARA CONCEPTS
 # =============================================================================
 
-# Regla que ejecuta cuando se tienen todos los parámetros
-exec_%:
-	@TYPE="$(word 1,$(MAKECMDGOALS))"; \
-	FEATURE="$(word 2,$(MAKECMDGOALS))"; \
-	ACTION="$(word 3,$(MAKECMDGOALS))"; \
-	COMPILER="$(word 4,$(MAKECMDGOALS))"; \
-	MODE="$(word 5,$(MAKECMDGOALS))"; \
-	PRINT="$(word 6,$(MAKECMDGOALS))"; \
-	\
-	if [ "$$ACTION" = "build_tests" ]; then \
-		echo "🔨 Compilando tests: $$TYPE $$FEATURE con $$COMPILER en modo $$MODE"; \
-		bash scripts/build_$${TYPE}_$${FEATURE}_extracted_tests.bash $$COMPILER $$MODE $$PRINT; \
-	elif [ "$$ACTION" = "build_benchs" ]; then \
-		echo "🔨 Compilando benchmarks: $$TYPE $$FEATURE con $$COMPILER en modo $$MODE"; \
-		bash scripts/build_$${TYPE}_$${FEATURE}_extracted_benchs.bash $$COMPILER $$MODE $$PRINT; \
-	elif [ "$$ACTION" = "check" ]; then \
-		echo "🧪 Ejecutando tests: $$TYPE $$FEATURE con $$COMPILER en modo $$MODE"; \
-		bash scripts/check_$${TYPE}_$${FEATURE}_extracted_tests.bash $$COMPILER $$MODE $$PRINT; \
-	elif [ "$$ACTION" = "run" ]; then \
-		echo "⚡ Ejecutando benchmarks: $$TYPE $$FEATURE con $$COMPILER en modo $$MODE"; \
-		bash scripts/run_$${TYPE}_$${FEATURE}_extracted_benchs.bash $$COMPILER $$MODE; \
-	else \
-		echo "❌ ERROR: Acción inválida: $$ACTION"; \
-		echo "Acciones válidas: $(VALID_ACTIONS)"; \
-		exit 1; \
-	fi
+.PHONY: build-all-concepts check-all-concepts run-all-concepts concepts-full
 
-# =============================================================================
-# ATAJOS ÚTILES
-# =============================================================================
-
-# Construir todos los tests de concepts para ambos tipos
-.PHONY: build_all_concepts_tests
-build_all_concepts_tests:
+build-all-concepts:
 	@echo "========================================="
-	@echo " Building ALL concepts tests"
+	@echo " Building ALL concepts (tests + benchs)"
 	@echo "========================================="
-	@bash scripts/build_uint128_concepts_extracted_tests.bash all all
-	@bash scripts/build_int128_concepts_extracted_tests.bash all all
+	@$(MAKE) build_tests TYPE=uint128 FEATURE=concepts COMPILER=all MODE=all
+	@$(MAKE) build_tests TYPE=int128 FEATURE=concepts COMPILER=all MODE=all
+	@$(MAKE) build_benchs TYPE=uint128 FEATURE=concepts COMPILER=all MODE=all
+	@$(MAKE) build_benchs TYPE=int128 FEATURE=concepts COMPILER=all MODE=all
 
-# Ejecutar todos los tests de concepts
-.PHONY: check_all_concepts
-check_all_concepts:
+check-all-concepts:
 	@echo "========================================="
 	@echo " Checking ALL concepts tests"
 	@echo "========================================="
-	@bash scripts/check_uint128_concepts_extracted_tests.bash all all
-	@bash scripts/check_int128_concepts_extracted_tests.bash all all
+	@$(MAKE) check TYPE=uint128 FEATURE=concepts COMPILER=all MODE=all
+	@$(MAKE) check TYPE=int128 FEATURE=concepts COMPILER=all MODE=all
 
-# Construir todos los benchmarks de concepts
-.PHONY: build_all_concepts_benchs
-build_all_concepts_benchs:
-	@echo "========================================="
-	@echo " Building ALL concepts benchmarks"
-	@echo "========================================="
-	@bash scripts/build_uint128_concepts_extracted_benchs.bash all all
-	@bash scripts/build_int128_concepts_extracted_benchs.bash all all
-
-# Ejecutar todos los benchmarks de concepts
-.PHONY: run_all_concepts_benchs
-run_all_concepts_benchs:
+run-all-concepts:
 	@echo "========================================="
 	@echo " Running ALL concepts benchmarks"
 	@echo "========================================="
-	@bash scripts/run_uint128_concepts_extracted_benchs.bash all all
-	@bash scripts/run_int128_concepts_extracted_benchs.bash all all
+	@$(MAKE) run TYPE=uint128 FEATURE=concepts COMPILER=all MODE=all
+	@$(MAKE) run TYPE=int128 FEATURE=concepts COMPILER=all MODE=all
 
-# Pipeline completo de concepts: build + test + bench
-.PHONY: concepts_full
-concepts_full: build_all_concepts_tests check_all_concepts build_all_concepts_benchs run_all_concepts_benchs
+concepts-full: build-all-concepts check-all-concepts run-all-concepts
 	@echo "========================================="
-	@echo " ✅ CONCEPTS: Full pipeline completed"
+	@echo " ✅ CONCEPTS: Pipeline completo"
 	@echo "========================================="
 
 # =============================================================================
 # LIMPIEZA
 # =============================================================================
 
-.PHONY: clean_build
-clean_build:
+.PHONY: clean clean-build clean-results
+
+clean-build:
 	@echo "🧹 Limpiando directorios de build..."
-	@rm -rf build/build_tests
-	@rm -rf build/build_benchmarks
-	@echo "✅ Directorios de build limpiados"
+	@rm -rf build/build_tests build/build_benchmarks
+	@echo "✅ Limpio"
 
-.PHONY: clean_results
-clean_results:
+clean-results:
 	@echo "🧹 Limpiando resultados..."
-	@rm -rf build/build_tests_results
-	@rm -rf benchmarks_results
-	@echo "✅ Resultados limpiados"
+	@rm -rf build/build_tests_results benchmarks_results
+	@echo "✅ Limpio"
 
-.PHONY: clean
-clean: clean_build clean_results
+clean: clean-build clean-results
 	@echo "✅ Limpieza completa"
 
 # =============================================================================
@@ -187,42 +121,42 @@ clean: clean_build clean_results
 # =============================================================================
 
 .PHONY: help
+
 help:
 	@echo "========================================="
 	@echo " INT128/UINT128 - Build System"
 	@echo "========================================="
 	@echo ""
-	@echo "USO PRINCIPAL:"
-	@echo "  make [type] [feature] [action] [compiler] [mode] [print]"
+	@echo "USO:"
+	@echo "  make [action] TYPE=[type] FEATURE=[feature] COMPILER=[compiler] MODE=[mode] PRINT=[print]"
+	@echo ""
+	@echo "ACCIONES:"
+	@echo "  build_tests   - Compilar tests"
+	@echo "  build_benchs  - Compilar benchmarks"
+	@echo "  check         - Ejecutar tests"
+	@echo "  run           - Ejecutar benchmarks"
 	@echo ""
 	@echo "ARGUMENTOS:"
-	@echo "  type:       $(VALID_TYPES)"
-	@echo "  feature:    $(VALID_FEATURES)"
-	@echo "  action:     $(VALID_ACTIONS)"
-	@echo "  compiler:   $(VALID_COMPILERS)"
-	@echo "  mode:       $(VALID_MODES)"
-	@echo "  print:      print (opcional, solo para tests)"
+	@echo "  TYPE          uint128 | int128 (requerido)"
+	@echo "  FEATURE       concepts | limits | algorithm | cmath (requerido)"
+	@echo "  COMPILER      gcc | clang | intel | msvc | all (default: all)"
+	@echo "  MODE          debug | release | all (default: all)"
+	@echo "  PRINT         print (opcional, solo para tests)"
 	@echo ""
 	@echo "EJEMPLOS:"
-	@echo "  make uint128 concepts build_tests gcc debug"
-	@echo "  make int128 concepts check all all print"
-	@echo "  make uint128 concepts run gcc release"
-	@echo "  make int128 concepts build_benchs intel all"
+	@echo "  make build_tests TYPE=uint128 FEATURE=concepts COMPILER=gcc MODE=debug"
+	@echo "  make check TYPE=int128 FEATURE=concepts COMPILER=all MODE=all PRINT=print"
+	@echo "  make run TYPE=uint128 FEATURE=concepts COMPILER=intel MODE=release"
 	@echo ""
-	@echo "ATAJOS ÚTILES:"
-	@echo "  make build_all_concepts_tests  - Compilar todos los tests de concepts"
-	@echo "  make check_all_concepts        - Ejecutar todos los tests de concepts"
-	@echo "  make build_all_concepts_benchs - Compilar todos los benchs de concepts"
-	@echo "  make run_all_concepts_benchs   - Ejecutar todos los benchs de concepts"
-	@echo "  make concepts_full             - Pipeline completo (build+test+bench)"
+	@echo "ATAJOS CONCEPTS:"
+	@echo "  make build-all-concepts  - Build completo concepts (tests+benchs)"
+	@echo "  make check-all-concepts  - Ejecutar todos los tests concepts"
+	@echo "  make run-all-concepts    - Ejecutar todos los benchs concepts"
+	@echo "  make concepts-full       - Pipeline completo concepts"
 	@echo ""
 	@echo "LIMPIEZA:"
-	@echo "  make clean_build               - Limpiar directorios de compilación"
-	@echo "  make clean_results             - Limpiar resultados de tests/benchs"
-	@echo "  make clean                     - Limpieza completa"
+	@echo "  make clean-build         - Limpiar compilaciones"
+	@echo "  make clean-results       - Limpiar resultados"
+	@echo "  make clean               - Limpiar todo"
 	@echo ""
 	@echo "========================================="
-
-# Evitar que make intente interpretar los argumentos como targets
-%:
-	@:
