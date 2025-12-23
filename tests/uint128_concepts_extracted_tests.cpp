@@ -258,6 +258,7 @@ bool test_uint128_binary_operation()
     // Prueba en tiempo de ejecución
     uint128_t result = add(uint128_t(10), uint128_t(20));
     assert(result == uint128_t(30) && "10 + 20 debe ser 30");
+    (void)result; // Suprimir warning de variable no usada
 
     std::cout << "  ✅ PASS - Concept uint128_binary_operation funciona correctamente\n";
     return true;
