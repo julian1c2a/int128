@@ -129,20 +129,115 @@ $(foreach feature,$(VALID_FEATURES),$(eval $(call feature_shortcuts,$(feature)))
 # LIMPIEZA
 # =============================================================================
 
-.PHONY: clean clean-build clean-results clean-logs clean-t
+# Función para crear targets de limpieza por feature (granulares)
+define feature_clean
+.PHONY: clean-$(1) clean-$(1)-gcc clean-$(1)-clang clean-$(1)-intel clean-$(1)-msvc
+.PHONY: clean-$(1)-gcc-debug clean-$(1)-gcc-release
+.PHONY: clean-$(1)-clang-debug clean-$(1)-clang-release
+.PHONY: clean-$(1)-intel-debug clean-$(1)-intel-release
+.PHONY: clean-$(1)-msvc-debug clean-$(1)-msvc-release
+
+# Limpiar toda la feature (todos los compiladores y modos)
+clean-$(1):
+	@echo "🧹 Limpiando feature '$(1)' (tests + benchs)..."
+	@rm -rf build/build_tests/*/debug/*$(1)*.exe build/build_tests/*/release/*$(1)*.exe
+	@rm -rf build/build_benchs/*/debug/*$(1)*.exe build/build_benchs/*/release/*$(1)*.exe
+	@rm -rf build/build_tests/*/debug/*$(1)*.obj build/build_tests/*/release/*$(1)*.obj
+	@rm -rf build/build_benchs/*/debug/*$(1)*.obj build/build_benchs/*/release/*$(1)*.obj
+	@echo "✅ Feature '$(1)' limpiada"
+
+# Limpiar por compilador (todos los modos)
+clean-$(1)-gcc:
+	@echo "🧹 Limpiando $(1) [GCC]..."
+	@rm -rf build/build_tests/gcc/debug/*$(1)*.exe build/build_tests/gcc/release/*$(1)*.exe
+	@rm -rf build/build_benchs/gcc/debug/*$(1)*.exe build/build_benchs/gcc/release/*$(1)*.exe
+	@rm -rf build/build_tests/gcc/debug/*$(1)*.obj build/build_tests/gcc/release/*$(1)*.obj
+	@rm -rf build/build_benchs/gcc/debug/*$(1)*.obj build/build_benchs/gcc/release/*$(1)*.obj
+	@echo "✅ $(1) [GCC] limpiado"
+
+clean-$(1)-clang:
+	@echo "🧹 Limpiando $(1) [Clang]..."
+	@rm -rf build/build_tests/clang/debug/*$(1)*.exe build/build_tests/clang/release/*$(1)*.exe
+	@rm -rf build/build_benchs/clang/debug/*$(1)*.exe build/build_benchs/clang/release/*$(1)*.exe
+	@rm -rf build/build_tests/clang/debug/*$(1)*.obj build/build_tests/clang/release/*$(1)*.obj
+	@rm -rf build/build_benchs/clang/debug/*$(1)*.obj build/build_benchs/clang/release/*$(1)*.obj
+	@echo "✅ $(1) [Clang] limpiado"
+
+clean-$(1)-intel:
+	@echo "🧹 Limpiando $(1) [Intel]..."
+	@rm -rf build/build_tests/intel/debug/*$(1)*.exe build/build_tests/intel/release/*$(1)*.exe
+	@rm -rf build/build_benchs/intel/debug/*$(1)*.exe build/build_benchs/intel/release/*$(1)*.exe
+	@rm -rf build/build_tests/intel/debug/*$(1)*.obj build/build_tests/intel/release/*$(1)*.obj
+	@rm -rf build/build_benchs/intel/debug/*$(1)*.obj build/build_benchs/intel/release/*$(1)*.obj
+	@echo "✅ $(1) [Intel] limpiado"
+
+clean-$(1)-msvc:
+	@echo "🧹 Limpiando $(1) [MSVC]..."
+	@rm -rf build/build_tests/msvc/debug/*$(1)*.exe build/build_tests/msvc/release/*$(1)*.exe
+	@rm -rf build/build_benchs/msvc/debug/*$(1)*.exe build/build_benchs/msvc/release/*$(1)*.exe
+	@rm -rf build/build_tests/msvc/debug/*$(1)*.obj build/build_tests/msvc/release/*$(1)*.obj
+	@rm -rf build/build_benchs/msvc/debug/*$(1)*.obj build/build_benchs/msvc/release/*$(1)*.obj
+	@echo "✅ $(1) [MSVC] limpiado"
+
+# Limpiar por compilador y modo específico
+clean-$(1)-gcc-debug:
+	@echo "🧹 Limpiando $(1) [GCC Debug]..."
+	@rm -rf build/build_tests/gcc/debug/*$(1)*.exe build/build_benchs/gcc/debug/*$(1)*.exe
+	@rm -rf build/build_tests/gcc/debug/*$(1)*.obj build/build_benchs/gcc/debug/*$(1)*.obj
+	@echo "✅ $(1) [GCC Debug] limpiado"
+
+clean-$(1)-gcc-release:
+	@echo "🧹 Limpiando $(1) [GCC Release]..."
+	@rm -rf build/build_tests/gcc/release/*$(1)*.exe build/build_benchs/gcc/release/*$(1)*.exe
+	@rm -rf build/build_tests/gcc/release/*$(1)*.obj build/build_benchs/gcc/release/*$(1)*.obj
+	@echo "✅ $(1) [GCC Release] limpiado"
+
+clean-$(1)-clang-debug:
+	@echo "🧹 Limpiando $(1) [Clang Debug]..."
+	@rm -rf build/build_tests/clang/debug/*$(1)*.exe build/build_benchs/clang/debug/*$(1)*.exe
+	@rm -rf build/build_tests/clang/debug/*$(1)*.obj build/build_benchs/clang/debug/*$(1)*.obj
+	@echo "✅ $(1) [Clang Debug] limpiado"
+
+clean-$(1)-clang-release:
+	@echo "🧹 Limpiando $(1) [Clang Release]..."
+	@rm -rf build/build_tests/clang/release/*$(1)*.exe build/build_benchs/clang/release/*$(1)*.exe
+	@rm -rf build/build_tests/clang/release/*$(1)*.obj build/build_benchs/clang/release/*$(1)*.obj
+	@echo "✅ $(1) [Clang Release] limpiado"
+
+clean-$(1)-intel-debug:
+	@echo "🧹 Limpiando $(1) [Intel Debug]..."
+	@rm -rf build/build_tests/intel/debug/*$(1)*.exe build/build_benchs/intel/debug/*$(1)*.exe
+	@rm -rf build/build_tests/intel/debug/*$(1)*.obj build/build_benchs/intel/debug/*$(1)*.obj
+	@echo "✅ $(1) [Intel Debug] limpiado"
+
+clean-$(1)-intel-release:
+	@echo "🧹 Limpiando $(1) [Intel Release]..."
+	@rm -rf build/build_tests/intel/release/*$(1)*.exe build/build_benchs/intel/release/*$(1)*.exe
+	@rm -rf build/build_tests/intel/release/*$(1)*.obj build/build_benchs/intel/release/*$(1)*.obj
+	@echo "✅ $(1) [Intel Release] limpiado"
+
+clean-$(1)-msvc-debug:
+	@echo "🧹 Limpiando $(1) [MSVC Debug]..."
+	@rm -rf build/build_tests/msvc/debug/*$(1)*.exe build/build_benchs/msvc/debug/*$(1)*.exe
+	@rm -rf build/build_tests/msvc/debug/*$(1)*.obj build/build_benchs/msvc/debug/*$(1)*.obj
+	@echo "✅ $(1) [MSVC Debug] limpiado"
+
+clean-$(1)-msvc-release:
+	@echo "🧹 Limpiando $(1) [MSVC Release]..."
+	@rm -rf build/build_tests/msvc/release/*$(1)*.exe build/build_benchs/msvc/release/*$(1)*.exe
+	@rm -rf build/build_tests/msvc/release/*$(1)*.obj build/build_benchs/msvc/release/*$(1)*.obj
+	@echo "✅ $(1) [MSVC Release] limpiado"
+endef
+
+# Generar targets de limpieza para todas las features
+$(foreach feature,$(VALID_FEATURES),$(eval $(call feature_clean,$(feature))))
+
+.PHONY: clean clean-build clean-results clean-logs
 
 clean-build:
 	@echo "🧹 Limpiando directorios de build..."
 	@rm -rf build/build_tests build/build_benchs
 	@echo "✅ Build limpiado"
-
-clean-t:
-	@echo "🧹 Limpiando feature 't' (tests + benchs)..."
-	@rm -rf build/build_tests/*/debug/*.exe build/build_tests/*/release/*.exe
-	@rm -rf build/build_benchs/*/debug/*.exe build/build_benchs/*/release/*.exe
-	@rm -rf build/build_tests/*/debug/*.obj build/build_tests/*/release/*.obj
-	@rm -rf build/build_benchs/*/debug/*.obj build/build_benchs/*/release/*.obj
-	@echo "✅ Feature 't' limpiada"
 
 clean-results:
 	@echo "🧹 Limpiando resultados..."
