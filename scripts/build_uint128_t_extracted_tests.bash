@@ -156,7 +156,7 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/intel/debug"
             WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_tests/intel/debug/uint128_t_extracted_tests.exe")
             "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /Zi /Od \
-                "/Fe:$WIN_OUT_DEBUG" 2>&1 | grep -v "LINK : warning LNK" | grep -v "^Intel" || true
+                "/Fe:$WIN_OUT_DEBUG" 2>&1
             if [ -f "$PROJECT_ROOT/build/build_tests/intel/debug/uint128_t_extracted_tests.exe" ]; then
                 echo "   ✅ Intel Debug OK"
             else

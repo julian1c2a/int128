@@ -1823,7 +1823,8 @@ class uint128_t
 
         // Si el divisor cabe en 64 bits (data[1] == 0), usamos una ruta rápida.
         if (v_in.data[1] == 0) {
-#if defined(__SIZEOF_INT128__)
+#if defined(__SIZEOF_INT128__) && !(defined(__INTEL_LLVM_COMPILER) && defined(_MSC_VER))
+            // Intel ICX en Windows usa el linker de MSVC que no proporciona __udivti3/__umodti3
             const __uint128_t dividend = (static_cast<__uint128_t>(data[1]) << 64) | data[0];
             const uint64_t divisor = v_in.data[0];
             const __uint128_t q = dividend / divisor;
@@ -1832,7 +1833,7 @@ class uint128_t
             const uint128_t remainder(0, static_cast<uint64_t>(r));
             return std::make_pair(quotient, remainder);
 #else
-            // Fallback para compiladores sin __uint128_t
+            // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
             return divrem(v_in);
 #endif
         }
@@ -1842,18 +1843,19 @@ class uint128_t
         // D1. Normalización
         // Desplazamos u y v para que el MSB de v sea 1.
         const int s = v_in.leading_zeros() > 0 ? v_in.leading_zeros() - 64 : 0;
-        const uint128_t v = v_in.shift_left(s);
-        const uint128_t u_shifted = this->shift_left(s);
+        [[maybe_unused]] const uint128_t v = v_in.shift_left(s);
+        [[maybe_unused]] const uint128_t u_shifted = this->shift_left(s);
 
         // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
-        uint64_t u_extension = 0;
+        [[maybe_unused]] uint64_t u_extension = 0;
         if (s > 0) {
             u_extension = data[1] >> (64 - s);
         }
 
         // D3. Calcular q_hat (Estimación del cociente)
         // Dividimos los dos dígitos más significativos del dividendo
-#if defined(__SIZEOF_INT128__)
+#if defined(__SIZEOF_INT128__) && !(defined(__INTEL_LLVM_COMPILER) && defined(_MSC_VER))
+        // Intel ICX en Windows usa el linker de MSVC que no proporciona __udivti3/__umodti3
         const __uint128_t numerator =
             (static_cast<__uint128_t>(u_extension) << 64) | u_shifted.data[1];
         const uint64_t divisor_high = v.data[1];
