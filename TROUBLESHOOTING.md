@@ -1,5 +1,68 @@
 # Troubleshooting - int128 Project
 
+## Problema: Clang de MSVC vs Clang de MSYS2
+
+### Síntoma
+Al ejecutar `make t-full` en terminal MSYS2/Bash aparecen errores de linkado:
+```
+fatal error LNK1120: 2 externos sin resolver
+clang++: error: linker command failed with exit code 1120
+```
+
+Pero al ejecutar el mismo comando manualmente funciona.
+
+### Diagnóstico
+Ejecuta este comando para verificar qué Clang estás usando:
+```bash
+which clang++
+clang++ --version | head -1
+```
+
+**Incorrecto** (causa errores):
+```
+/c/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/Llvm/x64/bin/clang++
+```
+
+**Correcto** (funciona):
+```
+/c/msys64/ucrt64/bin/clang++
+o
+/c/msys64/clang64/bin/clang++
+```
+
+### Causa
+El PATH en tu terminal MSYS2 prioriza el Clang de MSVC sobre el de MSYS2. El Clang de MSVC:
+- Usa el linker de Microsoft (`link.exe`)
+- Tiene configuraciones diferentes para headers y librerías
+- Puede fallar con código que el Clang de MSYS2 compila sin problemas
+
+### Solución
+
+Los scripts ya están actualizados para usar explícitamente el Clang de MSYS2. Si aún tienes problemas:
+
+**Opción 1: Ajustar PATH temporalmente**
+```bash
+export PATH="/c/msys64/ucrt64/bin:$PATH"
+make t-full
+```
+
+**Opción 2: Ajustar PATH permanentemente**
+Edita `~/.bashrc` o `~/.bash_profile`:
+```bash
+# Priorizar herramientas de MSYS2
+export PATH="/c/msys64/ucrt64/bin:/c/msys64/clang64/bin:$PATH"
+```
+
+Luego recarga:
+```bash
+source ~/.bashrc
+```
+
+**Opción 3: Crear alias**
+```bash
+alias clang++='/c/msys64/ucrt64/bin/clang++'
+```
+
 ## Errores de Linkado Fantasma (LNK1120)
 
 ### Síntoma

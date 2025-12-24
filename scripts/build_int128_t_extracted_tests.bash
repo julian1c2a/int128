@@ -98,12 +98,21 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
     echo ""
     echo "🔨 [Clang] Compilando..."
     
-    if ! command -v clang++ &> /dev/null; then
+    # Usar clang++ de MSYS2, no el de MSVC
+    CLANG_BIN="/c/msys64/ucrt64/bin/clang++"
+    if [ ! -f "$CLANG_BIN" ]; then
+        CLANG_BIN="/c/msys64/clang64/bin/clang++"
+    fi
+    if [ ! -f "$CLANG_BIN" ]; then
+        CLANG_BIN="clang++"
+    fi
+    
+    if ! command -v "$CLANG_BIN" &> /dev/null && ! [ -f "$CLANG_BIN" ]; then
         echo "   ⚠️  Clang no encontrado."
     else
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/clang/debug"
-            clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
+            "$CLANG_BIN" "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
                 -o "$PROJECT_ROOT/build/build_tests/clang/debug/int128_t_extracted_tests.exe" 2>&1 | grep -v "LINK : warning LNK" | grep -v "^LINK : " || true
             if [ -f "$PROJECT_ROOT/build/build_tests/clang/debug/int128_t_extracted_tests.exe" ]; then
                 echo "   ✅ Clang Debug OK"
@@ -114,7 +123,7 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/clang/release"
-            clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
+            "$CLANG_BIN" "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
                 -o "$PROJECT_ROOT/build/build_tests/clang/release/int128_t_extracted_tests.exe" 2>&1 | grep -v "LINK : warning LNK" | grep -v "^LINK : " || true
             if [ -f "$PROJECT_ROOT/build/build_tests/clang/release/int128_t_extracted_tests.exe" ]; then
                 echo "   ✅ Clang Release OK"
