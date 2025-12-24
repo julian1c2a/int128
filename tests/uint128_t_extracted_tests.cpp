@@ -29,7 +29,7 @@ void test_bits_is_128()
 
 void test_sizeof_high_is_8_bytes()
 {
-    uint128_t val;
+    [[maybe_unused]] uint128_t val;
     assert(sizeof(val.high()) == 8);
     std::cout << "test_sizeof_high_is_8_bytes passed" << std::endl;
 }
@@ -48,7 +48,7 @@ void test_self_div_2_64_equ_high()
 
 void test_sizeof_low_is_8_bytes()
 {
-    uint128_t val;
+    [[maybe_unused]] uint128_t val;
     assert(sizeof(val.low()) == 8);
     std::cout << "test_sizeof_low_is_8_bytes passed" << std::endl;
 }
@@ -70,7 +70,7 @@ void test_set_high()
 {
     // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
     for (int i = 0; i < 1000; ++i) {
-        uint128_t val;
+        [[maybe_unused]] uint128_t val;
         uint64_t v = rng();
         val.set_high(v);
         assert(val.high() == v);
@@ -82,7 +82,7 @@ void test_set_low()
 {
     // HACER ESTO CON VALORES ALEATORIOS DE uint64_t UN MONTÓN DE VECES
     for (int i = 0; i < 1000; ++i) {
-        uint128_t val;
+        [[maybe_unused]] uint128_t val;
         uint64_t v = rng();
         val.set_low(v);
         assert(val.low() == v);
@@ -92,7 +92,7 @@ void test_set_low()
 
 void test_default_constructor()
 {
-    uint128_t val;
+    [[maybe_unused]] uint128_t val;
     assert(val.low() == 0 && val.high() == 0);
     std::cout << "test_default_constructor passed" << std::endl;
 }
@@ -130,25 +130,25 @@ void test_integral_constructor()
 
         // int8_t
         int8_t v_i8_pos = static_cast<int8_t>(rand_val & 0x7F);
-        uint128_t val_i8_pos(v_i8_pos);
+        [[maybe_unused]] uint128_t val_i8_pos(v_i8_pos);
         assert(static_cast<int8_t>(val_i8_pos.low()) == v_i8_pos);
         assert(val_i8_pos.high() == 0ull);
 
         // int16_t
         int16_t v_i16_pos = static_cast<int16_t>(rand_val & 0x7FFF);
-        uint128_t val_i16_pos(v_i16_pos);
+        [[maybe_unused]] uint128_t val_i16_pos(v_i16_pos);
         assert(static_cast<int16_t>(val_i16_pos.low()) == v_i16_pos);
         assert(val_i16_pos.high() == 0ull);
 
         // int32_t
         int32_t v_i32_pos = static_cast<int32_t>(rand_val & 0x7FFFFFFF);
-        uint128_t val_i32_pos(v_i32_pos);
+        [[maybe_unused]] uint128_t val_i32_pos(v_i32_pos);
         assert(static_cast<int32_t>(val_i32_pos.low()) == v_i32_pos);
         assert(val_i32_pos.high() == 0ull);
 
         // int64_t
         int64_t v_i64_pos = static_cast<int64_t>(rand_val & 0x7FFFFFFFFFFFFFFFULL);
-        uint128_t val_i64_pos(v_i64_pos);
+        [[maybe_unused]] uint128_t val_i64_pos(v_i64_pos);
         assert(static_cast<int64_t>(val_i64_pos.low()) == v_i64_pos);
         assert(val_i64_pos.high() == 0ull);
 
@@ -159,7 +159,7 @@ void test_integral_constructor()
         int8_t v_i8_neg = static_cast<int8_t>(rand_val | 0x80);
         if (v_i8_neg >= 0)
             v_i8_neg = -1;
-        uint128_t val_i8_neg(v_i8_neg);
+        [[maybe_unused]] uint128_t val_i8_neg(v_i8_neg);
         assert(static_cast<int8_t>(val_i8_neg.low()) == v_i8_neg);
         assert(val_i8_neg.high() == ~0ull);
 
@@ -167,7 +167,7 @@ void test_integral_constructor()
         int16_t v_i16_neg = static_cast<int16_t>(rand_val | 0x8000);
         if (v_i16_neg >= 0)
             v_i16_neg = -1;
-        uint128_t val_i16_neg(v_i16_neg);
+        [[maybe_unused]] uint128_t val_i16_neg(v_i16_neg);
         assert(static_cast<int16_t>(val_i16_neg.low()) == v_i16_neg);
         assert(val_i16_neg.high() == ~0ull);
 
@@ -175,7 +175,7 @@ void test_integral_constructor()
         int32_t v_i32_neg = static_cast<int32_t>(rand_val | 0x80000000);
         if (v_i32_neg >= 0)
             v_i32_neg = -1;
-        uint128_t val_i32_neg(v_i32_neg);
+        [[maybe_unused]] uint128_t val_i32_neg(v_i32_neg);
         assert(static_cast<int32_t>(val_i32_neg.low()) == v_i32_neg);
         assert(val_i32_neg.high() == ~0ull);
 
@@ -183,7 +183,7 @@ void test_integral_constructor()
         int64_t v_i64_neg = static_cast<int64_t>(rand_val | 0x8000000000000000ULL);
         if (v_i64_neg >= 0)
             v_i64_neg = -1;
-        uint128_t val_i64_neg(v_i64_neg);
+        [[maybe_unused]] uint128_t val_i64_neg(v_i64_neg);
         assert(static_cast<int64_t>(val_i64_neg.low()) == v_i64_neg);
         assert(val_i64_neg.high() == ~0ull);
     }
@@ -194,7 +194,7 @@ void test_integral_assignment()
 {
     for (int i = 0; i < 1000; ++i) {
         uint64_t rand_val = rng();
-        uint128_t val;
+        [[maybe_unused]] uint128_t val;
 
         // --- UNSIGNED TYPES (Siempre high=0) ---
 
@@ -300,7 +300,7 @@ void test_high_low_constructor()
         uint64_t l = rng();
 
         // Test with uint64_t
-        uint128_t val(h, l);
+        [[maybe_unused]] uint128_t val(h, l);
         assert(val.high() == h);
         assert(val.low() == l);
 
@@ -315,7 +315,7 @@ void test_high_low_constructor()
         int64_t h_signed = static_cast<int64_t>(h);
         int64_t l_signed = static_cast<int64_t>(l);
 
-        uint128_t val_signed(h_signed, l_signed);
+        [[maybe_unused]] uint128_t val_signed(h_signed, l_signed);
 
         // Verification: The constructor casts to uint64_t, which for negative
         // numbers behaves as 2's complement (standard behavior for unsigned
@@ -324,11 +324,11 @@ void test_high_low_constructor()
         assert(val_signed.low() == static_cast<uint64_t>(l_signed));
 
         // Test with mixed signed/unsigned
-        uint128_t val_mixed1(h_signed, l);
+        [[maybe_unused]] uint128_t val_mixed1(h_signed, l);
         assert(val_mixed1.high() == static_cast<uint64_t>(h_signed));
         assert(val_mixed1.low() == l);
 
-        uint128_t val_mixed2(h, l_signed);
+        [[maybe_unused]] uint128_t val_mixed2(h, l_signed);
         assert(val_mixed2.high() == h);
         assert(val_mixed2.low() == static_cast<uint64_t>(l_signed));
 
@@ -336,7 +336,7 @@ void test_high_low_constructor()
         int8_t h_i8 = static_cast<int8_t>(h);    // Random 8-bit signed
         int16_t l_i16 = static_cast<int16_t>(l); // Random 16-bit signed
 
-        uint128_t val_small_signed(h_i8, l_i16);
+        [[maybe_unused]] uint128_t val_small_signed(h_i8, l_i16);
 
         // Sign extension is expected here because the constructor takes T1, T2
         // and casts to uint64_t. static_cast<uint64_t>(int8_t) extends sign.
@@ -349,27 +349,27 @@ void test_high_low_constructor()
 void test_cstr_constructor()
 {
     // Test hex parsing
-    uint128_t val_hex("0x123456789ABCDEF0");
+    [[maybe_unused]] uint128_t val_hex("0x123456789ABCDEF0");
     assert(val_hex.low() == 0x123456789ABCDEF0ULL);
     assert(val_hex.high() == 0);
 
     // Test large hex parsing (spanning into high bits)
     // 0x10000000000000000 (1 followed by 16 zeros) = 2^64
-    uint128_t val_large("0x10000000000000000");
+    [[maybe_unused]] uint128_t val_large("0x10000000000000000");
     assert(val_large.high() == 1);
     assert(val_large.low() == 0);
 
     // Test decimal parsing
-    uint128_t val_dec("12345");
+    [[maybe_unused]] uint128_t val_dec("12345");
     assert(val_dec.low() == 12345);
     assert(val_dec.high() == 0);
 
     // Test octal parsing (prefix 0)
-    uint128_t val_oct("010"); // Octal 10 = Decimal 8
+    [[maybe_unused]] uint128_t val_oct("010"); // Octal 10 = Decimal 8
     assert(val_oct.low() == 8);
 
     // Test binary parsing (prefix 0b)
-    uint128_t val_bin("0b1010"); // Binary 1010 = Decimal 10
+    [[maybe_unused]] uint128_t val_bin("0b1010"); // Binary 1010 = Decimal 10
     assert(val_bin.low() == 10);
 
     std::cout << "test_cstr_constructor passed" << std::endl;
@@ -377,7 +377,7 @@ void test_cstr_constructor()
 
 void test_cstr_assignment()
 {
-    uint128_t val;
+    [[maybe_unused]] uint128_t val;
 
     // Test hex assignment
     val = uint128_t(rng(), rng()); // Ensuciar valor previo
@@ -418,7 +418,7 @@ void test_bool_conversion()
         if (h == 0 && l == 0)
             l = 1; // Asegurar valor no-cero
 
-        uint128_t val(h, l);
+        [[maybe_unused]] uint128_t val(h, l);
         assert(static_cast<bool>(val) == true);
         assert(val); // Conversión contextual
 
@@ -433,7 +433,7 @@ void test_integral_conversion()
 {
     for (int i = 0; i < 1000; ++i) {
         uint64_t rand_val = rng();
-        uint128_t val(rand_val);
+        [[maybe_unused]] uint128_t val(rand_val);
 
         // Unsigned types
         assert(static_cast<uint8_t>(val) == static_cast<uint8_t>(rand_val));
@@ -449,7 +449,7 @@ void test_integral_conversion()
     }
 
     // Test specific value from docs
-    uint128_t val(123);
+    [[maybe_unused]] uint128_t val(123);
     assert(static_cast<uint8_t>(val) == 123);
     assert(static_cast<uint16_t>(val) == 123);
     assert(static_cast<uint32_t>(val) == 123);
@@ -468,8 +468,8 @@ void test___uint128_conversion()
     for (int i = 0; i < 1000; ++i) {
         uint64_t h = rng();
         uint64_t l = rng();
-        uint128_t val(h, l);
-        __uint128_t native = static_cast<__uint128_t>(val);
+        [[maybe_unused]] uint128_t val(h, l);
+        [[maybe_unused]] __uint128_t native = static_cast<__uint128_t>(val);
 
         assert((static_cast<uint64_t>(native >> 64)) == h);
         assert(static_cast<uint64_t>(native) == l);
@@ -486,10 +486,10 @@ void test___int128_conversion()
     for (int i = 0; i < 1000; ++i) {
         uint64_t h = rng();
         uint64_t l = rng();
-        uint128_t val(h, l);
+        [[maybe_unused]] uint128_t val(h, l);
         __int128_t native = static_cast<__int128_t>(val);
 
-        __uint128_t native_u = static_cast<__uint128_t>(native);
+        [[maybe_unused]] __uint128_t native_u = static_cast<__uint128_t>(native);
         assert((static_cast<uint64_t>(native_u >> 64)) == h);
         assert(static_cast<uint64_t>(native_u) == l);
     }
@@ -530,7 +530,7 @@ void test_addition_assignment()
     }
 
     // Overflow tests
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
     max_val += 1;
     assert(max_val == uint128_t(0));
 
@@ -620,7 +620,7 @@ void test_add_operator()
     }
 
     // Overflow tests
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
     assert(max_val + uint128_t(1) == uint128_t(0));
 
     std::cout << "test_add_operator passed" << std::endl;
@@ -645,7 +645,7 @@ void test_sub_operator()
     }
 
     // Underflow tests
-    uint128_t zero(0);
+    [[maybe_unused]] uint128_t zero(0);
     assert(zero - uint128_t(1) == uint128_t(UINT64_MAX, UINT64_MAX));
 
     std::cout << "test_sub_operator passed" << std::endl;
@@ -654,17 +654,17 @@ void test_sub_operator()
 void test_pre_increment()
 {
     // Simple increment
-    uint128_t val(0, 5);
+    [[maybe_unused]] uint128_t val(0, 5);
     ++val;
     assert(val == uint128_t(0, 6));
 
     // Overflow low part
-    uint128_t val_overflow_low(0, UINT64_MAX);
+    [[maybe_unused]] uint128_t val_overflow_low(0, UINT64_MAX);
     ++val_overflow_low;
     assert(val_overflow_low == uint128_t(1, 0));
 
     // Overflow full 128-bit
-    uint128_t val_max(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t val_max(UINT64_MAX, UINT64_MAX);
     ++val_max;
     assert(val_max == uint128_t(0, 0));
 
@@ -674,19 +674,19 @@ void test_pre_increment()
 void test_post_increment()
 {
     // Simple increment
-    uint128_t val(0, 5);
+    [[maybe_unused]] uint128_t val(0, 5);
     uint128_t old = val++;
     assert(old == uint128_t(0, 5));
     assert(val == uint128_t(0, 6));
 
     // Overflow low part
-    uint128_t val_overflow_low(0, UINT64_MAX);
+    [[maybe_unused]] uint128_t val_overflow_low(0, UINT64_MAX);
     old = val_overflow_low++;
     assert(old == uint128_t(0, UINT64_MAX));
     assert(val_overflow_low == uint128_t(1, 0));
 
     // Overflow full 128-bit
-    uint128_t val_max(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t val_max(UINT64_MAX, UINT64_MAX);
     old = val_max++;
     assert(old == uint128_t(UINT64_MAX, UINT64_MAX));
     assert(val_max == uint128_t(0, 0));
@@ -697,17 +697,17 @@ void test_post_increment()
 void test_pre_decrement()
 {
     // Simple decrement
-    uint128_t val(0, 6);
+    [[maybe_unused]] uint128_t val(0, 6);
     --val;
     assert(val == uint128_t(0, 5));
 
     // Underflow low part (borrow from high)
-    uint128_t val_underflow_low(1, 0);
+    [[maybe_unused]] uint128_t val_underflow_low(1, 0);
     --val_underflow_low;
     assert(val_underflow_low == uint128_t(0, UINT64_MAX));
 
     // Underflow full 128-bit
-    uint128_t val_zero(0, 0);
+    [[maybe_unused]] uint128_t val_zero(0, 0);
     --val_zero;
     assert(val_zero == uint128_t(UINT64_MAX, UINT64_MAX));
 
@@ -717,19 +717,19 @@ void test_pre_decrement()
 void test_post_decrement()
 {
     // Simple decrement
-    uint128_t val(0, 6);
+    [[maybe_unused]] uint128_t val(0, 6);
     uint128_t old = val--;
     assert(old == uint128_t(0, 6));
     assert(val == uint128_t(0, 5));
 
     // Underflow low part
-    uint128_t val_underflow_low(1, 0);
+    [[maybe_unused]] uint128_t val_underflow_low(1, 0);
     old = val_underflow_low--;
     assert(old == uint128_t(1, 0));
     assert(val_underflow_low == uint128_t(0, UINT64_MAX));
 
     // Underflow full 128-bit
-    uint128_t val_zero(0, 0);
+    [[maybe_unused]] uint128_t val_zero(0, 0);
     old = val_zero--;
     assert(old == uint128_t(0, 0));
     assert(val_zero == uint128_t(UINT64_MAX, UINT64_MAX));
@@ -740,21 +740,21 @@ void test_post_decrement()
 void test_leading_zeros()
 {
     // Test 0
-    uint128_t zero(0, 0);
+    [[maybe_unused]] uint128_t zero(0, 0);
     assert(zero.leading_zeros() == 128);
 
     // Test 1
-    uint128_t one(0, 1);
+    [[maybe_unused]] uint128_t one(0, 1);
     assert(one.leading_zeros() == 127);
 
     // Test powers of 2
     for (int i = 0; i < 128; ++i) {
-        uint128_t val = uint128_t(1) << i;
+        [[maybe_unused]] uint128_t val = uint128_t(1) << i;
         assert(val.leading_zeros() == 127 - i);
     }
 
     // Test max value
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
     assert(max_val.leading_zeros() == 0);
 
     std::cout << "test_leading_zeros passed" << std::endl;
@@ -763,21 +763,21 @@ void test_leading_zeros()
 void test_trailing_zeros()
 {
     // Test 0
-    uint128_t zero(0, 0);
+    [[maybe_unused]] uint128_t zero(0, 0);
     assert(zero.trailing_zeros() == 128);
 
     // Test 1
-    uint128_t one(0, 1);
+    [[maybe_unused]] uint128_t one(0, 1);
     assert(one.trailing_zeros() == 0);
 
     // Test powers of 2
     for (int i = 0; i < 128; ++i) {
-        uint128_t val = uint128_t(1) << i;
+        [[maybe_unused]] uint128_t val = uint128_t(1) << i;
         assert(val.trailing_zeros() == i);
     }
 
     // Test max value
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
     assert(max_val.trailing_zeros() == 0);
 
     std::cout << "test_trailing_zeros passed" << std::endl;
@@ -786,8 +786,8 @@ void test_trailing_zeros()
 void test_bitwise_operators()
 {
     // Static tests
-    uint128_t a(0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA);
-    uint128_t b(0x5555555555555555, 0x5555555555555555);
+    [[maybe_unused]] uint128_t a(0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA);
+    [[maybe_unused]] uint128_t b(0x5555555555555555, 0x5555555555555555);
 
     // AND
     assert((a & b) == uint128_t(0));
@@ -873,7 +873,7 @@ void test_bitwise_assignment_operators()
 void test_shift_left()
 {
     // Test basic left shift
-    uint128_t val(0, 1);
+    [[maybe_unused]] uint128_t val(0, 1);
     assert((val << 1) == uint128_t(0, 2));
     assert((val << 63) == uint128_t(0, 1ULL << 63));
 
@@ -893,7 +893,7 @@ void test_shift_left()
     assert((val << 200) == uint128_t(0, 0));
 
     // Test assignment operator
-    uint128_t val_assign(0, 1);
+    [[maybe_unused]] uint128_t val_assign(0, 1);
     val_assign <<= 10;
     assert(val_assign == uint128_t(0, 1024));
     val_assign <<= 60; // total shift 70
@@ -905,7 +905,7 @@ void test_shift_left()
 void test_shift_right()
 {
     // Test basic right shift
-    uint128_t val(1ULL << 63, 0); // MSB of high part is 1
+    [[maybe_unused]] uint128_t val(1ULL << 63, 0); // MSB of high part is 1
     assert((val >> 1) == uint128_t(1ULL << 62, 0));
     assert((val >> 63) == uint128_t(1, 0));
 
@@ -921,7 +921,7 @@ void test_shift_right()
     assert((val >> 200) == uint128_t(0, 0));
 
     // Test assignment operator
-    uint128_t val_assign(1ULL << 63, 0);
+    [[maybe_unused]] uint128_t val_assign(1ULL << 63, 0);
     val_assign >>= 10;
     assert(val_assign == (uint128_t(1ULL << 63, 0) >> 10));
     val_assign >>= 60; // total shift 70
@@ -933,21 +933,21 @@ void test_shift_right()
 void test_effective_length()
 {
     // Test 0
-    uint128_t zero(0, 0);
+    [[maybe_unused]] uint128_t zero(0, 0);
     assert(zero.effective_length() == 0);
 
     // Test 1
-    uint128_t one(0, 1);
+    [[maybe_unused]] uint128_t one(0, 1);
     assert(one.effective_length() == 1);
 
     // Test powers of 2
     for (int i = 0; i < 128; ++i) {
-        uint128_t val = uint128_t(1) << i;
+        [[maybe_unused]] uint128_t val = uint128_t(1) << i;
         assert(val.effective_length() == i + 1);
     }
 
     // Test max value
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
     assert(max_val.effective_length() == 128);
 
     std::cout << "test_effective_length passed" << std::endl;
@@ -956,23 +956,23 @@ void test_effective_length()
 void test_is_power_of_2()
 {
     // Test 0
-    uint128_t zero(0, 0);
+    [[maybe_unused]] uint128_t zero(0, 0);
     assert(!zero.is_power_of_2());
 
     // Test powers of 2
     for (int i = 0; i < 128; ++i) {
-        uint128_t val = uint128_t(1) << i;
+        [[maybe_unused]] uint128_t val = uint128_t(1) << i;
         assert(val.is_power_of_2());
     }
 
     // Test non-powers of 2
     for (int i = 2; i < 128; ++i) {
-        uint128_t val = (uint128_t(1) << i) + uint128_t(1);
+        [[maybe_unused]] uint128_t val = (uint128_t(1) << i) + uint128_t(1);
         assert(!val.is_power_of_2());
     }
 
     // Test max value (all ones)
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
     assert(!max_val.is_power_of_2());
 
     std::cout << "test_is_power_of_2 passed" << std::endl;
@@ -981,9 +981,9 @@ void test_is_power_of_2()
 void test_comparison_operators()
 {
     // Equality / Inequality
-    uint128_t zero(0);
-    uint128_t one(1);
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t zero(0);
+    [[maybe_unused]] uint128_t one(1);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
 
     assert(zero == zero);
     assert(one == one);
@@ -999,20 +999,20 @@ void test_comparison_operators()
     assert(!(zero > one));
 
     // High part comparison
-    uint128_t h1(1, 0);
-    uint128_t h2(2, 0);
+    [[maybe_unused]] uint128_t h1(1, 0);
+    [[maybe_unused]] uint128_t h2(2, 0);
     assert(h1 < h2);
     assert(h2 > h1);
 
     // Low part comparison with equal high
-    uint128_t hl1(1, 10);
-    uint128_t hl2(1, 20);
+    [[maybe_unused]] uint128_t hl1(1, 10);
+    [[maybe_unused]] uint128_t hl2(1, 20);
     assert(hl1 < hl2);
     assert(hl2 > hl1);
 
     // Mixed comparison (high part dominates)
-    uint128_t m1(1, UINT64_MAX);
-    uint128_t m2(2, 0);
+    [[maybe_unused]] uint128_t m1(1, UINT64_MAX);
+    [[maybe_unused]] uint128_t m2(2, 0);
     assert(m1 < m2);
     assert(m2 > m1);
 
@@ -1025,13 +1025,13 @@ void test_comparison_operators()
     assert(!(zero >= one));
 
     // Edge cases
-    uint128_t max_low(0, UINT64_MAX);
-    uint128_t min_high(1, 0);
+    [[maybe_unused]] uint128_t max_low(0, UINT64_MAX);
+    [[maybe_unused]] uint128_t min_high(1, 0);
     assert(max_low < min_high);
     assert(min_high > max_low);
 
-    uint128_t max_u128(UINT64_MAX, UINT64_MAX);
-    uint128_t almost_max(UINT64_MAX, UINT64_MAX - 1);
+    [[maybe_unused]] uint128_t max_u128(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t almost_max(UINT64_MAX, UINT64_MAX - 1);
     assert(almost_max < max_u128);
     assert(max_u128 > almost_max);
 
@@ -1045,8 +1045,8 @@ void test_comparison_operators()
         uint128_t u1(h1_r, l1_r);
         uint128_t u2(h2_r, l2_r);
 
-        bool real_less = (h1_r < h2_r) || (h1_r == h2_r && l1_r < l2_r);
-        bool real_eq = (h1_r == h2_r) && (l1_r == l2_r);
+        [[maybe_unused]] bool real_less = (h1_r < h2_r) || (h1_r == h2_r && l1_r < l2_r);
+        [[maybe_unused]] bool real_eq = (h1_r == h2_r) && (l1_r == l2_r);
 
         assert((u1 < u2) == real_less);
         assert((u1 > u2) == (!real_less && !real_eq));
@@ -1067,7 +1067,7 @@ void test_divrem_basic()
     uint128_t a = 100_u128;
     uint128_t b = 7_u128;
 
-    auto res = a.divrem(b);
+    [[maybe_unused]] auto res = a.divrem(b);
     assert(res.has_value());
     assert(res->first == 14_u128);
     assert(res->second == 2_u128);
@@ -1087,7 +1087,7 @@ void test_divrem_zero()
 {
     std::cout << "test_divrem: test_divrem_zero ......" << std::endl;
     uint128_t a = 100_u128;
-    auto res = a.divrem(0_u128);
+    [[maybe_unused]] auto res = a.divrem(0_u128);
     assert(!res.has_value());
 
     // Check operators (division by zero results in 0 per implementation)
@@ -1105,10 +1105,10 @@ void test_divrem_large()
 {
     std::cout << "test_divrem: test_divrem_large ......" << std::endl;
     // 2^100
-    uint128_t large = 1_u128 << 100;
+    [[maybe_unused]] uint128_t large = 1_u128 << 100;
     uint128_t divisor = 3_u128;
 
-    auto res = large.divrem(divisor);
+    [[maybe_unused]] auto res = large.divrem(divisor);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res->first * divisor + res->second == large);
@@ -1130,21 +1130,21 @@ void test_divrem_zero_integral_divisor()
 {
     std::cout << "test_divrem: test_divrem_zero_integral_divisor ......" << std::endl;
     uint128_t a = 100_u128;
-    auto res_u64 = a.divrem(static_cast<uint64_t>(0U));
+    [[maybe_unused]] auto res_u64 = a.divrem(static_cast<uint64_t>(0U));
     assert(!res_u64.has_value());
-    auto res_i64 = a.divrem(static_cast<int64_t>(0));
+    [[maybe_unused]] auto res_i64 = a.divrem(static_cast<int64_t>(0));
     assert(!res_i64.has_value());
-    auto res_u32 = a.divrem(static_cast<uint32_t>(0U));
+    [[maybe_unused]] auto res_u32 = a.divrem(static_cast<uint32_t>(0U));
     assert(!res_u32.has_value());
-    auto res_i32 = a.divrem(static_cast<int32_t>(0));
+    [[maybe_unused]] auto res_i32 = a.divrem(static_cast<int32_t>(0));
     assert(!res_i32.has_value());
-    auto res_u16 = a.divrem(static_cast<uint16_t>(0U));
+    [[maybe_unused]] auto res_u16 = a.divrem(static_cast<uint16_t>(0U));
     assert(!res_u16.has_value());
-    auto res_i16 = a.divrem(static_cast<int16_t>(0));
+    [[maybe_unused]] auto res_i16 = a.divrem(static_cast<int16_t>(0));
     assert(!res_i16.has_value());
-    auto res_u8 = a.divrem(static_cast<uint8_t>(0U));
+    [[maybe_unused]] auto res_u8 = a.divrem(static_cast<uint8_t>(0U));
     assert(!res_u8.has_value());
-    auto res_i8 = a.divrem(static_cast<int8_t>(0));
+    [[maybe_unused]] auto res_i8 = a.divrem(static_cast<int8_t>(0));
     assert(!res_i8.has_value());
     std::cout << "test_divrem: test_divrem_zero_integral_divisor passed" << std::endl;
 }
@@ -1154,7 +1154,7 @@ void test_divrem_basic_integral_divisor()
     std::cout << "test_divrem: test_divrem_basic_integral_divisor ......" << std::endl;
     uint128_t a = 100_u128;
     uint64_t b_u64 = 7ULL;
-    auto res_u64 = a.divrem(b_u64);
+    [[maybe_unused]] auto res_u64 = a.divrem(b_u64);
     assert(res_u64.has_value());
     assert(res_u64->first == 14_u128);
     assert(res_u64->second == 2_u128);
@@ -1166,7 +1166,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     int64_t b_i64 = 7LL;
-    auto res_i64 = a.divrem(b_i64);
+    [[maybe_unused]] auto res_i64 = a.divrem(b_i64);
     assert(res_i64.has_value());
     assert(res_i64->first == 14_u128);
     assert(res_i64->second == 2_u128);
@@ -1178,7 +1178,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     uint32_t b_u32 = 7U;
-    auto res_u32 = a.divrem(b_u32);
+    [[maybe_unused]] auto res_u32 = a.divrem(b_u32);
     assert(res_u32.has_value());
     assert(res_u32->first == 14_u128);
     assert(res_u32->second == 2_u128);
@@ -1190,7 +1190,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     int32_t b_i32 = 7L;
-    auto res_i32 = a.divrem(b_i32);
+    [[maybe_unused]] auto res_i32 = a.divrem(b_i32);
     assert(res_i32.has_value());
     assert(res_i32->first == 14_u128);
     assert(res_i32->second == 2_u128);
@@ -1202,7 +1202,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     uint16_t b_u16 = 7u;
-    auto res_u16 = a.divrem(b_u16);
+    [[maybe_unused]] auto res_u16 = a.divrem(b_u16);
     assert(res_u16.has_value());
     assert(res_u16->first == 14_u128);
     assert(res_u16->second == 2_u128);
@@ -1214,7 +1214,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     int16_t b_i16 = 7;
-    auto res_i16 = a.divrem(b_i16);
+    [[maybe_unused]] auto res_i16 = a.divrem(b_i16);
     assert(res_i16.has_value());
     assert(res_i16->first == 14_u128);
     assert(res_i16->second == 2_u128);
@@ -1226,7 +1226,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     uint8_t b_u8 = 7;
-    auto res_u8 = a.divrem(b_u8);
+    [[maybe_unused]] auto res_u8 = a.divrem(b_u8);
     assert(res_u8.has_value());
     assert(res_u8->first == 14_u128);
     assert(res_u8->second == 2_u128);
@@ -1238,7 +1238,7 @@ void test_divrem_basic_integral_divisor()
     assert(a_mod == 2_u128);
 
     int8_t b_i8 = 7;
-    auto res_i8 = a.divrem(b_i8);
+    [[maybe_unused]] auto res_i8 = a.divrem(b_i8);
     assert(res_i8.has_value());
     assert(res_i8->first == 14_u128);
     assert(res_i8->second == 2_u128);
@@ -1256,12 +1256,12 @@ void test_divrem_large_integral_divisor()
 {
     std::cout << "test_divrem: test_divrem_large_integral_divisor ......" << std::endl;
     // 2^100
-    uint128_t large = 1_u128 << 100;
+    [[maybe_unused]] uint128_t large = 1_u128 << 100;
 
     // Divisor como entero de 64 bits sin signo
     uint64_t divisor_u64 = 3ULL;
 
-    auto res_u64 = large.divrem(divisor_u64);
+    [[maybe_unused]] auto res_u64 = large.divrem(divisor_u64);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_u64->first * divisor_u64 + res_u64->second == large);
@@ -1279,7 +1279,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 64 bits con signo
     int64_t divisor_i64 = 3LL;
 
-    auto res_i64 = large.divrem(divisor_i64);
+    [[maybe_unused]] auto res_i64 = large.divrem(divisor_i64);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_i64->first * divisor_i64 + res_i64->second == large);
@@ -1296,7 +1296,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 32 bits sin signo
     uint32_t divisor_u32 = 3U;
 
-    auto res_u32 = large.divrem(divisor_u32);
+    [[maybe_unused]] auto res_u32 = large.divrem(divisor_u32);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_u32->first * divisor_u32 + res_u32->second == large);
@@ -1313,7 +1313,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 32 bits con signo
     int32_t divisor_i32 = 3L;
 
-    auto res_i32 = large.divrem(divisor_i32);
+    [[maybe_unused]] auto res_i32 = large.divrem(divisor_i32);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_i32->first * divisor_i32 + res_i32->second == large);
@@ -1330,7 +1330,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 16 bits sin signo
     uint16_t divisor_u16 = 3U;
 
-    auto res_u16 = large.divrem(divisor_u16);
+    [[maybe_unused]] auto res_u16 = large.divrem(divisor_u16);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_u16->first * divisor_u16 + res_u16->second == large);
@@ -1347,7 +1347,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 16 bits con signo
     int16_t divisor_i16 = 3;
 
-    auto res_i16 = large.divrem(divisor_i16);
+    [[maybe_unused]] auto res_i16 = large.divrem(divisor_i16);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_i16->first * divisor_i16 + res_i16->second == large);
@@ -1364,7 +1364,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 8 bits sin signo
     uint8_t divisor_u8 = 3U;
 
-    auto res_u8 = large.divrem(divisor_u8);
+    [[maybe_unused]] auto res_u8 = large.divrem(divisor_u8);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_u8->first * divisor_u8 + res_u8->second == large);
@@ -1381,7 +1381,7 @@ void test_divrem_large_integral_divisor()
     // Divisor como entero de 8 bits con signo
     int8_t divisor_i8 = 3;
 
-    auto res_i8 = large.divrem(divisor_i8);
+    [[maybe_unused]] auto res_i8 = large.divrem(divisor_i8);
 
     // Verificación: dividendo = cociente * divisor + resto
     assert(res_i8->first * divisor_i8 + res_i8->second == large);
@@ -1410,7 +1410,7 @@ void test_divrem_random()
         if (b == 0_u128)
             b = 1_u128;
 
-        auto res = a.divrem(b);
+        [[maybe_unused]] auto res = a.divrem(b);
         assert(res.has_value());
         uint128_t q = res->first;
         uint128_t r = res->second;
@@ -1435,14 +1435,14 @@ void test_divrem_random()
         uint128_t a_minus_r = a - r;
 
         // 1. (a - r) debe ser divisible por b y dar q
-        auto check1 = a_minus_r.divrem(b);
+        [[maybe_unused]] auto check1 = a_minus_r.divrem(b);
         assert(check1.has_value());
         assert(check1->first == q);
         assert(check1->second == 0_u128);
 
         // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
         if (q > 0_u128) {
-            auto check2 = a_minus_r.divrem(q);
+            [[maybe_unused]] auto check2 = a_minus_r.divrem(q);
             assert(check2.has_value());
             assert(check2->first == b);
             assert(check2->second == 0_u128);
@@ -1450,7 +1450,7 @@ void test_divrem_random()
 
         // 3. Comprobación con (a-1) (check3)
         if (a > 0_u128) {
-            auto check3 = (a - 1_u128).divrem(b);
+            [[maybe_unused]] auto check3 = (a - 1_u128).divrem(b);
             assert(check3.has_value());
             if (r != 0_u128) {
                 // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1482,7 +1482,7 @@ void test_divrem_random_integral_divisor()
             if (b_u64 == 0_u128)
                 b_u64 = 1ULL;
 
-            auto res_u64 = a.divrem(b_u64);
+            [[maybe_unused]] auto res_u64 = a.divrem(b_u64);
             assert(res_u64.has_value());
             uint128_t q_u64 = res_u64->first;
             uint128_t r_u64 = res_u64->second;
@@ -1508,14 +1508,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_u64;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_u64 = a_minus_r.divrem(b_u64);
+            [[maybe_unused]] auto check1_u64 = a_minus_r.divrem(b_u64);
             assert(check1_u64.has_value());
             assert(check1_u64->first == q_u64);
             assert(check1_u64->second == 0ULL);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_u64 > 0_u128) {
-                auto check2_u64 = a_minus_r.divrem(q_u64);
+                [[maybe_unused]] auto check2_u64 = a_minus_r.divrem(q_u64);
                 assert(check2_u64.has_value());
                 assert(check2_u64->first == b_u64);
                 assert(check2_u64->second == 0ULL);
@@ -1523,7 +1523,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_u64 = (a - 1_u128).divrem(b_u64);
+                [[maybe_unused]] auto check3_u64 = (a - 1_u128).divrem(b_u64);
                 assert(check3_u64.has_value());
                 if (r_u64 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1544,7 +1544,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_i64 == 0)
                 b_i64 = 1;
-            auto res_i64 = a.divrem(b_i64);
+            [[maybe_unused]] auto res_i64 = a.divrem(b_i64);
             assert(res_i64.has_value());
             uint128_t q_i64 = res_i64->first;
             uint128_t r_i64 = res_i64->second;
@@ -1569,14 +1569,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_i64;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_i64 = a_minus_r.divrem(b_i64);
+            [[maybe_unused]] auto check1_i64 = a_minus_r.divrem(b_i64);
             assert(check1_i64.has_value());
             assert(check1_i64->first == q_i64);
             assert(check1_i64->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_i64 > 0_u128) {
-                auto check2_i64 = a_minus_r.divrem(q_i64);
+                [[maybe_unused]] auto check2_i64 = a_minus_r.divrem(q_i64);
                 assert(check2_i64.has_value());
                 assert(check2_i64->first == b_i64);
                 assert(check2_i64->second == 0_u128);
@@ -1584,7 +1584,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_i64 = (a - 1_u128).divrem(b_i64);
+                [[maybe_unused]] auto check3_i64 = (a - 1_u128).divrem(b_i64);
                 assert(check3_i64.has_value());
                 if (r_i64 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1595,7 +1595,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_i64 = q_i64;
                     --q2_i64;
-                    auto b2_i64 = b_i64;
+                    [[maybe_unused]] auto b2_i64 = b_i64;
                     --b2_i64;
                     assert(check3_i64->first == q2_i64);
                     assert(check3_i64->second == b2_i64);
@@ -1609,7 +1609,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_u32 == 0)
                 b_u32 = 1;
-            auto res_u32 = a.divrem(b_u32);
+            [[maybe_unused]] auto res_u32 = a.divrem(b_u32);
             assert(res_u32.has_value());
             uint128_t q_u32 = res_u32->first;
             uint128_t r_u32 = res_u32->second;
@@ -1635,14 +1635,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_u32;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_u32 = a_minus_r.divrem(b_u32);
+            [[maybe_unused]] auto check1_u32 = a_minus_r.divrem(b_u32);
             assert(check1_u32.has_value());
             assert(check1_u32->first == q_u32);
             assert(check1_u32->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_u32 > 0_u128) {
-                auto check2_u32 = a_minus_r.divrem(q_u32);
+                [[maybe_unused]] auto check2_u32 = a_minus_r.divrem(q_u32);
                 assert(check2_u32.has_value());
                 assert(check2_u32->first == b_u32);
                 assert(check2_u32->second == 0_u128);
@@ -1650,7 +1650,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_u32 = (a - 1_u128).divrem(b_u32);
+                [[maybe_unused]] auto check3_u32 = (a - 1_u128).divrem(b_u32);
                 assert(check3_u32.has_value());
                 if (r_u32 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1663,7 +1663,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_u32 = q_u32;
                     --q2_u32;
-                    auto b2_u32 = b_u32;
+                    [[maybe_unused]] auto b2_u32 = b_u32;
                     --b2_u32;
                     assert(check3_u32->first == q2_u32);
                     assert(check3_u32->second == b2_u32);
@@ -1677,7 +1677,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_i32 == 0)
                 b_i32 = 1;
-            auto res_i32 = a.divrem(b_i32);
+            [[maybe_unused]] auto res_i32 = a.divrem(b_i32);
             assert(res_i32.has_value());
             uint128_t q_i32 = res_i32->first;
             uint128_t r_i32 = res_i32->second;
@@ -1703,14 +1703,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_i32;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_i32 = a_minus_r.divrem(b_i32);
+            [[maybe_unused]] auto check1_i32 = a_minus_r.divrem(b_i32);
             assert(check1_i32.has_value());
             assert(check1_i32->first == q_i32);
             assert(check1_i32->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_i32 > 0_u128) {
-                auto check2_i32 = a_minus_r.divrem(q_i32);
+                [[maybe_unused]] auto check2_i32 = a_minus_r.divrem(q_i32);
                 assert(check2_i32.has_value());
                 assert(check2_i32->first == b_i32);
                 assert(check2_i32->second == 0_u128);
@@ -1718,7 +1718,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_i32 = (a - 1_u128).divrem(b_i32);
+                [[maybe_unused]] auto check3_i32 = (a - 1_u128).divrem(b_i32);
                 assert(check3_i32.has_value());
                 if (r_i32 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1731,7 +1731,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_i32 = q_i32;
                     --q2_i32;
-                    auto b2_i32 = b_i32;
+                    [[maybe_unused]] auto b2_i32 = b_i32;
                     --b2_i32;
                     assert(check3_i32->first == q2_i32);
                     assert(check3_i32->second == b2_i32);
@@ -1745,7 +1745,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_u16 == 0)
                 b_u16 = 1;
-            auto res_u16 = a.divrem(b_u16);
+            [[maybe_unused]] auto res_u16 = a.divrem(b_u16);
             assert(res_u16.has_value());
             uint128_t q_u16 = res_u16->first;
             uint128_t r_u16 = res_u16->second;
@@ -1771,14 +1771,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_u16;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_u16 = a_minus_r.divrem(b_u16);
+            [[maybe_unused]] auto check1_u16 = a_minus_r.divrem(b_u16);
             assert(check1_u16.has_value());
             assert(check1_u16->first == q_u16);
             assert(check1_u16->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_u16 > 0_u128) {
-                auto check2_u16 = a_minus_r.divrem(q_u16);
+                [[maybe_unused]] auto check2_u16 = a_minus_r.divrem(q_u16);
                 assert(check2_u16.has_value());
                 assert(check2_u16->first == b_u16);
                 assert(check2_u16->second == 0_u128);
@@ -1786,7 +1786,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_u16 = (a - 1_u128).divrem(b_u16);
+                [[maybe_unused]] auto check3_u16 = (a - 1_u128).divrem(b_u16);
                 assert(check3_u16.has_value());
                 if (r_u16 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1799,7 +1799,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_u16 = q_u16;
                     --q2_u16;
-                    auto b2_u16 = b_u16;
+                    [[maybe_unused]] auto b2_u16 = b_u16;
                     --b2_u16;
                     assert(check3_u16->first == q2_u16);
                     assert(check3_u16->second == b2_u16);
@@ -1813,7 +1813,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_i16 == 0)
                 b_i16 = 1;
-            auto res_i16 = a.divrem(b_i16);
+            [[maybe_unused]] auto res_i16 = a.divrem(b_i16);
             assert(res_i16.has_value());
             uint128_t q_i16 = res_i16->first;
             uint128_t r_i16 = res_i16->second;
@@ -1839,14 +1839,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_i16;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_i16 = a_minus_r.divrem(b_i16);
+            [[maybe_unused]] auto check1_i16 = a_minus_r.divrem(b_i16);
             assert(check1_i16.has_value());
             assert(check1_i16->first == q_i16);
             assert(check1_i16->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_i16 > 0_u128) {
-                auto check2_i16 = a_minus_r.divrem(q_i16);
+                [[maybe_unused]] auto check2_i16 = a_minus_r.divrem(q_i16);
                 assert(check2_i16.has_value());
                 assert(check2_i16->first == b_i16);
                 assert(check2_i16->second == 0_u128);
@@ -1854,7 +1854,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_i16 = (a - 1_u128).divrem(b_i16);
+                [[maybe_unused]] auto check3_i16 = (a - 1_u128).divrem(b_i16);
                 assert(check3_i16.has_value());
                 if (r_i16 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1867,7 +1867,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_i16 = q_i16;
                     --q2_i16;
-                    auto b2_i16 = b_i16;
+                    [[maybe_unused]] auto b2_i16 = b_i16;
                     --b2_i16;
                     assert(check3_i16->first == q2_i16);
                     assert(check3_i16->second == b2_i16);
@@ -1881,7 +1881,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_u8 == 0)
                 b_u8 = 1;
-            auto res_u8 = a.divrem(b_u8);
+            [[maybe_unused]] auto res_u8 = a.divrem(b_u8);
             assert(res_u8.has_value());
             uint128_t q_u8 = res_u8->first;
             uint128_t r_u8 = res_u8->second;
@@ -1907,14 +1907,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_u8;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_u8 = a_minus_r.divrem(b_u8);
+            [[maybe_unused]] auto check1_u8 = a_minus_r.divrem(b_u8);
             assert(check1_u8.has_value());
             assert(check1_u8->first == q_u8);
             assert(check1_u8->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_u8 > 0_u128) {
-                auto check2_u8 = a_minus_r.divrem(q_u8);
+                [[maybe_unused]] auto check2_u8 = a_minus_r.divrem(q_u8);
                 assert(check2_u8.has_value());
                 assert(check2_u8->first == b_u8);
                 assert(check2_u8->second == 0_u128);
@@ -1922,7 +1922,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_u8 = (a - 1_u128).divrem(b_u8);
+                [[maybe_unused]] auto check3_u8 = (a - 1_u128).divrem(b_u8);
                 assert(check3_u8.has_value());
                 if (r_u8 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -1935,7 +1935,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_u8 = q_u8;
                     --q2_u8;
-                    auto b2_u8 = b_u8;
+                    [[maybe_unused]] auto b2_u8 = b_u8;
                     --b2_u8;
                     assert(check3_u8->first == q2_u8);
                     assert(check3_u8->second == b2_u8);
@@ -1949,7 +1949,7 @@ void test_divrem_random_integral_divisor()
 
             if (b_i8 == 0)
                 b_i8 = 1;
-            auto res_i8 = a.divrem(b_i8);
+            [[maybe_unused]] auto res_i8 = a.divrem(b_i8);
             assert(res_i8.has_value());
             uint128_t q_i8 = res_i8->first;
             uint128_t r_i8 = res_i8->second;
@@ -1975,14 +1975,14 @@ void test_divrem_random_integral_divisor()
             uint128_t a_minus_r = a - r_i8;
 
             // 1. (a - r) debe ser divisible por b y dar q
-            auto check1_i8 = a_minus_r.divrem(b_i8);
+            [[maybe_unused]] auto check1_i8 = a_minus_r.divrem(b_i8);
             assert(check1_i8.has_value());
             assert(check1_i8->first == q_i8);
             assert(check1_i8->second == 0_u128);
 
             // 2. (a - r) debe ser divisible por q y dar b (si q > 0)
             if (q_i8 > 0_u128) {
-                auto check2_i8 = a_minus_r.divrem(q_i8);
+                [[maybe_unused]] auto check2_i8 = a_minus_r.divrem(q_i8);
                 assert(check2_i8.has_value());
                 assert(check2_i8->first == b_i8);
                 assert(check2_i8->second == 0_u128);
@@ -1990,7 +1990,7 @@ void test_divrem_random_integral_divisor()
 
             // 3. Comprobación con (a-1) (check3)
             if (a > 0_u128) {
-                auto check3_i8 = (a - 1_u128).divrem(b_i8);
+                [[maybe_unused]] auto check3_i8 = (a - 1_u128).divrem(b_i8);
                 assert(check3_i8.has_value());
                 if (r_i8 != 0_u128) {
                     // Si a.divrem(b) -> [q,r] con r > 0, entonces (a-1).divrem(b) -> [q, r-1]
@@ -2003,7 +2003,7 @@ void test_divrem_random_integral_divisor()
                     // Si a.divrem(b) -> [q,0] con a > 0, entonces (a-1).divrem(b) -> [q-1, b-1]
                     auto q2_i8 = q_i8;
                     --q2_i8;
-                    auto b2_i8 = b_i8;
+                    [[maybe_unused]] auto b2_i8 = b_i8;
                     --b2_i8;
                     assert(check3_i8->first == q2_i8);
                     assert(check3_i8->second == b2_i8);
@@ -2019,7 +2019,7 @@ void test_divrem_known_result()
     std::cout << "test_divrem: test_divrem_known_result ......" << std::endl;
 
     // 100 / 3 = 33 rem 1
-    auto res1 = (100_u128).divrem(3_u128);
+    [[maybe_unused]] auto res1 = (100_u128).divrem(3_u128);
     assert(res1->first == 33_u128);
     assert(res1->second == 1_u128);
     uint128_t a1 = 100_u128;
@@ -2030,8 +2030,8 @@ void test_divrem_known_result()
     assert(m1 == 1_u128);
 
     // Max / 2 = (2^128 - 1) / 2 = 2^127 - 1 rem 1
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
-    auto res2 = max_val.divrem(2_u128);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] auto res2 = max_val.divrem(2_u128);
     assert(res2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
     assert(res2->second == 1_u128);
     uint128_t a2 = max_val;
@@ -2051,7 +2051,7 @@ void test_divrem_known_result_integral_divisor()
     // divisor como uint64_t
 
     // 100 / 3 (int)
-    auto res_u64 = (100_u128).divrem(static_cast<uint64_t>(3u));
+    [[maybe_unused]] auto res_u64 = (100_u128).divrem(static_cast<uint64_t>(3u));
     assert(res_u64->first == 33_u128);
     assert(res_u64->second == 1_u128);
     uint128_t a1 = 100_u128;
@@ -2062,8 +2062,8 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // Max / 2 (uint64_t)
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
-    auto res_u64_2 = max_val.divrem(static_cast<uint64_t>(2u));
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] auto res_u64_2 = max_val.divrem(static_cast<uint64_t>(2u));
     assert(res_u64_2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
     assert(res_u64_2->second == 1_u128);
     uint128_t a2 = max_val;
@@ -2076,7 +2076,7 @@ void test_divrem_known_result_integral_divisor()
     // divisor como int64_t
 
     // 100 / 3 (int)
-    auto res_i64 = (100_u128).divrem(static_cast<int64_t>(3));
+    [[maybe_unused]] auto res_i64 = (100_u128).divrem(static_cast<int64_t>(3));
     assert(res_i64->first == 33_u128);
     assert(res_i64->second == 1_u128);
     a1 = 100_u128;
@@ -2087,7 +2087,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // Max / 2 (int64_t)
-    auto res_i64_2 = max_val.divrem(static_cast<int64_t>(2));
+    [[maybe_unused]] auto res_i64_2 = max_val.divrem(static_cast<int64_t>(2));
     assert(res_i64_2->first == uint128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL));
     assert(res_i64_2->second == 1_u128);
     a2 = max_val;
@@ -2098,7 +2098,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m2 == 1_u128);
 
     // divisor como uint32_t
-    auto res_u32 = (100_u128).divrem(static_cast<uint32_t>(3u));
+    [[maybe_unused]] auto res_u32 = (100_u128).divrem(static_cast<uint32_t>(3u));
     assert(res_u32->first == 33_u128);
     assert(res_u32->second == 1_u128);
     a1 = 100_u128;
@@ -2109,7 +2109,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como int32_t
-    auto res_i32 = (100_u128).divrem(static_cast<int32_t>(3));
+    [[maybe_unused]] auto res_i32 = (100_u128).divrem(static_cast<int32_t>(3));
     assert(res_i32->first == 33_u128);
     assert(res_i32->second == 1_u128);
     a1 = 100_u128;
@@ -2120,7 +2120,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como uint16_t
-    auto res_u16 = (100_u128).divrem(static_cast<uint16_t>(3u));
+    [[maybe_unused]] auto res_u16 = (100_u128).divrem(static_cast<uint16_t>(3u));
     assert(res_u16->first == 33_u128);
     assert(res_u16->second == 1_u128);
     a1 = 100_u128;
@@ -2131,7 +2131,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como int16_t
-    auto res_i16 = (100_u128).divrem(static_cast<int16_t>(3));
+    [[maybe_unused]] auto res_i16 = (100_u128).divrem(static_cast<int16_t>(3));
     assert(res_i16->first == 33_u128);
     assert(res_i16->second == 1_u128);
     a1 = 100_u128;
@@ -2142,7 +2142,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como uint8_t
-    auto res_u8 = (100_u128).divrem(static_cast<uint8_t>(3u));
+    [[maybe_unused]] auto res_u8 = (100_u128).divrem(static_cast<uint8_t>(3u));
     assert(res_u8->first == 33_u128);
     assert(res_u8->second == 1_u128);
     a1 = 100_u128;
@@ -2153,7 +2153,7 @@ void test_divrem_known_result_integral_divisor()
     assert(m1 == 1_u128);
 
     // divisor como int8_t
-    auto res_i8 = (100_u128).divrem(static_cast<int8_t>(3));
+    [[maybe_unused]] auto res_i8 = (100_u128).divrem(static_cast<int8_t>(3));
     assert(res_i8->first == 33_u128);
     assert(res_i8->second == 1_u128);
     a1 = 100_u128;
@@ -2209,20 +2209,20 @@ void test_mult_assignment_operator()
         uint64_t a_val = (rng() % 0xFFFFULL) + 1; // Evitar 0
         uint64_t b_val = (rng() % 0xFFFFULL) + 1; // Evitar 0
 
-        uint128_t a(a_val);
-        uint128_t b(b_val);
+        [[maybe_unused]] uint128_t a(a_val);
+        [[maybe_unused]] uint128_t b(b_val);
 
         uint128_t c = a;
         c *= b;
 
         // Verificación 1: c / b debe dar a
-        auto div_result_b = c.divrem(b);
+        [[maybe_unused]] auto div_result_b = c.divrem(b);
         assert(div_result_b.has_value());
         assert(div_result_b->first == a);
         assert(div_result_b->second == uint128_t(0)); // Sin resto
 
         // Verificación 2: c / a debe dar b
-        auto div_result_a = c.divrem(a);
+        [[maybe_unused]] auto div_result_a = c.divrem(a);
         assert(div_result_a.has_value());
         assert(div_result_a->first == b);
         assert(div_result_a->second == uint128_t(0)); // Sin resto
@@ -2251,41 +2251,41 @@ void test_mult_assignment_operator()
     // Test 6: Casos conocidos específicos
     {
         // 2 * 3 = 6
-        uint128_t val = uint128_t(2);
+        [[maybe_unused]] uint128_t val = uint128_t(2);
         val *= uint128_t(3);
         assert(val == uint128_t(6));
 
         // Verificar con división
-        auto check = val.divrem(uint128_t(2));
+        [[maybe_unused]] auto check = val.divrem(uint128_t(2));
         assert(check->first == uint128_t(3));
         assert(check->second == uint128_t(0));
     }
 
     {
         // 100 * 200 = 20000
-        uint128_t val = uint128_t(100);
+        [[maybe_unused]] uint128_t val = uint128_t(100);
         val *= uint128_t(200);
         assert(val == uint128_t(20000));
 
         // Verificar con división
-        auto check1 = val.divrem(uint128_t(100));
+        [[maybe_unused]] auto check1 = val.divrem(uint128_t(100));
         assert(check1->first == uint128_t(200));
         assert(check1->second == uint128_t(0));
 
-        auto check2 = val.divrem(uint128_t(200));
+        [[maybe_unused]] auto check2 = val.divrem(uint128_t(200));
         assert(check2->first == uint128_t(100));
         assert(check2->second == uint128_t(0));
     }
 
     {
         // 2^32 * 2^32 = 2^64
-        uint128_t val(0, 1ULL << 32);
+        [[maybe_unused]] uint128_t val(0, 1ULL << 32);
         val *= uint128_t(0, 1ULL << 32);
         assert(val == uint128_t(1, 0)); // 2^64 = (1, 0)
 
         // Verificar con división
         uint128_t divisor(0, 1ULL << 32);
-        auto check = val.divrem(divisor);
+        [[maybe_unused]] auto check = val.divrem(divisor);
         assert(check->first == divisor);
         assert(check->second == uint128_t(0));
     }
@@ -2295,11 +2295,11 @@ void test_mult_assignment_operator()
         uint128_t a(0, rng() % 0xFFFFFFFFULL);
         uint64_t b_u64 = (rng() % 0xFFFFULL) + 1;
 
-        uint128_t result = a;
+        [[maybe_unused]] uint128_t result = a;
         result *= b_u64;
 
         // Verificar con división
-        auto check = result.divrem(b_u64);
+        [[maybe_unused]] auto check = result.divrem(b_u64);
         assert(check.has_value());
         assert(check->first == a);
         assert(check->second == uint128_t(0));
@@ -2311,21 +2311,21 @@ void test_mult_assignment_operator()
         uint128_t b(0, (rng() % 0xFFFFULL) + 1);
         uint128_t c(0, (rng() % 0xFFFFULL) + 1);
 
-        uint128_t left = a * (b + c);
-        uint128_t right = a * b + a * c;
+        [[maybe_unused]] uint128_t left = a * (b + c);
+        [[maybe_unused]] uint128_t right = a * b + a * c;
 
         assert(left == right);
     }
 
     // Test 9: Multiplicación por potencias de 2 (equivalente a shift)
     for (int shift = 0; shift < 64; ++shift) {
-        uint128_t a(0, 12345);
-        uint128_t b(0, 1ULL << shift);
+        [[maybe_unused]] uint128_t a(0, 12345);
+        [[maybe_unused]] uint128_t b(0, 1ULL << shift);
 
         uint128_t prod = a;
         prod *= b;
 
-        uint128_t shifted = a << shift;
+        [[maybe_unused]] uint128_t shifted = a << shift;
 
         assert(prod == shifted);
     }
@@ -2430,15 +2430,15 @@ void test_mod_operator()
 void test_fullmult_times_uint64()
 {
     // Test basic multiplication
-    uint128_t val(0, 10);
-    uint64_t mult = 10;
+    [[maybe_unused]] uint128_t val(0, 10);
+    [[maybe_unused]] uint64_t mult = 10;
     // 10 * 10 = 100. High part of 192-bit result is 0.
     assert(val.fullmult_times_uint64(mult) == 0);
 
     // Test with large numbers to ensure high part is used
     // (2^64 - 1) * (2^64 - 1) = 2^128 - 2^65 + 1
     // This fits in 128 bits, so high part of 192 bits (bits 128-191) is 0.
-    uint128_t max64(0, UINT64_MAX);
+    [[maybe_unused]] uint128_t max64(0, UINT64_MAX);
     assert(max64.fullmult_times_uint64(UINT64_MAX) == 0);
 
     // We need a case where the result exceeds 128 bits.
@@ -2447,7 +2447,7 @@ void test_fullmult_times_uint64()
     // result = 2^128.
     // 2^128 in 192 bits: bit 128 is 1.
     // So fullmult should return 1.
-    uint128_t large(0x8000000000000000ULL, 0);
+    [[maybe_unused]] uint128_t large(0x8000000000000000ULL, 0);
     assert(large.fullmult_times_uint64(2) == 1);
 
     std::cout << "test_fullmult_times_uint64 passed" << std::endl;
@@ -2456,9 +2456,9 @@ void test_fullmult_times_uint64()
 void test_knuth_D_divrem()
 {
     // Basic test
-    uint128_t a(0, 100);
-    uint128_t b(0, 3);
-    auto res = a.knuth_D_divrem(b);
+    [[maybe_unused]] uint128_t a(0, 100);
+    [[maybe_unused]] uint128_t b(0, 3);
+    [[maybe_unused]] auto res = a.knuth_D_divrem(b);
     assert(res.has_value());
     assert(res->first == uint128_t(0, 33));
     assert(res->second == uint128_t(0, 1));
@@ -2466,7 +2466,7 @@ void test_knuth_D_divrem()
     // Test optimization paths (e.g. power of 2)
     uint128_t c(0, 100);
     uint128_t d(0, 4);
-    auto res2 = c.knuth_D_divrem(d);
+    [[maybe_unused]] auto res2 = c.knuth_D_divrem(d);
     assert(res2.has_value());
     assert(res2->first == uint128_t(0, 25));
     assert(res2->second == uint128_t(0, 0));
@@ -2476,9 +2476,9 @@ void test_knuth_D_divrem()
 
 void test_knuth_D_divrem_integral()
 {
-    uint128_t a(0, 100);
+    [[maybe_unused]] uint128_t a(0, 100);
     uint64_t b = 3;
-    auto res = a.knuth_D_divrem(b);
+    [[maybe_unused]] auto res = a.knuth_D_divrem(b);
     assert(res.has_value());
     assert(res->first == uint128_t(0, 33));
     assert(res->second == uint128_t(0, 1));
@@ -2487,16 +2487,16 @@ void test_knuth_D_divrem_integral()
 
 void test_to_string()
 {
-    uint128_t val(0, 12345);
+    [[maybe_unused]] uint128_t val(0, 12345);
     assert(val.to_string() == "12345");
-    uint128_t val2(1, 0); // 2^64
+    [[maybe_unused]] uint128_t val2(1, 0); // 2^64
     assert(val2.to_string() == "18446744073709551616");
     std::cout << "test_to_string passed" << std::endl;
 }
 
 void test_to_string_base()
 {
-    uint128_t val(0, 255);
+    [[maybe_unused]] uint128_t val(0, 255);
     assert(val.to_string_base(16) == "FF");
     assert(val.to_string_base(2) == "11111111");
     assert(val.to_string_base(8) == "377");
@@ -2505,7 +2505,7 @@ void test_to_string_base()
 
 void test_to_string_hex()
 {
-    uint128_t val(0, 255);
+    [[maybe_unused]] uint128_t val(0, 255);
     assert(val.to_string_hex() == "FF");
     assert(val.to_string_hex(true) == "0xFF");
     std::cout << "test_to_string_hex passed" << std::endl;
@@ -2513,7 +2513,7 @@ void test_to_string_hex()
 
 void test_to_string_bin()
 {
-    uint128_t val(0, 15);
+    [[maybe_unused]] uint128_t val(0, 15);
     assert(val.to_string_bin() == "1111");
     assert(val.to_string_bin(true) == "0b1111");
     std::cout << "test_to_string_bin passed" << std::endl;
@@ -2521,7 +2521,7 @@ void test_to_string_bin()
 
 void test_to_string_oct()
 {
-    uint128_t val(0, 8);
+    [[maybe_unused]] uint128_t val(0, 8);
     assert(val.to_string_oct() == "10");
     assert(val.to_string_oct(true) == "010");
     std::cout << "test_to_string_oct passed" << std::endl;
@@ -2544,7 +2544,7 @@ void test_from_cstr_base()
 
 void test_to_cstr()
 {
-    uint128_t val(0, 123);
+    [[maybe_unused]] uint128_t val(0, 123);
     std::string s = val.to_cstr();
     assert(s == "123");
     std::cout << "test_to_cstr passed" << std::endl;
@@ -2552,7 +2552,7 @@ void test_to_cstr()
 
 void test_to_cstr_base()
 {
-    uint128_t val(0, 255);
+    [[maybe_unused]] uint128_t val(0, 255);
     std::string s = val.to_cstr_base(16);
     assert(s == "FF");
     std::cout << "test_to_cstr_base passed" << std::endl;
@@ -2560,7 +2560,7 @@ void test_to_cstr_base()
 
 void test_to_cstr_hex()
 {
-    uint128_t val(0, 255);
+    [[maybe_unused]] uint128_t val(0, 255);
     std::string s = val.to_cstr_hex();
     assert(s == "FF");
     std::cout << "test_to_cstr_hex passed" << std::endl;
@@ -2568,7 +2568,7 @@ void test_to_cstr_hex()
 
 void test_to_cstr_bin()
 {
-    uint128_t val(0, 5);
+    [[maybe_unused]] uint128_t val(0, 5);
     std::string s = val.to_cstr_bin();
     assert(s == "101");
     std::cout << "test_to_cstr_bin passed" << std::endl;
@@ -2576,7 +2576,7 @@ void test_to_cstr_bin()
 
 void test_to_cstr_oct()
 {
-    uint128_t val(0, 8);
+    [[maybe_unused]] uint128_t val(0, 8);
     std::string s = val.to_cstr_oct();
     assert(s == "10");
     std::cout << "test_to_cstr_oct passed" << std::endl;
@@ -2616,13 +2616,13 @@ void test_copy_constructor()
     assert(original.low() == 0xFEDCBA0987654321ULL);
 
     // Test copy of zero
-    uint128_t zero;
-    uint128_t zero_copy(zero);
+    [[maybe_unused]] uint128_t zero;
+    [[maybe_unused]] uint128_t zero_copy(zero);
     assert(zero_copy == uint128_t(0));
 
     // Test copy of max value
-    uint128_t max_val(UINT64_MAX, UINT64_MAX);
-    uint128_t max_copy(max_val);
+    [[maybe_unused]] uint128_t max_val(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max_copy(max_val);
     assert(max_copy == max_val);
 
     std::cout << "passed" << std::endl;
@@ -2634,16 +2634,16 @@ void test_move_constructor()
 
     // Test basic move
     uint128_t original(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
-    uint64_t orig_high = original.high();
-    uint64_t orig_low = original.low();
+    [[maybe_unused]] uint64_t orig_high = original.high();
+    [[maybe_unused]] uint64_t orig_low = original.low();
 
-    uint128_t moved(std::move(original));
+    [[maybe_unused]] uint128_t moved(std::move(original));
 
     assert(moved.high() == orig_high);
     assert(moved.low() == orig_low);
 
     // Test moving from temporary
-    uint128_t from_temp(uint128_t(0xAAAA, 0xBBBB));
+    [[maybe_unused]] uint128_t from_temp(uint128_t(0xAAAA, 0xBBBB));
     assert(from_temp.high() == 0xAAAA);
     assert(from_temp.low() == 0xBBBB);
 
@@ -2697,8 +2697,8 @@ void test_move_assignment()
 
     // Test basic move assignment
     uint128_t original(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
-    uint64_t orig_high = original.high();
-    uint64_t orig_low = original.low();
+    [[maybe_unused]] uint64_t orig_high = original.high();
+    [[maybe_unused]] uint64_t orig_low = original.low();
 
     uint128_t target;
     target = std::move(original);
@@ -2707,7 +2707,7 @@ void test_move_assignment()
     assert(target.low() == orig_low);
 
     // Test moving from temporary
-    uint128_t from_temp;
+    [[maybe_unused]] uint128_t from_temp;
     from_temp = uint128_t(0xCCCC, 0xDDDD);
     assert(from_temp.high() == 0xCCCC);
     assert(from_temp.low() == 0xDDDD);
@@ -2754,16 +2754,16 @@ void test_udl_integer()
     using namespace uint128_literals;
 
     // Test integer literal
-    auto val = 12345_u128;
+    [[maybe_unused]] auto val = 12345_u128;
     assert(val.low() == 12345ULL);
     assert(val.high() == 0);
 
     // Test zero
-    auto zero = 0_u128;
+    [[maybe_unused]] auto zero = 0_u128;
     assert(zero == uint128_t(0));
 
     // Test max uint64
-    auto max64 = 18446744073709551615_u128;
+    [[maybe_unused]] auto max64 = 18446744073709551615_u128;
     assert(max64.low() == UINT64_MAX);
     assert(max64.high() == 0);
 
@@ -2777,16 +2777,16 @@ void test_udl_string()
     using namespace uint128_literals;
 
     // Test string literals
-    auto hex = "0xFF"_u128;
+    [[maybe_unused]] auto hex = "0xFF"_u128;
     assert(hex.low() == 0xFF);
 
-    auto dec = "12345"_u128;
+    [[maybe_unused]] auto dec = "12345"_u128;
     assert(dec.low() == 12345);
 
-    auto bin = "0b1010"_u128;
+    [[maybe_unused]] auto bin = "0b1010"_u128;
     assert(bin.low() == 0b1010);
 
-    auto oct = "0777"_u128;
+    [[maybe_unused]] auto oct = "0777"_u128;
     assert(oct.low() == 0777);
 
     std::cout << "passed" << std::endl;
@@ -2799,13 +2799,13 @@ void test_udl_specific_formats()
     using namespace uint128_literals;
 
     // Test format-specific literals
-    auto hex = "FF"_u128_hex;
+    [[maybe_unused]] auto hex = "FF"_u128_hex;
     assert(hex.low() == 0xFF);
 
-    auto bin = "1010"_u128_bin;
+    [[maybe_unused]] auto bin = "1010"_u128_bin;
     assert(bin.low() == 0b1010);
 
-    auto oct = "777"_u128_oct;
+    [[maybe_unused]] auto oct = "777"_u128_oct;
     assert(oct.low() == 0777);
 
     std::cout << "passed" << std::endl;
@@ -2820,7 +2820,7 @@ void test_ostream_operator()
     std::ostringstream oss;
 
     // Test zero
-    uint128_t zero(0);
+    [[maybe_unused]] uint128_t zero(0);
     oss << zero;
     assert(oss.str() == "0");
 
@@ -2832,7 +2832,7 @@ void test_ostream_operator()
 
     // Test larger value
     oss.str("");
-    uint128_t large(1, 0);
+    [[maybe_unused]] uint128_t large(1, 0);
     oss << large;
     assert(oss.str() == "18446744073709551616"); // 2^64
 
@@ -2845,7 +2845,7 @@ void test_istream_operator()
 
     // Test reading decimal
     std::istringstream iss("12345");
-    uint128_t val;
+    [[maybe_unused]] uint128_t val;
     iss >> val;
     assert(val.low() == 12345);
 
@@ -2871,19 +2871,19 @@ void test_overflow_behavior()
     std::cout << "test_overflow_behavior: ";
 
     // Test addition overflow
-    uint128_t max(UINT64_MAX, UINT64_MAX);
-    uint128_t one(0, 1);
-    uint128_t result = max + one;
+    [[maybe_unused]] uint128_t max(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t one(0, 1);
+    [[maybe_unused]] uint128_t result = max + one;
     assert(result == uint128_t(0, 0)); // Should wrap to zero
 
     // Test increment overflow
-    uint128_t almost_max(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t almost_max(UINT64_MAX, UINT64_MAX);
     ++almost_max;
     assert(almost_max == uint128_t(0, 0));
 
     // Test multiplication overflow (silent)
     uint128_t half_max(UINT64_MAX >> 1, UINT64_MAX);
-    uint128_t mult_result = half_max * uint128_t(0, 4);
+    [[maybe_unused]] uint128_t mult_result = half_max * uint128_t(0, 4);
     // Just verify it computes without crashing
     assert(mult_result.high() != 0 || mult_result.low() != 0);
 
@@ -2895,9 +2895,9 @@ void test_underflow_behavior()
     std::cout << "test_underflow_behavior: ";
 
     // Test subtraction underflow
-    uint128_t zero(0);
-    uint128_t one(0, 1);
-    uint128_t result = zero - one;
+    [[maybe_unused]] uint128_t zero(0);
+    [[maybe_unused]] uint128_t one(0, 1);
+    [[maybe_unused]] uint128_t result = zero - one;
     assert(result == uint128_t(UINT64_MAX, UINT64_MAX)); // Should wrap to max
 
     // Test decrement underflow
@@ -2913,24 +2913,24 @@ void test_boundary_values()
     std::cout << "test_boundary_values: ";
 
     // Test zero
-    uint128_t zero(0);
+    [[maybe_unused]] uint128_t zero(0);
     assert(zero.high() == 0);
     assert(zero.low() == 0);
     assert(!static_cast<bool>(zero));
 
     // Test max value
-    uint128_t max(UINT64_MAX, UINT64_MAX);
+    [[maybe_unused]] uint128_t max(UINT64_MAX, UINT64_MAX);
     assert(max.high() == UINT64_MAX);
     assert(max.low() == UINT64_MAX);
     assert(static_cast<bool>(max));
 
     // Test powers of 2
-    uint128_t power64(1, 0); // 2^64
+    [[maybe_unused]] uint128_t power64(1, 0); // 2^64
     assert(power64.high() == 1);
     assert(power64.low() == 0);
 
     // Test one less than power of 2
-    uint128_t almost_power64(0, UINT64_MAX); // 2^64 - 1
+    [[maybe_unused]] uint128_t almost_power64(0, UINT64_MAX); // 2^64 - 1
     assert(almost_power64.high() == 0);
     assert(almost_power64.low() == UINT64_MAX);
 
@@ -2942,19 +2942,19 @@ void test_division_by_zero()
     std::cout << "test_division_by_zero: ";
 
     uint128_t dividend(100, 200);
-    uint128_t zero(0);
+    [[maybe_unused]] uint128_t zero(0);
 
     // Division by zero behavior (noexcept - returns zero or max, implementation defined)
     // The operators are marked noexcept, so they don't throw
     // Just verify the operation completes without crashing
-    uint128_t result1 = dividend / zero;
+    [[maybe_unused]] uint128_t result1 = dividend / zero;
     (void)result1; // Should not crash
 
-    uint128_t result2 = dividend % zero;
+    [[maybe_unused]] uint128_t result2 = dividend % zero;
     (void)result2; // Should not crash
 
     // Division by non-zero should work
-    uint128_t result3 = dividend / uint128_t(0, 2);
+    [[maybe_unused]] uint128_t result3 = dividend / uint128_t(0, 2);
     assert(result3.high() == 50 && result3.low() == 100);
 
     std::cout << "passed" << std::endl;
@@ -3022,33 +3022,33 @@ void test_shift_edge_cases()
 {
     std::cout << "test_shift_edge_cases: ";
 
-    uint128_t val(0x1234, 0x5678);
+    [[maybe_unused]] uint128_t val(0x1234, 0x5678);
 
     // Test shift by 0
-    uint128_t shift0 = val << 0;
+    [[maybe_unused]] uint128_t shift0 = val << 0;
     assert(shift0 == val);
 
     shift0 = val >> 0;
     assert(shift0 == val);
 
     // Test shift by 64 (boundary between high and low)
-    uint128_t shift64 = uint128_t(0, 0xFF) << 64;
+    [[maybe_unused]] uint128_t shift64 = uint128_t(0, 0xFF) << 64;
     assert(shift64.high() == 0xFF);
     assert(shift64.low() == 0);
 
-    uint128_t shift64r = uint128_t(0xFF, 0) >> 64;
+    [[maybe_unused]] uint128_t shift64r = uint128_t(0xFF, 0) >> 64;
     assert(shift64r.high() == 0);
     assert(shift64r.low() == 0xFF);
 
     // Test shift by 128 (should zero out)
-    uint128_t shift128 = val << 128;
+    [[maybe_unused]] uint128_t shift128 = val << 128;
     assert(shift128 == uint128_t(0));
 
-    uint128_t shift128r = val >> 128;
+    [[maybe_unused]] uint128_t shift128r = val >> 128;
     assert(shift128r == uint128_t(0));
 
     // Test shift by large value
-    uint128_t shift200 = val << 200;
+    [[maybe_unused]] uint128_t shift200 = val << 200;
     assert(shift200 == uint128_t(0));
 
     std::cout << "passed" << std::endl;
@@ -3061,28 +3061,28 @@ void test_mixed_type_operations()
     uint128_t small(0, 200); // Only low part, easier to test
 
     // Test operations with different integral types
-    uint128_t result1 = small + 50;
+    [[maybe_unused]] uint128_t result1 = small + 50;
     assert(result1.low() == 250);
 
-    uint128_t result2 = small - 100;
+    [[maybe_unused]] uint128_t result2 = small - 100;
     assert(result2.low() == 100);
 
-    uint128_t result3 = small * 2;
+    [[maybe_unused]] uint128_t result3 = small * 2;
     assert(result3.low() == 400);
 
-    uint128_t result4 = small / 2;
+    [[maybe_unused]] uint128_t result4 = small / 2;
     assert(result4.low() == 100);
 
     // Test symmetric operations
-    uint128_t result5 = 50 + small;
+    [[maybe_unused]] uint128_t result5 = 50 + small;
     assert(result5.low() == 250);
 
-    uint128_t result6 = 1000 - small;
+    [[maybe_unused]] uint128_t result6 = 1000 - small;
     assert(result6.low() == 800);
     assert(result6.high() == 0);
 
     // Test with negative int (sign extension)
-    uint128_t result7 = small + (-10);
+    [[maybe_unused]] uint128_t result7 = small + (-10);
     assert(result7.low() == 190);
 
     std::cout << "passed" << std::endl;

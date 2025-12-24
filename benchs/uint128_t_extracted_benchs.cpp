@@ -210,7 +210,7 @@ void benchmark_construction()
 
     // uint64_t construction (comparison)
     benchmark_operation("construction_default", "uint64_t", []() {
-        volatile uint64_t v;
+        volatile uint64_t v = 0;
         (void)v;
     });
 
@@ -221,13 +221,13 @@ void benchmark_construction()
 
     // uint32_t construction (comparison)
     benchmark_operation("construction_default", "uint32_t", []() {
-        volatile uint32_t v;
+        volatile uint32_t v = 0;
         (void)v;
     });
 
 #ifdef HAS_UINT128_T
     benchmark_operation("construction_default", "__uint128_t", []() {
-        volatile __uint128_t v;
+        volatile __uint128_t v = 0;
         (void)v;
     });
 

@@ -129,12 +129,20 @@ $(foreach feature,$(VALID_FEATURES),$(eval $(call feature_shortcuts,$(feature)))
 # LIMPIEZA
 # =============================================================================
 
-.PHONY: clean clean-build clean-results clean-logs
+.PHONY: clean clean-build clean-results clean-logs clean-t
 
 clean-build:
 	@echo "🧹 Limpiando directorios de build..."
 	@rm -rf build/build_tests build/build_benchs
 	@echo "✅ Build limpiado"
+
+clean-t:
+	@echo "🧹 Limpiando feature 't' (tests + benchs)..."
+	@rm -rf build/build_tests/*/debug/*.exe build/build_tests/*/release/*.exe
+	@rm -rf build/build_benchs/*/debug/*.exe build/build_benchs/*/release/*.exe
+	@rm -rf build/build_tests/*/debug/*.obj build/build_tests/*/release/*.obj
+	@rm -rf build/build_benchs/*/debug/*.obj build/build_benchs/*/release/*.obj
+	@echo "✅ Feature 't' limpiada"
 
 clean-results:
 	@echo "🧹 Limpiando resultados..."

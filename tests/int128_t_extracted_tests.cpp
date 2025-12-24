@@ -25,7 +25,7 @@ void test_int128_sizeof_is_16_bytes()
 
 void test_int128_default_constructor()
 {
-    int128_t val;
+    [[maybe_unused]] int128_t val;
     assert(val.low() == 0 && val.high() == 0);
     std::cout << "test_int128_default_constructor passed" << std::endl;
 }
@@ -112,17 +112,17 @@ void test_int128_two_part_constructor()
 void test_int128_is_negative()
 {
     // Positive values
-    int128_t pos_small(0, 100);
+    [[maybe_unused]] int128_t pos_small(0, 100);
     assert(!pos_small.is_negative());
 
-    int128_t pos_large(0x7FFFFFFFFFFFFFFFULL, UINT64_MAX);
+    [[maybe_unused]] int128_t pos_large(0x7FFFFFFFFFFFFFFFULL, UINT64_MAX);
     assert(!pos_large.is_negative());
 
     // Negative values (MSB of high part set)
-    int128_t neg_small(UINT64_MAX, static_cast<uint64_t>(-100));
+    [[maybe_unused]] int128_t neg_small(UINT64_MAX, static_cast<uint64_t>(-100));
     assert(neg_small.is_negative());
 
-    int128_t neg_large(0x8000000000000000ULL, 0);
+    [[maybe_unused]] int128_t neg_large(0x8000000000000000ULL, 0);
     assert(neg_large.is_negative());
 
     std::cout << "test_int128_is_negative passed" << std::endl;
@@ -137,9 +137,9 @@ void test_int128_addition_positive()
         int64_t b = static_cast<int64_t>(rng() & 0x7FFFFFFF);
 
         int128_t va(a), vb(b);
-        int128_t result = va + vb;
+        [[maybe_unused]] int128_t result = va + vb;
 
-        int64_t expected = a + b;
+        [[maybe_unused]] int64_t expected = a + b;
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_addition_positive passed" << std::endl;
@@ -152,9 +152,9 @@ void test_int128_addition_negative()
         int64_t b = -static_cast<int64_t>(rng() & 0x7FFFFFFF);
 
         int128_t va(a), vb(b);
-        int128_t result = va + vb;
+        [[maybe_unused]] int128_t result = va + vb;
 
-        int64_t expected = a + b;
+        [[maybe_unused]] int64_t expected = a + b;
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_addition_negative passed" << std::endl;
@@ -167,9 +167,9 @@ void test_int128_subtraction()
         int64_t b = static_cast<int64_t>(rng());
 
         int128_t va(a), vb(b);
-        int128_t result = va - vb;
+        [[maybe_unused]] int128_t result = va - vb;
 
-        int64_t expected = a - b;
+        [[maybe_unused]] int64_t expected = a - b;
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_subtraction passed" << std::endl;
@@ -182,9 +182,9 @@ void test_int128_multiplication()
         int32_t b = static_cast<int32_t>(rng());
 
         int128_t va(a), vb(b);
-        int128_t result = va * vb;
+        [[maybe_unused]] int128_t result = va * vb;
 
-        int64_t expected = static_cast<int64_t>(a) * static_cast<int64_t>(b);
+        [[maybe_unused]] int64_t expected = static_cast<int64_t>(a) * static_cast<int64_t>(b);
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_multiplication passed" << std::endl;
@@ -197,9 +197,9 @@ void test_int128_division()
         int64_t b = static_cast<int64_t>(rng() | 1); // Ensure b != 0
 
         int128_t va(a), vb(b);
-        int128_t result = va / vb;
+        [[maybe_unused]] int128_t result = va / vb;
 
-        int64_t expected = a / b;
+        [[maybe_unused]] int64_t expected = a / b;
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_division passed" << std::endl;
@@ -212,9 +212,9 @@ void test_int128_modulo()
         int64_t b = static_cast<int64_t>(rng() | 1); // Ensure b != 0
 
         int128_t va(a), vb(b);
-        int128_t result = va % vb;
+        [[maybe_unused]] int128_t result = va % vb;
 
-        int64_t expected = a % b;
+        [[maybe_unused]] int64_t expected = a % b;
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_modulo passed" << std::endl;
@@ -225,9 +225,9 @@ void test_int128_negation()
     for (int i = 0; i < 1000; ++i) {
         int64_t a = static_cast<int64_t>(rng());
         int128_t va(a);
-        int128_t result = -va;
+        [[maybe_unused]] int128_t result = -va;
 
-        int64_t expected = -a;
+        [[maybe_unused]] int64_t expected = -a;
         assert(static_cast<int64_t>(result.low()) == expected);
     }
     std::cout << "test_int128_negation passed" << std::endl;
@@ -242,7 +242,7 @@ void test_int128_equality()
         int128_t a(val), b(val);
         assert(a == b);
 
-        int128_t c(val + 1);
+        [[maybe_unused]] int128_t c(val + 1);
         assert(!(a == c));
     }
     std::cout << "test_int128_equality passed" << std::endl;
@@ -251,17 +251,17 @@ void test_int128_equality()
 void test_int128_less_than()
 {
     // Positive vs positive
-    int128_t a(10), b(20);
+    [[maybe_unused]] int128_t a(10), b(20);
     assert(a < b);
     assert(!(b < a));
 
     // Negative vs negative
-    int128_t c(-20), d(-10);
+    [[maybe_unused]] int128_t c(-20), d(-10);
     assert(c < d);
     assert(!(d < c));
 
     // Negative vs positive
-    int128_t e(-10), f(10);
+    [[maybe_unused]] int128_t e(-10), f(10);
     assert(e < f);
     assert(!(f < e));
 
@@ -270,13 +270,13 @@ void test_int128_less_than()
 
 void test_int128_greater_than()
 {
-    int128_t a(20), b(10);
+    [[maybe_unused]] int128_t a(20), b(10);
     assert(a > b);
 
-    int128_t c(-10), d(-20);
+    [[maybe_unused]] int128_t c(-10), d(-20);
     assert(c > d);
 
-    int128_t e(10), f(-10);
+    [[maybe_unused]] int128_t e(10), f(-10);
     assert(e > f);
 
     std::cout << "test_int128_greater_than passed" << std::endl;
@@ -289,7 +289,7 @@ void test_int128_bitwise_and()
     for (int i = 0; i < 1000; ++i) {
         uint64_t a = rng(), b = rng();
         int128_t va(0, a), vb(0, b);
-        int128_t result = va & vb;
+        [[maybe_unused]] int128_t result = va & vb;
         assert(result.low() == (a & b));
     }
     std::cout << "test_int128_bitwise_and passed" << std::endl;
@@ -300,7 +300,7 @@ void test_int128_bitwise_or()
     for (int i = 0; i < 1000; ++i) {
         uint64_t a = rng(), b = rng();
         int128_t va(0, a), vb(0, b);
-        int128_t result = va | vb;
+        [[maybe_unused]] int128_t result = va | vb;
         assert(result.low() == (a | b));
     }
     std::cout << "test_int128_bitwise_or passed" << std::endl;
@@ -311,7 +311,7 @@ void test_int128_bitwise_xor()
     for (int i = 0; i < 1000; ++i) {
         uint64_t a = rng(), b = rng();
         int128_t va(0, a), vb(0, b);
-        int128_t result = va ^ vb;
+        [[maybe_unused]] int128_t result = va ^ vb;
         assert(result.low() == (a ^ b));
     }
     std::cout << "test_int128_bitwise_xor passed" << std::endl;
@@ -322,7 +322,7 @@ void test_int128_bitwise_not()
     for (int i = 0; i < 1000; ++i) {
         uint64_t h = rng(), l = rng();
         int128_t val(h, l);
-        int128_t result = ~val;
+        [[maybe_unused]] int128_t result = ~val;
         assert(result.high() == ~h);
         assert(result.low() == ~l);
     }
@@ -337,8 +337,8 @@ void test_int128_left_shift()
         uint64_t val = rng() & 0xFFFFFFFF; // Keep small
         int shift = static_cast<int>(rng() % 64);
 
-        int128_t v(0, val);
-        int128_t result = v << shift;
+        [[maybe_unused]] int128_t v(0, val);
+        [[maybe_unused]] int128_t result = v << shift;
 
         assert(result.low() == (val << shift));
     }
@@ -351,8 +351,8 @@ void test_int128_right_shift()
         uint64_t val = rng();
         int shift = static_cast<int>(rng() % 64);
 
-        int128_t v(0, val);
-        int128_t result = v >> shift;
+        [[maybe_unused]] int128_t v(0, val);
+        [[maybe_unused]] int128_t result = v >> shift;
 
         // Arithmetic right shift for signed
         assert(result.low() == (val >> shift));
@@ -388,14 +388,14 @@ void test_int128_to_string_zero()
 
 void test_int128_from_string_positive()
 {
-    int128_t val = int128_t::from_string("12345");
+    [[maybe_unused]] int128_t val = int128_t::from_string("12345");
     assert(val == int128_t(12345));
     std::cout << "test_int128_from_string_positive passed" << std::endl;
 }
 
 void test_int128_from_string_negative()
 {
-    int128_t val = int128_t::from_string("-12345");
+    [[maybe_unused]] int128_t val = int128_t::from_string("-12345");
     assert(val == int128_t(-12345));
     std::cout << "test_int128_from_string_negative passed" << std::endl;
 }
@@ -405,11 +405,11 @@ void test_int128_from_string_negative()
 void test_int128_min_max_values()
 {
     // INT128_MIN = -2^127 (MSB set, all else 0)
-    int128_t min_val(0x8000000000000000ULL, 0);
+    [[maybe_unused]] int128_t min_val(0x8000000000000000ULL, 0);
     assert(min_val.is_negative());
 
     // INT128_MAX = 2^127 - 1 (MSB clear, all else 1)
-    int128_t max_val(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
+    [[maybe_unused]] int128_t max_val(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
     assert(!max_val.is_negative());
 
     std::cout << "test_int128_min_max_values passed" << std::endl;
@@ -421,8 +421,8 @@ void test_int128_pre_increment()
 {
     for (int i = 0; i < 1000; ++i) {
         int64_t val = static_cast<int64_t>(rng());
-        int128_t v(val);
-        int128_t& result = ++v;
+        [[maybe_unused]] int128_t v(val);
+        [[maybe_unused]] int128_t& result = ++v;
         assert(&result == &v); // Returns reference
         assert(static_cast<int64_t>(v.low()) == val + 1);
     }
@@ -433,8 +433,8 @@ void test_int128_post_increment()
 {
     for (int i = 0; i < 1000; ++i) {
         int64_t val = static_cast<int64_t>(rng());
-        int128_t v(val);
-        int128_t old = v++;
+        [[maybe_unused]] int128_t v(val);
+        [[maybe_unused]] int128_t old = v++;
         assert(static_cast<int64_t>(old.low()) == val);
         assert(static_cast<int64_t>(v.low()) == val + 1);
     }
@@ -445,8 +445,8 @@ void test_int128_pre_decrement()
 {
     for (int i = 0; i < 1000; ++i) {
         int64_t val = static_cast<int64_t>(rng());
-        int128_t v(val);
-        int128_t& result = --v;
+        [[maybe_unused]] int128_t v(val);
+        [[maybe_unused]] int128_t& result = --v;
         assert(&result == &v);
         assert(static_cast<int64_t>(v.low()) == val - 1);
     }
@@ -457,8 +457,8 @@ void test_int128_post_decrement()
 {
     for (int i = 0; i < 1000; ++i) {
         int64_t val = static_cast<int64_t>(rng());
-        int128_t v(val);
-        int128_t old = v--;
+        [[maybe_unused]] int128_t v(val);
+        [[maybe_unused]] int128_t old = v--;
         assert(static_cast<int64_t>(old.low()) == val);
         assert(static_cast<int64_t>(v.low()) == val - 1);
     }
@@ -475,7 +475,7 @@ void test_int128_stream_output()
     assert(oss.str() == "42");
 
     std::ostringstream oss2;
-    int128_t neg_val(-42);
+    [[maybe_unused]] int128_t neg_val(-42);
     oss2 << neg_val;
     assert(oss2.str() == "-42");
 
