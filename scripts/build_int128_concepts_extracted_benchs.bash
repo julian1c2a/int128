@@ -48,7 +48,7 @@ echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================="
 
 # Archivo fuente
-SOURCE_FILE="$PROJECT_ROOT/benchmarks/int128_concepts_extracted_benchs.cpp"
+SOURCE_FILE="$PROJECT_ROOT/benchs/int128_concepts_extracted_benchs.cpp"
 
 if [ ! -f "$SOURCE_FILE" ]; then
     echo "❌ ERROR: No se encuentra el archivo $SOURCE_FILE"
@@ -76,16 +76,16 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "gcc" ]; then
         echo "   ⚠️  GCC no encontrado."
     else
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/gcc/debug"
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/gcc/debug"
             g++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
-                -o "$PROJECT_ROOT/build/build_benchmarks/gcc/debug/int128_concepts_extracted_benchs.exe"
+                -o "$PROJECT_ROOT/build/build_benchs/gcc/debug/int128_concepts_extracted_benchs.exe"
             echo "   ✅ GCC Debug OK"
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/gcc/release"
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/gcc/release"
             g++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
-                -o "$PROJECT_ROOT/build/build_benchmarks/gcc/release/int128_concepts_extracted_benchs.exe"
+                -o "$PROJECT_ROOT/build/build_benchs/gcc/release/int128_concepts_extracted_benchs.exe"
             echo "   ✅ GCC Release OK"
         fi
     fi
@@ -102,16 +102,16 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
         echo "   ⚠️  Clang no encontrado."
     else
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/clang/debug"
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/clang/debug"
             clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
-                -o "$PROJECT_ROOT/build/build_benchmarks/clang/debug/int128_concepts_extracted_benchs.exe"
+                -o "$PROJECT_ROOT/build/build_benchs/clang/debug/int128_concepts_extracted_benchs.exe"
             echo "   ✅ Clang Debug OK"
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/clang/release"
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/clang/release"
             clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
-                -o "$PROJECT_ROOT/build/build_benchmarks/clang/release/int128_concepts_extracted_benchs.exe"
+                -o "$PROJECT_ROOT/build/build_benchs/clang/release/int128_concepts_extracted_benchs.exe"
             echo "   ✅ Clang Release OK"
         fi
     fi
@@ -136,16 +136,16 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
         ICX_FLAGS_BASE="/std:c++20 /W3 /EHsc /Zc:__cplusplus /D_HAS_CXX20=1 -Xclang -fcxx-exceptions"
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/intel/debug"
-            WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_benchmarks/intel/debug/int128_concepts_extracted_benchs.exe")
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/intel/debug"
+            WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_benchs/intel/debug/int128_concepts_extracted_benchs.exe")
             "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /Zi /Od \
                 "/Fe:$WIN_OUT_DEBUG" > /dev/null
             if [ $? -eq 0 ]; then echo "   ✅ Intel Debug OK"; else echo "   ❌ Intel Debug FAILED"; fi
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/intel/release"
-            WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/build_benchmarks/intel/release/int128_concepts_extracted_benchs.exe")
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/intel/release"
+            WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/build_benchs/intel/release/int128_concepts_extracted_benchs.exe")
             "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /O2 /DNDEBUG \
                 "/Fe:$WIN_OUT_RELEASE" > /dev/null
             if [ $? -eq 0 ]; then echo "   ✅ Intel Release OK"; else echo "   ❌ Intel Release FAILED"; fi
@@ -171,16 +171,16 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
         export MSYS2_ARG_CONV_EXCL="*"
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/msvc/debug"
-            WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_benchmarks/msvc/debug/int128_concepts_extracted_benchs.exe")
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/msvc/debug"
+            WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_benchs/msvc/debug/int128_concepts_extracted_benchs.exe")
             cl "$WIN_SOURCE" /I"$WIN_INCLUDE" /std:c++20 /W4 /Zi /Od /EHsc \
                 "/Fe:$WIN_OUT_DEBUG" > /dev/null
             echo "   ✅ MSVC Debug OK"
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
-            mkdir -p "$PROJECT_ROOT/build/build_benchmarks/msvc/release"
-            WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/build_benchmarks/msvc/release/int128_concepts_extracted_benchs.exe")
+            mkdir -p "$PROJECT_ROOT/build/build_benchs/msvc/release"
+            WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/build_benchs/msvc/release/int128_concepts_extracted_benchs.exe")
             cl "$WIN_SOURCE" /I"$WIN_INCLUDE" /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
                 "/Fe:$WIN_OUT_RELEASE" > /dev/null
             echo "   ✅ MSVC Release OK"

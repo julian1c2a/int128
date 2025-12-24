@@ -77,7 +77,7 @@ run_test() {
     if [ -n "$PRINT_MODE" ]; then
         mkdir -p "$RESULTS_DIR/${compiler,,}/${mode,,}"
         local timestamp=$(date '+%Y%m%d_%H%M%S')
-        local output_file="$RESULTS_DIR/${compiler,,}/${mode,,}/uint128_concepts_tests_${timestamp}.txt"
+        local output_file="$RESULTS_DIR/${compiler,,}/${mode,,}/uint128_concepts_extracted_tests_results_${timestamp}.txt"
         
         if "$executable" | tee "$output_file"; then
             echo -e "${GREEN}✅ TESTS PASADOS${NC}"
