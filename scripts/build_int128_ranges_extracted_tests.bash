@@ -15,7 +15,7 @@ cd "$PROJECT_ROOT"
 
 TYPE="int128"
 FEATURE="ranges"
-TEST_FILE="tests/${TYPE}_${FEATURE}_tests.cpp"
+TEST_FILE="tests/${TYPE}_${FEATURE}_extracted_tests.cpp"
 BUILD_DIR="build/build_tests"
 
 # ========================= Color Output =========================

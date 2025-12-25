@@ -15,8 +15,8 @@ cd "$PROJECT_ROOT"
 
 TYPE="uint128"
 FEATURE="format"
-BENCH_FILE="benchmarks/${TYPE}_${FEATURE}_benchmarks.cpp"
-BUILD_DIR="build/build_benchmarks"
+BENCH_FILE="benchs/${TYPE}_${FEATURE}_extracted_benchs.cpp"
+BUILD_DIR="build/build_benchs"
 
 # ========================= Color Output =========================
 
@@ -49,7 +49,7 @@ for MODE in debug release; do
     OUTPUT_DIR="$BUILD_DIR/$COMPILER/$MODE"
     mkdir -p "$OUTPUT_DIR"
     
-    OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchmarks_${COMPILER}"
+    OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchs_${COMPILER}"
     
     COMMON_FLAGS="-std=c++20 -Wall -Wextra -pedantic -I./include"
     
@@ -87,7 +87,7 @@ else
         OUTPUT_DIR="$BUILD_DIR/$COMPILER/$MODE"
         mkdir -p "$OUTPUT_DIR"
         
-        OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchmarks_${COMPILER}"
+        OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchs_${COMPILER}"
         
         COMMON_FLAGS="-std=c++20 -Wall -Wextra -pedantic -I./include"
         
@@ -126,7 +126,7 @@ else
         OUTPUT_DIR="$BUILD_DIR/$COMPILER/$MODE"
         mkdir -p "$OUTPUT_DIR"
         
-        OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchmarks_${COMPILER}"
+        OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchs_${COMPILER}"
         
         COMMON_FLAGS="-std=c++20 -Wall -Wextra -I./include"
         
@@ -167,7 +167,7 @@ else
         OUTPUT_DIR="$BUILD_DIR/$COMPILER/$MODE"
         mkdir -p "$OUTPUT_DIR"
         
-        OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchmarks_${COMPILER}.exe"
+        OUTPUT="$OUTPUT_DIR/${TYPE}_${FEATURE}_benchs_${COMPILER}.exe"
         
         COMMON_FLAGS="/std:c++20 /EHsc /W4 /I./include"
         

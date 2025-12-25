@@ -15,7 +15,7 @@ cd "$PROJECT_ROOT"
 
 TYPE="uint128"
 FEATURE="numeric"
-TEST_FILE="tests/test_uint128_numeric.cpp"
+TEST_FILE="tests/uint128_numeric_extracted_tests.cpp"
 BUILD_DIR="build/build_tests"
 
 # ========================= Color Output =========================

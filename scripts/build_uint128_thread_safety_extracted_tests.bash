@@ -15,7 +15,7 @@ cd "$PROJECT_ROOT"
 
 TYPE="uint128"
 FEATURE="thread_safety"
-TEST_FILE="tests/uint128_thread_safety_tests.cpp"
+TEST_FILE="tests/${TYPE}_${FEATURE}_extracted_tests.cpp"
 BUILD_DIR="build/build_tests"
 
 # ========================= Color Output =========================

@@ -15,7 +15,7 @@ cd "$PROJECT_ROOT"
 
 TYPE="uint128"
 FEATURE="format"
-TEST_FILE="tests/uint128_iostreams_tests.cpp"
+TEST_FILE="tests/uint128_iostreams_extracted_tests.cpp"
 BUILD_DIR="build/build_tests"
 
 # ========================= Color Output =========================
