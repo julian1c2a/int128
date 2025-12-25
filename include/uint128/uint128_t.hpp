@@ -27,6 +27,9 @@
 // Include helpers de módulo optimizados
 #include "specializations/uint128_mod_helpers.hpp"
 
+// Forward declaration para int128_t (necesario para constructor)
+class int128_t;
+
 class uint128_t
 {
     using uint64_t = std::uint64_t;
@@ -197,6 +200,14 @@ class uint128_t
         static_assert(std::is_integral_v<T1> && std::is_integral_v<T2>,
                       "T1 and T2 must be integral types");
     }
+
+    /**
+     * @brief Constructor a partir de int128_t (forward declaration).
+     * @param value El valor int128_t a convertir.
+     * @post El uint128_t se inicializa con la representación binaria de value.
+     * @note Para valores negativos, se preserva la representación two's complement.
+     */
+    inline constexpr uint128_t(const int128_t& value) noexcept;
 
     /**
      * @brief Constructor explícito a partir de una cadena de caracteres (C-string).
@@ -2703,4 +2714,12 @@ constexpr uint128_t operator""_u128_oct(const char* str, std::size_t)
 // Conveniencia: importar literales al namespace global cuando se usa
 // using namespace uint128_literals;
 
+// ============================================================================
+// Implementación del constructor uint128_t(const int128_t&)
+// Debe estar después de la definición completa de int128_t
+// Declarado en línea ~207, implementado aquí al final
+// ============================================================================
+
+// NOTA: Esta implementación se proporciona en int128_t.hpp después de
+// la definición completa de int128_t para evitar errores de tipo incompleto
 #endif // UINT128_T_HPP

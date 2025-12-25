@@ -78,12 +78,19 @@ inline std::ostream& operator<<(std::ostream& os, const int128_t& value)
             uint128_t uval(value);
             result = uval.to_string_hex(show_base);
         } else {
-            result = value.to_string_hex(show_base);
+            // Convertir a uint128_t para usar to_string_hex
+            uint128_t uval(value);
+            result = uval.to_string_hex(show_base);
         }
         if (uppercase) {
+            // Ya está en mayúsculas por defecto
+            // No hacer nada
+        } else {
+            // Convertir a minúsculas
             for (char& c : result) {
-                if (c >= 'a' && c <= 'f')
-                    c = c - 'a' + 'A';
+                if (c >= 'A' && c <= 'F') {
+                    c = c - 'A' + 'a';
+                }
             }
         }
         break;
@@ -93,7 +100,9 @@ inline std::ostream& operator<<(std::ostream& os, const int128_t& value)
             uint128_t uval(value);
             result = uval.to_string_oct(show_base);
         } else {
-            result = value.to_string_oct(show_base);
+            // Convertir a uint128_t para usar to_string_oct
+            uint128_t uval(value);
+            result = uval.to_string_oct(show_base);
         }
         break;
 

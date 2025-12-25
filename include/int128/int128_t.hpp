@@ -834,4 +834,15 @@ inline int128_t operator""_i128(const char* str, std::size_t len)
 
 } // namespace int128_literals
 
+// ============================================================================
+// Implementación del constructor uint128_t(const int128_t&)
+// Se declara en uint128_t.hpp pero se implementa aquí donde int128_t
+// está completamente definido
+// ============================================================================
+
+inline constexpr uint128_t::uint128_t(const int128_t& value) noexcept
+    : data{value.low(), value.high()}
+{
+}
+
 #endif // INT128_T_HPP

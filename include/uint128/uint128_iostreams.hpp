@@ -70,10 +70,13 @@ inline std::ostream& operator<<(std::ostream& os, const uint128_t& value)
     case std::ios_base::hex:
         result = value.to_string_hex(show_base);
         if (uppercase) {
-            // Convertir a mayúsculas
+            // Ya está en mayúsculas por defecto (to_string_base usa "ABCDEF")
+            // No hacer nada
+        } else {
+            // Convertir a minúsculas
             for (char& c : result) {
-                if (c >= 'a' && c <= 'f') {
-                    c = c - 'a' + 'A';
+                if (c >= 'A' && c <= 'F') {
+                    c = c - 'A' + 'a';
                 }
             }
         }

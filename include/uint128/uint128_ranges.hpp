@@ -91,44 +91,13 @@ uint128_t inner_product(InputIt1 first1, InputIt1 last1, InputIt2 first2, uint12
     return init;
 }
 
-/**
- * @brief Especialización de std::partial_sum para uint128_t
- */
-template <class InputIt, class OutputIt>
-OutputIt partial_sum(InputIt first, InputIt last, OutputIt d_first)
-{
-    if (first == last)
-        return d_first;
-
-    uint128_t sum = *first;
-    *d_first = sum;
-
-    while (++first != last) {
-        sum = sum + *first;
-        *++d_first = sum;
-    }
-    return ++d_first;
-}
-
-/**
- * @brief Especialización de std::adjacent_difference para uint128_t
- */
-template <class InputIt, class OutputIt>
-OutputIt adjacent_difference(InputIt first, InputIt last, OutputIt d_first)
-{
-    if (first == last)
-        return d_first;
-
-    uint128_t acc = *first;
-    *d_first = acc;
-
-    while (++first != last) {
-        uint128_t val = *first;
-        *++d_first = val - acc;
-        acc = val;
-    }
-    return ++d_first;
-}
+// NOTA: Las funciones std::partial_sum, std::adjacent_difference, etc.
+// ya funcionan correctamente con uint128_t sin necesidad de especializaciones
+// adicionales, ya que son templates genéricos que solo requieren operadores
+// básicos (+, -, etc.) que uint128_t ya proporciona.
+//
+// Solo especializamos iota() y accumulate() porque toman valores por copia
+// y podemos optimizar pasándolos directamente como uint128_t.
 
 } // namespace std
 
