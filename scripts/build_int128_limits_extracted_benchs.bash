@@ -114,18 +114,34 @@ if ! command -v cl &> /dev/null; then
 else
     cd "$PROJECT_ROOT"
     
-    mkdir -p "build/int128_limits_extracted_benchs/msvc/debug"
-    mkdir -p "build/int128_limits_extracted_benchs/msvc/release"
+    mkdir -p "build/build_benchmarks/msvc/debug"
+    mkdir -p "build/build_benchmarks/msvc/release"
     
     export MSYS2_ARG_CONV_EXCL="*"
     
-    cl benchmarks/int128_limits_extracted_benchs.cpp /Iinclude /std:c++20 /W4 /Zi /Od /EHsc \
-        /Fe:build/int128_limits_extracted_benchs/msvc/debug/int128_limits_extracted_benchs.exe
-    echo "   ✅ MSVC Debug: build/int128_limits_extracted_benchs/msvc/debug/int128_limits_extracted_benchs.exe"
+    cl.exe benchmarks/int128_limits_extracted_benchs.cpp /I./include /std:c++20 /W4 /Zi /Od /EHsc \
+        /Fe:build/build_benchmarks/msvc/debug/int128_limits_benchs_msvc.exe > /dev/null 2>&1
     
-    cl benchmarks/int128_limits_extracted_benchs.cpp /Iinclude /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
-        /Fe:build/int128_limits_extracted_benchs/msvc/release/int128_limits_extracted_benchs.exe
-    echo "   ✅ MSVC Release: build/int128_limits_extracted_benchs/msvc/release/int128_limits_extracted_benchs.exe"
+    result_debug=$?
+    if [ $result_debug -eq 0 ]; then
+        echo "   ✅ MSVC Debug OK"
+        rm -f build/build_benchmarks/msvc/debug/*.obj build/build_benchmarks/msvc/debug/*.pdb
+    else
+        echo "   ❌ MSVC Debug FAILED"
+    fi
+    
+    cl.exe benchmarks/int128_limits_extracted_benchs.cpp /I./include /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
+        /Fe:build/build_benchmarks/msvc/release/int128_limits_benchs_msvc.exe > /dev/null 2>&1
+    
+    result_release=$?
+    if [ $result_release -eq 0 ]; then
+        echo "   ✅ MSVC Release OK"
+        rm -f build/build_benchmarks/msvc/release/*.obj build/build_benchmarks/msvc/release/*.pdb
+    else
+        echo "   ❌ MSVC Release FAILED"
+    fi
+    
+    unset MSYS2_ARG_CONV_EXCL
     
     cd "$SCRIPT_DIR"
 fi

@@ -133,25 +133,45 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
     if ! command -v cl &> /dev/null; then
         echo "   ⚠️  MSVC no disponible, omitiendo..."
     else
-        mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/msvc/debug"
-        mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/msvc/release"
+        mkdir -p "$PROJECT_ROOT/build/build_tests/msvc/debug"
+        mkdir -p "$PROJECT_ROOT/build/build_tests/msvc/release"
         
-        WIN_SOURCE=$(cygpath -m "$SOURCE_FILE")
-        WIN_INCLUDE=$(cygpath -m "$PROJECT_ROOT/include")
-        WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/uint128_limits_extracted_tests/msvc/debug/uint128_limits_extracted_tests.exe")
-        WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/uint128_limits_extracted_tests/msvc/release/uint128_limits_extracted_tests.exe")
+        INCLUDE_DIR="./include"
+        TEST_SRC="tests/uint128_limits_extracted_tests.cpp"
         
         export MSYS2_ARG_CONV_EXCL="*"
         
         # DEBUG
-        cl "$WIN_SOURCE" /I"$WIN_INCLUDE" /std:c++20 /W4 /Zi /Od /EHsc \
-            "/Fe:$WIN_OUT_DEBUG" > /dev/null
-        echo "   ✅ MSVC Debug OK"
+        cl.exe /std:c++20 /W4 /EHsc /Od /Zi \
+            /I"${INCLUDE_DIR}" \
+            "${TEST_SRC}" \
+            /Fe"build/build_tests/msvc/debug/uint128_limits_tests_msvc.exe" \
+            > /dev/null 2>&1
+        
+        result_debug=$?
+        
+        if [ $result_debug -eq 0 ]; then
+            echo "   ✅ MSVC Debug OK"
+            rm -f build/build_tests/msvc/debug/*.obj build/build_tests/msvc/debug/*.pdb
+        else
+            echo "   ❌ MSVC Debug FAILED"
+        fi
         
         # RELEASE
-        cl "$WIN_SOURCE" /I"$WIN_INCLUDE" /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
-            "/Fe:$WIN_OUT_RELEASE" > /dev/null
-        echo "   ✅ MSVC Release OK"
+        cl.exe /std:c++20 /W4 /EHsc /O2 /DNDEBUG \
+            /I"${INCLUDE_DIR}" \
+            "${TEST_SRC}" \
+            /Fe"build/build_tests/msvc/release/uint128_limits_tests_msvc.exe" \
+            > /dev/null 2>&1
+        
+        result_release=$?
+        
+        if [ $result_release -eq 0 ]; then
+            echo "   ✅ MSVC Release OK"
+            rm -f build/build_tests/msvc/release/*.obj build/build_tests/msvc/release/*.pdb
+        else
+            echo "   ❌ MSVC Release FAILED"
+        fi
         
         unset MSYS2_ARG_CONV_EXCL
     fi

@@ -1,5 +1,5 @@
-#include "../include/uint128_numeric.hpp"
-#include "../include/uint128_t.hpp"
+#include "../include/uint128/uint128_numeric.hpp"
+#include "../include/uint128/uint128_t.hpp"
 #include <iomanip>
 #include <iostream>
 
@@ -67,14 +67,14 @@ int main()
     std::cout << "  - ilog2(1024) = " << std::ilog2(uint128_t(1024)) << "\n";
 
     // Test funciones adicionales
-    std::cout << "\n7. Funciones adicionales (namespace uint128_numeric):\n";
-    auto pow_result = uint128_numeric::power(uint128_t(2), uint128_t(10));
+    std::cout << "\n7. Funciones adicionales (namespace std::uint128_numeric):\n";
+    auto pow_result = std::uint128_numeric::power(uint128_t(2), uint128_t(10));
     std::cout << "  - power(2, 10) = " << pow_result << "\n";
 
-    auto sqrt_result = uint128_numeric::isqrt(uint128_t(10000));
+    auto sqrt_result = std::uint128_numeric::isqrt(uint128_t(10000));
     std::cout << "  - isqrt(10000) = " << sqrt_result << "\n";
 
-    auto fact_result = uint128_numeric::factorial(10);
+    auto fact_result = std::uint128_numeric::factorial(10);
     std::cout << "  - factorial(10) = " << fact_result << "\n";
 
     std::cout << "\n✅ Todas las funciones numéricas C++20 implementadas y funcionando!\n";

@@ -90,14 +90,14 @@ fi
 # ---------------------------------------
 # 4. MSVC
 # ---------------------------------------
-if [ -f "../build/int128_limits_extracted_tests/msvc/debug/int128_limits_extracted_tests.exe" ]; then
+if [ -f "../build/build_tests/msvc/debug/int128_limits_tests_msvc.exe" ]; then
     ((total++))
-    if run_test "MSVC" "Debug" "../build/int128_limits_extracted_tests/msvc/debug/int128_limits_extracted_tests.exe"; then
+    if run_test "MSVC" "Debug" "../build/build_tests/msvc/debug/int128_limits_tests_msvc.exe"; then
         ((passed++))
     fi
     
     ((total++))
-    if run_test "MSVC" "Release" "../build/int128_limits_extracted_tests/msvc/release/int128_limits_extracted_tests.exe"; then
+    if run_test "MSVC" "Release" "../build/build_tests/msvc/release/int128_limits_tests_msvc.exe"; then
         ((passed++))
     fi
 fi

@@ -50,7 +50,8 @@ g++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
     -o "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/debug/uint128_limits_extracted_benchs"
 echo "   ✅ GCC Debug: build/uint128_limits_extracted_benchs/gcc/debug/uint128_limits_extracted_benchs"
 
-g++ $SO"$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/release/uint128_limits_extracted_benchs"
+g++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -O2 -DNDEBUG \
+    -o "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/gcc/release/uint128_limits_extracted_benchs"
 echo "   ✅ GCC Release: build/uint128_limits_extracted_benchs/gcc/release/uint128_limits_extracted_benchs"
 fi
 
@@ -65,9 +66,10 @@ mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/release"
 
 clang++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
     -o "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/debug/uint128_limits_extracted_benchs"
-    -o ../build/uint128_limits_extracted_benchs/clang/debug/uint128_limits_extracted_benchs
 echo "   ✅ Clang Debug: build/uint128_limits_extracted_benchs/clang/debug/uint128_limits_extracted_benchs"
-"$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/release/uint128_limits_extracted_benchs"
+
+clang++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -O2 -DNDEBUG \
+    -o "$PROJECT_ROOT/build/uint128_limits_extracted_benchs/clang/release/uint128_limits_extracted_benchs"
 echo "   ✅ Clang Release: build/uint128_limits_extracted_benchs/clang/release/uint128_limits_extracted_benchs"
 fi
 
@@ -115,23 +117,37 @@ if ! command -v cl &> /dev/null; then
 else
     cd "$PROJECT_ROOT"
     
-    mkdir -p "build/uint128_limits_extracted_benchs/msvc/debug"
-    mkdir -p "build/uint128_limits_extracted_benchs/msvc/release"
+    mkdir -p "build/build_benchmarks/msvc/debug"
+    mkdir -p "build/build_benchmarks/msvc/release"
     
     export MSYS2_ARG_CONV_EXCL="*"
     
-    cl benchmarks/uint128_limits_extracted_benchs.cpp /Iinclude /std:c++20 /W4 /Zi /Od /EHsc \
-        /Fe:build/uint128_limits_extracted_benchs/msvc/debug/uint128_limits_extracted_benchs.exe
-    echo "   ✅ MSVC Debug: build/uint128_limits_extracted_benchs/msvc/debug/uint128_limits_extracted_benchs.exe"
+    cl.exe benchmarks/uint128_limits_extracted_benchs.cpp /I./include /std:c++20 /W4 /Zi /Od /EHsc \
+        /Fe:build/build_benchmarks/msvc/debug/uint128_limits_benchs_msvc.exe > /dev/null 2>&1
     
-    cl benchmarks/uint128_limits_extracted_benchs.cpp /Iinclude /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
-        /Fe:build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe
-    echo "   ✅ MSVC Release: build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe"
+    result_debug=$?
+    if [ $result_debug -eq 0 ]; then
+        echo "   ✅ MSVC Debug OK"
+        rm -f build/build_benchmarks/msvc/debug/*.obj build/build_benchmarks/msvc/debug/*.pdb
+    else
+        echo "   ❌ MSVC Debug FAILED"
+    fi
+    
+    cl.exe benchmarks/uint128_limits_extracted_benchs.cpp /I./include /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
+        /Fe:build/build_benchmarks/msvc/release/uint128_limits_benchs_msvc.exe > /dev/null 2>&1
+    
+    result_release=$?
+    if [ $result_release -eq 0 ]; then
+        echo "   ✅ MSVC Release OK"
+        rm -f build/build_benchmarks/msvc/release/*.obj build/build_benchmarks/msvc/release/*.pdb
+    else
+        echo "   ❌ MSVC Release FAILED"
+    fi
+    
+    unset MSYS2_ARG_CONV_EXCL
     
     cd "$SCRIPT_DIR"
 fi
-        /Fe:../build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe
-    echo "   ✅ MSVC Release: build/uint128_limits_extracted_benchs/msvc/release/uint128_limits_extracted_benchs.exe"
 fi
 
 echo ""

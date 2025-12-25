@@ -124,19 +124,35 @@ else
     # Cambiar al directorio del proyecto
     cd "$PROJECT_ROOT"
     
-    mkdir -p "build/int128_limits_extracted_tests/msvc/debug"
-    mkdir -p "build/int128_limits_extracted_tests/msvc/release"
+    mkdir -p "build/build_tests/msvc/debug"
+    mkdir -p "build/build_tests/msvc/release"
     
     # Evitar conversión de paths
     export MSYS2_ARG_CONV_EXCL="*"
     
-    cl tests/int128_limits_extracted_tests.cpp /Iinclude /std:c++20 /W4 /Zi /Od /EHsc \
-        /Fe:build/int128_limits_extracted_tests/msvc/debug/int128_limits_extracted_tests.exe
-    echo "   ✅ MSVC Debug: build/int128_limits_extracted_tests/msvc/debug/int128_limits_extracted_tests.exe"
+    cl.exe tests/int128_limits_extracted_tests.cpp /I./include /std:c++20 /W4 /Zi /Od /EHsc \
+        /Fe:build/build_tests/msvc/debug/int128_limits_tests_msvc.exe > /dev/null 2>&1
     
-    cl tests/int128_limits_extracted_tests.cpp /Iinclude /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
-        /Fe:build/int128_limits_extracted_tests/msvc/release/int128_limits_extracted_tests.exe
-    echo "   ✅ MSVC Release: build/int128_limits_extracted_tests/msvc/release/int128_limits_extracted_tests.exe"
+    result_debug=$?
+    if [ $result_debug -eq 0 ]; then
+        echo "   ✅ MSVC Debug OK"
+        rm -f build/build_tests/msvc/debug/*.obj build/build_tests/msvc/debug/*.pdb
+    else
+        echo "   ❌ MSVC Debug FAILED"
+    fi
+    
+    cl.exe tests/int128_limits_extracted_tests.cpp /I./include /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
+        /Fe:build/build_tests/msvc/release/int128_limits_tests_msvc.exe > /dev/null 2>&1
+    
+    result_release=$?
+    if [ $result_release -eq 0 ]; then
+        echo "   ✅ MSVC Release OK"
+        rm -f build/build_tests/msvc/release/*.obj build/build_tests/msvc/release/*.pdb
+    else
+        echo "   ❌ MSVC Release FAILED"
+    fi
+    
+    unset MSYS2_ARG_CONV_EXCL
     
     # Volver al directorio del script
     cd "$SCRIPT_DIR"
