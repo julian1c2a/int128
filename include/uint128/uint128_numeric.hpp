@@ -402,6 +402,51 @@ uint128_t factorial(unsigned int n) noexcept
     return result;
 }
 
+// ===============================================================================
+// GCD Y LCM (MÁXIMO COMÚN DIVISOR Y MÍNIMO COMÚN MÚLTIPLO)
+// ===============================================================================
+
+/**
+ * @brief Máximo común divisor (algoritmo de Euclides)
+ *
+ * @param a Primer número
+ * @param b Segundo número
+ * @return GCD(a, b)
+ */
+uint128_t gcd(uint128_t a, uint128_t b) noexcept
+{
+    if (a == 0)
+        return b;
+    if (b == 0)
+        return a;
+
+    // Algoritmo de Euclides
+    while (b != 0) {
+        uint128_t temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+/**
+ * @brief Mínimo común múltiplo
+ *
+ * @param a Primer número
+ * @param b Segundo número
+ * @return LCM(a, b) = (a * b) / GCD(a, b)
+ */
+uint128_t lcm(uint128_t a, uint128_t b) noexcept
+{
+    if (a == 0 || b == 0)
+        return uint128_t(0);
+
+    // lcm(a, b) = (a / gcd(a, b)) * b
+    // Dividimos primero para evitar overflow
+    uint128_t g = gcd(a, b);
+    return (a / g) * b;
+}
+
 } // namespace uint128_numeric
 
 } // namespace std

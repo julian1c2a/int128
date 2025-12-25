@@ -18,7 +18,7 @@ PRINT ?=
 
 # Validación (completo según PROMPT.md)
 VALID_TYPES := uint128 int128
-VALID_FEATURES := t traits limits concepts algorithms iostreams bits cmath numeric ranges format safe thread_safety
+VALID_FEATURES := t traits limits concepts algorithms iostreams bits cmath numeric ranges format safe thread_safety comparison_boost interop
 VALID_COMPILERS := gcc clang intel msvc all
 VALID_MODES := debug release all
 
@@ -310,7 +310,8 @@ help:
 	@echo "ARGUMENTOS:"
 	@echo "  TYPE          uint128 | int128 (requerido)"
 	@echo "  FEATURE       t | traits | limits | concepts | algorithms | iostreams"
-	@echo "                bits | cmath | numeric | ranges | format | safe | thread_safety (requerido)"
+	@echo "                bits | cmath | numeric | ranges | format | safe | thread_safety"
+	@echo "                comparison_boost | interop (requerido)"
 	@echo "  COMPILER      gcc | clang | intel | msvc | all (default: all)"
 	@echo "  MODE          debug | release | all (default: all)"
 	@echo "  PRINT         print (opcional, genera logs/resultados en archivos)"

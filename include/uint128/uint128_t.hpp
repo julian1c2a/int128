@@ -1,6 +1,10 @@
 #ifndef UINT128_T_HPP
 #define UINT128_T_HPP
 
+// ⚠️ CRITICAL: Include trait specializations BEFORE any standard library headers
+// This ensures std::is_integral and other traits are properly specialized
+#include "uint128_traits_specializations.hpp"
+
 #include <climits>
 #include <cstddef>
 #include <cstdint>

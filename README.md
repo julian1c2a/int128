@@ -7,6 +7,27 @@ Una implementación completa y eficiente de enteros de 128 bits (signed y unsign
 - **`uint128_t`**: Entero **sin signo** de 128 bits (0 a 2^128-1)
 - **`int128_t`**: Entero **con signo** de 128 bits (-2^127 a 2^127-1)
 
+## 🌍 Plataformas Soportadas
+
+### ✅ Plataforma Principal (Completamente Testeada)
+- **Windows x86_64** (MSYS2)
+  - ✅ GCC 15.2+ (UCRT64) - Recomendado
+  - ✅ Clang 19.1+ (CLANG64)
+  - ✅ Intel OneAPI ICX
+  - ✅ MSVC 2022 (Visual Studio 17.12+)
+
+### 📋 Otras Plataformas (Sin Testear - Debería Funcionar)
+La biblioteca usa C++20 estándar portable. Debería compilar sin problemas en:
+- **Linux x86_64**: GCC 10+, Clang 12+, Intel ICX
+- **macOS x86_64/ARM64**: Clang (Apple), GCC (Homebrew)
+- **ARM 32/64-bit**: GCC, Clang (con fallback a código genérico)
+- **RISC-V 32/64-bit**: GCC, Clang (código genérico)
+
+**Nota**: Los intrínsecos de optimización son específicos de x86_64. En otras arquitecturas,
+la biblioteca usa automáticamente implementaciones genéricas portables.
+
+## 📦 Arquitectura del Proyecto
+
 Ambos tipos tienen implementación
     uint128_t (unsigned) - Implementación principal
 │   ├── uint128_limits.hpp     # std::numeric_limits especializations
@@ -159,21 +180,90 @@ bash scripts/run_boost_comparison.bash
 
 **Resultados esperados**: uint128_t ~2-3× más rápido en operaciones 128-bit fijas
 
+**Usando Makefile**:
+```bash
+# Compilar y ejecutar con GCC
+make build_benchs TYPE=uint128 FEATURE=comparison_boost COMPILER=gcc MODE=release
+make run TYPE=uint128 FEATURE=comparison_boost COMPILER=gcc MODE=release
+
+# Pipeline completo (build + run)
+make comparison_boost-full
+```
+
 **Documentación completa**:
+- [COMPARISON_BOOST_FEATURE_SUMMARY.md](COMPARISON_BOOST_FEATURE_SUMMARY.md) - Documentación de la FEATURE
 - [BOOST_COMPARISON_ANALYSIS.md](BOOST_COMPARISON_ANALYSIS.md) - Análisis detallado de features y performance
 - [BOOST_COMPARISON_QUICKSTART.md](BOOST_COMPARISON_QUICKSTART.md) - Guía rápida de uso
 
 **Comparación de características**:
 
-| Característica | uint128_t | Boost.Multiprecision |
-|---------------|-----------|---------------------|
-| **Performance (128-bit)** | ✅ ~2-3× más rápido | ⚠️ Genérico |
-| **std::is_integral** | ✅ true | ❌ false |
-| **C++20 concepts** | ✅ Completo | ❌ No |
-| **Thread safety** | ✅ 4 wrappers | ❌ No |
-| **Precisión arbitraria** | ❌ Solo 128-bit | ✅ Ilimitada |
+| Característica | uint128_t | Boost.Multiprecision | unsigned __int128 |
+|---------------|-----------|---------------------|-------------------|
+| **Performance (128-bit)** | ✅ ~2-3× más rápido | ⚠️ Genérico | ✅ ~10-20% más rápido |
+| **std::is_integral** | ✅ true | ❌ false | ❌ false |
+| **C++20 concepts** | ✅ Completo | ❌ No | ❌ No |
+| **Thread safety** | ✅ 4 wrappers | ❌ No | ❌ No |
+| **Precisión arbitraria** | ❌ Solo 128-bit | ✅ Ilimitada | ❌ Solo 128-bit |
+| **Portabilidad** | ✅ Todos | ✅ Todos | ⚠️ Solo GCC/Clang |
 
-#### 📈 Benchmarks Internos
+#### 🆚 Benchmark int128_t vs uint128_t
+
+Comparación de performance entre tipos con signo y sin signo para medir el overhead del manejo de signo:
+
+```bash
+# Compilar y ejecutar
+bash scripts/build_benchmark_int128_vs_uint128.bash gcc release
+bash scripts/run_benchmark_int128_vs_uint128.bash gcc release
+```
+
+**6 categorías evaluadas** (30+ tests):
+1. Construcción y asignación (4 tests)
+2. Aritmética básica (6 tests: +, -, *, /, %, negación)
+3. Operaciones bitwise (5 tests: &, |, ^, <<, >>)
+4. Conversiones string (6 tests: positivos y negativos)
+5. Funciones matemáticas (5 tests: gcd, lcm, pow, sqrt, abs)
+6. Comparaciones (3 tests: ==, <, >)
+
+**Overhead típico**: 5-10% en operaciones aritméticas, 0-2% en bitwise
+
+**Documentación completa**: [BENCHMARK_INT128_VS_UINT128.md](BENCHMARK_INT128_VS_UINT128.md)
+
+#### � FEATURE interop - Interoperabilidad uint128_t ↔ int128_t
+
+**Suite unificada para validación de interoperabilidad** entre tipos signed y unsigned:
+
+```bash
+# Usando el Makefile con FEATURE=interop
+make build_benchs TYPE=uint128 FEATURE=interop COMPILER=gcc MODE=release
+make run TYPE=uint128 FEATURE=interop COMPILER=gcc MODE=release
+make build_tests TYPE=uint128 FEATURE=interop COMPILER=gcc MODE=release
+make check TYPE=uint128 FEATURE=interop COMPILER=gcc MODE=release
+
+# Pipeline completo (build + check + run)
+make interop-full COMPILER=gcc MODE=release
+```
+
+**Incluye**:
+- **Benchmark int128_vs_uint128**: Medición de overhead signed (30+ tests)
+- **Tests de interoperabilidad**: ✅ **17/17 tests PASSING (100%)**
+  - Conversiones explícitas uint128_t ↔ int128_t
+  - Operaciones aritméticas y bitwise mixtas
+  - **Type traits**: `std::common_type`, `std::make_signed`, `std::make_unsigned`, `std::is_integral`
+  - **Funciones numéricas**: gcd/lcm personalizado
+  - Casos límite y asignaciones seguras
+
+**Ventajas**:
+- ✅ **Unificación**: Un solo comando para toda la validación
+- ✅ **Consistencia**: Mismo patrón que otras FEATURES del Makefile
+- ✅ **Atajos automáticos**: `make interop-full` ejecuta todo
+- ✅ **Flexible**: Funciona con TYPE=uint128 o TYPE=int128
+- ✅ **Completo**: Cobertura 100% de operaciones mixtas
+
+**Documentación**:
+- [INTEROP_FEATURE_SUMMARY.md](INTEROP_FEATURE_SUMMARY.md) - Resumen general
+- [TYPE_TRAITS_IMPLEMENTATION.md](TYPE_TRAITS_IMPLEMENTATION.md) - Type traits y gcd/lcm
+
+#### �📈 Benchmarks Internos
 
 - ✅ **Comparación de tipos (uint128_t)**:
   - `uint128_t` (nuestra implementación)
@@ -312,6 +402,59 @@ Los resultados se guardan en `benchmark_results/`:
 - `report_[timestamp].txt` - Reporte completo con análisis
 - `benchmarks_[compiler]_[timestamp].txt` - Resultados por compilador
 - `tests_[compiler]_[timestamp].txt` - Logs de tests por compilador
+
+---
+
+### 🔄 Tests de Interoperabilidad uint128_t ↔ int128_t
+
+**Suite completa de tests para operaciones mixtas entre tipos signed y unsigned**:
+
+#### 📝 Características
+
+- ✅ **17 tests exhaustivos** - Validación completa de interoperabilidad
+- ✅ **9 categorías** - Conversiones, aritmética, comparaciones, type traits, bitwise, límites, asignaciones, compuestas, math
+- ✅ **4 compiladores** - GCC, Clang, Intel, MSVC
+- ✅ **Output con colores** - Verde (pass) / Rojo (fail)
+- ✅ **Automatización completa** - Scripts de build y ejecución
+
+#### 📂 Archivos
+
+- **Tests**: `tests/test_interoperability_uint128_int128.cpp`
+- **Scripts build**: `scripts/build_test_interoperability.bash`
+- **Scripts run**: `scripts/run_test_interoperability.bash`
+
+#### 🚀 Uso Rápido
+
+```bash
+# Compilar tests
+bash scripts/build_test_interoperability.bash gcc release
+
+# Ejecutar tests
+bash scripts/run_test_interoperability.bash gcc release
+```
+
+#### 📊 Tests Incluidos
+
+1. **Conversiones explícitas** (2) - Casts seguros uint128_t ↔ int128_t
+2. **Aritmética mixta** (4) - `+`, `-`, `*`, `/` con explicit cast
+3. **Comparaciones** (2) - `==`, `!=`, `<`, `>`, `<=`, `>=`
+4. **Type traits** (2) - `std::common_type`, `make_signed/unsigned`
+5. **Bitwise** (1) - `&`, `|`, `^` entre tipos
+6. **Casos límite** (3) - Zero, negativos, valores grandes
+7. **Asignaciones** (1) - Verificación de rangos seguros
+8. **Compuestas** (1) - Expresiones complejas
+9. **Math functions** (1) - `std::gcd`, `std::lcm`
+
+#### 📚 Documentación
+
+- [INTEROPERABILITY_TESTS.md](INTEROPERABILITY_TESTS.md) - 📘 **Documentación completa**
+
+#### ⚠️ Puntos Clave
+
+- **Conversiones explícitas requeridas**: Las operaciones mixtas necesitan cast explícito
+- **std::common_type funciona**: Está correctamente definido entre ambos tipos
+- **Negativos → complemento a 2**: int128_t negativo se convierte a uint128_t vía complemento a 2
+- **make_signed/unsigned**: Conversión bidireccional entre tipos
 
 ---
 

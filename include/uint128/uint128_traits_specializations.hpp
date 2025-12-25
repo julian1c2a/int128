@@ -136,6 +136,21 @@ template <> struct is_trivially_destructible<int128_t> : true_type {
 template <> struct is_standard_layout<int128_t> : true_type {
 };
 
+// ===============================================================================
+// CONVERSIONES SIGNED/UNSIGNED
+// ===============================================================================
+
+/**
+ * @brief Especialización de std::make_signed para uint128_t
+ *
+ * Convierte uint128_t a su equivalente con signo (int128_t)
+ */
+template <> struct make_signed<uint128_t> {
+    using type = int128_t;
+};
+
+// NOTA: make_unsigned<int128_t> está definido en int128_traits.hpp
+
 #endif // !UINT128_USING_LIBCPP
 
 } // namespace std

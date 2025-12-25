@@ -1,0 +1,358 @@
+name: CI - Multi-Platform Build and Test (EXAMPLE)
+
+# ⚠️ ESTE ES UN ARCHIVO DE EJEMPLO
+# Para usar: Copiar contenido a .github/workflows/ci.yml
+# Requiere: Adaptar scripts o usar comandos directos
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  # ============================================================================
+  # LINUX x86_64 - Ubuntu con GCC y Clang
+  # ============================================================================
+  linux-build:
+    name: Linux ${{ matrix.os }} - ${{ matrix.compiler }} (${{ matrix.mode }})
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+        compiler: [gcc-13, gcc-14, clang-16, clang-17]
+        mode: [Debug, Release]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential
+        
+    - name: Install GCC
+      if: startsWith(matrix.compiler, 'gcc')
+      run: |
+        sudo apt-get install -y ${{ matrix.compiler }} g++-$(echo ${{ matrix.compiler }} | sed 's/gcc-//')
+        
+    - name: Install Clang
+      if: startsWith(matrix.compiler, 'clang')
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh $(echo ${{ matrix.compiler }} | sed 's/clang-//')
+        
+    - name: Set compiler variables
+      run: |
+        if [[ "${{ matrix.compiler }}" == gcc-* ]]; then
+          echo "CC=gcc-$(echo ${{ matrix.compiler }} | sed 's/gcc-//')" >> $GITHUB_ENV
+          echo "CXX=g++-$(echo ${{ matrix.compiler }} | sed 's/gcc-//')" >> $GITHUB_ENV
+        else
+          echo "CC=clang-$(echo ${{ matrix.compiler }} | sed 's/clang-//')" >> $GITHUB_ENV
+          echo "CXX=clang++-$(echo ${{ matrix.compiler }} | sed 's/clang-//')" >> $GITHUB_ENV
+        fi
+        
+    - name: Compile interoperability test
+      run: |
+        mkdir -p build
+        FLAGS="-std=c++20 -I./include"
+        if [ "${{ matrix.mode }}" = "Debug" ]; then
+          FLAGS="$FLAGS -g -O0"
+        else
+          FLAGS="$FLAGS -O2 -DNDEBUG"
+        fi
+        $CXX $FLAGS tests/test_interoperability_uint128_int128.cpp -o build/test_interop
+          
+    - name: Run interoperability test
+      run: ./build/test_interop
+      
+    - name: Compile type traits tests
+      run: |
+        $CXX -std=c++20 -O2 -I./include tests/test_common_type_simple.cpp -o build/test_common_type
+        $CXX -std=c++20 -O2 -I./include tests/test_is_integral.cpp -o build/test_is_integral
+        $CXX -std=c++20 -O2 -I./include tests/test_make_signed_unsigned.cpp -o build/test_make_signed
+        
+    - name: Run type traits tests
+      run: |
+        ./build/test_common_type
+        ./build/test_is_integral
+        ./build/test_make_signed
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: linux-${{ matrix.os }}-${{ matrix.compiler }}-${{ matrix.mode }}
+        path: build/
+        retention-days: 7
+
+  # ============================================================================
+  # macOS x86_64 - Clang (Apple toolchain)
+  # ============================================================================
+  macos-intel-build:
+    name: macOS Intel - Clang (${{ matrix.mode }})
+    runs-on: macos-13  # Intel runners
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [Debug, Release]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies (optional)
+      run: |
+        # Clang viene preinstalado
+        clang++ --version
+        
+    - name: Compile interoperability test
+      run: |
+        mkdir -p build
+        FLAGS="-std=c++20 -I./include"
+        if [ "${{ matrix.mode }}" = "Debug" ]; then
+          FLAGS="$FLAGS -g -O0"
+        else
+          FLAGS="$FLAGS -O2 -DNDEBUG"
+        fi
+        clang++ $FLAGS tests/test_interoperability_uint128_int128.cpp -o build/test_interop
+          
+    - name: Run interoperability test
+      run: ./build/test_interop
+      
+    - name: Compile type traits tests
+      run: |
+        clang++ -std=c++20 -O2 -I./include tests/test_common_type_simple.cpp -o build/test_common_type
+        clang++ -std=c++20 -O2 -I./include tests/test_is_integral.cpp -o build/test_is_integral
+        clang++ -std=c++20 -O2 -I./include tests/test_make_signed_unsigned.cpp -o build/test_make_signed
+        
+    - name: Run type traits tests
+      run: |
+        ./build/test_common_type
+        ./build/test_is_integral
+        ./build/test_make_signed
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: macos-intel-${{ matrix.mode }}
+        path: build/
+        retention-days: 7
+
+  # ============================================================================
+  # macOS ARM64 (Apple Silicon) - Clang
+  # ============================================================================
+  macos-arm-build:
+    name: macOS ARM64 - Clang (${{ matrix.mode }})
+    runs-on: macos-14  # M1/M2 runners
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [Debug, Release]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check architecture
+      run: |
+        uname -m  # Debería ser arm64
+        clang++ --version
+        
+    - name: Compile interoperability test
+      run: |
+        mkdir -p build
+        FLAGS="-std=c++20 -I./include -arch arm64"
+        if [ "${{ matrix.mode }}" = "Debug" ]; then
+          FLAGS="$FLAGS -g -O0"
+        else
+          FLAGS="$FLAGS -O2 -DNDEBUG"
+        fi
+        clang++ $FLAGS tests/test_interoperability_uint128_int128.cpp -o build/test_interop
+          
+    - name: Run interoperability test
+      run: ./build/test_interop
+      
+    - name: Compile type traits tests
+      run: |
+        clang++ -std=c++20 -O2 -I./include -arch arm64 tests/test_common_type_simple.cpp -o build/test_common_type
+        clang++ -std=c++20 -O2 -I./include -arch arm64 tests/test_is_integral.cpp -o build/test_is_integral
+        clang++ -std=c++20 -O2 -I./include -arch arm64 tests/test_make_signed_unsigned.cpp -o build/test_make_signed
+        
+    - name: Run type traits tests
+      run: |
+        ./build/test_common_type
+        ./build/test_is_integral
+        ./build/test_make_signed
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: macos-arm64-${{ matrix.mode }}
+        path: build/
+        retention-days: 7
+
+  # ============================================================================
+  # Windows x86_64 - MSVC (ya implementado, incluido para completitud)
+  # ============================================================================
+  windows-msvc-build:
+    name: Windows - MSVC (${{ matrix.mode }})
+    runs-on: windows-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [Debug, Release]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      
+    - name: Compile interoperability test
+      shell: cmd
+      run: |
+        mkdir build 2>nul
+        if "${{ matrix.mode }}"=="Debug" (
+          cl /std:c++20 /EHsc /Zi /Od /I.\include tests\test_interoperability_uint128_int128.cpp /Fe:build\test_interop.exe
+        ) else (
+          cl /std:c++20 /EHsc /O2 /DNDEBUG /I.\include tests\test_interoperability_uint128_int128.cpp /Fe:build\test_interop.exe
+        )
+          
+    - name: Run interoperability test
+      shell: cmd
+      run: build\test_interop.exe
+      
+    - name: Compile type traits tests
+      shell: cmd
+      run: |
+        cl /std:c++20 /EHsc /O2 /I.\include tests\test_common_type_simple.cpp /Fe:build\test_common_type.exe
+        cl /std:c++20 /EHsc /O2 /I.\include tests\test_is_integral.cpp /Fe:build\test_is_integral.exe
+        cl /std:c++20 /EHsc /O2 /I.\include tests\test_make_signed_unsigned.cpp /Fe:build\test_make_signed.exe
+        
+    - name: Run type traits tests
+      shell: cmd
+      run: |
+        build\test_common_type.exe
+        build\test_is_integral.exe
+        build\test_make_signed.exe
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: windows-msvc-${{ matrix.mode }}
+        path: build/
+        retention-days: 7
+
+  # ============================================================================
+  # Windows x86_64 - GCC/Clang via MSYS2 (ya implementado)
+  # ============================================================================
+  windows-mingw-build:
+    name: Windows - ${{ matrix.compiler }} (${{ matrix.mode }})
+    runs-on: windows-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        mode: [Debug, Release]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.compiler == 'gcc' && 'UCRT64' || 'CLANG64' }}
+        update: true
+        install: >-
+          ${{ matrix.compiler == 'gcc' && 'mingw-w64-ucrt-x86_64-gcc' || 'mingw-w64-clang-x86_64-clang' }}
+          make
+    
+    - name: Compile and run tests
+      shell: msys2 {0}
+      run: |
+        mkdir -p build
+        FLAGS="-std=c++20 -I./include"
+        if [ "${{ matrix.mode }}" = "Debug" ]; then
+          FLAGS="$FLAGS -g -O0"
+        else
+          FLAGS="$FLAGS -O2 -DNDEBUG"
+        fi
+        
+        # Compilar y ejecutar test de interoperabilidad
+        ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }} $FLAGS tests/test_interoperability_uint128_int128.cpp -o build/test_interop.exe
+        ./build/test_interop.exe
+        
+        # Compilar y ejecutar tests de type traits
+        ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }} -std=c++20 -O2 -I./include tests/test_common_type_simple.cpp -o build/test_common_type.exe
+        ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }} -std=c++20 -O2 -I./include tests/test_is_integral.cpp -o build/test_is_integral.exe
+        ${{ matrix.compiler == 'gcc' && 'g++' || 'clang++' }} -std=c++20 -O2 -I./include tests/test_make_signed_unsigned.cpp -o build/test_make_signed.exe
+        
+        ./build/test_common_type.exe
+        ./build/test_is_integral.exe
+        ./build/test_make_signed.exe
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: windows-${{ matrix.compiler }}-${{ matrix.mode }}
+        path: build/
+        retention-days: 7
+
+  # ============================================================================
+  # Resumen Final de Resultados
+  # ============================================================================
+  test-summary:
+    name: 📊 Test Summary
+    runs-on: ubuntu-latest
+    needs: [linux-build, macos-intel-build, macos-arm-build, windows-msvc-build, windows-mingw-build]
+    if: always()
+    
+    steps:
+    - name: Generate summary
+      run: |
+        echo "=========================================="
+        echo "      Multi-Platform CI/CD Summary"
+        echo "=========================================="
+        echo ""
+        echo "Platform Results:"
+        echo "  Linux (GCC/Clang):     ${{ needs.linux-build.result }}"
+        echo "  macOS Intel (Clang):   ${{ needs.macos-intel-build.result }}"
+        echo "  macOS ARM64 (Clang):   ${{ needs.macos-arm-build.result }}"
+        echo "  Windows (MSVC):        ${{ needs.windows-msvc-build.result }}"
+        echo "  Windows (GCC/Clang):   ${{ needs.windows-mingw-build.result }}"
+        echo ""
+        echo "=========================================="
+        
+        # Check if any job failed
+        FAILED=0
+        [[ "${{ needs.linux-build.result }}" != "success" ]] && FAILED=1
+        [[ "${{ needs.macos-intel-build.result }}" != "success" ]] && FAILED=1
+        [[ "${{ needs.macos-arm-build.result }}" != "success" ]] && FAILED=1
+        [[ "${{ needs.windows-msvc-build.result }}" != "success" ]] && FAILED=1
+        [[ "${{ needs.windows-mingw-build.result }}" != "success" ]] && FAILED=1
+        
+        if [ $FAILED -eq 1 ]; then
+          echo "❌ Some tests failed"
+          exit 1
+        else
+          echo "✅ All platforms passed!"
+        fi

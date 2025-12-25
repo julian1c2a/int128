@@ -95,6 +95,15 @@ template <> struct make_unsigned<int128_t> {
     using type = uint128_t;
 };
 
+/**
+ * @brief Especialización para make_unsigned de uint128_t
+ *
+ * uint128_t ya es unsigned, retorna el mismo tipo.
+ */
+template <> struct make_unsigned<uint128_t> {
+    using type = uint128_t;
+};
+
 #endif // !INT128_USING_LIBCPP
 
 // ===============================================================================
@@ -180,12 +189,14 @@ template <> struct common_type<int128_t, int128_t> {
 // INTEROPERABILIDAD CON UINT128_T
 // ===============================================================================
 
+// El tipo común entre int128_t y uint128_t es int128_t (signed)
+// Esto preserva la capacidad de representar valores negativos
 template <> struct common_type<int128_t, uint128_t> {
-    using type = uint128_t; // El tipo sin signo puede representar más valores positivos
+    using type = int128_t;
 };
 
 template <> struct common_type<uint128_t, int128_t> {
-    using type = uint128_t;
+    using type = int128_t;
 };
 
 // ===============================================================================

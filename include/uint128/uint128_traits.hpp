@@ -159,6 +159,9 @@ template <> struct common_type<uint128_t, uint128_t> {
     using type = uint128_t;
 };
 
+// NOTA: Las especializaciones common_type entre uint128_t e int128_t
+// están definidas en int128_traits.hpp para evitar problemas de orden de inclusión
+
 // ===============================================================================
 // SOPORTE PARA HASH
 // ===============================================================================

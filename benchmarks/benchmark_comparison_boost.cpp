@@ -1,5 +1,5 @@
 /**
- * Benchmark Comparativo: uint128_t vs Boost.Multiprecision (128-bit fixed)
+ * Benchmark Comparativo: uint128_t vs Boost.Multiprecision (128-bit fixed) vs __int128
  *
  * Compara:
  * - uint128_t (nuestra implementación)
@@ -7,6 +7,8 @@
  * - boost::multiprecision::checked_uint128_t (con overflow checking)
  * - boost::multiprecision::number<gmp_int> (GMP backend)
  * - boost::multiprecision::number<tommath_int> (tommath backend)
+ * - unsigned __int128 (GCC/Clang builtin)
+ * - __int128 (GCC/Clang builtin signed)
  *
  * Operaciones benchmarked:
  * - Construcción y asignación
@@ -42,6 +44,15 @@ using boost_checked_uint128_t = mp::checked_uint128_t;
 // Opcional: GMP y tommath backends
 using gmp_uint128_t = mp::number<mp::gmp_int, mp::et_off>;
 using tom_uint128_t = mp::number<mp::tommath_int, mp::et_off>;
+
+// Verificar si tenemos __int128 disponible (GCC/Clang)
+#if defined(__GNUC__) || defined(__clang__)
+#define HAS_INT128_BUILTIN 1
+using builtin_uint128_t = unsigned __int128;
+using builtin_int128_t = __int128;
+#else
+#define HAS_INT128_BUILTIN 0
+#endif
 
 constexpr int ITERATIONS = 100000;
 constexpr int WARM_UP = 1000;
@@ -107,20 +118,51 @@ void benchmark_construction()
         (void)val;
     });
 
+#if HAS_INT128_BUILTIN
+    // unsigned __int128
+    auto time_builtin_default = measure_time("unsigned __int128 default ctor", []() {
+        builtin_uint128_t val;
+        (void)val;
+    });
+
+    auto time_builtin_uint64 = measure_time("unsigned __int128 from uint64_t", []() {
+        builtin_uint128_t val = 0x123456789ABCDEF0ULL;
+        (void)val;
+    });
+
+    auto time_builtin_copy = measure_time("unsigned __int128 copy", []() {
+        static builtin_uint128_t src = 0x123456789ABCDEF0ULL;
+        builtin_uint128_t val = src;
+        (void)val;
+    });
+#endif
+
     std::cout << "Default constructor:" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_default << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_default << " ns  ";
     std::cout << "(speedup: " << time_boost_default / time_our_default << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_default << " ns  ";
+    std::cout << "(speedup: " << time_builtin_default / time_our_default << "x)" << std::endl;
+#endif
 
     std::cout << "From uint64_t:" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_uint64 << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_uint64 << " ns  ";
     std::cout << "(speedup: " << time_boost_uint64 / time_our_uint64 << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_uint64 << " ns  ";
+    std::cout << "(speedup: " << time_builtin_uint64 / time_our_uint64 << "x)" << std::endl;
+#endif
 
     std::cout << "Copy constructor:" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_copy << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_copy << " ns  ";
     std::cout << "(speedup: " << time_boost_copy / time_our_copy << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_copy << " ns  ";
+    std::cout << "(speedup: " << time_builtin_copy / time_our_copy << "x)" << std::endl;
+#endif
 }
 
 // ============================================================================
@@ -139,6 +181,11 @@ void benchmark_arithmetic()
     boost_uint128_t boost_a(std::string("123456789012345678901234567890"));
     boost_uint128_t boost_b(std::string("98765432109876543210987654321"));
 
+#if HAS_INT128_BUILTIN
+    builtin_uint128_t builtin_a = (builtin_uint128_t(0x123456789ABCDEF0ULL) << 64) | 0xFEDCBA9876543210ULL;
+    builtin_uint128_t builtin_b = (builtin_uint128_t(0xABCDEF0123456789ULL) << 64) | 0x0123456789ABCDEFULL;
+#endif
+
     // Suma
     auto time_our_add = measure_time("uint128_t addition", [&]() {
         auto result = our_a + our_b;
@@ -149,6 +196,13 @@ void benchmark_arithmetic()
         auto result = boost_a + boost_b;
         (void)result;
     });
+
+#if HAS_INT128_BUILTIN
+    auto time_builtin_add = measure_time("unsigned __int128 addition", [&]() {
+        auto result = builtin_a + builtin_b;
+        (void)result;
+    });
+#endif
 
     // Resta
     auto time_our_sub = measure_time("uint128_t subtraction", [&]() {
@@ -161,6 +215,13 @@ void benchmark_arithmetic()
         (void)result;
     });
 
+#if HAS_INT128_BUILTIN
+    auto time_builtin_sub = measure_time("unsigned __int128 subtraction", [&]() {
+        auto result = builtin_a - builtin_b;
+        (void)result;
+    });
+#endif
+
     // Multiplicación
     auto time_our_mul = measure_time("uint128_t multiplication", [&]() {
         auto result = our_a * uint128_t(12345);
@@ -171,6 +232,13 @@ void benchmark_arithmetic()
         auto result = boost_a * boost_uint128_t(12345);
         (void)result;
     });
+
+#if HAS_INT128_BUILTIN
+    auto time_builtin_mul = measure_time("unsigned __int128 multiplication", [&]() {
+        auto result = builtin_a * builtin_uint128_t(12345);
+        (void)result;
+    });
+#endif
 
     // División
     auto time_our_div = measure_time("uint128_t division", [&]() {
@@ -183,6 +251,13 @@ void benchmark_arithmetic()
         (void)result;
     });
 
+#if HAS_INT128_BUILTIN
+    auto time_builtin_div = measure_time("unsigned __int128 division", [&]() {
+        auto result = builtin_a / builtin_uint128_t(12345);
+        (void)result;
+    });
+#endif
+
     // Módulo
     auto time_our_mod = measure_time("uint128_t modulo", [&]() {
         auto result = our_a % uint128_t(12345);
@@ -194,30 +269,57 @@ void benchmark_arithmetic()
         (void)result;
     });
 
+#if HAS_INT128_BUILTIN
+    auto time_builtin_mod = measure_time("unsigned __int128 modulo", [&]() {
+        auto result = builtin_a % builtin_uint128_t(12345);
+        (void)result;
+    });
+#endif
+
     std::cout << "Addition (+):" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_add << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_add << " ns  ";
     std::cout << "(speedup: " << time_boost_add / time_our_add << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_add << " ns  ";
+    std::cout << "(speedup: " << time_builtin_add / time_our_add << "x)" << std::endl;
+#endif
 
     std::cout << "Subtraction (-):" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_sub << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_sub << " ns  ";
     std::cout << "(speedup: " << time_boost_sub / time_our_sub << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_sub << " ns  ";
+    std::cout << "(speedup: " << time_builtin_sub / time_our_sub << "x)" << std::endl;
+#endif
 
     std::cout << "Multiplication (*):" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_mul << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_mul << " ns  ";
     std::cout << "(speedup: " << time_boost_mul / time_our_mul << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_mul << " ns  ";
+    std::cout << "(speedup: " << time_builtin_mul / time_our_mul << "x)" << std::endl;
+#endif
 
     std::cout << "Division (/):" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_div << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_div << " ns  ";
     std::cout << "(speedup: " << time_boost_div / time_our_div << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_div << " ns  ";
+    std::cout << "(speedup: " << time_builtin_div / time_our_div << "x)" << std::endl;
+#endif
 
     std::cout << "Modulo (%):" << std::endl;
     std::cout << "  uint128_t:       " << std::setw(8) << time_our_mod << " ns" << std::endl;
     std::cout << "  boost_uint128_t: " << std::setw(8) << time_boost_mod << " ns  ";
     std::cout << "(speedup: " << time_boost_mod / time_our_mod << "x)" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "  unsigned __int128: " << std::setw(8) << time_builtin_mod << " ns  ";
+    std::cout << "(speedup: " << time_builtin_mod / time_our_mod << "x)" << std::endl;
+#endif
 }
 
 // ============================================================================
@@ -469,11 +571,16 @@ int main()
 {
     std::cout << "=============================================================================="
               << std::endl;
-    std::cout << "BENCHMARK COMPARATIVO: uint128_t vs Boost.Multiprecision" << std::endl;
+    std::cout << "BENCHMARK COMPARATIVO: uint128_t vs Boost.Multiprecision vs __int128" << std::endl;
     std::cout << "=============================================================================="
               << std::endl;
     std::cout << "Iteraciones: " << ITERATIONS << " (warm-up: " << WARM_UP << ")" << std::endl;
     std::cout << "Nota: speedup > 1.0 significa uint128_t es más rápido" << std::endl;
+#if HAS_INT128_BUILTIN
+    std::cout << "✅ Compilador con soporte para __int128 (GCC/Clang)" << std::endl;
+#else
+    std::cout << "⚠️  Compilador sin soporte para __int128 (MSVC/Intel)" << std::endl;
+#endif
 
     benchmark_construction();
     benchmark_arithmetic();
