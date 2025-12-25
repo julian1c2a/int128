@@ -29,9 +29,16 @@ MODE="${2:-release}"
 MODE=$(echo "$MODE" | tr '[:upper:]' '[:lower:]')
 
 # Validar modo
-if [ "$MODE" != "debug" ] && [ "$MODE" != "release" ]; then
-    echo -e "${RED}Error: Modo inválido '$MODE'. Use 'debug' o 'release'${NC}"
+if [ "$MODE" != "debug" ] && [ "$MODE" != "release" ] && [ "$MODE" != "all" ]; then
+    echo -e "${RED}Error: Modo inválido '$MODE'. Use 'debug', 'release' o 'all'${NC}"
     exit 1
+fi
+
+# Si MODE=all, compilar debug y release recursivamente
+if [ "$MODE" = "all" ]; then
+    echo -e "${BLUE}Compilando en modo 'all': debug + release${NC}"
+    "$0" "$COMPILER" debug "${3:-}" && "$0" "$COMPILER" release "${3:-}"
+    exit $?
 fi
 
 # Validar compilador
@@ -220,33 +227,33 @@ main() {
     
     if should_compile "gcc"; then
         if build_gcc; then
-            ((success++))
+            ((success++)) || true
         else
-            ((failed++))
+            ((failed++)) || true
         fi
     fi
     
     if should_compile "clang"; then
         if build_clang; then
-            ((success++))
+            ((success++)) || true
         else
-            ((failed++))
+            ((failed++)) || true
         fi
     fi
     
     if should_compile "intel"; then
         if build_intel; then
-            ((success++))
+            ((success++)) || true
         else
-            ((failed++))
+            ((failed++)) || true
         fi
     fi
     
     if should_compile "msvc"; then
         if build_msvc; then
-            ((success++))
+            ((success++)) || true
         else
-            ((failed++))
+            ((failed++)) || true
         fi
     fi
     
@@ -261,5 +268,6 @@ main() {
 }
 
 main
+exit $?
 
 

@@ -13,22 +13,9 @@
 #include <unordered_map>
 #include <vector>
 
-// Detectar si las especializaciones de traits están disponibles
-// NO están disponibles en:
-// - libc++ (Clang)
-// - Intel ICX en Windows (usa MSVC STL)
-#if defined(_LIBCPP_VERSION)
-#define int128_traits_NOT_AVAILABLE 1
-#elif defined(__INTEL_LLVM_COMPILER) && defined(_MSC_VER)
-#define int128_traits_NOT_AVAILABLE 1
-#else
-#define int128_traits_NOT_AVAILABLE 0
-#endif
-
-// Usar INT128_USING_LIBCPP del header si está definido
-#ifndef INT128_USING_LIBCPP
-#define INT128_USING_LIBCPP int128_traits_NOT_AVAILABLE
-#endif
+// Los traits se definen en int128_traits.hpp
+// La macro INT128_USING_LIBCPP indica si las especializaciones están disponibles
+// (0 = disponibles en GCC/MSVC con libstdc++/MS STL, 1 = NO disponibles en libc++)
 
 // =============================================================================
 // TEST: is_integral

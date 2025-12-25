@@ -97,24 +97,24 @@ build-all-$(1):
 	@echo "========================================="
 	@echo " Building ALL $(1) (tests + benchs)"
 	@echo "========================================="
-	@$$(MAKE) build_tests TYPE=uint128 FEATURE=$(1) COMPILER=all MODE=all
-	@$$(MAKE) build_tests TYPE=int128 FEATURE=$(1) COMPILER=all MODE=all
-	@$$(MAKE) build_benchs TYPE=uint128 FEATURE=$(1) COMPILER=all MODE=all
-	@$$(MAKE) build_benchs TYPE=int128 FEATURE=$(1) COMPILER=all MODE=all
+	@$$(MAKE) build_tests TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) build_tests TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) build_benchs TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) build_benchs TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
 
 check-all-$(1):
 	@echo "========================================="
 	@echo " Checking ALL $(1) tests"
 	@echo "========================================="
-	@$$(MAKE) check TYPE=uint128 FEATURE=$(1) COMPILER=all MODE=all
-	@$$(MAKE) check TYPE=int128 FEATURE=$(1) COMPILER=all MODE=all
+	@$$(MAKE) check TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) check TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
 
 run-all-$(1):
 	@echo "========================================="
 	@echo " Running ALL $(1) benchmarks"
 	@echo "========================================="
-	@$$(MAKE) run TYPE=uint128 FEATURE=$(1) COMPILER=all MODE=all
-	@$$(MAKE) run TYPE=int128 FEATURE=$(1) COMPILER=all MODE=all
+	@$$(MAKE) run TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) run TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
 
 $(1)-full: build-all-$(1) check-all-$(1) run-all-$(1)
 	@echo "========================================="
