@@ -46,9 +46,12 @@ class int128_t;
 // Detectar si las especializaciones de traits están disponibles
 // NO están disponibles en:
 // - libc++ (Clang con libc++)
+// - MSVC STL (Microsoft Visual C++)
 // - Intel ICX en Windows (usa MSVC STL que no permite especializaciones)
 #if defined(_LIBCPP_VERSION)
 #define UINT128_USING_LIBCPP 1
+#elif defined(_MSC_VER) && !defined(__INTEL_LLVM_COMPILER)
+#define UINT128_USING_LIBCPP 1 // MSVC STL también bloquea especializaciones
 #elif defined(__INTEL_LLVM_COMPILER) && defined(_MSC_VER)
 #define UINT128_USING_LIBCPP 1
 #else

@@ -21,6 +21,8 @@
 #ifdef _MSC_VER
 #include <intrin.h>
 #define RDTSC() __rdtsc()
+// MSVC no soporta asm inline en x64, usamos barrera por referencia volátil
+#define PREVENT_OPTIMIZE(var) (*(volatile decltype(&var))&var)
 #elif defined(__GNUC__) || defined(__clang__)
 static inline uint64_t RDTSC()
 {
@@ -28,8 +30,10 @@ static inline uint64_t RDTSC()
     __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
     return ((uint64_t)hi << 32) | lo;
 }
+#define PREVENT_OPTIMIZE(var) asm volatile("" : : "r,m"(var) : "memory")
 #else
 #define RDTSC() 0
+#define PREVENT_OPTIMIZE(var) ((void)var)
 #endif
 
 // Estructura para resultados de benchmark
@@ -58,7 +62,7 @@ BenchmarkResult bench_is_integral()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(result) : "memory");
+    PREVENT_OPTIMIZE(result);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -84,7 +88,7 @@ BenchmarkResult bench_is_arithmetic()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(result) : "memory");
+    PREVENT_OPTIMIZE(result);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -110,7 +114,7 @@ BenchmarkResult bench_is_unsigned()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(result) : "memory");
+    PREVENT_OPTIMIZE(result);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -136,7 +140,7 @@ BenchmarkResult bench_is_trivially_copyable()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(result) : "memory");
+    PREVENT_OPTIMIZE(result);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -191,7 +195,7 @@ BenchmarkResult bench_common_type()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(result) : "memory");
+    PREVENT_OPTIMIZE(result);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -308,7 +312,8 @@ BenchmarkResult bench_numeric_limits()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(result), "r,m"(digits) : "memory");
+    PREVENT_OPTIMIZE(result);
+    PREVENT_OPTIMIZE(digits);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;
@@ -336,7 +341,8 @@ BenchmarkResult bench_numeric_limits_minmax()
     uint64_t end_cycles = RDTSC();
     auto end_time = std::chrono::high_resolution_clock::now();
 
-    asm volatile("" : : "r,m"(min_val), "r,m"(max_val) : "memory");
+    PREVENT_OPTIMIZE(min_val);
+    PREVENT_OPTIMIZE(max_val);
 
     double elapsed_ns = std::chrono::duration<double, std::nano>(end_time - start_time).count();
     uint64_t cycles = end_cycles - start_cycles;

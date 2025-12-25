@@ -186,9 +186,17 @@ build_intel() {
 build_msvc() {
     echo -e "\n${YELLOW}[MSVC] Compilando benchmarks...${NC}"
     
-    if ! command -v cl.exe &> /dev/null; then
-        echo -e "${RED}  ⚠️  cl.exe no encontrado en el PATH${NC}"
-        echo -e "      Ejecuta vcvarsall.bat o usa vcvarsall.py"
+    # Intentar cl.exe primero, luego clang-cl como fallback
+    local COMPILER=""
+    if command -v cl.exe &> /dev/null; then
+        COMPILER="cl.exe"
+        echo "  Usando: cl.exe (MSVC nativo)"
+    elif command -v clang-cl &> /dev/null; then
+        COMPILER="clang-cl"
+        echo "  Usando: clang-cl (modo compatible MSVC)"
+    else
+        echo -e "${RED}  ⚠️  Ni cl.exe ni clang-cl encontrados en el PATH${NC}"
+        echo -e "      Ejecuta vcvarsall.bat o instala Clang"
         return 1
     fi
     
@@ -201,13 +209,19 @@ build_msvc() {
     
     local OUTPUT="build/build_benchmarks/msvc/${MODE}/int128_traits_benchs_msvc.exe"
     
-    cl.exe $FLAGS \
+    # Desactivar conversión de rutas de MSYS2 para MSVC
+    export MSYS2_ARG_CONV_EXCL="*"
+    
+    $COMPILER $FLAGS \
         /I"${INCLUDE_DIR}" \
         "${BENCH_SRC}" \
         /Fe"${OUTPUT}" \
         > /dev/null 2>&1
     
-    if [ $? -eq 0 ]; then
+    local result=$?
+    unset MSYS2_ARG_CONV_EXCL
+    
+    if [ $result -eq 0 ]; then
         echo -e "${GREEN}    ✅ Benchmarks compilados OK${NC}"
         # Limpiar archivos temporales
         rm -f build/build_benchmarks/msvc/${MODE}/*.obj build/build_benchmarks/msvc/${MODE}/*.pdb
