@@ -140,6 +140,6 @@ int main()
     test_format_zero();
     test_format_uppercase();
 
-    std::cout << "\n✓ All tests passed!" << std::endl;
+    std::cout << "\n[OK] All tests passed!" << std::endl;
     return 0;
 }

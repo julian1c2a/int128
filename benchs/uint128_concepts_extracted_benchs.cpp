@@ -394,12 +394,12 @@ int main()
         benchmark_shift_operations();
         benchmark_accumulate_with_reduce();
     } catch (const std::exception& e) {
-        std::cerr << "\n❌ Exception caught: " << e.what() << "\n";
+        std::cerr << "\n[FAIL] Exception caught: " << e.what() << "\n";
         return 1;
     }
 
     std::cout << "\n========================================\n";
-    std::cout << "  ✅ BENCHMARKS COMPLETADOS\n";
+    std::cout << "  [OK] BENCHMARKS COMPLETADOS\n";
     std::cout << "========================================\n";
 
     return 0;

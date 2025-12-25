@@ -83,8 +83,8 @@ int main()
               << (std::is_same_v<decltype(result3), uint128_t>) << " y valor correcto: "
               << (result3 == uint128_t(150)) << "\n\n";
 
-    std::cout << "✅ Todos los traits están funcionando correctamente!\n";
-    std::cout << "✅ uint128_t es totalmente compatible con C++ standard library\n";
+    std::cout << "[OK] Todos los traits están funcionando correctamente!\n";
+    std::cout << "[OK] uint128_t es totalmente compatible con C++ standard library\n";
 
     return 0;
 }

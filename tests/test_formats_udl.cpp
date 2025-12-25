@@ -100,24 +100,24 @@ void test_roundtrip_conversions()
     // Decimal roundtrip
     auto dec_str = original.to_string();
     auto dec_back = uint128_t::from_string(dec_str);
-    std::cout << "Decimal roundtrip: " << (original == dec_back ? "✓" : "✗") << std::endl;
+    std::cout << "Decimal roundtrip: " << (original == dec_back ? "[OK]" : "[ERROR]") << std::endl;
 
     // Hex roundtrip
     auto hex_str = "0x" + original.to_string_hex();
     auto hex_back = uint128_t::from_string(hex_str);
-    std::cout << "Hex roundtrip: " << (original == hex_back ? "✓" : "✗") << std::endl;
+    std::cout << "Hex roundtrip: " << (original == hex_back ? "[OK]" : "[ERROR]") << std::endl;
 
     // Bin roundtrip (número pequeño para que sea práctico)
     uint128_t small_val(0, 255);
     auto bin_str = "0b" + small_val.to_string_bin();
     auto bin_back = uint128_t::from_string(bin_str);
-    std::cout << "Bin roundtrip: " << (small_val == bin_back ? "✓" : "✗") << std::endl;
+    std::cout << "Bin roundtrip: " << (small_val == bin_back ? "[OK]" : "[ERROR]") << std::endl;
 
     // Oct roundtrip
     uint128_t oct_val(0, 0777);
     auto oct_str = "0" + oct_val.to_string_oct();
     auto oct_back = uint128_t::from_string(oct_str);
-    std::cout << "Oct roundtrip: " << (oct_val == oct_back ? "✓" : "✗") << std::endl;
+    std::cout << "Oct roundtrip: " << (oct_val == oct_back ? "[OK]" : "[ERROR]") << std::endl;
 }
 
 void test_practical_usage()
@@ -159,17 +159,17 @@ int main()
     test_roundtrip_conversions();
     test_practical_usage();
 
-    std::cout << "\n✅ TODOS los tests completados!" << std::endl;
+    std::cout << "\n[OK] TODOS los tests completados!" << std::endl;
     std::cout << "\n📝 FUNCIONALIDADES VALIDADAS:" << std::endl;
-    std::cout << "   ✓ to_string() con múltiples formatos (decimal, hex, bin, oct)" << std::endl;
-    std::cout << "   ✓ from_string() con detección automática de formato" << std::endl;
-    std::cout << "   ✓ from_string_base() para conversión con base específica" << std::endl;
-    std::cout << "   ✓ Literales UDL numéricos: 123_u128" << std::endl;
-    std::cout << "   ✓ Literales UDL de string: \"0xFF\"_u128" << std::endl;
+    std::cout << "   [OK] to_string() con múltiples formatos (decimal, hex, bin, oct)" << std::endl;
+    std::cout << "   [OK] from_string() con detección automática de formato" << std::endl;
+    std::cout << "   [OK] from_string_base() para conversión con base específica" << std::endl;
+    std::cout << "   [OK] Literales UDL numéricos: 123_u128" << std::endl;
+    std::cout << "   [OK] Literales UDL de string: \"0xFF\"_u128" << std::endl;
     std::cout
-        << "   ✓ Literales UDL específicos: \"FF\"_u128_hex, \"1010\"_u128_bin, \"777\"_u128_oct"
+        << "   [OK] Literales UDL específicos: \"FF\"_u128_hex, \"1010\"_u128_bin, \"777\"_u128_oct"
         << std::endl;
-    std::cout << "   ✓ Conversiones ida y vuelta consistentes" << std::endl;
+    std::cout << "   [OK] Conversiones ida y vuelta consistentes" << std::endl;
     std::cout << "\n🎯 uint128_t ahora soporta formatos múltiples y literales modernos!"
               << std::endl;
 

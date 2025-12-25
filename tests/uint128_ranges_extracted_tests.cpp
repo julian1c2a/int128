@@ -132,6 +132,6 @@ int main()
     test_empty_range();
     test_large_values();
 
-    std::cout << "\n✓ All tests passed!" << std::endl;
+    std::cout << "\n[OK] All tests passed!" << std::endl;
     return 0;
 }

@@ -170,6 +170,6 @@ int main()
     test_large_value();
     test_roundtrip();
 
-    std::cout << "\n✓ All uint128_t iostreams tests passed!" << std::endl;
+    std::cout << "\n[OK] All uint128_t iostreams tests passed!" << std::endl;
     return 0;
 }

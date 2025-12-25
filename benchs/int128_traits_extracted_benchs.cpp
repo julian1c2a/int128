@@ -230,7 +230,7 @@ int main()
     std::cout << "Timestamp: " << get_timestamp() << "\n";
 
 #if INT128_TRAITS_NOT_AVAILABLE
-    std::cout << "\n⚠️  ADVERTENCIA: Traits no soportados en esta configuración\n";
+    std::cout << "\n[WARN]  ADVERTENCIA: Traits no soportados en esta configuración\n";
     std::cout << "   (libc++ o Intel ICX/Windows)\n";
 #endif
 

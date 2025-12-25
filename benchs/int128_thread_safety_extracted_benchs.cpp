@@ -640,9 +640,9 @@ void run_contention_analysis()
 
 int main()
 {
-    std::cout << "╔═════════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "╔=============================================================╗" << std::endl;
     std::cout << "║  Thread Safety Benchmarks for int128_t (signed)           ║" << std::endl;
-    std::cout << "╚═════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚=============================================================╝" << std::endl;
 
     const size_t NUM_THREADS = 4;
     const size_t OPS_PER_THREAD = 250000;
@@ -694,11 +694,11 @@ int main()
     std::cout << fastest->name << " (" << fastest->ns_per_op << " ns/op)" << std::endl;
 
     std::cout << "\nRecommendations:" << std::endl;
-    std::cout << "  • Use thread-local for best performance (no synchronization)" << std::endl;
-    std::cout << "  • Use Mutex wrapper for general-purpose shared access" << std::endl;
-    std::cout << "  • Use RW-lock for read-heavy workloads (>90% reads)" << std::endl;
-    std::cout << "  • Use Spin-lock for low-contention scenarios" << std::endl;
-    std::cout << "  • Signed operations (negate, is_negative) have minimal overhead" << std::endl;
+    std::cout << "  * Use thread-local for best performance (no synchronization)" << std::endl;
+    std::cout << "  * Use Mutex wrapper for general-purpose shared access" << std::endl;
+    std::cout << "  * Use RW-lock for read-heavy workloads (>90% reads)" << std::endl;
+    std::cout << "  * Use Spin-lock for low-contention scenarios" << std::endl;
+    std::cout << "  * Signed operations (negate, is_negative) have minimal overhead" << std::endl;
 
     return 0;
 }

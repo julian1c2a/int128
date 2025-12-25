@@ -36,7 +36,7 @@ void test_constexpr_from_cstr()
     assert(empty_const == uint128_t(0, 0));
     assert(null_const == uint128_t(0, 0));
 
-    std::cout << "✓ Todos los tests constexpr pasaron" << std::endl;
+    std::cout << "[OK] Todos los tests constexpr pasaron" << std::endl;
 }
 
 void test_constexpr_from_cstr_base()
@@ -60,7 +60,7 @@ void test_constexpr_from_cstr_base()
     assert(oct_base == uint128_t(0, 63));
     assert(base36 == uint128_t(0, 35 * 36 + 35)); // Z=35, ZZ = 35*36+35
 
-    std::cout << "✓ Todos los tests base específica pasaron" << std::endl;
+    std::cout << "[OK] Todos los tests base específica pasaron" << std::endl;
 }
 
 void test_to_cstr()
@@ -92,7 +92,7 @@ void test_to_cstr()
     std::cout << "to_cstr() zero: '" << zero_cstr << "'" << std::endl;
     assert(std::strcmp(zero_cstr, "0") == 0);
 
-    std::cout << "✓ Todos los tests to_cstr pasaron" << std::endl;
+    std::cout << "[OK] Todos los tests to_cstr pasaron" << std::endl;
 }
 
 void test_to_cstr_rotation()
@@ -136,7 +136,7 @@ void test_to_cstr_rotation()
     assert(str5 == str1);                  // Misma dirección de buffer
     assert(std::strcmp(str5, "555") == 0); // Contenido correcto
 
-    std::cout << "✓ Buffer rotation funciona correctamente" << std::endl;
+    std::cout << "[OK] Buffer rotation funciona correctamente" << std::endl;
 }
 
 void test_roundtrip_cstr()
@@ -149,24 +149,24 @@ void test_roundtrip_cstr()
     // Decimal roundtrip
     const char* decimal_cstr = original.to_cstr();
     auto decimal_back = uint128_t::from_cstr(decimal_cstr);
-    std::cout << "Decimal roundtrip: " << (original == decimal_back ? "✓" : "✗") << std::endl;
+    std::cout << "Decimal roundtrip: " << (original == decimal_back ? "[OK]" : "[ERROR]") << std::endl;
 
     // Hex roundtrip
     const char* hex_cstr = original.to_cstr_hex();
     auto hex_back = uint128_t::from_cstr_base(hex_cstr, 16);
-    std::cout << "Hex roundtrip: " << (original == hex_back ? "✓" : "✗") << std::endl;
+    std::cout << "Hex roundtrip: " << (original == hex_back ? "[OK]" : "[ERROR]") << std::endl;
 
     // Bin roundtrip (número pequeño)
     uint128_t small(0, 255);
     const char* bin_cstr = small.to_cstr_bin();
     auto bin_back = uint128_t::from_cstr_base(bin_cstr, 2);
-    std::cout << "Bin roundtrip: " << (small == bin_back ? "✓" : "✗") << std::endl;
+    std::cout << "Bin roundtrip: " << (small == bin_back ? "[OK]" : "[ERROR]") << std::endl;
 
     // Oct roundtrip
     uint128_t oct_val(0, 0777);
     const char* oct_cstr = oct_val.to_cstr_oct();
     auto oct_back = uint128_t::from_cstr_base(oct_cstr, 8);
-    std::cout << "Oct roundtrip: " << (oct_val == oct_back ? "✓" : "✗") << std::endl;
+    std::cout << "Oct roundtrip: " << (oct_val == oct_back ? "[OK]" : "[ERROR]") << std::endl;
 }
 
 void test_compile_time_evaluation()
@@ -180,14 +180,14 @@ void test_compile_time_evaluation()
 
     std::cout << "Compile-time max decimal: " << compile_time_max.to_string() << std::endl;
     std::cout << "Compile-time max hex: " << compile_time_hex.to_string() << std::endl;
-    std::cout << "Son iguales: " << (compile_time_max == compile_time_hex ? "✓" : "✗") << std::endl;
+    std::cout << "Son iguales: " << (compile_time_max == compile_time_hex ? "[OK]" : "[ERROR]") << std::endl;
 
     // Test operaciones constexpr con resultados
     constexpr auto sum = uint128_t::from_cstr("100") + uint128_t::from_cstr("200");
     constexpr auto expected = uint128_t::from_cstr("300");
 
     std::cout << "Suma constexpr: " << sum.to_string() << std::endl;
-    std::cout << "Suma correcta: " << (sum == expected ? "✓" : "✗") << std::endl;
+    std::cout << "Suma correcta: " << (sum == expected ? "[OK]" : "[ERROR]") << std::endl;
 }
 
 int main()
@@ -202,15 +202,15 @@ int main()
     test_roundtrip_cstr();
     test_compile_time_evaluation();
 
-    std::cout << "\n✅ TODOS los tests completados!" << std::endl;
+    std::cout << "\n[OK] TODOS los tests completados!" << std::endl;
     std::cout << "\n📝 FUNCIONALIDADES VALIDADAS:" << std::endl;
-    std::cout << "   ✓ constexpr from_cstr() con detección automática de formato" << std::endl;
-    std::cout << "   ✓ constexpr from_cstr_base() para base específica" << std::endl;
-    std::cout << "   ✓ to_cstr() con buffer rotativo thread-safe" << std::endl;
-    std::cout << "   ✓ to_cstr_hex(), to_cstr_bin(), to_cstr_oct()" << std::endl;
-    std::cout << "   ✓ Buffer rotation para múltiples llamadas simultáneas" << std::endl;
-    std::cout << "   ✓ Conversiones ida y vuelta consistentes" << std::endl;
-    std::cout << "   ✓ Evaluación real en tiempo de compilación" << std::endl;
+    std::cout << "   [OK] constexpr from_cstr() con detección automática de formato" << std::endl;
+    std::cout << "   [OK] constexpr from_cstr_base() para base específica" << std::endl;
+    std::cout << "   [OK] to_cstr() con buffer rotativo thread-safe" << std::endl;
+    std::cout << "   [OK] to_cstr_hex(), to_cstr_bin(), to_cstr_oct()" << std::endl;
+    std::cout << "   [OK] Buffer rotation para múltiples llamadas simultáneas" << std::endl;
+    std::cout << "   [OK] Conversiones ida y vuelta consistentes" << std::endl;
+    std::cout << "   [OK] Evaluación real en tiempo de compilación" << std::endl;
     std::cout << "\n🚀 uint128_t ahora soporta C-strings con evaluación constexpr!" << std::endl;
 
     return 0;

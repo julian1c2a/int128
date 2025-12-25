@@ -220,6 +220,6 @@ int main()
     test_roundtrip();
     test_negative_roundtrip();
 
-    std::cout << "\n✓ All int128_t iostreams tests passed!" << std::endl;
+    std::cout << "\n[OK] All int128_t iostreams tests passed!" << std::endl;
     return 0;
 }

@@ -144,6 +144,6 @@ int main()
     test_format_large_values();
     test_format_negative_hex();
 
-    std::cout << "\n✓ All tests passed!" << std::endl;
+    std::cout << "\n[OK] All tests passed!" << std::endl;
     return 0;
 }

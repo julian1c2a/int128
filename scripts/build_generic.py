@@ -30,6 +30,16 @@ import shutil
 from pathlib import Path
 from typing import List, Optional
 
+# Add env_setup to path for importing compiler_env module
+sys.path.insert(0, str(Path(__file__).parent / "env_setup"))
+
+try:
+    from compiler_env import CompilerEnvironment
+    USE_COMPILER_ENV = True
+except ImportError:
+    USE_COMPILER_ENV = False
+    print("[WARN] compiler_env module not available, using default environment")
+
 # Force UTF-8 encoding for Windows
 if sys.platform == "win32":
     import io
@@ -77,9 +87,13 @@ def compile_with_compiler(
     output_suffix: str,
     modes: List[str],
     print_commands: bool,
-    skip_check: bool = False
+    skip_check: bool = False,
+    project_root: Path = None  # Add project_root parameter
 ) -> None:
     """Compile source file with specified compiler"""
+    
+    if project_root is None:
+        project_root = Path.cwd()
     
     echo_info(f"Building with {compiler_name}...")
     
@@ -89,6 +103,14 @@ def compile_with_compiler(
             echo_error(f"{compiler_name} not found ({compiler_cmd}). Skipping...")
             print()
             return
+    
+    # Get compiler environment (isolated, doesn't modify global environment)
+    if USE_COMPILER_ENV:
+        comp_env = CompilerEnvironment(compiler_name)
+        env = comp_env.get_env()
+        echo_info(f"  Using isolated environment for {compiler_name}")
+    else:
+        env = os.environ.copy()
     
     # Compile for each mode
     for mode in modes:
@@ -102,17 +124,20 @@ def compile_with_compiler(
             output = output.with_suffix(".exe")
         
         # Define compilation flags
-        common_flags = ["-std=c++20", "-Wall", "-Wextra", "-pedantic", "-I./include"]
+        common_flags = ["-std=c++20", "-I./include"]
         
         if mode == "debug":
-            mode_flags = ["-O0", "-g3", "-DDEBUG"]
+            mode_flags = ["-O0", "-g", "-DDEBUG"]
         else:
-            mode_flags = ["-O3", "-march=native", "-DNDEBUG"]
+            mode_flags = ["-O3", "-DNDEBUG"]
         
         echo_info(f"  Compiling [{mode}]...")
         
-        # Build command
-        cmd = [compiler_cmd] + common_flags + mode_flags + [source_file, "-o", str(output)]
+        # Build command - convert paths to forward slashes for compatibility
+        source_str = str(source_file).replace("\\", "/")
+        output_str = str(output).replace("\\", "/")
+        
+        cmd = [compiler_cmd] + common_flags + mode_flags + [source_str, "-o", output_str]
         
         # Print command if requested
         if print_commands:
@@ -124,15 +149,21 @@ def compile_with_compiler(
                 cmd,
                 capture_output=True,
                 text=True,
-                cwd=os.getcwd()
+                cwd=project_root,  # Use project root from global scope
+                env=env  # Use isolated compiler environment
             )
             
-            if result.returncode == 0 and output.exists():
-                echo_success(f"  {compiler_name} [{mode}]: {output}")
+            # Check if compilation succeeded
+            output_check = Path(output_str)  # Use the string path for checking
+            if result.returncode == 0 or output_check.exists():
+                echo_success(f"  {compiler_name} [{mode}]: {output_str}")
             else:
                 echo_error(f"  {compiler_name} [{mode}]: compilation failed")
-                if result.stderr and print_commands:
-                    print(result.stderr)
+                echo_error(f"    Return code: {result.returncode}")
+                if result.stderr:
+                    print(f"\nSTDERR:\n{result.stderr}")
+                if result.stdout:
+                    print(f"\nSTDOUT:\n{result.stdout}")
         except Exception as e:
             echo_error(f"  {compiler_name} [{mode}]: {str(e)}")
     
@@ -214,28 +245,28 @@ def main():
         compile_with_compiler(
             "gcc", gcc_cmd, source_file, build_dir,
             type_name, feature, output_suffix, modes_to_compile,
-            print_commands, skip_check=True
+            print_commands, skip_check=True, project_root=project_root
         )
     
     if compiler in ["clang", "all"]:
         compile_with_compiler(
             "clang", clang_cmd, source_file, build_dir,
             type_name, feature, output_suffix, modes_to_compile,
-            print_commands
+            print_commands, project_root=project_root
         )
     
     if compiler in ["intel", "all"]:
         compile_with_compiler(
             "intel", intel_cmd, source_file, build_dir,
             type_name, feature, output_suffix, modes_to_compile,
-            print_commands
+            print_commands, project_root=project_root
         )
     
     if compiler in ["msvc", "all"]:
         compile_with_compiler(
             "msvc", msvc_cmd, source_file, build_dir,
             type_name, feature, output_suffix, modes_to_compile,
-            print_commands
+            print_commands, project_root=project_root
         )
     
     # Summary

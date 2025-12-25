@@ -80,6 +80,6 @@ int main()
     benchmark_input_decimal();
     benchmark_formatted_output();
 
-    std::cout << "\n✓ Benchmarks completed" << std::endl;
+    std::cout << "\n[OK] Benchmarks completed" << std::endl;
     return 0;
 }

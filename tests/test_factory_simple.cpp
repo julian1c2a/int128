@@ -85,7 +85,7 @@ void test_trivial_properties()
     assert(std::is_standard_layout_v<uint128_t> && "uint128_t debe tener layout estándar");
     assert(std::is_trivially_copyable_v<int128_t> && "int128_t debe ser trivialmente copiable");
     assert(std::is_standard_layout_v<int128_t> && "int128_t debe tener layout estándar");
-    std::cout << "  ✅ Propiedades clave para optimización verificadas (trivially copyable + "
+    std::cout << "  [OK] Propiedades clave para optimización verificadas (trivially copyable + "
                  "standard layout)\n";
 
     if (std::is_trivial_v<uint128_t> && std::is_trivial_v<int128_t>) {
@@ -101,28 +101,28 @@ void test_trivial_properties()
     auto uint_val = make_uint128_simple(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
     assert(uint_val.high() == 0x1234567890ABCDEFULL);
     assert(uint_val.low() == 0xFEDCBA0987654321ULL);
-    std::cout << "  ✅ make_uint128_simple() funciona\n";
+    std::cout << "  [OK] make_uint128_simple() funciona\n";
 
     auto int_val = make_int128_simple(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
     assert(int_val.high() == 0x7FFFFFFFFFFFFFFFULL);
     assert(int_val.low() == 0xFFFFFFFFFFFFFFFFULL);
-    std::cout << "  ✅ make_int128_simple() funciona\n";
+    std::cout << "  [OK] make_int128_simple() funciona\n";
 
     // Test con valores enteros
     auto uint_from_int = make_uint128_from_int(42);
     assert(uint_from_int.low() == 42);
     assert(uint_from_int.high() == 0);
-    std::cout << "  ✅ make_uint128_from_int() funciona\n";
+    std::cout << "  [OK] make_uint128_from_int() funciona\n";
 
     auto int_from_int = make_int128_from_int(42);
     assert(int_from_int.low() == 42);
     assert(int_from_int.high() == 0);
     assert(!int_from_int.is_negative());
-    std::cout << "  ✅ make_int128_from_int() funciona\n";
+    std::cout << "  [OK] make_int128_from_int() funciona\n";
 
     auto int_negative = make_int128_from_int(-42);
     assert(int_negative.is_negative());
-    std::cout << "  ✅ make_int128_from_int() con negativos funciona\n";
+    std::cout << "  [OK] make_int128_from_int() con negativos funciona\n";
 }
 
 void test_operations_with_factory()
@@ -137,19 +137,19 @@ void test_operations_with_factory()
     // Crear valor esperado con fábrica también
     auto expected = make_int128_from_int(300);
     assert(sum == expected);
-    std::cout << "  ✅ Aritmética básica funciona con factory\n";
+    std::cout << "  [OK] Aritmética básica funciona con factory\n";
 
     // Test comparaciones
     assert(a < b);
     assert(b > a);
     assert(a != b);
-    std::cout << "  ✅ Comparaciones funcionan con factory\n";
+    std::cout << "  [OK] Comparaciones funcionan con factory\n";
 
     // Test con valores grandes
     auto large1 = make_uint128_simple(0x8000000000000000ULL, 0);
     auto large2 = make_uint128_simple(0, UINT64_MAX);
     assert(large1 > large2);
-    std::cout << "  ✅ Operaciones con valores grandes funcionan\n";
+    std::cout << "  [OK] Operaciones con valores grandes funcionan\n";
 }
 
 void test_memory_layout()
@@ -159,18 +159,18 @@ void test_memory_layout()
     // Test que los tipos tienen el tamaño esperado
     static_assert(sizeof(uint128_t) == 16, "uint128_t debe ser 16 bytes");
     static_assert(sizeof(int128_t) == 16, "int128_t debe ser 16 bytes");
-    std::cout << "  ✅ Tamaños de tipos correctos: " << sizeof(uint128_t) << " y "
+    std::cout << "  [OK] Tamaños de tipos correctos: " << sizeof(uint128_t) << " y "
               << sizeof(int128_t) << " bytes\n";
 
     // Test que el layout es estándar
     assert(std::is_standard_layout_v<uint128_t>);
     assert(std::is_standard_layout_v<int128_t>);
-    std::cout << "  ✅ Layout estándar verificado\n";
+    std::cout << "  [OK] Layout estándar verificado\n";
 
     // Test alineación
     static_assert(alignof(uint128_t) == alignof(uint64_t), "Alineación uint128_t");
     static_assert(alignof(int128_t) == alignof(uint64_t), "Alineación int128_t");
-    std::cout << "  ✅ Alineación correcta: " << alignof(uint128_t) << " bytes\n";
+    std::cout << "  [OK] Alineación correcta: " << alignof(uint128_t) << " bytes\n";
 }
 
 int main()
@@ -190,18 +190,18 @@ int main()
 
         std::cout << "🎉 ¡TODOS LOS TESTS BÁSICOS PASARON!\n";
         std::cout << "==========================================\n";
-        std::cout << "✅ Funciones de fábrica básicas funcionando\n";
-        std::cout << "✅ Propiedades de trivialidad verificadas\n";
-        std::cout << "✅ Layout de memoria correcto\n";
+        std::cout << "[OK] Funciones de fábrica básicas funcionando\n";
+        std::cout << "[OK] Propiedades de trivialidad verificadas\n";
+        std::cout << "[OK] Layout de memoria correcto\n";
         std::cout << "🔄 Próximo paso: Eliminar constructores no triviales\n";
 
         return 0;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Error en tests: " << e.what() << std::endl;
+        std::cout << "[FAIL] Error en tests: " << e.what() << std::endl;
         return 1;
     } catch (...) {
-        std::cout << "❌ Error desconocido en tests" << std::endl;
+        std::cout << "[FAIL] Error desconocido en tests" << std::endl;
         return 1;
     }
 }

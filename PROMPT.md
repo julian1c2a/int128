@@ -292,8 +292,8 @@ Los resultados de la llamada serán los resultados de los tests o benchmarks res
      
      COMPATIBILIDAD:
      Los scripts individuales (build_*_extracted_*.bash, check_*_extracted_tests.bash, 
-     run_*_extracted_benchs.bash) están deprecados pero se mantienen por compatibilidad.
-     Se recomienda migrar al sistema genérico para futuros desarrollos.
+     run_*_extracted_benchs.bash) están deprecados pero se mantienen en scripts/individualized/ 
+     por compatibilidad. Se recomienda migrar al sistema genérico para futuros desarrollos.
      
      DOCUMENTACIÓN COMPLETA:
      Ver documentation/BUILD_SCRIPTS_GENERIC.md para información detallada sobre:
@@ -302,3 +302,541 @@ Los resultados de la llamada serán los resultados de los tests o benchmarks res
      - Flags de compilación por modo
      - Solución de problemas
      - Comparación Bash vs Python
+
+---
+
+## Sistema de Gestión de Entornos de Compiladores
+
+### Descripción
+
+El proyecto incluye un sistema avanzado de gestión de entornos de compiladores que permite:
+
+- **Detección automática** de compiladores (GCC, Clang, Intel oneAPI, MSVC)
+- **Entornos aislados** sin modificar variables globales del sistema
+- **Configuraciones persistentes** guardadas en archivos JSON
+- **Scripts Python genéricos** que usan estos entornos automáticamente
+
+### Estructura de Archivos
+
+```
+scripts/
+├── env_setup/                           # Módulo de gestión de entornos
+│   ├── compiler_env.py                  # Módulo principal Python
+│   ├── setup_gcc_env.bash               # Setup para GCC
+│   ├── setup_clang_env.bash             # Setup para Clang
+│   ├── setup_intel_env.bash             # Setup para Intel oneAPI
+│   ├── setup_msvc_env.bash              # Setup para MSVC
+│   └── [otros scripts de detección]
+├── individualized/                      # Scripts individuales (deprecados)
+│   ├── build_*_extracted_{tests|benchs}.bash  # 58 scripts build
+│   ├── check_*_extracted_tests.bash           # 28 scripts check
+│   └── run_*_extracted_benchs.bash            # 30 scripts run
+├── build_generic.{bash|py}              # Build genérico (bash y Python)
+├── check_generic.{bash|py}              # Check genérico (bash y Python)
+├── run_generic.{bash|py}                # Run genérico (bash y Python)
+└── init_project.py                      # Inicialización del proyecto
+
+build/
+└── compiler_envs/                       # Configuraciones guardadas
+    ├── gcc_env.json
+    ├── clang_env.json
+    ├── intel_env.json
+    └── msvc_env.json
+```
+
+### Inicialización del Proyecto
+
+**Primera vez que usas el proyecto:**
+
+```bash
+python scripts/init_project.py
+```
+
+Este comando:
+1. Detecta todos los compiladores disponibles en tu sistema
+2. Configura sus entornos (PATH, INCLUDE, LIB, etc.)
+3. Guarda las configuraciones en `build/compiler_envs/*.json`
+4. Muestra un resumen de compiladores detectados
+
+**Salida esperada:**
+```
+╔════════════════════════════════════════════════════════════╗
+║        INT128 PROJECT - COMPILER CONFIGURATION             ║
+╚════════════════════════════════════════════════════════════╝
+
+[GCC]
+-> Detectando entorno para gcc...
+[OK] Configuración guardada en build/compiler_envs/gcc_env.json
+
+[CLANG]
+-> Detectando entorno para clang...
+[OK] Configuración guardada en build/compiler_envs/clang_env.json
+
+[MSVC]
+-> Detectando entorno para msvc...
+[OK] Configuración guardada en build/compiler_envs/msvc_env.json
+
+[INTEL]
+-> Detectando entorno para intel...
+[OK] Configuración guardada en build/compiler_envs/intel_env.json
+
+╔════════════════════════════════════════════════════════════╗
+║  Compiladores detectados: 4/4                              ║
+╚════════════════════════════════════════════════════════════╝
+```
+
+### Uso de Scripts Python Genéricos
+
+#### Compilación (build_generic.py)
+
+```bash
+# Compilar con todos los compiladores detectados
+python scripts/build_generic.py uint128 bits tests
+
+# Compilar solo con GCC en modo release
+python scripts/build_generic.py uint128 bits tests gcc release
+
+# Compilar con MSVC mostrando comandos
+python scripts/build_generic.py int128 numeric benchs msvc release yes
+```
+
+**Ventaja clave:** Los scripts Python usan automáticamente las configuraciones guardadas,
+inyectando el entorno correcto para cada compilador sin afectar el entorno global.
+
+#### Ejecución de Tests (check_generic.py)
+
+```bash
+# Ejecutar tests con todos los compiladores
+python scripts/check_generic.py uint128 bits
+
+# Ejecutar solo tests compilados con GCC en release
+python scripts/check_generic.py int128 algorithm gcc release
+```
+
+#### Ejecución de Benchmarks (run_generic.py)
+
+```bash
+# Ejecutar benchmarks con todos los compiladores
+python scripts/run_generic.py uint128 cmath
+
+# Ejecutar solo benchmarks de Intel en release
+python scripts/run_generic.py int128 numeric intel release
+```
+
+### Gestión Manual de Entornos
+
+#### Detectar un compilador específico:
+
+```bash
+python scripts/env_setup/compiler_env.py --detect gcc
+python scripts/env_setup/compiler_env.py --detect msvc
+python scripts/env_setup/compiler_env.py --detect intel
+```
+
+#### Ver configuración guardada:
+
+```bash
+python scripts/env_setup/compiler_env.py --show gcc
+```
+
+Muestra el JSON con todas las variables de entorno para ese compilador.
+
+#### Listar compiladores configurados:
+
+```bash
+python scripts/env_setup/compiler_env.py --list
+```
+
+### Entornos Aislados: Cómo Funciona
+
+**Problema tradicional:**
+```python
+# Configurar MSVC contamina el entorno global
+subprocess.run(["vcvarsall.bat", "x64"], shell=True)
+# Ahora TODO usa MSVC, incluso si quieres compilar con GCC después
+```
+
+**Solución con entornos aislados:**
+```python
+from compiler_env import CompilerEnvironment
+
+# Compilar con MSVC
+msvc_env = CompilerEnvironment("msvc")
+subprocess.run(["cl.exe", "test.cpp"], env=msvc_env.get_env())
+
+# Compilar con GCC (entorno limpio, sin MSVC)
+gcc_env = CompilerEnvironment("gcc")
+subprocess.run(["g++", "test.cpp"], env=gcc_env.get_env())
+
+# El entorno de Python NO se modificó en ningún momento
+print(os.environ["PATH"])  # PATH original sin cambios
+```
+
+**Cada compilación usa un diccionario `env` personalizado que solo afecta
+al proceso hijo (subprocess), nunca al proceso Python principal.**
+
+### Configuración de Entornos (JSON)
+
+Ejemplo de `gcc_env.json`:
+
+```json
+{
+  "PATH": "/c/msys64/ucrt64/bin:/usr/bin:...",
+  "CC": "gcc",
+  "CXX": "g++",
+  "GCC_PATH": "/c/msys64/ucrt64/bin/g++",
+  "GCC_VERSION": "g++ (GCC) 15.2.0"
+}
+```
+
+Ejemplo de `msvc_env.json`:
+
+```json
+{
+  "PATH": "C:\\Program Files\\Microsoft Visual Studio\\...",
+  "INCLUDE": "C:\\Program Files\\Microsoft Visual Studio\\...\\include;...",
+  "LIB": "C:\\Program Files\\Microsoft Visual Studio\\...\\lib\\x64;...",
+  "MSVC_VER": "14.50.35717"
+}
+```
+
+### Flujo de Trabajo Recomendado
+
+1. **Instalación inicial:**
+   ```bash
+   git clone <repo>
+   cd int128
+   python scripts/init_project.py
+   ```
+
+2. **Desarrollo:**
+   ```bash
+   # Compilar tests con GCC rápido
+   python scripts/build_generic.py uint128 bits tests gcc release
+   
+   # Ejecutar tests
+   python scripts/check_generic.py uint128 bits gcc release
+   ```
+
+3. **Validación completa:**
+   ```bash
+   # Compilar con todos los compiladores
+   python scripts/build_generic.py uint128 bits tests all all
+   
+   # Ejecutar tests con todos
+   python scripts/check_generic.py uint128 bits all all
+   ```
+
+4. **Benchmarking:**
+   ```bash
+   # Compilar benchmarks optimizados
+   python scripts/build_generic.py uint128 algorithm benchs all release
+   
+   # Ejecutar y comparar rendimiento
+   python scripts/run_generic.py uint128 algorithm all release
+   ```
+
+### Ventajas del Sistema
+
+✅ **Aislamiento total**: Cada compilador usa su propio entorno sin conflictos  
+✅ **Persistencia**: Configuraciones guardadas, no necesitas reconfigur cada vez  
+✅ **Portabilidad**: Funciona en Windows (cmd/PowerShell), MSYS2, Linux  
+✅ **Automatización**: Los scripts Python detectan y usan entornos automáticamente  
+✅ **Mantenimiento**: Cambios en rutas de compiladores solo requieren re-detectar  
+✅ **Paralelización**: Puedes compilar con múltiples compiladores simultáneamente  
+
+### Solución de Problemas
+
+**Compilador no detectado:**
+```bash
+# Re-detectar después de instalar un nuevo compilador
+python scripts/env_setup/compiler_env.py --detect <compiler>
+```
+
+**Error "compilador no encontrado" al ejecutar scripts:**
+```bash
+# Verificar que la detección fue exitosa
+python scripts/env_setup/compiler_env.py --list
+python scripts/env_setup/compiler_env.py --show <compiler>
+
+# Si la configuración existe pero falla, re-detectar
+python scripts/env_setup/compiler_env.py --detect <compiler>
+```
+
+**Limpiar configuraciones:**
+```bash
+# Borrar configuraciones antiguas
+rm -rf build/compiler_envs/*.json
+
+# Re-detectar todo
+python scripts/init_project.py
+```
+
+### Comparación: Bash vs Python
+
+| Aspecto | Scripts Bash | Scripts Python |
+|---------|--------------|----------------|
+| Entornos aislados | ❌ Modifica entorno global | ✅ Aislamiento completo |
+| Compiladores Windows | ⚠️ Requiere configuración manual | ✅ Detección automática |
+| Persistencia config | ❌ Debes source cada vez | ✅ Guardado en JSON |
+| Portabilidad | ⚠️ Depende de bash/msys2 | ✅ Funciona en cualquier Python |
+| Paralelización | ❌ No soportado | ✅ Posible (futuro) |
+
+**Recomendación:** Usa scripts Python para desarrollo serio. Los scripts Bash
+se mantienen por compatibilidad con workflows existentes.
+
+---
+
+## make.py - Sistema de Build Centralizado
+
+### Descripción
+
+`make.py` es un **reemplazo completo del Makefile tradicional** implementado en Python,
+que centraliza todas las operaciones de compilación, testing y benchmarking del proyecto.
+
+### Ventajas sobre Make tradicional
+
+✅ **Portabilidad total**: Funciona idéntico en Windows, Linux, macOS  
+✅ **Entornos aislados**: Integración nativa con `compiler_env.py`  
+✅ **Mejor manejo de errores**: Excepciones Python vs sintaxis Make  
+✅ **Lógica compleja**: Condicionales, loops, y estructuras nativas  
+✅ **Sin dependencias**: No requiere `make`, `nmake`, o versiones GNU  
+✅ **Integración IDE**: VSCode puede ejecutar directamente  
+✅ **Configuración JSON**: Más legible que variables Makefile  
+
+### Comandos Principales
+
+```bash
+# Inicialización (detecta compiladores)
+python make.py init
+
+# Compilación
+python make.py build <type> <feature> <target> [compiler] [mode]
+python make.py build uint128 bits tests gcc release
+python make.py build int128 numeric benchs all all
+
+# Ejecución de tests
+python make.py check <type> <feature> [compiler] [mode]
+python make.py check uint128 bits gcc release
+python make.py check int128 algorithm all all
+
+# Ejecución de benchmarks
+python make.py run <type> <feature> [compiler] [mode]
+python make.py run uint128 cmath all release
+python make.py run int128 numeric intel release
+
+# Limpieza
+python make.py clean              # Limpia build_tests/ y build_benchs/
+python make.py clean --all        # Limpia también compiler_envs/
+```
+
+### Targets Especiales
+
+```bash
+# Compilar TODO el proyecto (tests + benchs, todos los compiladores)
+python make.py all
+
+# Compilar y ejecutar TODOS los tests
+python make.py test               # Con todos los compiladores
+python make.py test gcc release   # Solo GCC en release
+
+# Compilar y ejecutar TODOS los benchmarks
+python make.py bench              # Con todos los compiladores
+python make.py bench intel        # Solo Intel
+
+# Listar todas las combinaciones disponibles
+python make.py list
+```
+
+### Ejemplos de Uso
+
+**Desarrollo rápido:**
+```bash
+# Editas código de uint128_bits
+python make.py build uint128 bits tests gcc release
+python make.py check uint128 bits gcc release
+```
+
+**Validación completa:**
+```bash
+# Compilar todo el proyecto
+python make.py all
+
+# Ejecutar todos los tests
+python make.py test
+
+# Ejecutar todos los benchmarks
+python make.py bench
+```
+
+**Workflow típico:**
+```bash
+# Inicialización (solo primera vez)
+python make.py init
+
+# Desarrollo iterativo
+python make.py build uint128 algorithm tests gcc debug
+python make.py check uint128 algorithm gcc debug
+
+# Antes de commit
+python make.py test gcc release
+
+# Benchmarking
+python make.py bench all
+```
+
+### Comparación: make.py vs Makefile
+
+| Característica | Makefile | make.py |
+|----------------|----------|---------|
+| Portabilidad | ⚠️ Depende de make/nmake | ✅ Solo Python |
+| Entornos aislados | ❌ Contamina global | ✅ Nativo |
+| Sintaxis | ⚠️ Arcana (tabs, $@, etc) | ✅ Python estándar |
+| Debugging | ❌ Difícil | ✅ Excepciones claras |
+| Lógica compleja | ⚠️ Limitada | ✅ Python completo |
+| Paralelización | ✅ make -j nativo | ⚠️ Requiere implementar |
+| Curva aprendizaje | ⚠️ Todos conocen make | ✅ Python es ubicuo |
+| Rendimiento | ✅ Muy rápido | ✅ Suficiente |
+
+### Características Implementadas
+
+✅ **Compilación completa**: `python make.py all`  
+✅ **Testing masivo**: `python make.py test`  
+✅ **Benchmarking masivo**: `python make.py bench`  
+✅ **Auto-detección**: Lista automática de combinaciones type-feature  
+✅ **Estadísticas**: Tiempo total, exitosas/fallidas  
+✅ **Colores**: Output legible con códigos ANSI  
+✅ **Limpieza**: Clean inteligente con opción --all  
+✅ **Listado**: `python make.py list` muestra todo disponible  
+✅ **Ayuda integrada**: `python make.py --help`  
+
+### Integración con Entornos Aislados
+
+`make.py` usa automáticamente el sistema de `compiler_env.py`, garantizando que:
+
+1. Cada compilación usa su entorno correcto (PATH, INCLUDE, LIB)
+2. No contamina el entorno global del sistema
+3. Las configuraciones se cargan desde `build/compiler_envs/*.json`
+4. Compiladores se detectan automáticamente con `python make.py init`
+
+### Estructura Interna
+
+```python
+make.py
+├── cmd_init()      # Detecta compiladores
+├── cmd_build()     # Wrapper de build_generic.py
+├── cmd_check()     # Wrapper de check_generic.py
+├── cmd_run()       # Wrapper de run_generic.py
+├── cmd_clean()     # Limpia directorios
+├── cmd_all()       # Compila todo
+├── cmd_test()      # Tests masivos
+├── cmd_bench()     # Benchmarks masivos
+└── cmd_list()      # Lista combinaciones
+```
+
+Cada comando delega en los scripts genéricos Python (`scripts/*.py`), que a su vez
+usan entornos aislados de `compiler_env.py`.
+
+### Migración desde Makefile
+
+**Antes (Makefile):**
+```bash
+make TYPE=uint128 FEATURE=bits COMPILER=gcc MODE=release build_tests
+make TYPE=uint128 FEATURE=bits COMPILER=gcc MODE=release check
+make clean
+```
+
+**Ahora (make.py):**
+```bash
+python make.py build uint128 bits tests gcc release
+python make.py check uint128 bits gcc release
+python make.py clean
+```
+
+**O incluso más simple:**
+```bash
+python make.py test gcc release
+```
+
+### Salida de Ejemplo
+
+```
+$ python make.py test gcc release
+
+============================================================
+  EJECUCIÓN COMPLETA DE TESTS
+============================================================
+
+[1/14] uint128_algorithm
+  Compilando...
+  Ejecutando...
+[OK]   gcc [release]: PASS
+
+[2/14] uint128_bits
+  Compilando...
+  Ejecutando...
+[OK]   gcc [release]: PASS
+
+...
+
+============================================================
+  RESUMEN DE TESTS
+============================================================
+[OK] Pasaron: 14/14
+[INFO] Tiempo total: 45.3s
+```
+
+### Extensibilidad
+
+Para añadir nuevos comandos:
+
+```python
+def cmd_custom(args: argparse.Namespace) -> int:
+    """Tu comando personalizado"""
+    echo_info("Ejecutando comando custom...")
+    # Tu lógica aquí
+    return 0
+
+# Registrar en main()
+commands = {
+    'custom': cmd_custom,
+}
+```
+
+### Flujo de Trabajo Recomendado
+
+1. **Setup inicial:**
+   ```bash
+   git clone <repo>
+   cd int128
+   python make.py init
+   ```
+
+2. **Desarrollo diario:**
+   ```bash
+   # Editar código
+   python make.py build uint128 bits tests gcc debug
+   python make.py check uint128 bits gcc debug
+   ```
+
+3. **Validación pre-commit:**
+   ```bash
+   python make.py test gcc release
+   ```
+
+4. **Validación completa:**
+   ```bash
+   python make.py all
+   python make.py test
+   ```
+
+5. **Benchmarking:**
+   ```bash
+   python make.py bench all
+   ```
+
+---
+
+**Con make.py, el proyecto tiene un sistema de build moderno, portable y
+mantenible que reemplaza completamente el Makefile tradicional.**
+

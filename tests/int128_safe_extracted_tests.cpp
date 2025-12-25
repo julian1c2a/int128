@@ -190,6 +190,6 @@ int main()
     test_safe_abs();
     test_value_or();
 
-    std::cout << "\n✓ All tests passed!" << std::endl;
+    std::cout << "\n[OK] All tests passed!" << std::endl;
     return 0;
 }

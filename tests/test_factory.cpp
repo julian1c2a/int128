@@ -17,26 +17,26 @@ void test_uint128_factory()
     auto val1 = make_uint128(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
     assert(val1.high() == 0x1234567890ABCDEFULL);
     assert(val1.low() == 0xFEDCBA0987654321ULL);
-    std::cout << "  ✅ make_uint128(high, low) funciona\n";
+    std::cout << "  [OK] make_uint128(high, low) funciona\n";
 
     // Test make_uint128 desde enteros
     auto val2 = make_uint128(42);
     assert(val2.low() == 42);
     assert(val2.high() == 0);
-    std::cout << "  ✅ make_uint128(int) funciona\n";
+    std::cout << "  [OK] make_uint128(int) funciona\n";
 
     // Test valores especiales
     auto zero = make_uint128_zero();
     assert(zero.low() == 0 && zero.high() == 0);
-    std::cout << "  ✅ make_uint128_zero() funciona\n";
+    std::cout << "  [OK] make_uint128_zero() funciona\n";
 
     auto one = make_uint128_one();
     assert(one.low() == 1 && one.high() == 0);
-    std::cout << "  ✅ make_uint128_one() funciona\n";
+    std::cout << "  [OK] make_uint128_one() funciona\n";
 
     auto max_val = make_uint128_max();
     assert(max_val.low() == UINT64_MAX && max_val.high() == UINT64_MAX);
-    std::cout << "  ✅ make_uint128_max() funciona\n";
+    std::cout << "  [OK] make_uint128_max() funciona\n";
 }
 
 void test_int128_factory()
@@ -47,44 +47,44 @@ void test_int128_factory()
     auto val1 = make_int128(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
     assert(val1.high() == 0x7FFFFFFFFFFFFFFFULL);
     assert(val1.low() == 0xFFFFFFFFFFFFFFFFULL);
-    std::cout << "  ✅ make_int128(high, low) funciona\n";
+    std::cout << "  [OK] make_int128(high, low) funciona\n";
 
     // Test make_int128 desde enteros positivos
     auto val2 = make_int128(42);
     assert(val2.low() == 42);
     assert(val2.high() == 0);
     assert(!val2.is_negative());
-    std::cout << "  ✅ make_int128(int positivo) funciona\n";
+    std::cout << "  [OK] make_int128(int positivo) funciona\n";
 
     // Test make_int128 desde enteros negativos
     auto val3 = make_int128(-42);
     assert(val3.is_negative());
-    std::cout << "  ✅ make_int128(int negativo) funciona\n";
+    std::cout << "  [OK] make_int128(int negativo) funciona\n";
 
     // Test valores especiales
     auto zero = make_int128_zero();
     assert(zero.low() == 0 && zero.high() == 0);
-    std::cout << "  ✅ make_int128_zero() funciona\n";
+    std::cout << "  [OK] make_int128_zero() funciona\n";
 
     auto one = make_int128_one();
     assert(one.low() == 1 && one.high() == 0);
-    std::cout << "  ✅ make_int128_one() funciona\n";
+    std::cout << "  [OK] make_int128_one() funciona\n";
 
     auto minus_one = make_int128_minus_one();
     assert(minus_one.is_negative());
-    std::cout << "  ✅ make_int128_minus_one() funciona\n";
+    std::cout << "  [OK] make_int128_minus_one() funciona\n";
 
     auto max_val = make_int128_max();
     assert(max_val.high() == 0x7FFFFFFFFFFFFFFFULL);
     assert(max_val.low() == UINT64_MAX);
     assert(!max_val.is_negative());
-    std::cout << "  ✅ make_int128_max() funciona\n";
+    std::cout << "  [OK] make_int128_max() funciona\n";
 
     auto min_val = make_int128_min();
     assert(min_val.high() == 0x8000000000000000ULL);
     assert(min_val.low() == 0);
     assert(min_val.is_negative());
-    std::cout << "  ✅ make_int128_min() funciona\n";
+    std::cout << "  [OK] make_int128_min() funciona\n";
 }
 
 void test_conversion_functions()
@@ -96,23 +96,23 @@ void test_conversion_functions()
     auto uint_val = int128_to_uint128(int_val);
     assert(uint_val.high() == 0x1234567890ABCDEFULL);
     assert(uint_val.low() == 0xFEDCBA0987654321ULL);
-    std::cout << "  ✅ int128_to_uint128() funciona\n";
+    std::cout << "  [OK] int128_to_uint128() funciona\n";
 
     auto back_to_int = uint128_to_int128(uint_val);
     assert(back_to_int.high() == int_val.high());
     assert(back_to_int.low() == int_val.low());
-    std::cout << "  ✅ uint128_to_int128() funciona\n";
+    std::cout << "  [OK] uint128_to_int128() funciona\n";
 
     // Test conversión segura
     auto positive_int = make_int128(42);
     auto safe_uint = safe_int128_to_uint128(positive_int);
     assert(safe_uint.low() == 42);
-    std::cout << "  ✅ safe_int128_to_uint128() funciona\n";
+    std::cout << "  [OK] safe_int128_to_uint128() funciona\n";
 
     auto safe_back = safe_uint128_to_int128(safe_uint);
     assert(safe_back.low() == 42);
     assert(!safe_back.is_negative());
-    std::cout << "  ✅ safe_uint128_to_int128() funciona\n";
+    std::cout << "  [OK] safe_uint128_to_int128() funciona\n";
 }
 
 void test_alias_functions()
@@ -122,11 +122,11 @@ void test_alias_functions()
     // Test aliases
     auto uint_alias = uint128(42);
     assert(uint_alias.low() == 42);
-    std::cout << "  ✅ uint128() alias funciona\n";
+    std::cout << "  [OK] uint128() alias funciona\n";
 
     auto int_alias = int128(42);
     assert(int_alias.low() == 42);
-    std::cout << "  ✅ int128() alias funciona\n";
+    std::cout << "  [OK] int128() alias funciona\n";
 }
 
 void test_backward_compatibility()
@@ -143,19 +143,19 @@ void test_backward_compatibility()
 
     // Verificar que la suma funciona
     assert(sum == make_int128(300));
-    std::cout << "  ✅ Aritmética básica funciona\n";
+    std::cout << "  [OK] Aritmética básica funciona\n";
 
     // Prueba comparaciones
     assert(a < b);
     assert(b > a);
     assert(a != b);
-    std::cout << "  ✅ Comparaciones funcionan\n";
+    std::cout << "  [OK] Comparaciones funcionan\n";
 
     // Prueba con valores grandes
     auto large1 = make_uint128(0x8000000000000000ULL, 0);
     auto large2 = make_uint128(0, UINT64_MAX);
     assert(large1 > large2);
-    std::cout << "  ✅ Operaciones con valores grandes funcionan\n";
+    std::cout << "  [OK] Operaciones con valores grandes funcionan\n";
 }
 
 int main()
@@ -181,18 +181,18 @@ int main()
 
         std::cout << "🎉 ¡TODOS LOS TESTS DE FACTORY PASARON!\n";
         std::cout << "==========================================\n";
-        std::cout << "✅ Funciones de fábrica uint128_t funcionando\n";
-        std::cout << "✅ Funciones de fábrica int128_t funcionando\n";
-        std::cout << "✅ Funciones de conversión funcionando\n";
-        std::cout << "✅ Aliases y compatibilidad funcionando\n";
+        std::cout << "[OK] Funciones de fábrica uint128_t funcionando\n";
+        std::cout << "[OK] Funciones de fábrica int128_t funcionando\n";
+        std::cout << "[OK] Funciones de conversión funcionando\n";
+        std::cout << "[OK] Aliases y compatibilidad funcionando\n";
 
         return 0;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Error en tests: " << e.what() << std::endl;
+        std::cout << "[FAIL] Error en tests: " << e.what() << std::endl;
         return 1;
     } catch (...) {
-        std::cout << "❌ Error desconocido en tests" << std::endl;
+        std::cout << "[FAIL] Error desconocido en tests" << std::endl;
         return 1;
     }
 }

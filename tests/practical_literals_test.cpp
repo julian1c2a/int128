@@ -81,7 +81,7 @@ int main()
     std::cout << "data = 0x12345678 = " << data << "\n";
     std::cout << "mask = 0xFF = " << mask << "\n";
     std::cout << "data & mask = " << result << "\n";
-    std::cout << "result == 0x78: " << (result == uint128_t(0x78) ? "✓" : "✗") << "\n";
+    std::cout << "result == 0x78: " << (result == uint128_t(0x78) ? "[OK]" : "[ERROR]") << "\n";
 
     // Test 8: Expresiones complejas
     std::cout << "\n8. Expresiones matemáticas complejas:\n";
@@ -89,15 +89,15 @@ int main()
     auto expected = 100 * 200 + 50 * 4 - 42; // = 20158
 
     std::cout << "(100 * 200) + (50 << 2) - 42 = " << complex_calc << "\n";
-    std::cout << "Verificación: " << (complex_calc == uint128_t(expected) ? "✓" : "✗") << "\n";
+    std::cout << "Verificación: " << (complex_calc == uint128_t(expected) ? "[OK]" : "[ERROR]") << "\n";
 
     std::cout << "\n=== Beneficios de los literales uint128_t ===\n";
-    std::cout << "✓ Sintaxis natural: 42_u128 vs uint128_t(42)\n";
-    std::cout << "✓ Números grandes legibles: \"123456789\"_u128\n";
-    std::cout << "✓ Funciona con auto: auto x = 42_u128\n";
-    std::cout << "✓ Integración perfecta con operadores\n";
-    std::cout << "✓ Constantes de tiempo de compilación\n";
-    std::cout << "✓ Código más limpio y expresivo\n";
+    std::cout << "[OK] Sintaxis natural: 42_u128 vs uint128_t(42)\n";
+    std::cout << "[OK] Números grandes legibles: \"123456789\"_u128\n";
+    std::cout << "[OK] Funciona con auto: auto x = 42_u128\n";
+    std::cout << "[OK] Integración perfecta con operadores\n";
+    std::cout << "[OK] Constantes de tiempo de compilación\n";
+    std::cout << "[OK] Código más limpio y expresivo\n";
 
     return 0;
 }

@@ -75,9 +75,9 @@ int128_t sink;
 
 void print_header()
 {
-    std::cout << "\n╔══════════════════════════════════════════════════════════════════════════╗\n";
+    std::cout << "\n╔==========================================================================╗\n";
     std::cout << "║  INT128_CMATH.HPP - PERFORMANCE BENCHMARKS                               ║\n";
-    std::cout << "╚══════════════════════════════════════════════════════════════════════════╝\n";
+    std::cout << "╚==========================================================================╝\n";
 
 #if defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER)
     std::cout << "Compiler: GCC " << __VERSION__ << "\n";
@@ -95,10 +95,10 @@ void print_header()
 
 void print_results()
 {
-    std::cout << "\n═══════════════════════════════════════════════════════════════════════════\n";
+    std::cout << "\n===========================================================================\n";
     std::cout << std::left << std::setw(50) << "Operation" << std::right << std::setw(12)
               << "Time (ns)" << std::setw(12) << "CPU Cycles" << "\n";
-    std::cout << "═══════════════════════════════════════════════════════════════════════════\n";
+    std::cout << "===========================================================================\n";
 
     std::string last_category;
     for (const auto& r : results) {
@@ -110,7 +110,7 @@ void print_results()
                   << std::fixed << std::setprecision(1) << r.time_ns << std::setw(12) << r.cycles
                   << "\n";
     }
-    std::cout << "═══════════════════════════════════════════════════════════════════════════\n";
+    std::cout << "===========================================================================\n";
 }
 
 // ============================================================================
@@ -441,18 +441,18 @@ int main()
     print_results();
 
     std::cout << "\n=== Performance Summary ===\n";
-    std::cout << "• GCD: Binary GCD (Stein's algorithm) with sign handling - O(log(min(a,b)))\n";
-    std::cout << "• LCM: Optimized formula abs(a*b)/gcd(a,b) - prevents overflow\n";
+    std::cout << "* GCD: Binary GCD (Stein's algorithm) with sign handling - O(log(min(a,b)))\n";
+    std::cout << "* LCM: Optimized formula abs(a*b)/gcd(a,b) - prevents overflow\n";
     std::cout
-        << "• POW: Fast exponentiation by squaring with negative base support - O(log(exp))\n";
-    std::cout << "• SQRT: Newton's method for non-negative values - O(log(n))\n";
-    std::cout << "• ABS/SIGN/MIN/MAX/CLAMP: Constant time operations - O(1)\n";
-    std::cout << "• MIDPOINT: Overflow-safe: a + (b-a)/2 - O(1)\n";
+        << "* POW: Fast exponentiation by squaring with negative base support - O(log(exp))\n";
+    std::cout << "* SQRT: Newton's method for non-negative values - O(log(n))\n";
+    std::cout << "* ABS/SIGN/MIN/MAX/CLAMP: Constant time operations - O(1)\n";
+    std::cout << "* MIDPOINT: Overflow-safe: a + (b-a)/2 - O(1)\n";
     std::cout << "\n=== Notes ===\n";
-    std::cout << "• Negative value handling adds minimal overhead (sign checks)\n";
-    std::cout << "• int64_t baselines provided for direct comparison\n";
-    std::cout << "• RDTSC measurements may show 0 cycles for highly optimized operations\n";
-    std::cout << "• Results vary by compiler optimization levels and CPU architecture\n";
+    std::cout << "* Negative value handling adds minimal overhead (sign checks)\n";
+    std::cout << "* int64_t baselines provided for direct comparison\n";
+    std::cout << "* RDTSC measurements may show 0 cycles for highly optimized operations\n";
+    std::cout << "* Results vary by compiler optimization levels and CPU architecture\n";
 
     return 0;
 }

@@ -30,7 +30,7 @@ int main()
             correct = false;
         }
     }
-    std::cout << (correct ? "✓" : "✗") << " Todos los valores son correctos\n";
+    std::cout << (correct ? "[OK]" : "[ERROR]") << " Todos los valores son correctos\n";
 
     // Test 3: iota con vector
     std::cout << "\n3. Test con std::vector:\n";
@@ -59,15 +59,15 @@ int main()
     uint128_t original = test_val;
     ++test_val;
     std::cout << "Antes: " << original << ", Después de ++: " << test_val << "\n";
-    std::cout << "Incremento correcto: " << ((test_val - original) == uint128_t(1) ? "✓" : "✗") << "\n";
+    std::cout << "Incremento correcto: " << ((test_val - original) == uint128_t(1) ? "[OK]" : "[ERROR]") << "\n";
 
     std::cout << "\n=== Conclusión ===\n";
-    std::cout << "✓ std::iota funciona perfectamente con uint128_t\n";
-    std::cout << "✓ Requiere que el tipo tenga:\n";
+    std::cout << "[OK] std::iota funciona perfectamente con uint128_t\n";
+    std::cout << "[OK] Requiere que el tipo tenga:\n";
     std::cout << "  - Constructor de copia\n";
     std::cout << "  - Operador de asignación\n";
     std::cout << "  - Operador++\n";
-    std::cout << "✓ Nuestra implementación cumple todos estos requisitos\n";
+    std::cout << "[OK] Nuestra implementación cumple todos estos requisitos\n";
 
     return 0;
 }

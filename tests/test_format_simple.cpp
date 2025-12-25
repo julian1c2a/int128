@@ -90,17 +90,17 @@ void demo_realistic_usage()
 
     // Tabla formateada
     std::cout << "\nTabla de valores:" << std::endl;
-    std::cout << "┌─────────────────┬──────────────────────────┬──────────────┐" << std::endl;
-    std::cout << "│      Decimal    │       Hexadecimal       │    Octal     │" << std::endl;
-    std::cout << "├─────────────────┼──────────────────────────┼──────────────┤" << std::endl;
+    std::cout << "┌-----------------┬--------------------------┬--------------┐" << std::endl;
+    std::cout << "|      Decimal    |       Hexadecimal       |    Octal     |" << std::endl;
+    std::cout << "├-----------------┼--------------------------┼--------------┤" << std::endl;
 
     for (uint64_t i : {255, 1024, 65535}) {
         uint128_t val(0, i);
-        std::cout << "│ " << uint128_format::format(val, 10, 15, ' ') << " │ ";
-        std::cout << uint128_format::format(val, 16, 24, ' ', true, false) << " │ ";
-        std::cout << uint128_format::format(val, 8, 12, ' ', true, false) << " │" << std::endl;
+        std::cout << "| " << uint128_format::format(val, 10, 15, ' ') << " | ";
+        std::cout << uint128_format::format(val, 16, 24, ' ', true, false) << " | ";
+        std::cout << uint128_format::format(val, 8, 12, ' ', true, false) << " |" << std::endl;
     }
-    std::cout << "└─────────────────┴──────────────────────────┴──────────────┘" << std::endl;
+    std::cout << "└-----------------┴--------------------------┴--------------┘" << std::endl;
 }
 
 void demo_comparison_with_builtin()
@@ -125,10 +125,10 @@ void demo_comparison_with_builtin()
 
 int main()
 {
-    std::cout << "╔══════════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "╔==============================================================╗" << std::endl;
     std::cout << "║               DEMOSTRACIÓN DE FORMATEO uint128_t             ║" << std::endl;
     std::cout << "║     Funciones que simulan iostream/iomanip para uint128_t   ║" << std::endl;
-    std::cout << "╚══════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚==============================================================╝" << std::endl;
 
     demo_basic_formatting();
     demo_width_and_alignment();
@@ -137,13 +137,13 @@ int main()
     demo_realistic_usage();
     demo_comparison_with_builtin();
 
-    std::cout << "\n╔══════════════════════════════════════════════════════════════╗" << std::endl;
-    std::cout << "║                       ✅ CONCLUSIONES                        ║" << std::endl;
-    std::cout << "╠══════════════════════════════════════════════════════════════╣" << std::endl;
+    std::cout << "\n╔==============================================================╗" << std::endl;
+    std::cout << "║                       [OK] CONCLUSIONES                        ║" << std::endl;
+    std::cout << "╠==============================================================╣" << std::endl;
     std::cout << "║ RESPUESTA: ¿Son fáciles de conseguir las posibilidades      ║" << std::endl;
     std::cout << "║ de formateo de iostream/iomanip para uint128_t?              ║" << std::endl;
     std::cout << "║                                                              ║" << std::endl;
-    std::cout << "║ ✅ SÍ - Con funciones de conveniencia es MUY FÁCIL:         ║" << std::endl;
+    std::cout << "║ [OK] SÍ - Con funciones de conveniencia es MUY FÁCIL:         ║" << std::endl;
     std::cout << "║                                                              ║" << std::endl;
     std::cout << "║ 🔸 Bases: uint128_format::hex(), oct(), dec()               ║" << std::endl;
     std::cout << "║ 🔸 Ancho y relleno: width, fill parameters                  ║" << std::endl;
@@ -154,7 +154,7 @@ int main()
     std::cout << "║ 📝 NOTA: Los manipuladores iostream estándar no funcionan   ║" << std::endl;
     std::cout << "║ automáticamente, pero nuestras funciones proporcionan       ║" << std::endl;
     std::cout << "║ la MISMA funcionalidad de manera intuitiva y fácil.         ║" << std::endl;
-    std::cout << "╚══════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚==============================================================╝" << std::endl;
 
     return 0;
 }

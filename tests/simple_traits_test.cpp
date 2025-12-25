@@ -31,7 +31,7 @@ int main()
     assert(limits::is_integer == true);
     assert(limits::is_signed == false);
     assert(limits::digits == 128);
-    std::cout << "✓ numeric_limits especialización funciona\n\n";
+    std::cout << "[OK] numeric_limits especialización funciona\n\n";
 
     // ===============================================================================
     // TEST HASH (para unordered containers)
@@ -49,7 +49,7 @@ int main()
     assert(map[key2] == "Second value");
     assert(map.size() == 2);
 
-    std::cout << "✓ Hash support funciona con unordered_map\n\n";
+    std::cout << "[OK] Hash support funciona con unordered_map\n\n";
 
     // ===============================================================================
     // TEST CONCEPTS BÁSICOS
@@ -61,20 +61,20 @@ int main()
     // Test manual de concepts (sin static_assert para evitar problemas)
     if constexpr (uint128_convertible<int>)
     {
-        std::cout << "✓ int es convertible a uint128_t\n";
+        std::cout << "[OK] int es convertible a uint128_t\n";
     }
 
     if constexpr (uint128_convertible<uint64_t>)
     {
-        std::cout << "✓ uint64_t es convertible a uint128_t\n";
+        std::cout << "[OK] uint64_t es convertible a uint128_t\n";
     }
 
     if constexpr (uint128_convertible<uint128_t>)
     {
-        std::cout << "✓ uint128_t es convertible a sí mismo\n";
+        std::cout << "[OK] uint128_t es convertible a sí mismo\n";
     }
 
-    std::cout << "✓ Concepts personalizados funcionan\n\n";
+    std::cout << "[OK] Concepts personalizados funcionan\n\n";
 
     // ===============================================================================
     // TEST UTILITIES (versión simplificada)
@@ -93,7 +93,7 @@ int main()
     assert(!can_hold_32);
     assert(may_overflow_16);
 
-    std::cout << "✓ Utilidades funcionan correctamente\n\n";
+    std::cout << "[OK] Utilidades funcionan correctamente\n\n";
 
     std::cout << "¡Extensiones básicas funcionan perfectamente! 🎉\n";
     return 0;

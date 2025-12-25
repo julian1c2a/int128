@@ -59,7 +59,7 @@ int main()
 
     if (correct)
     {
-        std::cout << "✓ Todos los valores son correctos\n";
+        std::cout << "[OK] Todos los valores son correctos\n";
     }
 
     std::cout << "\n=== Test completado ===\n";

@@ -58,7 +58,7 @@ int main()
         all_correct &= correct;
 
         std::cout << tc.description << ": ";
-        std::cout << (correct ? "✓ CORRECTO" : "✗ ERROR") << std::endl;
+        std::cout << (correct ? "[OK] CORRECTO" : "[ERROR] ERROR") << std::endl;
 
         if (!correct) {
             std::cout << "  Resultado: 0x" << std::hex << result << std::endl;
@@ -67,7 +67,7 @@ int main()
     }
 
     if (!all_correct) {
-        std::cout << "\n❌ HAY ERRORES EN LA EMULACIÓN" << std::endl;
+        std::cout << "\n[FAIL] HAY ERRORES EN LA EMULACIÓN" << std::endl;
         return 1;
     }
 
@@ -137,18 +137,18 @@ int main()
 #endif
 
     std::cout << "\n--- COMPARACIÓN CON MSVC ---" << std::endl;
-    std::cout << "• MSVC __umulh:      ~0.46 ns/op (REFERENCIA)" << std::endl;
-    std::cout << "• Nuestra emulación: " << std::fixed << std::setprecision(2) << ns_per_op
+    std::cout << "* MSVC __umulh:      ~0.46 ns/op (REFERENCIA)" << std::endl;
+    std::cout << "* Nuestra emulación: " << std::fixed << std::setprecision(2) << ns_per_op
               << " ns/op" << std::endl;
 
     if (ns_per_op < 0.5) {
-        std::cout << "• Estado: EXCELENTE - Muy cerca de MSVC 🎯" << std::endl;
+        std::cout << "* Estado: EXCELENTE - Muy cerca de MSVC 🎯" << std::endl;
     } else if (ns_per_op < 1.0) {
-        std::cout << "• Estado: MUY BUENO - Emulación eficiente 🚀" << std::endl;
+        std::cout << "* Estado: MUY BUENO - Emulación eficiente 🚀" << std::endl;
     } else if (ns_per_op < 2.0) {
-        std::cout << "• Estado: BUENO - Rendimiento aceptable ✓" << std::endl;
+        std::cout << "* Estado: BUENO - Rendimiento aceptable [OK]" << std::endl;
     } else {
-        std::cout << "• Estado: MEJORABLE - Considerar más optimización 📈" << std::endl;
+        std::cout << "* Estado: MEJORABLE - Considerar más optimización 📈" << std::endl;
     }
 
     std::cout << "\n=== ANÁLISIS COMPLETADO ===" << std::endl;

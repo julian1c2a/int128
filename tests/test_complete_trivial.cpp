@@ -65,45 +65,45 @@ void test_assign_functions()
     assign_uint128(u1, 0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
     assert(u1.high() == 0x1234567890ABCDEFULL);
     assert(u1.low() == 0xFEDCBA0987654321ULL);
-    std::cout << "  ✅ assign_uint128(target, high, low) funciona\n";
+    std::cout << "  [OK] assign_uint128(target, high, low) funciona\n";
 
     uint128_t u2{};
     assign_uint128(u2, 42);
     assert(u2.low() == 42);
     assert(u2.high() == 0);
-    std::cout << "  ✅ assign_uint128(target, value) funciona\n";
+    std::cout << "  [OK] assign_uint128(target, value) funciona\n";
 
     uint128_t u3{};
     assign_from_int(u3, 123456);
     assert(u3.low() == 123456);
     assert(u3.high() == 0);
-    std::cout << "  ✅ assign_from_int(uint128, value) funciona\n";
+    std::cout << "  [OK] assign_from_int(uint128, value) funciona\n";
 
     // Test int128_t asignaciones
     int128_t i1{};
     assign_int128(i1, 0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
     assert(i1.high() == 0x7FFFFFFFFFFFFFFFULL);
     assert(i1.low() == 0xFFFFFFFFFFFFFFFFULL);
-    std::cout << "  ✅ assign_int128(target, high, low) funciona\n";
+    std::cout << "  [OK] assign_int128(target, high, low) funciona\n";
 
     int128_t i2{};
     assign_int128(i2, -42);
     assert(i2.is_negative());
-    std::cout << "  ✅ assign_int128(target, negative) funciona\n";
+    std::cout << "  [OK] assign_int128(target, negative) funciona\n";
 
     int128_t i3{};
     assign_from_int(i3, 789);
     assert(i3.low() == 789);
     assert(i3.high() == 0);
     assert(!i3.is_negative());
-    std::cout << "  ✅ assign_from_int(int128, value) funciona\n";
+    std::cout << "  [OK] assign_from_int(int128, value) funciona\n";
 
     // Test asignación desde uint128_t
     int128_t i4{};
     assign_int128(i4, u1);
     assert(i4.high() == u1.high());
     assert(i4.low() == u1.low());
-    std::cout << "  ✅ assign_int128(target, uint128) funciona\n";
+    std::cout << "  [OK] assign_int128(target, uint128) funciona\n";
 }
 
 void test_factory_vs_assign()
@@ -118,7 +118,7 @@ void test_factory_vs_assign()
     assign_uint128(u_assign, 0xDEADBEEFULL, 0xCAFEBABEULL);
 
     assert(u_factory == u_assign);
-    std::cout << "  ✅ Factory y assign producen resultados idénticos\n";
+    std::cout << "  [OK] Factory y assign producen resultados idénticos\n";
 
     // Verificar que ambas approaches funcionan
     auto i_factory = make_int128(-999);
@@ -127,7 +127,7 @@ void test_factory_vs_assign()
     assign_int128(i_assign, -999);
 
     assert(i_factory == i_assign);
-    std::cout << "  ✅ Factory y assign compatibles para negativos\n";
+    std::cout << "  [OK] Factory y assign compatibles para negativos\n";
 }
 
 void test_memory_layout()
@@ -144,7 +144,7 @@ void test_memory_layout()
     assert(alignof(uint128_t) == 8);
     assert(alignof(int128_t) == 8);
 
-    std::cout << "  ✅ Layout de memoria correcto para tipos triviales\n";
+    std::cout << "  [OK] Layout de memoria correcto para tipos triviales\n";
 }
 
 int main()
@@ -159,10 +159,10 @@ int main()
 
     std::cout << "\n🎉 ¡TODOS LOS TESTS PASARON!\n";
     std::cout << "======================================\n";
-    std::cout << "✅ TRIVIALIDAD COMPLETA lograda\n";
-    std::cout << "✅ Funciones assign funcionando\n";
-    std::cout << "✅ Compatibilidad con factory functions\n";
-    std::cout << "✅ Optimizaciones del compilador habilitadas\n";
+    std::cout << "[OK] TRIVIALIDAD COMPLETA lograda\n";
+    std::cout << "[OK] Funciones assign funcionando\n";
+    std::cout << "[OK] Compatibilidad con factory functions\n";
+    std::cout << "[OK] Optimizaciones del compilador habilitadas\n";
 
     return 0;
 }

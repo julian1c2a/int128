@@ -15,7 +15,7 @@ void test_cmath_functions()
     std::cout << "=== Testing INT128_T CMATH FUNCTIONS ===" << std::endl;
 
     // Test gcd
-    std::cout << "\n📊 Testing gcd:" << std::endl;
+    std::cout << "\n[INFO] Testing gcd:" << std::endl;
     auto gcd1 = std::gcd(48_i128, 18_i128);
     auto gcd2 = std::gcd(-48_i128, 18_i128);
     auto gcd3 = std::gcd(48_i128, -18_i128);
@@ -32,7 +32,7 @@ void test_cmath_functions()
     assert(gcd4 == 6_i128);
 
     // Test lcm
-    std::cout << "\n📊 Testing lcm:" << std::endl;
+    std::cout << "\n[INFO] Testing lcm:" << std::endl;
     auto lcm1 = std::lcm(12_i128, 18_i128);
     auto lcm2 = std::lcm(-12_i128, 18_i128);
     auto lcm3 = std::lcm(12_i128, -18_i128);
@@ -46,7 +46,7 @@ void test_cmath_functions()
     assert(lcm3 == 36_i128);
 
     // Test abs
-    std::cout << "\n📊 Testing abs:" << std::endl;
+    std::cout << "\n[INFO] Testing abs:" << std::endl;
     auto abs1 = std::abs(42_i128);
     auto abs2 = std::abs(-42_i128);
     auto abs3 = std::abs(0_i128);
@@ -60,7 +60,7 @@ void test_cmath_functions()
     assert(abs3 == 0_i128);
 
     // Test pow
-    std::cout << "\n📊 Testing pow:" << std::endl;
+    std::cout << "\n[INFO] Testing pow:" << std::endl;
     auto pow1 = std::pow(2_i128, 10_i128);
     auto pow2 = std::pow(-2_i128, 3_i128);
     auto pow3 = std::pow(-2_i128, 4_i128);
@@ -77,7 +77,7 @@ void test_cmath_functions()
     assert(pow4 == 1_i128);
 
     // Test sqrt
-    std::cout << "\n📊 Testing sqrt:" << std::endl;
+    std::cout << "\n[INFO] Testing sqrt:" << std::endl;
     auto sqrt1 = std::sqrt(64_i128);
     auto sqrt2 = std::sqrt(100_i128);
     auto sqrt3 = std::sqrt(-16_i128);
@@ -94,7 +94,7 @@ void test_cmath_functions()
     assert(sqrt4 == 0_i128);
 
     // Test sign
-    std::cout << "\n📊 Testing sign:" << std::endl;
+    std::cout << "\n[INFO] Testing sign:" << std::endl;
     auto sign1 = std::sign(42_i128);
     auto sign2 = std::sign(-42_i128);
     auto sign3 = std::sign(0_i128);
@@ -108,7 +108,7 @@ void test_cmath_functions()
     assert(sign3 == 0_i128);
 
     // Test min/max
-    std::cout << "\n📊 Testing min/max:" << std::endl;
+    std::cout << "\n[INFO] Testing min/max:" << std::endl;
     auto min1 = std::min(42_i128, 17_i128);
     auto max1 = std::max(42_i128, 17_i128);
     auto min2 = std::min(-10_i128, 5_i128);
@@ -124,7 +124,7 @@ void test_cmath_functions()
     assert(min2 == -10_i128);
     assert(max2 == 5_i128);
 
-    std::cout << "✅ CMATH functions OK" << std::endl;
+    std::cout << "[OK] CMATH functions OK" << std::endl;
 }
 
 void test_bit_functions()
@@ -132,7 +132,7 @@ void test_bit_functions()
     std::cout << "\n=== Testing INT128_T BIT FUNCTIONS ===" << std::endl;
 
     // Test popcount
-    std::cout << "\n📊 Testing popcount:" << std::endl;
+    std::cout << "\n[INFO] Testing popcount:" << std::endl;
     auto pop1 = std::popcount(7_i128);  // 0111 = 3 bits
     auto pop2 = std::popcount(-1_i128); // All 1s = 128 bits
     auto pop3 = std::popcount(0_i128);  // 0000 = 0 bits
@@ -148,7 +148,7 @@ void test_bit_functions()
     assert(pop3 == 0);
 
     // Test countl_zero
-    std::cout << "\n📊 Testing countl_zero:" << std::endl;
+    std::cout << "\n[INFO] Testing countl_zero:" << std::endl;
     auto clz1 = std::countl_zero(1_i128);
     auto clz2 = std::countl_zero(0_i128);
     auto clz3 = std::countl_zero(-1_i128);
@@ -162,7 +162,7 @@ void test_bit_functions()
     assert(clz3 == 0); // Negativos empiezan con 1
 
     // Test countr_zero
-    std::cout << "\n📊 Testing countr_zero:" << std::endl;
+    std::cout << "\n[INFO] Testing countr_zero:" << std::endl;
     auto ctz1 = std::countr_zero(8_i128);
     auto ctz2 = std::countr_zero(1_i128);
     auto ctz3 = std::countr_zero(0_i128);
@@ -176,7 +176,7 @@ void test_bit_functions()
     assert(ctz3 == 128);
 
     // Test bit_width
-    std::cout << "\n📊 Testing bit_width:" << std::endl;
+    std::cout << "\n[INFO] Testing bit_width:" << std::endl;
     auto bw1 = std::bit_width(7_i128);
     auto bw2 = std::bit_width(0_i128);
     auto bw3 = std::bit_width(-1_i128);
@@ -190,7 +190,7 @@ void test_bit_functions()
     assert(bw3 == 128); // Negativos usan todos los bits
 
     // Test has_single_bit
-    std::cout << "\n📊 Testing has_single_bit:" << std::endl;
+    std::cout << "\n[INFO] Testing has_single_bit:" << std::endl;
     bool hsb1 = std::has_single_bit(8_i128);
     bool hsb2 = std::has_single_bit(7_i128);
     bool hsb3 = std::has_single_bit(-8_i128);
@@ -203,7 +203,7 @@ void test_bit_functions()
     assert(hsb2 == false);
     assert(hsb3 == false); // Negativos no califican
 
-    std::cout << "✅ STD bit functions OK" << std::endl;
+    std::cout << "[OK] STD bit functions OK" << std::endl;
 }
 
 void test_extended_bit_functions()
@@ -211,7 +211,7 @@ void test_extended_bit_functions()
     std::cout << "\n=== Testing EXTENDED BIT FUNCTIONS ===" << std::endl;
 
     // Test rotl/rotr
-    std::cout << "\n📊 Testing rotation:" << std::endl;
+    std::cout << "\n[INFO] Testing rotation:" << std::endl;
     int128_t val = int128_t(0x123456789ABCDEF0ULL);
     auto rotl_result = int128_bits::rotl(val, 4);
     auto rotr_result = int128_bits::rotr(val, 4);
@@ -221,7 +221,7 @@ void test_extended_bit_functions()
     std::cout << "rotr(4): " << rotr_result.to_string_base(16) << std::endl;
 
     // Test bit manipulation
-    std::cout << "\n📊 Testing bit manipulation:" << std::endl;
+    std::cout << "\n[INFO] Testing bit manipulation:" << std::endl;
     int128_t test_val = 42_i128;
 
     bool bit5_set = int128_bits::test_bit(test_val, 5);
@@ -237,7 +237,7 @@ void test_extended_bit_functions()
     assert(cleared_bit1 == 40_i128);             // 42 - 2 = 40
 
     // Test extract/insert bits
-    std::cout << "\n📊 Testing extract/insert bits:" << std::endl;
+    std::cout << "\n[INFO] Testing extract/insert bits:" << std::endl;
     int128_t source = 0xFF_i128;                                      // 11111111
     auto extracted = int128_bits::extract_bits(source, 2, 4);         // Bits 2-5
     auto inserted = int128_bits::insert_bits(0_i128, 0xA_i128, 4, 4); // Insertar 1010 en posición 4
@@ -249,7 +249,7 @@ void test_extended_bit_functions()
     assert(inserted == 0xA0_i128); // 1010 en posición 4
 
     // Test find first/last set
-    std::cout << "\n📊 Testing find first/last set:" << std::endl;
+    std::cout << "\n[INFO] Testing find first/last set:" << std::endl;
     int128_t find_val = 0x104_i128; // 100000100
     int ffs = int128_bits::find_first_set(find_val);
     int fls = int128_bits::find_last_set(find_val);
@@ -260,7 +260,7 @@ void test_extended_bit_functions()
     assert(ffs == 2); // Primer bit set en posición 2
     assert(fls == 8); // Último bit set en posición 8
 
-    std::cout << "✅ Extended bit functions OK" << std::endl;
+    std::cout << "[OK] Extended bit functions OK" << std::endl;
 }
 
 void test_divmod()
@@ -283,7 +283,7 @@ void test_divmod()
     assert(100_i128 == -7_i128 * q3 + r3);
     assert(-100_i128 == -7_i128 * q4 + r4);
 
-    std::cout << "✅ DIVMOD OK" << std::endl;
+    std::cout << "[OK] DIVMOD OK" << std::endl;
 }
 
 int main()
@@ -299,19 +299,19 @@ int main()
 
         std::cout << "\n🎉 ¡TODOS LOS TESTS PASARON!" << std::endl;
         std::cout << "\n🔧 FUNCIONES CONFIRMADAS:" << std::endl;
-        std::cout << "✅ int128_cmath.hpp - Funciones matemáticas completas" << std::endl;
-        std::cout << "  • std::gcd, std::lcm, std::abs, std::pow, std::sqrt" << std::endl;
-        std::cout << "  • std::sign, std::min, std::max, std::clamp, std::midpoint" << std::endl;
-        std::cout << "  • std::divmod para división y módulo simultáneos" << std::endl;
-        std::cout << "✅ int128_bits.hpp - Manipulación de bits completa" << std::endl;
-        std::cout << "  • std::popcount, std::countl_zero, std::countr_zero" << std::endl;
-        std::cout << "  • std::bit_width, std::has_single_bit, std::bit_floor" << std::endl;
-        std::cout << "  • int128_bits:: rotl, rotr, reverse_bits, byteswap" << std::endl;
-        std::cout << "  • int128_bits:: extract_bits, insert_bits, test/set/clear_bit" << std::endl;
-        std::cout << "  • int128_bits:: find_first_set, find_last_set" << std::endl;
+        std::cout << "[OK] int128_cmath.hpp - Funciones matemáticas completas" << std::endl;
+        std::cout << "  * std::gcd, std::lcm, std::abs, std::pow, std::sqrt" << std::endl;
+        std::cout << "  * std::sign, std::min, std::max, std::clamp, std::midpoint" << std::endl;
+        std::cout << "  * std::divmod para división y módulo simultáneos" << std::endl;
+        std::cout << "[OK] int128_bits.hpp - Manipulación de bits completa" << std::endl;
+        std::cout << "  * std::popcount, std::countl_zero, std::countr_zero" << std::endl;
+        std::cout << "  * std::bit_width, std::has_single_bit, std::bit_floor" << std::endl;
+        std::cout << "  * int128_bits:: rotl, rotr, reverse_bits, byteswap" << std::endl;
+        std::cout << "  * int128_bits:: extract_bits, insert_bits, test/set/clear_bit" << std::endl;
+        std::cout << "  * int128_bits:: find_first_set, find_last_set" << std::endl;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Error: " << e.what() << std::endl;
+        std::cout << "[FAIL] Error: " << e.what() << std::endl;
         return 1;
     }
 

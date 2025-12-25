@@ -46,7 +46,7 @@ int main()
     std::cout << "  - 100 + 200 = " << sum << "\n";
     std::cout << "  - Comparación: " << (a < b) << "\n\n";
 
-    std::cout << "✅ Arquitectura modular funcionando correctamente!\n";
+    std::cout << "[OK] Arquitectura modular funcionando correctamente!\n";
 
     return 0;
 }

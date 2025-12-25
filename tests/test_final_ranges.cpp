@@ -37,11 +37,11 @@ int main()
     assert(mid == uint128_t(150));
 
     std::cout << "\n🎉 ¡TODAS LAS FUNCIONES DE RANGO Y NUMERIC FUNCIONAN!" << std::endl;
-    std::cout << "✅ std::iota para uint128_t" << std::endl;
-    std::cout << "✅ std::accumulate para uint128_t" << std::endl;
-    std::cout << "✅ uint128_ranges::* funciones especializadas" << std::endl;
-    std::cout << "✅ std::midpoint y todas las funciones numéricas C++20" << std::endl;
-    std::cout << "✅ Biblioteca COMPLETA con rangos y funciones estándar" << std::endl;
+    std::cout << "[OK] std::iota para uint128_t" << std::endl;
+    std::cout << "[OK] std::accumulate para uint128_t" << std::endl;
+    std::cout << "[OK] uint128_ranges::* funciones especializadas" << std::endl;
+    std::cout << "[OK] std::midpoint y todas las funciones numéricas C++20" << std::endl;
+    std::cout << "[OK] Biblioteca COMPLETA con rangos y funciones estándar" << std::endl;
 
     return 0;
 }

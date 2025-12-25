@@ -20,12 +20,12 @@ int main()
     std::cout << "c = " << c << std::endl;
     std::cout << "d = " << d << std::endl;
 
-    std::cout << "✅ Explicit constructors working correctly" << std::endl;
+    std::cout << "[OK] Explicit constructors working correctly" << std::endl;
 
     // Estos NO deberían compilar si descomentas (conversiones implícitas)
-    // int128_t e = 42;           // ❌ Conversión implícita
-    // int128_t f = -42;          // ❌ Conversión implícita
-    // int128_t g;                // ❌ Constructor por defecto implícito
+    // int128_t e = 42;           // [FAIL] Conversión implícita
+    // int128_t f = -42;          // [FAIL] Conversión implícita
+    // int128_t g;                // [FAIL] Constructor por defecto implícito
 
     return 0;
 }

@@ -14,7 +14,7 @@ void test_int128_min_max()
     int128_t a(100), b(200);
     assert(std::min(a, b) == a);
     assert(std::max(a, b) == b);
-    std::cout << "  ✅ min/max básico: min=" << std::min(a, b) << ", max=" << std::max(a, b)
+    std::cout << "  [OK] min/max básico: min=" << std::min(a, b) << ", max=" << std::max(a, b)
               << "\n";
 
     // Test int128_t vs int
@@ -23,21 +23,21 @@ void test_int128_min_max()
     assert(std::max(a, x) == int128_t(x)); // max(100, 150) = 150
     assert(std::min(x, b) == int128_t(x)); // min(150, 200) = 150
     assert(std::max(x, b) == b);           // max(150, 200) = 200
-    std::cout << "  ✅ min/max con int: min=" << std::min(a, x) << ", max=" << std::max(a, x)
+    std::cout << "  [OK] min/max con int: min=" << std::min(a, x) << ", max=" << std::max(a, x)
               << "\n";
 
     // Test con valores negativos
     int128_t neg(-50);
     assert(std::min(neg, a) == neg);
     assert(std::max(neg, a) == a);
-    std::cout << "  ✅ min/max negativos: min=" << std::min(neg, a) << ", max=" << std::max(neg, a)
+    std::cout << "  [OK] min/max negativos: min=" << std::min(neg, a) << ", max=" << std::max(neg, a)
               << "\n";
 
     // Test con tipos más grandes
     int64_t large = 1000000000LL;
     assert(std::min(int128_t(large), a) == a);
     assert(std::max(int128_t(large), a) == int128_t(large));
-    std::cout << "  ✅ min/max con int64_t: min=" << std::min(int128_t(large), a)
+    std::cout << "  [OK] min/max con int64_t: min=" << std::min(int128_t(large), a)
               << ", max=" << std::max(int128_t(large), a) << "\n";
 }
 
@@ -49,7 +49,7 @@ void test_uint128_min_max()
     uint128_t a(100), b(200);
     assert(std::min(a, b) == a);
     assert(std::max(a, b) == b);
-    std::cout << "  ✅ min/max básico: min=" << std::min(a, b) << ", max=" << std::max(a, b)
+    std::cout << "  [OK] min/max básico: min=" << std::min(a, b) << ", max=" << std::max(a, b)
               << "\n";
 
     // Test uint128_t vs unsigned int
@@ -58,14 +58,14 @@ void test_uint128_min_max()
     assert(std::max(a, x) == uint128_t(x)); // max(100, 150) = 150
     assert(std::min(x, b) == uint128_t(x)); // min(150, 200) = 150
     assert(std::max(x, b) == b);            // max(150, 200) = 200
-    std::cout << "  ✅ min/max con unsigned int: min=" << std::min(a, x)
+    std::cout << "  [OK] min/max con unsigned int: min=" << std::min(a, x)
               << ", max=" << std::max(a, x) << "\n";
 
     // Test con valores grandes
     uint64_t large = 18446744073709551615ULL; // UINT64_MAX
     assert(std::min(uint128_t(large), a) == a);
     assert(std::max(uint128_t(large), a) == uint128_t(large));
-    std::cout << "  ✅ min/max con uint64_t: min=" << std::min(uint128_t(large), a)
+    std::cout << "  [OK] min/max con uint64_t: min=" << std::min(uint128_t(large), a)
               << ", max=" << std::max(uint128_t(large), a) << "\n";
 }
 
@@ -106,7 +106,7 @@ void test_trivial_traits()
         !std::is_trivially_default_constructible_v<uint128_t>); // Constructor definido por usuario
     assert(std::is_standard_layout_v<uint128_t>);               // Layout estándar OK
 
-    std::cout << "  ✅ Traits principales verificados correctamente\n";
+    std::cout << "  [OK] Traits principales verificados correctamente\n";
     std::cout << "  📝 Nota: Los tipos 128-bit no son triviales debido a constructores definidos "
                  "por usuario\n";
     std::cout << "  📝 Nota: La copiabilidad trivial puede variar según la implementación del "
@@ -124,9 +124,9 @@ int main()
 
     std::cout << "\n🎉 ¡TODOS LOS TESTS PASARON!\n";
     std::cout << "==========================================\n";
-    std::cout << "✅ std::min/max para int128_t funcionando\n";
-    std::cout << "✅ std::min/max para uint128_t funcionando\n";
-    std::cout << "✅ Traits de trivialidad implementados correctamente\n";
+    std::cout << "[OK] std::min/max para int128_t funcionando\n";
+    std::cout << "[OK] std::min/max para uint128_t funcionando\n";
+    std::cout << "[OK] Traits de trivialidad implementados correctamente\n";
 
     return 0;
 }

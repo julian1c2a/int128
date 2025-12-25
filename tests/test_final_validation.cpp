@@ -47,30 +47,30 @@ uint64_t corrected_fullmult_times_uint64(const uint128_t& number, uint64_t multi
 
 void test_basic_cases()
 {
-    std::cout << "🧪 Test casos básicos..." << std::endl;
+    std::cout << "[TEST] Test casos básicos..." << std::endl;
 
     // Test 1: Multiplicación por 0
     uint128_t zero(0, 0);
     uint64_t result = corrected_fullmult_times_uint64(zero, 12345);
     assert(result == 0);
-    std::cout << "✓ Multiplicación por 0" << std::endl;
+    std::cout << "[OK] Multiplicación por 0" << std::endl;
 
     // Test 2: Multiplicar 0 por número
     uint128_t number(123, 456);
     result = corrected_fullmult_times_uint64(number, 0);
     assert(result == 0);
-    std::cout << "✓ Multiplicar 0 por número" << std::endl;
+    std::cout << "[OK] Multiplicar 0 por número" << std::endl;
 
     // Test 3: Multiplicación por 1
     result = corrected_fullmult_times_uint64(number, 1);
     assert(result == 0);
-    std::cout << "✓ Multiplicación por 1" << std::endl;
+    std::cout << "[OK] Multiplicación por 1" << std::endl;
 
     // Test 4: Overflow con máximo valor - CORREGIDO
     uint128_t large(UINT64_MAX, UINT64_MAX);
     result = corrected_fullmult_times_uint64(large, 2);
     assert(result == 1); // (2^128 - 1) * 2 = 2^129 - 2 -> overflow = 1
-    std::cout << "✓ Overflow con máximo valor" << std::endl;
+    std::cout << "[OK] Overflow con máximo valor" << std::endl;
 }
 
 void test_specific_values()
@@ -93,12 +93,12 @@ void test_specific_values()
 
     assert(result1 == expected1);
 
-    std::cout << "✓ Caso específico pasó" << std::endl;
+    std::cout << "[OK] Caso específico pasó" << std::endl;
 }
 
 void test_performance()
 {
-    std::cout << "⚡ Test de rendimiento..." << std::endl;
+    std::cout << "[RUN] Test de rendimiento..." << std::endl;
 
     uint128_t test_num(0x123456789ABCDEF0ULL, 0xFEDCBA0987654321ULL);
     uint64_t mult = 0x1000000000000000ULL;
@@ -117,7 +117,7 @@ void test_performance()
 
     double ns_per_operation = static_cast<double>(duration.count()) / iterations;
 
-    std::cout << "✓ Rendimiento: " << std::fixed << std::setprecision(2) << ns_per_operation
+    std::cout << "[OK] Rendimiento: " << std::fixed << std::setprecision(2) << ns_per_operation
               << " ns por operación" << std::endl;
     std::cout << "  Resultado final: 0x" << std::hex << result << std::endl;
 }
@@ -133,9 +133,9 @@ int main()
 
     std::cout << "\n🎉 ¡Todos los tests pasaron!" << std::endl;
     std::cout << "\n📝 RESUMEN:" << std::endl;
-    std::cout << "- ✅ Casos básicos: incluido (2^128-1)*2 = 1 overflow" << std::endl;
-    std::cout << "- ✅ Casos específicos: verificados" << std::endl;
-    std::cout << "- ✅ Rendimiento: sub-2ns por operación" << std::endl;
+    std::cout << "- [OK] Casos básicos: incluido (2^128-1)*2 = 1 overflow" << std::endl;
+    std::cout << "- [OK] Casos específicos: verificados" << std::endl;
+    std::cout << "- [OK] Rendimiento: sub-2ns por operación" << std::endl;
     std::cout << "\n✨ La implementación está matemáticamente correcta y lista." << std::endl;
 
     return 0;

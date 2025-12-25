@@ -13,7 +13,7 @@ int main()
 
     std::cout << "\n--- VERIFICACIÓN CORRECTITUD ---" << std::endl;
     uint64_t result = test_value.fullmult_times_uint64(multiplier);
-    std::cout << "Caso (2^128-1)*2 = " << result << " ✓ " << (result == 1 ? "CORRECTO" : "ERROR")
+    std::cout << "Caso (2^128-1)*2 = " << result << " [OK] " << (result == 1 ? "CORRECTO" : "ERROR")
               << std::endl;
 
     // Benchmark rápido
@@ -53,13 +53,13 @@ int main()
 #endif
 
     std::cout << "\n--- COMPARACIÓN CON IMPLEMENTACIÓN ANTERIOR ---" << std::endl;
-    std::cout << "• Implementación anterior (manual):  ~4.0 ns/op" << std::endl;
-    std::cout << "• Nueva implementación optimizada:   " << std::fixed << std::setprecision(2)
+    std::cout << "* Implementación anterior (manual):  ~4.0 ns/op" << std::endl;
+    std::cout << "* Nueva implementación optimizada:   " << std::fixed << std::setprecision(2)
               << ns_per_op << " ns/op" << std::endl;
 
     if (ns_per_op < 4.0) {
         double improvement = 4.0 / ns_per_op;
-        std::cout << "• Mejora de rendimiento:             " << std::fixed << std::setprecision(1)
+        std::cout << "* Mejora de rendimiento:             " << std::fixed << std::setprecision(1)
                   << improvement << "x más rápido 🚀" << std::endl;
     }
 

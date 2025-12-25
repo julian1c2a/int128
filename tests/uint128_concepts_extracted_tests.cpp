@@ -34,7 +34,7 @@ bool test_uint128_convertible()
     static_assert(!uint128_concepts::uint128_convertible<double>, "double no debe ser convertible");
     static_assert(!uint128_concepts::uint128_convertible<void*>, "void* no debe ser convertible");
 
-    std::cout << "  ✅ PASS - Concept uint128_convertible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_convertible funciona correctamente\n";
     return true;
 }
 
@@ -59,7 +59,7 @@ bool test_uint128_compatible()
     static_assert(!uint128_concepts::uint128_compatible<std::string>,
                   "string no debe ser compatible");
 
-    std::cout << "  ✅ PASS - Concept uint128_compatible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_compatible funciona correctamente\n";
     return true;
 }
 
@@ -84,7 +84,7 @@ bool test_uint128_bitwise_compatible()
     static_assert(!uint128_concepts::uint128_bitwise_compatible<double>,
                   "double no debe ser bitwise compatible");
 
-    std::cout << "  ✅ PASS - Concept uint128_bitwise_compatible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_bitwise_compatible funciona correctamente\n";
     return true;
 }
 
@@ -105,7 +105,7 @@ bool test_valid_shift_type()
     static_assert(!uint128_concepts::valid_shift_type<float>,
                   "float no debe ser válido para shift");
 
-    std::cout << "  ✅ PASS - Concept valid_shift_type funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept valid_shift_type funciona correctamente\n";
     return true;
 }
 
@@ -127,7 +127,7 @@ bool test_bit_index_type()
     static_assert(!uint128_concepts::bit_index_type<int64_t>,
                   "int64_t no debe ser válido para índice");
 
-    std::cout << "  ✅ PASS - Concept bit_index_type funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept bit_index_type funciona correctamente\n";
     return true;
 }
 
@@ -147,7 +147,7 @@ bool test_uint128_comparable()
     static_assert(!uint128_concepts::uint128_comparable<float>, "float no debe ser comparable");
     static_assert(!uint128_concepts::uint128_comparable<double>, "double no debe ser comparable");
 
-    std::cout << "  ✅ PASS - Concept uint128_comparable funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_comparable funciona correctamente\n";
     return true;
 }
 
@@ -174,7 +174,7 @@ bool test_promotable_to_uint128()
     // Tipos no integrales no pueden ser promovidos
     static_assert(!uint128_concepts::promotable_to_uint128<float>, "float no puede ser promovido");
 
-    std::cout << "  ✅ PASS - Concept promotable_to_uint128 funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept promotable_to_uint128 funciona correctamente\n";
     return true;
 }
 
@@ -195,7 +195,7 @@ bool test_uint128_function()
     static_assert(uint128_concepts::uint128_function<decltype(func2), int>,
                   "Lambda con args adicionales debe satisfacer el concepto");
 
-    std::cout << "  ✅ PASS - Concept uint128_function funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_function funciona correctamente\n";
     return true;
 }
 
@@ -219,7 +219,7 @@ bool test_uint128_container()
     assert(vec.size() == 3 && "Vector debe tener 3 elementos");
     assert(vec[0] == uint128_t(1) && "Primer elemento debe ser 1");
 
-    std::cout << "  ✅ PASS - Concept uint128_container funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_container funciona correctamente\n";
     return true;
 }
 
@@ -239,7 +239,7 @@ bool test_uint128_predicate()
     assert(is_even(uint128_t(2)) && "2 debe ser par");
     assert(!is_even(uint128_t(3)) && "3 no debe ser par");
 
-    std::cout << "  ✅ PASS - Concept uint128_predicate funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_predicate funciona correctamente\n";
     return true;
 }
 
@@ -260,7 +260,7 @@ bool test_uint128_binary_operation()
     assert(result == uint128_t(30) && "10 + 20 debe ser 30");
     (void)result; // Suprimir warning de variable no usada
 
-    std::cout << "  ✅ PASS - Concept uint128_binary_operation funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_binary_operation funciona correctamente\n";
     return true;
 }
 
@@ -281,7 +281,7 @@ bool test_uint128_reduce_operation()
     // Prueba en tiempo de ejecución
     assert(sum_op(100, uint128_t(50)) == 150 && "Reducción debe dar 150");
 
-    std::cout << "  ✅ PASS - Concept uint128_reduce_operation funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept uint128_reduce_operation funciona correctamente\n";
     return true;
 }
 
@@ -306,7 +306,7 @@ bool test_standard_concept_checks()
     std::cout << "  std::move_constructible<uint128_t> = "
               << std::move_constructible<uint128_t> << "\n";
 
-    std::cout << "  ✅ PASS - Standard concept checks correctos\n";
+    std::cout << "  [OK] PASS - Standard concept checks correctos\n";
     return true;
 }
 
@@ -336,15 +336,15 @@ int main()
         all_pass &= test_uint128_reduce_operation();
         all_pass &= test_standard_concept_checks();
     } catch (const std::exception& e) {
-        std::cerr << "\n❌ Exception caught: " << e.what() << "\n";
+        std::cerr << "\n[FAIL] Exception caught: " << e.what() << "\n";
         return 1;
     }
 
     std::cout << "\n========================================\n";
     if (all_pass) {
-        std::cout << "  ✅ TODOS LOS TESTS PASARON\n";
+        std::cout << "  [OK] TODOS LOS TESTS PASARON\n";
     } else {
-        std::cout << "  ❌ ALGUNOS TESTS FALLARON\n";
+        std::cout << "  [FAIL] ALGUNOS TESTS FALLARON\n";
     }
     std::cout << "========================================\n";
 

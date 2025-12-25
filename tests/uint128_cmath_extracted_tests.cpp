@@ -395,21 +395,21 @@ void test_constexpr()
 void print_performance_notes()
 {
     std::cout << "\n=== Performance Notes ===" << std::endl;
-    std::cout << "• std::gcd usa algoritmo binario (Stein's) - O(log(min(a,b)))" << std::endl;
-    std::cout << "• std::lcm optimizado: lcm(a,b) = (a/gcd(a,b))*b para evitar overflow"
+    std::cout << "* std::gcd usa algoritmo binario (Stein's) - O(log(min(a,b)))" << std::endl;
+    std::cout << "* std::lcm optimizado: lcm(a,b) = (a/gcd(a,b))*b para evitar overflow"
               << std::endl;
-    std::cout << "• std::pow usa exponenciación rápida - O(log(exp))" << std::endl;
-    std::cout << "• std::sqrt usa método de Newton - convergencia cuadrática" << std::endl;
-    std::cout << "• Todas las funciones son constexpr y compatible con compile-time" << std::endl;
+    std::cout << "* std::pow usa exponenciación rápida - O(log(exp))" << std::endl;
+    std::cout << "* std::sqrt usa método de Newton - convergencia cuadrática" << std::endl;
+    std::cout << "* Todas las funciones son constexpr y compatible con compile-time" << std::endl;
 }
 
 // ========================= MAIN =========================
 
 int main()
 {
-    std::cout << "╔══════════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "╔==============================================================╗" << std::endl;
     std::cout << "║  UINT128_CMATH.HPP - COMPREHENSIVE TEST SUITE               ║" << std::endl;
-    std::cout << "╚══════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚==============================================================╝" << std::endl;
 
     test_gcd_basic();
     test_lcm_basic();
@@ -420,12 +420,12 @@ int main()
     test_edge_cases();
     test_constexpr();
 
-    std::cout << "\n╔══════════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "\n╔==============================================================╗" << std::endl;
     std::cout << "║  FINAL SUMMARY                                               ║" << std::endl;
-    std::cout << "╚══════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚==============================================================╝" << std::endl;
     std::cout << "Total Tests:  " << test_count << std::endl;
-    std::cout << "✓ Passed:     " << test_passed << std::endl;
-    std::cout << "✗ Failed:     " << test_failed << std::endl;
+    std::cout << "[OK] Passed:     " << test_passed << std::endl;
+    std::cout << "[ERROR] Failed:     " << test_failed << std::endl;
     std::cout << "Success Rate: " << std::fixed << std::setprecision(1)
               << (100.0 * test_passed / test_count) << "%" << std::endl;
 

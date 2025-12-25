@@ -30,7 +30,7 @@ void test_mutex_wrapper()
 
     uint128_t result = counter.get();
     std::cout << "  Expected: 1000, Got: " << result.low() << std::endl;
-    std::cout << "  ✓ Passed" << std::endl;
+    std::cout << "  [OK] Passed" << std::endl;
 }
 
 void test_rwlock_wrapper()
@@ -62,7 +62,7 @@ void test_rwlock_wrapper()
         t.join();
     }
 
-    std::cout << "  ✓ Passed" << std::endl;
+    std::cout << "  [OK] Passed" << std::endl;
 }
 
 void test_atomic_wrapper()
@@ -77,7 +77,7 @@ void test_atomic_wrapper()
     uint128_t loaded = atomic_val.load();
     std::cout << "  Stored 200, Loaded: " << loaded.low() << std::endl;
 
-    std::cout << "  ✓ Passed" << std::endl;
+    std::cout << "  [OK] Passed" << std::endl;
 }
 
 void test_spinlock_wrapper()
@@ -101,7 +101,7 @@ void test_spinlock_wrapper()
 
     uint128_t result = counter.get();
     std::cout << "  Expected: 1000, Got: " << result.low() << std::endl;
-    std::cout << "  ✓ Passed" << std::endl;
+    std::cout << "  [OK] Passed" << std::endl;
 }
 
 int main()

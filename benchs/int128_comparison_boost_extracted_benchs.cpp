@@ -577,9 +577,9 @@ int main()
     std::cout << "Iteraciones: " << ITERATIONS << " (warm-up: " << WARM_UP << ")" << std::endl;
     std::cout << "Nota: speedup > 1.0 significa uint128_t es más rápido" << std::endl;
 #if HAS_INT128_BUILTIN
-    std::cout << "✅ Compilador con soporte para __int128 (GCC/Clang)" << std::endl;
+    std::cout << "[OK] Compilador con soporte para __int128 (GCC/Clang)" << std::endl;
 #else
-    std::cout << "⚠️  Compilador sin soporte para __int128 (MSVC/Intel)" << std::endl;
+    std::cout << "[WARN]  Compilador sin soporte para __int128 (MSVC/Intel)" << std::endl;
 #endif
 
     benchmark_construction();

@@ -479,9 +479,9 @@ void benchmark_combined()
 
 int main()
 {
-    std::cout << "╔════════════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "╔================================================================╗" << std::endl;
     std::cout << "║  UINT128_CMATH.HPP - PERFORMANCE BENCHMARKS                   ║" << std::endl;
-    std::cout << "╚════════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚================================================================╝" << std::endl;
     std::cout << "\nMeasuring time (nanoseconds) and CPU cycles per operation\n" << std::endl;
 
     benchmark_gcd();
@@ -492,16 +492,16 @@ int main()
     benchmark_bezout();
     benchmark_combined();
 
-    std::cout << "\n╔════════════════════════════════════════════════════════════════╗"
+    std::cout << "\n╔================================================================╗"
               << std::endl;
     std::cout << "║  PERFORMANCE NOTES                                             ║" << std::endl;
-    std::cout << "╚════════════════════════════════════════════════════════════════╝" << std::endl;
-    std::cout << "• gcd: Binary GCD (Stein's) - O(log(min(a,b)))" << std::endl;
-    std::cout << "• lcm: Optimized with gcd - O(log(min(a,b)))" << std::endl;
-    std::cout << "• pow: Fast exponentiation - O(log(exp))" << std::endl;
-    std::cout << "• sqrt: Newton's method - converges quadratically" << std::endl;
-    std::cout << "• min/max: Single comparison - O(1)" << std::endl;
-    std::cout << "• bezout_coeffs: Simple search (demo) - O(n)" << std::endl;
+    std::cout << "╚================================================================╝" << std::endl;
+    std::cout << "* gcd: Binary GCD (Stein's) - O(log(min(a,b)))" << std::endl;
+    std::cout << "* lcm: Optimized with gcd - O(log(min(a,b)))" << std::endl;
+    std::cout << "* pow: Fast exponentiation - O(log(exp))" << std::endl;
+    std::cout << "* sqrt: Newton's method - converges quadratically" << std::endl;
+    std::cout << "* min/max: Single comparison - O(1)" << std::endl;
+    std::cout << "* bezout_coeffs: Simple search (demo) - O(n)" << std::endl;
     std::cout << "\nNote: CPU cycles may show as 0 or very low for Intel compiler" << std::endl;
     std::cout << "      due to aggressive optimizations eliminating operations." << std::endl;
 

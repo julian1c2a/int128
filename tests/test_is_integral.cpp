@@ -12,19 +12,19 @@ int main()
     // uint128_t
     std::cout << "uint128_t:\n";
     std::cout << "  std::is_integral_v<uint128_t> = "
-              << (std::is_integral_v<uint128_t> ? "true ✅" : "false ❌") << "\n";
+              << (std::is_integral_v<uint128_t> ? "true [OK]" : "false [FAIL]") << "\n";
     std::cout << "  std::is_arithmetic_v<uint128_t> = "
-              << (std::is_arithmetic_v<uint128_t> ? "true ✅" : "false ❌") << "\n";
+              << (std::is_arithmetic_v<uint128_t> ? "true [OK]" : "false [FAIL]") << "\n";
     std::cout << "  std::is_unsigned_v<uint128_t> = "
-              << (std::is_unsigned_v<uint128_t> ? "true ✅" : "false ❌") << "\n";
+              << (std::is_unsigned_v<uint128_t> ? "true [OK]" : "false [FAIL]") << "\n";
 
     std::cout << "\nint128_t:\n";
     std::cout << "  std::is_integral_v<int128_t> = "
-              << (std::is_integral_v<int128_t> ? "true ✅" : "false ❌") << "\n";
+              << (std::is_integral_v<int128_t> ? "true [OK]" : "false [FAIL]") << "\n";
     std::cout << "  std::is_arithmetic_v<int128_t> = "
-              << (std::is_arithmetic_v<int128_t> ? "true ✅" : "false ❌") << "\n";
+              << (std::is_arithmetic_v<int128_t> ? "true [OK]" : "false [FAIL]") << "\n";
     std::cout << "  std::is_signed_v<int128_t> = "
-              << (std::is_signed_v<int128_t> ? "true ✅" : "false ❌") << "\n";
+              << (std::is_signed_v<int128_t> ? "true [OK]" : "false [FAIL]") << "\n";
 
     std::cout << "\nMacros de compilador:\n";
 #if defined(_LIBCPP_VERSION)
@@ -46,7 +46,7 @@ int main()
     if (std::is_integral_v<int128_t>) {
         std::cout << "\n🎉 ¡int128_t es integral! std::gcd debería funcionar.\n";
     } else {
-        std::cout << "\n⚠️  int128_t NO es integral. std::gcd no funcionará.\n";
+        std::cout << "\n[WARN]  int128_t NO es integral. std::gcd no funcionará.\n";
     }
 
     return 0;

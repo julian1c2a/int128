@@ -536,17 +536,17 @@ int main()
     std::cout << "==============================================================================\n";
 
     if (failed_count == 0) {
-        std::cout << GREEN << "\n✅ TODOS LOS TESTS DE INTEROPERABILIDAD PASARON\n" << RESET;
+        std::cout << GREEN << "\n[OK] TODOS LOS TESTS DE INTEROPERABILIDAD PASARON\n" << RESET;
         std::cout << "\nConversiones uint128_t ↔ int128_t funcionan correctamente:\n";
-        std::cout << "  ✅ Conversiones explícitas seguras\n";
-        std::cout << "  ✅ Operaciones aritméticas mixtas\n";
-        std::cout << "  ✅ Comparaciones mixtas\n";
-        std::cout << "  ✅ std::common_type definido\n";
-        std::cout << "  ✅ std::make_signed/unsigned funcional\n";
-        std::cout << "  ✅ Casos límite manejados\n";
+        std::cout << "  [OK] Conversiones explícitas seguras\n";
+        std::cout << "  [OK] Operaciones aritméticas mixtas\n";
+        std::cout << "  [OK] Comparaciones mixtas\n";
+        std::cout << "  [OK] std::common_type definido\n";
+        std::cout << "  [OK] std::make_signed/unsigned funcional\n";
+        std::cout << "  [OK] Casos límite manejados\n";
         return 0;
     } else {
-        std::cout << RED << "\n❌ ALGUNOS TESTS FALLARON\n" << RESET;
+        std::cout << RED << "\n[FAIL] ALGUNOS TESTS FALLARON\n" << RESET;
         return 1;
     }
 }

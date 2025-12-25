@@ -12,7 +12,7 @@ int main()
     uint128_t max_value(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
     uint64_t result_critical = max_value.fullmult_times_uint64(2);
     std::cout << "Caso crítico (2^128-1)*2 = " << result_critical
-              << (result_critical == 1 ? " ✓ CORRECTO" : " ✗ ERROR") << std::endl;
+              << (result_critical == 1 ? " [OK] CORRECTO" : " [ERROR] ERROR") << std::endl;
 
     // Test de rendimiento rápido
     std::cout << "\n--- BENCHMARK RÁPIDO ---" << std::endl;
@@ -72,7 +72,7 @@ int main()
     } else if (ns_per_op < 1.5) {
         std::cout << "🚀 MUY BUENO: Emulación eficiente lograda" << std::endl;
     } else if (ns_per_op < 3.0) {
-        std::cout << "✓ BUENO: Rendimiento aceptable" << std::endl;
+        std::cout << "[OK] BUENO: Rendimiento aceptable" << std::endl;
     } else {
         std::cout << "📈 MEJORABLE: Espacio para optimización" << std::endl;
     }

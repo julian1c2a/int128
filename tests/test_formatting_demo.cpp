@@ -92,26 +92,26 @@ void demo_realistic_usage()
 
     // Tabla formateada
     std::cout << "\nTabla de valores:" << std::endl;
-    std::cout << "┌─────────────────┬──────────────────────────┬──────────────┐" << std::endl;
-    std::cout << "│      Decimal    │       Hexadecimal       │    Octal     │" << std::endl;
-    std::cout << "├─────────────────┼──────────────────────────┼──────────────┤" << std::endl;
+    std::cout << "┌-----------------┬--------------------------┬--------------┐" << std::endl;
+    std::cout << "|      Decimal    |       Hexadecimal       |    Octal     |" << std::endl;
+    std::cout << "├-----------------┼--------------------------┼--------------┤" << std::endl;
 
     for (uint64_t i : {255, 1024, 65535}) {
         uint128_t val(0, i);
-        std::cout << "│ " << std::dec << std::setw(15) << val << " │ ";
-        std::cout << std::hex << std::setw(24) << std::showbase << val << std::noshowbase << " │ ";
-        std::cout << std::oct << std::setw(12) << std::showbase << val << std::noshowbase << " │"
+        std::cout << "| " << std::dec << std::setw(15) << val << " | ";
+        std::cout << std::hex << std::setw(24) << std::showbase << val << std::noshowbase << " | ";
+        std::cout << std::oct << std::setw(12) << std::showbase << val << std::noshowbase << " |"
                   << std::endl;
     }
-    std::cout << "└─────────────────┴──────────────────────────┴──────────────┘" << std::endl;
+    std::cout << "└-----------------┴--------------------------┴--------------┘" << std::endl;
 }
 
 int main()
 {
-    std::cout << "╔══════════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "╔==============================================================╗" << std::endl;
     std::cout << "║               DEMOSTRACIÓN DE FORMATEO uint128_t             ║" << std::endl;
     std::cout << "║        Todas las capacidades de iostream/iomanip            ║" << std::endl;
-    std::cout << "╚══════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚==============================================================╝" << std::endl;
 
     demo_basic_formatting();
     demo_width_and_alignment();
@@ -119,9 +119,9 @@ int main()
     demo_convenience_functions();
     demo_realistic_usage();
 
-    std::cout << "\n╔══════════════════════════════════════════════════════════════╗" << std::endl;
-    std::cout << "║                       ✅ CONCLUSIONES                        ║" << std::endl;
-    std::cout << "╠══════════════════════════════════════════════════════════════╣" << std::endl;
+    std::cout << "\n╔==============================================================╗" << std::endl;
+    std::cout << "║                       [OK] CONCLUSIONES                        ║" << std::endl;
+    std::cout << "╠==============================================================╣" << std::endl;
     std::cout << "║ uint128_t ahora tiene SOPORTE COMPLETO de formateo:         ║" << std::endl;
     std::cout << "║                                                              ║" << std::endl;
     std::cout << "║ 🔸 Bases: dec, hex, oct con std::dec, std::hex, std::oct    ║" << std::endl;
@@ -131,8 +131,8 @@ int main()
     std::cout << "║ 🔸 Mayúsculas: std::uppercase para hexadecimal             ║" << std::endl;
     std::cout << "║ 🔸 Funciones de conveniencia personalizadas                ║" << std::endl;
     std::cout << "║                                                              ║" << std::endl;
-    std::cout << "║ ✅ uint128_t es TAN FÁCIL de formatear como int/long!      ║" << std::endl;
-    std::cout << "╚══════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "║ [OK] uint128_t es TAN FÁCIL de formatear como int/long!      ║" << std::endl;
+    std::cout << "╚==============================================================╝" << std::endl;
 
     return 0;
 }

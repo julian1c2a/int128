@@ -11,9 +11,9 @@ template <typename T>
 void test_assert(const T& actual, const T& expected, const std::string& test_name)
 {
     if (actual == expected) {
-        std::cout << "✓ " << test_name << std::endl;
+        std::cout << "[OK] " << test_name << std::endl;
     } else {
-        std::cout << "✗ " << test_name << " - Expected: " << expected << ", Actual: " << actual
+        std::cout << "[ERROR] " << test_name << " - Expected: " << expected << ", Actual: " << actual
                   << std::endl;
         assert(false);
     }
@@ -37,7 +37,7 @@ void test_gcd()
     auto large1 = uint128_t::from_string("123456789012345678901234567890");
     auto large2 = uint128_t::from_string("987654321098765432109876543210");
     auto gcd_large = std::gcd(large1, large2);
-    std::cout << "✓ gcd(large1, large2) = " << gcd_large.to_string() << std::endl;
+    std::cout << "[OK] gcd(large1, large2) = " << gcd_large.to_string() << std::endl;
 
     // Mixed type tests
     test_assert(std::gcd(100_u128, 25), 25_u128, "gcd(uint128_t, int)");
@@ -77,7 +77,7 @@ void test_lcm()
     auto large1 = uint128_t::from_string("123456789");
     auto large2 = uint128_t::from_string("987654321");
     auto lcm_large = std::lcm(large1, large2);
-    std::cout << "✓ lcm(123456789, 987654321) = " << lcm_large.to_string() << std::endl;
+    std::cout << "[OK] lcm(123456789, 987654321) = " << lcm_large.to_string() << std::endl;
 }
 
 void test_pow()
@@ -139,7 +139,7 @@ void test_sqrt()
     // Very large numbers
     auto large_square = uint128_t::from_string("123456789012345678901234567890");
     auto sqrt_large = std::sqrt(large_square);
-    std::cout << "✓ sqrt(123456789012345678901234567890) = " << sqrt_large.to_string() << std::endl;
+    std::cout << "[OK] sqrt(123456789012345678901234567890) = " << sqrt_large.to_string() << std::endl;
 
     // Verify sqrt property: sqrt(n)^2 <= n < (sqrt(n)+1)^2
     uint128_t test_val = 12345_u128;
@@ -258,23 +258,23 @@ void test_large_numbers_cryptographic()
     auto rsa_like_1 = uint128_t::from_string("170141183460469231731687303715884105727");
     auto rsa_like_2 = uint128_t::from_string("340282366920938463463374607431768211455");
     auto gcd_rsa = std::gcd(rsa_like_1, rsa_like_2);
-    std::cout << "✓ GCD of RSA-like numbers: " << gcd_rsa.to_string() << std::endl;
+    std::cout << "[OK] GCD of RSA-like numbers: " << gcd_rsa.to_string() << std::endl;
 
     // Modular exponentiation (used in RSA)
     auto base = uint128_t::from_string("12345");
     auto exp = uint128_t::from_string("65537");      // Common RSA exponent
     auto mod = uint128_t::from_string("2147483647"); // Large prime
     auto result_mod = std::powmod(base, exp, mod);
-    std::cout << "✓ Modular exponentiation 12345^65537 mod 2147483647 = " << result_mod.to_string()
+    std::cout << "[OK] Modular exponentiation 12345^65537 mod 2147483647 = " << result_mod.to_string()
               << std::endl;
 
     // Large factorial
     auto fact_20 = uint128_math::factorial(20);
-    std::cout << "✓ 20! = " << fact_20.to_string() << std::endl;
+    std::cout << "[OK] 20! = " << fact_20.to_string() << std::endl;
 
     // Large binomial coefficient
     auto binom_large = uint128_math::binomial(100_u128, 50_u128);
-    std::cout << "✓ C(100,50) = " << binom_large.to_string() << std::endl;
+    std::cout << "[OK] C(100,50) = " << binom_large.to_string() << std::endl;
 }
 
 int main()
@@ -294,20 +294,20 @@ int main()
         test_large_numbers_cryptographic();
 
         std::cout << "\n🎉 ALL MATHEMATICAL FUNCTION TESTS PASSED!" << std::endl;
-        std::cout << "✓ std::gcd, std::lcm, std::pow optimized and working" << std::endl;
-        std::cout << "✓ std::sqrt, std::abs, utility functions validated" << std::endl;
-        std::cout << "✓ Extended math namespace functions complete" << std::endl;
-        std::cout << "✓ Cryptographic large number operations verified" << std::endl;
-        std::cout << "✓ Performance benchmarks completed" << std::endl;
+        std::cout << "[OK] std::gcd, std::lcm, std::pow optimized and working" << std::endl;
+        std::cout << "[OK] std::sqrt, std::abs, utility functions validated" << std::endl;
+        std::cout << "[OK] Extended math namespace functions complete" << std::endl;
+        std::cout << "[OK] Cryptographic large number operations verified" << std::endl;
+        std::cout << "[OK] Performance benchmarks completed" << std::endl;
 
-        std::cout << "\n📊 MATHEMATICAL LIBRARY STATUS:" << std::endl;
+        std::cout << "\n[INFO] MATHEMATICAL LIBRARY STATUS:" << std::endl;
         std::cout << "   🚀 Production-ready mathematical operations" << std::endl;
         std::cout << "   🔒 Cryptographic-grade large number support" << std::endl;
-        std::cout << "   ⚡ Optimized algorithms (Binary GCD, fast exponentiation)" << std::endl;
+        std::cout << "   [RUN] Optimized algorithms (Binary GCD, fast exponentiation)" << std::endl;
         std::cout << "   🎯 Complete std namespace integration" << std::endl;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Test failed with exception: " << e.what() << std::endl;
+        std::cout << "[FAIL] Test failed with exception: " << e.what() << std::endl;
         return 1;
     }
 

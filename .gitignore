@@ -155,3 +155,4 @@ benchmarks_results/*/*/*/*/*.json
 benchmarks_results/*/*/*/*/*/*.json
 benchmarks_results/*/*/*/*/*/*/*.json
 temp_preprocessed.txt
+scripts/env_setup/__pycache__/compiler_env.cpython-314.pyc

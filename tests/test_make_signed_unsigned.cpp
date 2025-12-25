@@ -14,9 +14,9 @@ int main()
     using SignedFromUnsigned = std::make_signed_t<uint128_t>;
 
     if constexpr (std::is_same_v<SignedFromUnsigned, int128_t>) {
-        std::cout << "   ✅ std::make_signed_t<uint128_t> = int128_t\n";
+        std::cout << "   [OK] std::make_signed_t<uint128_t> = int128_t\n";
     } else {
-        std::cout << "   ❌ std::make_signed_t<uint128_t> != int128_t\n";
+        std::cout << "   [FAIL] std::make_signed_t<uint128_t> != int128_t\n";
         return 1;
     }
 
@@ -27,9 +27,9 @@ int main()
     using UnsignedFromSigned = std::make_unsigned_t<int128_t>;
 
     if constexpr (std::is_same_v<UnsignedFromSigned, uint128_t>) {
-        std::cout << "   ✅ std::make_unsigned_t<int128_t> = uint128_t\n";
+        std::cout << "   [OK] std::make_unsigned_t<int128_t> = uint128_t\n";
     } else {
-        std::cout << "   ❌ std::make_unsigned_t<int128_t> != uint128_t\n";
+        std::cout << "   [FAIL] std::make_unsigned_t<int128_t> != uint128_t\n";
         return 1;
     }
 
@@ -41,9 +41,9 @@ int main()
     UnsignedFromSigned u1 = static_cast<UnsignedFromSigned>(i1);
 
     if (u1 == uint128_t(42)) {
-        std::cout << "   ✅ int128_t(42) -> uint128_t(42)\n";
+        std::cout << "   [OK] int128_t(42) -> uint128_t(42)\n";
     } else {
-        std::cout << "   ❌ Conversión incorrecta\n";
+        std::cout << "   [FAIL] Conversión incorrecta\n";
         return 1;
     }
 
@@ -55,9 +55,9 @@ int main()
     SignedFromUnsigned i2 = static_cast<SignedFromUnsigned>(u2);
 
     if (i2 == int128_t(84)) {
-        std::cout << "   ✅ uint128_t(84) -> int128_t(84)\n";
+        std::cout << "   [OK] uint128_t(84) -> int128_t(84)\n";
     } else {
-        std::cout << "   ❌ Conversión incorrecta\n";
+        std::cout << "   [FAIL] Conversión incorrecta\n";
         return 1;
     }
 
@@ -71,9 +71,9 @@ int main()
     // -1 en two's complement es todos los bits en 1 (máximo uint128_t)
     uint128_t max_val = ~uint128_t(0); // Todos los bits en 1
     if (u_neg == max_val) {
-        std::cout << "   ✅ int128_t(-1) -> uint128_t::max() (two's complement)\n";
+        std::cout << "   [OK] int128_t(-1) -> uint128_t::max() (two's complement)\n";
     } else {
-        std::cout << "   ❌ Conversión de negativo incorrecta\n";
+        std::cout << "   [FAIL] Conversión de negativo incorrecta\n";
         return 1;
     }
 

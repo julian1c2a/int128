@@ -50,18 +50,18 @@ uint64_t reference_fullmult_times_uint64(uint64_t high, uint64_t low, uint64_t m
 
 void test_basic_cases()
 {
-    std::cout << "🧪 Test casos básicos..." << std::endl;
+    std::cout << "[TEST] Test casos básicos..." << std::endl;
 
     // Caso 1: Multiplicar por 0
     uint128_t zero(0, 0);
     assert(zero.fullmult_times_uint64(0xFFFFFFFFFFFFFFFFULL) == 0);
     assert(zero.fullmult_times_uint64(1) == 0);
-    std::cout << "✓ Multiplicación por 0" << std::endl;
+    std::cout << "[OK] Multiplicación por 0" << std::endl;
 
     // Caso 2: Multiplicar 0 por algo
     uint128_t max_val(UINT64_MAX, UINT64_MAX);
     assert(max_val.fullmult_times_uint64(0) == 0);
-    std::cout << "✓ Multiplicar 0 por número" << std::endl;
+    std::cout << "[OK] Multiplicar 0 por número" << std::endl;
 
     // Caso 3: Multiplicar por 1 (no debería haber overflow para números < 2^128)
     uint128_t test1(0x8000000000000000ULL, 0); // 2^127
@@ -69,13 +69,13 @@ void test_basic_cases()
 
     uint128_t test2(UINT64_MAX, 0);
     assert(test2.fullmult_times_uint64(1) == 0);
-    std::cout << "✓ Multiplicación por 1" << std::endl;
+    std::cout << "[OK] Multiplicación por 1" << std::endl;
 
     // Caso 4: Casos que deberían generar overflow
     uint128_t large(UINT64_MAX, UINT64_MAX); // 2^128 - 1
     uint64_t result = large.fullmult_times_uint64(2);
     assert(result == 1); // (2^128 - 1) * 2 = 2^129 - 2, overflow = 1
-    std::cout << "✓ Overflow con máximo valor" << std::endl;
+    std::cout << "[OK] Overflow con máximo valor" << std::endl;
 }
 
 void test_specific_values()
@@ -97,7 +97,7 @@ void test_specific_values()
               << expected1 << std::endl;
 
     assert(result1 == expected1);
-    std::cout << "✓ Test valor específico 1" << std::endl;
+    std::cout << "[OK] Test valor específico 1" << std::endl;
 
     // Test 2: Otro valor
     uint128_t test2(0x8000000000000000ULL, 0x8000000000000000ULL);
@@ -108,7 +108,7 @@ void test_specific_values()
         reference_fullmult_times_uint64(0x8000000000000000ULL, 0x8000000000000000ULL, mult2);
 
     assert(result2 == expected2);
-    std::cout << "✓ Test valor específico 2" << std::endl;
+    std::cout << "[OK] Test valor específico 2" << std::endl;
 }
 
 void test_random_values()
@@ -132,7 +132,7 @@ void test_random_values()
         if (result == expected) {
             passed++;
         } else {
-            std::cout << "❌ Fallo en test " << i << ":" << std::endl;
+            std::cout << "[FAIL] Fallo en test " << i << ":" << std::endl;
             std::cout << "  Input: 0x" << std::hex << high << low << " * 0x" << multiplier
                       << std::endl;
             std::cout << "  Got: 0x" << result << " | Expected: 0x" << expected << std::endl;
@@ -145,7 +145,7 @@ void test_random_values()
         }
     }
 
-    std::cout << "✓ " << passed << "/" << num_tests << " tests aleatorios pasados" << std::endl;
+    std::cout << "[OK] " << passed << "/" << num_tests << " tests aleatorios pasados" << std::endl;
 }
 
 void test_edge_cases()
@@ -159,25 +159,25 @@ void test_edge_cases()
     uint64_t result = high_only.fullmult_times_uint64(mult);
     uint64_t expected = reference_fullmult_times_uint64(0x123456789ABCDEF0ULL, 0, mult);
     assert(result == expected);
-    std::cout << "✓ Solo parte alta" << std::endl;
+    std::cout << "[OK] Solo parte alta" << std::endl;
 
     // Caso límite 2: Solo parte baja
     uint128_t low_only(0, 0x123456789ABCDEF0ULL);
     result = low_only.fullmult_times_uint64(mult);
     expected = reference_fullmult_times_uint64(0, 0x123456789ABCDEF0ULL, mult);
     assert(result == expected);
-    std::cout << "✓ Solo parte baja" << std::endl;
+    std::cout << "[OK] Solo parte baja" << std::endl;
 
     // Caso límite 3: Potencias de 2
     uint128_t pow2_test(0x4000000000000000ULL, 0); // 2^126
     result = pow2_test.fullmult_times_uint64(4);   // * 2^2 = 2^128 = overflow de 1
     assert(result == 1);
-    std::cout << "✓ Potencias de 2" << std::endl;
+    std::cout << "[OK] Potencias de 2" << std::endl;
 }
 
 void benchmark_performance()
 {
-    std::cout << "\n⚡ Benchmark de rendimiento..." << std::endl;
+    std::cout << "\n[RUN] Benchmark de rendimiento..." << std::endl;
 
     std::mt19937_64 rng(54321);
     const int iterations = 1000000;
@@ -203,9 +203,9 @@ void benchmark_performance()
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
     double avg_time = static_cast<double>(duration.count()) / iterations;
-    std::cout << "✓ Tiempo promedio: " << std::fixed << std::setprecision(2) << avg_time
+    std::cout << "[OK] Tiempo promedio: " << std::fixed << std::setprecision(2) << avg_time
               << " ns por operación" << std::endl;
-    std::cout << "✓ Dummy result (para evitar optimización): " << std::hex << dummy_result
+    std::cout << "[OK] Dummy result (para evitar optimización): " << std::hex << dummy_result
               << std::endl;
 }
 
@@ -222,14 +222,14 @@ int main()
         benchmark_performance();
 
         std::cout << "\n🎉 ¡Todos los tests pasaron!" << std::endl;
-        std::cout << "✅ La función fullmult_times_uint64 es correcta y eficiente" << std::endl;
+        std::cout << "[OK] La función fullmult_times_uint64 es correcta y eficiente" << std::endl;
         return 0;
 
     } catch (const std::exception& e) {
-        std::cerr << "❌ Error: " << e.what() << std::endl;
+        std::cerr << "[FAIL] Error: " << e.what() << std::endl;
         return 1;
     } catch (...) {
-        std::cerr << "❌ Error desconocido" << std::endl;
+        std::cerr << "[FAIL] Error desconocido" << std::endl;
         return 1;
     }
 }

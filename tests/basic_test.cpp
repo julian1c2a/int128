@@ -11,7 +11,7 @@ int main()
         uint128_t a;
         assert(a.high() == 0);
         assert(a.low() == 0);
-        std::cout << "✓ Constructor por defecto\n";
+        std::cout << "[OK] Constructor por defecto\n";
     }
 
     // Test constructor de un valor
@@ -19,7 +19,7 @@ int main()
         uint128_t a(123);
         assert(a.high() == 0);
         assert(a.low() == 123);
-        std::cout << "✓ Constructor de un valor\n";
+        std::cout << "[OK] Constructor de un valor\n";
     }
 
     // Test constructor de dos valores
@@ -27,7 +27,7 @@ int main()
         uint128_t a(0x1234, 0x5678);
         assert(a.high() == 0x1234);
         assert(a.low() == 0x5678);
-        std::cout << "✓ Constructor de dos valores\n";
+        std::cout << "[OK] Constructor de dos valores\n";
     }
 
     // Test copy constructor
@@ -36,7 +36,7 @@ int main()
         uint128_t b = a;
         assert(b.high() == 1);
         assert(b.low() == 2);
-        std::cout << "✓ Copy constructor\n";
+        std::cout << "[OK] Copy constructor\n";
     }
 
     // Test assignment
@@ -46,7 +46,7 @@ int main()
         c = a;
         assert(c.high() == 1);
         assert(c.low() == 2);
-        std::cout << "✓ Assignment operator\n";
+        std::cout << "[OK] Assignment operator\n";
     }
 
     // Test escritura explícita
@@ -56,7 +56,7 @@ int main()
         a.set_low(0xEF12);
         assert(a.high() == 0xABCD);
         assert(a.low() == 0xEF12);
-        std::cout << "✓ Escritura explícita (set_high/set_low)\n";
+        std::cout << "[OK] Escritura explícita (set_high/set_low)\n";
     }
 
     // Test modificación
@@ -65,7 +65,7 @@ int main()
         a.set_high(0x9999);
         assert(a.high() == 0x9999);
         assert(a.low() == 0x2222); // low no debe cambiar
-        std::cout << "✓ Modificación de parte alta\n";
+        std::cout << "[OK] Modificación de parte alta\n";
     }
 
     std::cout << "\n¡Todos los tests pasaron! 🎉\n";

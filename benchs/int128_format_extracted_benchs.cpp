@@ -93,6 +93,6 @@ int main()
     benchmark_format_with_width();
     benchmark_format_showpos();
 
-    std::cout << "\n✓ Benchmarks completed" << std::endl;
+    std::cout << "\n[OK] Benchmarks completed" << std::endl;
     return 0;
 }

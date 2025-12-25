@@ -637,11 +637,11 @@ int main()
     std::cout << "All thread-safety tests completed." << std::endl;
     std::cout << std::endl;
     std::cout << "Summary:" << std::endl;
-    std::cout << "  ✓ int128_t is thread-safe for concurrent reads" << std::endl;
-    std::cout << "  ✓ int128_t is thread-safe for thread-local modifications" << std::endl;
-    std::cout << "  ✓ Signed operations (negate, is_negative) are thread-safe for reads"
+    std::cout << "  [OK] int128_t is thread-safe for concurrent reads" << std::endl;
+    std::cout << "  [OK] int128_t is thread-safe for thread-local modifications" << std::endl;
+    std::cout << "  [OK] Signed operations (negate, is_negative) are thread-safe for reads"
               << std::endl;
-    std::cout << "  ✓ Concurrent modifications require synchronization wrappers" << std::endl;
+    std::cout << "  [OK] Concurrent modifications require synchronization wrappers" << std::endl;
 
     return 0;
 }

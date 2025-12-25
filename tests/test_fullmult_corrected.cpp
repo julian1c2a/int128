@@ -47,30 +47,30 @@ uint64_t correct_reference_fullmult_times_uint64(uint64_t high, uint64_t low, ui
 
 void test_basic_cases()
 {
-    std::cout << "🧪 Test casos básicos..." << std::endl;
+    std::cout << "[TEST] Test casos básicos..." << std::endl;
 
     // Test 1: Multiplicación por 0
     uint128_t zero(0, 0);
     uint64_t result = zero.fullmult_times_uint64(12345);
     assert(result == 0);
-    std::cout << "✓ Multiplicación por 0" << std::endl;
+    std::cout << "[OK] Multiplicación por 0" << std::endl;
 
     // Test 2: Multiplicar 0 por número
     uint128_t number(123, 456);
     result = number.fullmult_times_uint64(0);
     assert(result == 0);
-    std::cout << "✓ Multiplicar 0 por número" << std::endl;
+    std::cout << "[OK] Multiplicar 0 por número" << std::endl;
 
     // Test 3: Multiplicación por 1
     result = number.fullmult_times_uint64(1);
     assert(result == 0);
-    std::cout << "✓ Multiplicación por 1" << std::endl;
+    std::cout << "[OK] Multiplicación por 1" << std::endl;
 
     // Test 4: Overflow con máximo valor - CORREGIDO
     uint128_t large(UINT64_MAX, UINT64_MAX);
     result = large.fullmult_times_uint64(2);
     assert(result == 1); // (2^128 - 1) * 2 = 2^129 - 2 -> overflow = 1
-    std::cout << "✓ Overflow con máximo valor" << std::endl;
+    std::cout << "[OK] Overflow con máximo valor" << std::endl;
 }
 
 void test_specific_values()
@@ -103,7 +103,7 @@ void test_specific_values()
 
     assert(result2 == expected2);
 
-    std::cout << "✓ Todos los casos específicos pasaron" << std::endl;
+    std::cout << "[OK] Todos los casos específicos pasaron" << std::endl;
 }
 
 void test_random_values()
@@ -132,7 +132,7 @@ void test_random_values()
         if (result == expected) {
             passed++;
         } else {
-            std::cout << "❌ Falló: high=0x" << std::hex << high << " low=0x" << low << " mult=0x"
+            std::cout << "[FAIL] Falló: high=0x" << std::hex << high << " low=0x" << low << " mult=0x"
                       << mult << " got 0x" << result << " expected 0x" << expected << std::endl;
             // Mostrar solo los primeros errores
             if ((total - passed) > 10)
@@ -140,13 +140,13 @@ void test_random_values()
         }
     }
 
-    std::cout << "✓ Pasaron " << passed << "/" << total << " tests aleatorios" << std::endl;
+    std::cout << "[OK] Pasaron " << passed << "/" << total << " tests aleatorios" << std::endl;
     assert(passed == total);
 }
 
 void test_performance()
 {
-    std::cout << "⚡ Test de rendimiento..." << std::endl;
+    std::cout << "[RUN] Test de rendimiento..." << std::endl;
 
     uint128_t test_num(0x123456789ABCDEF0ULL, 0xFEDCBA0987654321ULL);
     uint64_t mult = 0x1000000000000000ULL;
@@ -165,7 +165,7 @@ void test_performance()
 
     double ns_per_operation = static_cast<double>(duration.count()) / iterations;
 
-    std::cout << "✓ Rendimiento: " << std::fixed << std::setprecision(2) << ns_per_operation
+    std::cout << "[OK] Rendimiento: " << std::fixed << std::setprecision(2) << ns_per_operation
               << " ns por operación" << std::endl;
     std::cout << "  Resultado final: 0x" << std::hex << result << std::endl;
 }

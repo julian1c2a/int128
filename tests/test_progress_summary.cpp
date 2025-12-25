@@ -15,37 +15,37 @@ void show_progress()
     std::cout << "🎯 PROGRESO DE IMPLEMENTACIÓN INT128_T" << std::endl;
     std::cout << "=======================================" << std::endl;
 
-    std::cout << "\n✅ ARCHIVOS IMPLEMENTADOS:" << std::endl;
+    std::cout << "\n[OK] ARCHIVOS IMPLEMENTADOS:" << std::endl;
     std::cout << "📁 int128_t.hpp           - Tipo base con constructores explícitos" << std::endl;
     std::cout << "📁 int128_traits.hpp      - Type traits de std::" << std::endl;
     std::cout << "📁 int128_limits.hpp      - std::numeric_limits especialización" << std::endl;
     std::cout << "📁 int128_numeric.hpp     - Funciones numéricas de C++20" << std::endl;
 
-    std::cout << "\n📊 CARACTERÍSTICAS CONFIRMADAS:" << std::endl;
-    std::cout << "• Constructores explícitos (evita conversiones implícitas)" << std::endl;
-    std::cout << "• std::is_integral<int128_t> = " << std::is_integral_v<int128_t> << std::endl;
-    std::cout << "• std::is_signed<int128_t> = " << std::is_signed_v<int128_t> << std::endl;
-    std::cout << "• std::is_arithmetic<int128_t> = " << std::is_arithmetic_v<int128_t> << std::endl;
-    std::cout << "• std::numeric_limits<int128_t>::min() = " << std::numeric_limits<int128_t>::min()
+    std::cout << "\n[INFO] CARACTERÍSTICAS CONFIRMADAS:" << std::endl;
+    std::cout << "* Constructores explícitos (evita conversiones implícitas)" << std::endl;
+    std::cout << "* std::is_integral<int128_t> = " << std::is_integral_v<int128_t> << std::endl;
+    std::cout << "* std::is_signed<int128_t> = " << std::is_signed_v<int128_t> << std::endl;
+    std::cout << "* std::is_arithmetic<int128_t> = " << std::is_arithmetic_v<int128_t> << std::endl;
+    std::cout << "* std::numeric_limits<int128_t>::min() = " << std::numeric_limits<int128_t>::min()
               << std::endl;
-    std::cout << "• std::numeric_limits<int128_t>::max() = " << std::numeric_limits<int128_t>::max()
+    std::cout << "* std::numeric_limits<int128_t>::max() = " << std::numeric_limits<int128_t>::max()
               << std::endl;
-    std::cout << "• std::numeric_limits<int128_t>::digits = "
+    std::cout << "* std::numeric_limits<int128_t>::digits = "
               << std::numeric_limits<int128_t>::digits << std::endl;
 
     std::cout << "\n🔧 FUNCIONES DISPONIBLES:" << std::endl;
-    std::cout << "• Aritmética completa: +, -, *, /, %, ++, --" << std::endl;
-    std::cout << "• Comparaciones: ==, !=, <, <=, >, >=" << std::endl;
-    std::cout << "• Operaciones bit a bit: &, |, ^, ~, <<, >>" << std::endl;
-    std::cout << "• I/O: operator<<, operator>>" << std::endl;
-    std::cout << "• Conversiones: to<T>(), to_string(), from_string()" << std::endl;
-    std::cout << "• Funciones numéricas:" << std::endl;
+    std::cout << "* Aritmética completa: +, -, *, /, %, ++, --" << std::endl;
+    std::cout << "* Comparaciones: ==, !=, <, <=, >, >=" << std::endl;
+    std::cout << "* Operaciones bit a bit: &, |, ^, ~, <<, >>" << std::endl;
+    std::cout << "* I/O: operator<<, operator>>" << std::endl;
+    std::cout << "* Conversiones: to<T>(), to_string(), from_string()" << std::endl;
+    std::cout << "* Funciones numéricas:" << std::endl;
     std::cout << "  - std::midpoint, std::clamp, std::abs" << std::endl;
     std::cout << "  - std::popcount, std::countl_zero, std::countr_zero" << std::endl;
     std::cout << "  - std::bit_width, std::has_single_bit, std::bit_floor" << std::endl;
     std::cout << "  - std::gcd, std::lcm" << std::endl;
-    std::cout << "• Type traits: make_signed, make_unsigned, common_type" << std::endl;
-    std::cout << "• Hash: std::hash<int128_t> para unordered containers" << std::endl;
+    std::cout << "* Type traits: make_signed, make_unsigned, common_type" << std::endl;
+    std::cout << "* Hash: std::hash<int128_t> para unordered containers" << std::endl;
 
     std::cout << "\n📋 ARCHIVOS uint128_*.hpp PENDIENTES:" << std::endl;
     std::cout << "⏳ uint128_concepts.hpp    -> int128_concepts.hpp" << std::endl;
@@ -70,7 +70,7 @@ void demonstrate_usage()
     // Constructor explícito
     int128_t a{42};             // OK
     int128_t b = int128_t(100); // OK
-    // int128_t c = 42;                // ❌ Error - conversión implícita prohibida
+    // int128_t c = 42;                // [FAIL] Error - conversión implícita prohibida
 
     std::cout << "int128_t a{42} = " << a << std::endl;
     std::cout << "int128_t b = int128_t(100) = " << b << std::endl;

@@ -100,7 +100,7 @@ int main()
         all_correct &= correct;
 
         std::cout << tc.description << ": ";
-        std::cout << (correct ? "✓ CORRECTO" : "✗ ERROR") << std::endl;
+        std::cout << (correct ? "[OK] CORRECTO" : "[ERROR] ERROR") << std::endl;
 
         if (!correct) {
             std::cout << "  Optimizado: 0x" << std::hex << optimized_result << std::endl;
@@ -111,7 +111,7 @@ int main()
     if (all_correct) {
         std::cout << "\n🎉 TODAS LAS PRUEBAS CORRECTAS 🎉" << std::endl;
     } else {
-        std::cout << "\n❌ HAY ERRORES EN LA IMPLEMENTACIÓN" << std::endl;
+        std::cout << "\n[FAIL] HAY ERRORES EN LA IMPLEMENTACIÓN" << std::endl;
         return 1;
     }
 
@@ -183,15 +183,15 @@ int main()
 #endif
 
 #if defined(__BMI2__)
-    std::cout << "BMI2: Disponible ✓" << std::endl;
+    std::cout << "BMI2: Disponible [OK]" << std::endl;
 #else
-    std::cout << "BMI2: No disponible ✗" << std::endl;
+    std::cout << "BMI2: No disponible [ERROR]" << std::endl;
 #endif
 
 #if defined(__SIZEOF_INT128__)
-    std::cout << "__uint128_t: Disponible ✓" << std::endl;
+    std::cout << "__uint128_t: Disponible [OK]" << std::endl;
 #else
-    std::cout << "__uint128_t: No disponible ✗" << std::endl;
+    std::cout << "__uint128_t: No disponible [ERROR]" << std::endl;
 #endif
 
     std::cout << "\n=== BENCHMARK COMPLETADO ===" << std::endl;

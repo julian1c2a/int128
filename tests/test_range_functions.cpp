@@ -8,7 +8,7 @@
 
 void test_iota()
 {
-    std::cout << "🧪 Probando std::iota..." << std::endl;
+    std::cout << "[TEST] Probando std::iota..." << std::endl;
 
     // Test con vector
     std::vector<uint128_t> vec(5);
@@ -34,12 +34,12 @@ void test_iota()
     assert(arr[1] == uint128_t(1001));
     assert(arr[2] == uint128_t(1002));
 
-    std::cout << "✅ std::iota funcionando correctamente" << std::endl;
+    std::cout << "[OK] std::iota funcionando correctamente" << std::endl;
 }
 
 void test_accumulate()
 {
-    std::cout << "\n🧪 Probando std::accumulate..." << std::endl;
+    std::cout << "\n[TEST] Probando std::accumulate..." << std::endl;
 
     std::vector<uint128_t> vec = {uint128_t(10), uint128_t(20), uint128_t(30), uint128_t(40)};
 
@@ -59,12 +59,12 @@ void test_accumulate()
     std::cout << "  Producto: " << product << std::endl;
     assert(product == uint128_t(240000)); // 10*20*30*40 = 240000
 
-    std::cout << "✅ std::accumulate funcionando correctamente" << std::endl;
+    std::cout << "[OK] std::accumulate funcionando correctamente" << std::endl;
 }
 
 void test_partial_sum()
 {
-    std::cout << "\n🧪 Probando std::partial_sum..." << std::endl;
+    std::cout << "\n[TEST] Probando std::partial_sum..." << std::endl;
 
     std::vector<uint128_t> input = {uint128_t(1), uint128_t(2), uint128_t(3), uint128_t(4),
                                     uint128_t(5)};
@@ -89,12 +89,12 @@ void test_partial_sum()
     assert(output[3] == uint128_t(10));
     assert(output[4] == uint128_t(15));
 
-    std::cout << "✅ std::partial_sum funcionando correctamente" << std::endl;
+    std::cout << "[OK] std::partial_sum funcionando correctamente" << std::endl;
 }
 
 void test_adjacent_difference()
 {
-    std::cout << "\n🧪 Probando std::adjacent_difference..." << std::endl;
+    std::cout << "\n[TEST] Probando std::adjacent_difference..." << std::endl;
 
     std::vector<uint128_t> input = {uint128_t(10), uint128_t(15), uint128_t(12), uint128_t(20)};
     std::vector<uint128_t> output(input.size());
@@ -117,12 +117,12 @@ void test_adjacent_difference()
     // output[2] debería ser 12-15 pero como es uint128_t, será un número muy grande
     assert(output[3] == uint128_t(8)); // 20-12 = 8
 
-    std::cout << "✅ std::adjacent_difference funcionando correctamente" << std::endl;
+    std::cout << "[OK] std::adjacent_difference funcionando correctamente" << std::endl;
 }
 
 void test_inner_product()
 {
-    std::cout << "\n🧪 Probando std::inner_product..." << std::endl;
+    std::cout << "\n[TEST] Probando std::inner_product..." << std::endl;
 
     std::vector<uint128_t> vec1 = {uint128_t(2), uint128_t(3), uint128_t(4)};
     std::vector<uint128_t> vec2 = {uint128_t(5), uint128_t(6), uint128_t(7)};
@@ -144,7 +144,7 @@ void test_inner_product()
     // 2*5 + 3*6 + 4*7 = 10 + 18 + 28 = 56
     assert(result == uint128_t(56));
 
-    std::cout << "✅ std::inner_product funcionando correctamente" << std::endl;
+    std::cout << "[OK] std::inner_product funcionando correctamente" << std::endl;
 }
 
 int main()
@@ -159,11 +159,11 @@ int main()
         test_inner_product();
 
         std::cout << "\n🎉 ¡Todas las funciones de rango funcionan correctamente!" << std::endl;
-        std::cout << "✅ std::iota, std::accumulate, std::partial_sum," << std::endl;
-        std::cout << "✅ std::adjacent_difference, std::inner_product" << std::endl;
+        std::cout << "[OK] std::iota, std::accumulate, std::partial_sum," << std::endl;
+        std::cout << "[OK] std::adjacent_difference, std::inner_product" << std::endl;
 
     } catch (const std::exception& e) {
-        std::cerr << "❌ Error: " << e.what() << std::endl;
+        std::cerr << "[FAIL] Error: " << e.what() << std::endl;
         return 1;
     }
 

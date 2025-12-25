@@ -68,7 +68,7 @@ int main()
     std::cout << "\n=== RESULTADO ===" << std::endl;
     std::cout << "Resultado: 0x" << std::hex << result << " = " << std::dec << result << std::endl;
     std::cout << "Esperado: 1" << std::endl;
-    std::cout << "¿Correcto?: " << (result == 1 ? "SÍ ✓" : "NO ✗") << std::endl;
+    std::cout << "¿Correcto?: " << (result == 1 ? "SÍ [OK]" : "NO [ERROR]") << std::endl;
 
     // Verificación adicional con Python
     std::cout << "\n=== VERIFICACIÓN MATEMÁTICA ===" << std::endl;

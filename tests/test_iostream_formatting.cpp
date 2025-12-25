@@ -185,14 +185,14 @@ int main()
         test_complex_formatting();
 
         std::cout << "\n🎉 ¡TODAS LAS CAPACIDADES DE FORMATEO FUNCIONAN!" << std::endl;
-        std::cout << "✅ Manipuladores de base: hex, oct, dec" << std::endl;
-        std::cout << "✅ Control de ancho: setw()" << std::endl;
-        std::cout << "✅ Carácter de relleno: setfill()" << std::endl;
-        std::cout << "✅ Alineación: left, right, internal" << std::endl;
-        std::cout << "✅ Prefijos de base: showbase" << std::endl;
-        std::cout << "✅ Mayúsculas/minúsculas: uppercase" << std::endl;
-        std::cout << "✅ Entrada con formato automático" << std::endl;
-        std::cout << "✅ Funciones de conveniencia personalizadas" << std::endl;
+        std::cout << "[OK] Manipuladores de base: hex, oct, dec" << std::endl;
+        std::cout << "[OK] Control de ancho: setw()" << std::endl;
+        std::cout << "[OK] Carácter de relleno: setfill()" << std::endl;
+        std::cout << "[OK] Alineación: left, right, internal" << std::endl;
+        std::cout << "[OK] Prefijos de base: showbase" << std::endl;
+        std::cout << "[OK] Mayúsculas/minúsculas: uppercase" << std::endl;
+        std::cout << "[OK] Entrada con formato automático" << std::endl;
+        std::cout << "[OK] Funciones de conveniencia personalizadas" << std::endl;
 
         // Ejemplo final impresionante
         std::cout << "\n🎨 EJEMPLO FINAL IMPRESIONANTE:" << std::endl;
@@ -202,7 +202,7 @@ int main()
                   << std::setfill('*') << std::internal << demo << std::endl;
 
     } catch (const std::exception& e) {
-        std::cerr << "❌ Error: " << e.what() << std::endl;
+        std::cerr << "[FAIL] Error: " << e.what() << std::endl;
         return 1;
     }
 

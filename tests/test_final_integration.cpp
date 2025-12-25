@@ -34,9 +34,9 @@ int main()
               << remainder.to_string() << " = " << verification.to_string() << std::endl;
 
     if (verification == a) {
-        std::cout << "✓ Verificación exitosa" << std::endl;
+        std::cout << "[OK] Verificación exitosa" << std::endl;
     } else {
-        std::cout << "✗ Verificación falló" << std::endl;
+        std::cout << "[ERROR] Verificación falló" << std::endl;
     }
 
     // Probar caso más grande
@@ -55,16 +55,16 @@ int main()
               << std::endl;
 
     if (large_verification == large) {
-        std::cout << "✓ Verificación exitosa para números grandes" << std::endl;
+        std::cout << "[OK] Verificación exitosa para números grandes" << std::endl;
     } else {
-        std::cout << "✗ Verificación falló para números grandes" << std::endl;
+        std::cout << "[ERROR] Verificación falló para números grandes" << std::endl;
     }
 
     // Prueba de división por cero
     std::cout << "\nPrueba de división por cero:" << std::endl;
     auto div_by_zero = a.divrem(uint128_t(0, 0));
     if (!div_by_zero.has_value()) {
-        std::cout << "✓ División por cero detectada correctamente" << std::endl;
+        std::cout << "[OK] División por cero detectada correctamente" << std::endl;
     }
 
     std::cout << "\n¡Algoritmo divrem integrado exitosamente en uint128_t.hpp!" << std::endl;

@@ -27,14 +27,14 @@ int main()
 
     if (correct)
     {
-        std::cout << "✓ std::iota funciona correctamente\n";
-        std::cout << "arr[0] == 5: " << (arr[0] == uint128_t(5) ? "✓" : "✗") << "\n";
-        std::cout << "arr[1] == 6: " << (arr[1] == uint128_t(6) ? "✓" : "✗") << "\n";
-        std::cout << "arr[2] == 7: " << (arr[2] == uint128_t(7) ? "✓" : "✗") << "\n";
+        std::cout << "[OK] std::iota funciona correctamente\n";
+        std::cout << "arr[0] == 5: " << (arr[0] == uint128_t(5) ? "[OK]" : "[ERROR]") << "\n";
+        std::cout << "arr[1] == 6: " << (arr[1] == uint128_t(6) ? "[OK]" : "[ERROR]") << "\n";
+        std::cout << "arr[2] == 7: " << (arr[2] == uint128_t(7) ? "[OK]" : "[ERROR]") << "\n";
     }
     else
     {
-        std::cout << "✗ Error en std::iota\n";
+        std::cout << "[ERROR] Error en std::iota\n";
     }
 
     // Test con números un poco más grandes
@@ -52,7 +52,7 @@ int main()
         }
     }
 
-    std::cout << (vec_correct ? "✓" : "✗") << " Iota con números más grandes\n";
+    std::cout << (vec_correct ? "[OK]" : "[ERROR]") << " Iota con números más grandes\n";
 
     std::cout << "\n=== Test completado ===\n";
 

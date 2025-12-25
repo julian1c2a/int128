@@ -18,7 +18,7 @@ int main()
         // Deberían ser iguales
         assert(result1.high() == result2.high());
         assert(result1.low() == result2.low());
-        std::cout << "✓ Simetría en suma (+)\n";
+        std::cout << "[OK] Simetría en suma (+)\n";
     }
 
     // Test simetría en comparación
@@ -30,7 +30,7 @@ int main()
         bool comp2 = y > x; // int > uint128_t (usando friend)
 
         assert(comp1 == comp2); // Ambas deberían ser true
-        std::cout << "✓ Simetría en comparación (</>)\n";
+        std::cout << "[OK] Simetría en comparación (</>)\n";
     }
 
     // Test simetría en operadores bitwise
@@ -43,7 +43,7 @@ int main()
 
         assert(result1.high() == result2.high());
         assert(result1.low() == result2.low());
-        std::cout << "✓ Simetría en AND bitwise (&)\n";
+        std::cout << "[OK] Simetría en AND bitwise (&)\n";
     }
 
     // Test con diferentes tipos integrales
@@ -56,7 +56,7 @@ int main()
 
         assert(result1.high() == result2.high());
         assert(result1.low() == result2.low());
-        std::cout << "✓ Simetría con uint64_t (*)\n";
+        std::cout << "[OK] Simetría con uint64_t (*)\n";
     }
 
     std::cout << "\n¡Todas las pruebas de simetría pasaron! 🎉\n";

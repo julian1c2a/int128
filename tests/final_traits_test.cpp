@@ -67,10 +67,10 @@ int main()
     std::cout << "  - unsigned_integral<uint128_t>: " << is_unsigned_concept << "\n\n";
 
     if (is_integral_concept && is_unsigned_concept) {
-        std::cout << "✅ Todos los traits están funcionando correctamente!\n";
-        std::cout << "✅ uint128_t es totalmente compatible con C++ standard library\n";
+        std::cout << "[OK] Todos los traits están funcionando correctamente!\n";
+        std::cout << "[OK] uint128_t es totalmente compatible con C++ standard library\n";
     } else {
-        std::cout << "❌ Algunos traits no están funcionando\n";
+        std::cout << "[FAIL] Algunos traits no están funcionando\n";
     }
 
     return 0;

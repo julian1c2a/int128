@@ -33,7 +33,7 @@ bool test_int128_convertible()
     static_assert(!int128_concepts::int128_convertible<double>, "double no debe ser convertible");
     static_assert(!int128_concepts::int128_convertible<void*>, "void* no debe ser convertible");
 
-    std::cout << "  ✅ PASS - Concept int128_convertible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_convertible funciona correctamente\n";
     return true;
 }
 
@@ -59,7 +59,7 @@ bool test_int128_compatible()
     static_assert(!int128_concepts::int128_compatible<std::string>,
                   "string no debe ser compatible");
 
-    std::cout << "  ✅ PASS - Concept int128_compatible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_compatible funciona correctamente\n";
     return true;
 }
 
@@ -84,7 +84,7 @@ bool test_int128_bitwise_compatible()
     static_assert(!int128_concepts::int128_bitwise_compatible<double>,
                   "double no debe ser bitwise compatible");
 
-    std::cout << "  ✅ PASS - Concept int128_bitwise_compatible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_bitwise_compatible funciona correctamente\n";
     return true;
 }
 
@@ -111,7 +111,7 @@ bool test_int128_signed_compatible()
     static_assert(!int128_concepts::int128_signed_compatible<uint64_t>,
                   "uint64_t no debe ser signed compatible");
 
-    std::cout << "  ✅ PASS - Concept int128_signed_compatible funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_signed_compatible funciona correctamente\n";
     return true;
 }
 
@@ -131,7 +131,7 @@ bool test_valid_shift_type()
     // Tipos inválidos
     static_assert(!int128_concepts::valid_shift_type<float>, "float no debe ser válido para shift");
 
-    std::cout << "  ✅ PASS - Concept valid_shift_type funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept valid_shift_type funciona correctamente\n";
     return true;
 }
 
@@ -153,7 +153,7 @@ bool test_bit_index_type()
     static_assert(!int128_concepts::bit_index_type<int64_t>,
                   "int64_t no debe ser válido para índice");
 
-    std::cout << "  ✅ PASS - Concept bit_index_type funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept bit_index_type funciona correctamente\n";
     return true;
 }
 
@@ -174,7 +174,7 @@ bool test_int128_comparable()
     static_assert(!int128_concepts::int128_comparable<float>, "float no debe ser comparable");
     static_assert(!int128_concepts::int128_comparable<double>, "double no debe ser comparable");
 
-    std::cout << "  ✅ PASS - Concept int128_comparable funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_comparable funciona correctamente\n";
     return true;
 }
 
@@ -199,7 +199,7 @@ bool test_promotable_to_int128()
     // Tipos no integrales no pueden ser promovidos
     static_assert(!int128_concepts::promotable_to_int128<float>, "float no puede ser promovido");
 
-    std::cout << "  ✅ PASS - Concept promotable_to_int128 funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept promotable_to_int128 funciona correctamente\n";
     return true;
 }
 
@@ -220,7 +220,7 @@ bool test_int128_function()
     static_assert(int128_concepts::int128_function<decltype(func2), int>,
                   "Lambda con args adicionales debe satisfacer el concepto");
 
-    std::cout << "  ✅ PASS - Concept int128_function funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_function funciona correctamente\n";
     return true;
 }
 
@@ -245,7 +245,7 @@ bool test_int128_container()
     assert(vec[0] == int128_t(1) && "Primer elemento debe ser 1");
     assert(vec[1] == int128_t(-2) && "Segundo elemento debe ser -2");
 
-    std::cout << "  ✅ PASS - Concept int128_container funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_container funciona correctamente\n";
     return true;
 }
 
@@ -266,7 +266,7 @@ bool test_int128_range_type()
     static_assert(!int128_concepts::int128_range_type<uint32_t>,
                   "uint32_t no debe ser válido como range type");
 
-    std::cout << "  ✅ PASS - Concept int128_range_type funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_range_type funciona correctamente\n";
     return true;
 }
 
@@ -287,7 +287,7 @@ bool test_int128_predicate()
     assert(!is_positive(int128_t(-5)) && "-5 no debe ser positivo");
     assert(!is_positive(int128_t(0)) && "0 no debe ser positivo");
 
-    std::cout << "  ✅ PASS - Concept int128_predicate funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_predicate funciona correctamente\n";
     return true;
 }
 
@@ -306,7 +306,7 @@ bool test_int128_binary_operation()
     // Prueba en tiempo de ejecución
     assert(add(int128_t(10), int128_t(-20)) == int128_t(-10) && "10 + (-20) debe ser -10");
 
-    std::cout << "  ✅ PASS - Concept int128_binary_operation funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_binary_operation funciona correctamente\n";
     return true;
 }
 
@@ -327,7 +327,7 @@ bool test_int128_reduce_operation()
     // Prueba en tiempo de ejecución
     assert(sum_op(100, int128_t(-50)) == 50 && "Reducción debe dar 50");
 
-    std::cout << "  ✅ PASS - Concept int128_reduce_operation funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_reduce_operation funciona correctamente\n";
     return true;
 }
 
@@ -347,7 +347,7 @@ bool test_int128_safe_operation()
     assert(safe_add(int128_t(1000), int128_t(-500)) == int128_t(500) &&
            "1000 + (-500) debe ser 500");
 
-    std::cout << "  ✅ PASS - Concept int128_safe_operation funciona correctamente\n";
+    std::cout << "  [OK] PASS - Concept int128_safe_operation funciona correctamente\n";
     return true;
 }
 
@@ -377,7 +377,7 @@ bool test_standard_concept_checks()
     std::cout << "  int128_t(-1) < int128_t(0) = " << (int128_t(-1) < int128_t(0)) << "\n";
     std::cout << "  int128_t(1) > int128_t(0) = " << (int128_t(1) > int128_t(0)) << "\n";
 
-    std::cout << "  ✅ PASS - Standard concept checks correctos\n";
+    std::cout << "  [OK] PASS - Standard concept checks correctos\n";
     return true;
 }
 
@@ -410,15 +410,15 @@ int main()
         all_pass &= test_int128_safe_operation();
         all_pass &= test_standard_concept_checks();
     } catch (const std::exception& e) {
-        std::cerr << "\n❌ Exception caught: " << e.what() << "\n";
+        std::cerr << "\n[FAIL] Exception caught: " << e.what() << "\n";
         return 1;
     }
 
     std::cout << "\n========================================\n";
     if (all_pass) {
-        std::cout << "  ✅ TODOS LOS TESTS PASARON\n";
+        std::cout << "  [OK] TODOS LOS TESTS PASARON\n";
     } else {
-        std::cout << "  ❌ ALGUNOS TESTS FALLARON\n";
+        std::cout << "  [FAIL] ALGUNOS TESTS FALLARON\n";
     }
     std::cout << "========================================\n";
 

@@ -481,12 +481,12 @@ int main()
         benchmark_safe_operation();
         benchmark_comparison_operations();
     } catch (const std::exception& e) {
-        std::cerr << "\n❌ Exception caught: " << e.what() << "\n";
+        std::cerr << "\n[FAIL] Exception caught: " << e.what() << "\n";
         return 1;
     }
 
     std::cout << "\n========================================\n";
-    std::cout << "  ✅ BENCHMARKS COMPLETADOS\n";
+    std::cout << "  [OK] BENCHMARKS COMPLETADOS\n";
     std::cout << "========================================\n";
 
     return 0;

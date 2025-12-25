@@ -20,10 +20,10 @@ static int failed_tests = 0;
         total_tests++;                                                                             \
         if (condition) {                                                                           \
             passed_tests++;                                                                        \
-            std::cout << "  ✓ " << message << std::endl;                                           \
+            std::cout << "  [OK] " << message << std::endl;                                           \
         } else {                                                                                   \
             failed_tests++;                                                                        \
-            std::cout << "  ✗ FAILED: " << message << std::endl;                                   \
+            std::cout << "  [ERROR] FAILED: " << message << std::endl;                                   \
         }                                                                                          \
     } while (0)
 
@@ -382,9 +382,9 @@ void test_constexpr()
 
 int main()
 {
-    std::cout << "╔═══════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "╔===========================================================╗" << std::endl;
     std::cout << "║  INT128_CMATH.HPP - COMPREHENSIVE TEST SUITE             ║" << std::endl;
-    std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚===========================================================╝" << std::endl;
 
     print_section("Testing std::gcd (Greatest Common Divisor)");
     test_gcd_basic();
@@ -451,25 +451,25 @@ int main()
               << " | Failed: " << failed_tests << std::endl;
 
     // Summary
-    std::cout << "\n╔═══════════════════════════════════════════════════════════╗" << std::endl;
+    std::cout << "\n╔===========================================================╗" << std::endl;
     std::cout << "║  FINAL SUMMARY                                            ║" << std::endl;
-    std::cout << "╚═══════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "╚===========================================================╝" << std::endl;
     std::cout << "Total Tests:  " << total_tests << std::endl;
-    std::cout << "✓ Passed:     " << passed_tests << std::endl;
-    std::cout << "✗ Failed:     " << failed_tests << std::endl;
+    std::cout << "[OK] Passed:     " << passed_tests << std::endl;
+    std::cout << "[ERROR] Failed:     " << failed_tests << std::endl;
     std::cout << "Success Rate: " << std::fixed << std::setprecision(1)
               << (100.0 * passed_tests / total_tests) << "%" << std::endl;
 
     std::cout << "\n=== Performance Notes ===" << std::endl;
     std::cout
-        << "• std::gcd usa algoritmo binario (Stein's) con manejo de signos - O(log(min(a,b)))"
+        << "* std::gcd usa algoritmo binario (Stein's) con manejo de signos - O(log(min(a,b)))"
         << std::endl;
-    std::cout << "• std::lcm optimizado: lcm(a,b) = abs(a*b)/gcd(a,b) - evita overflow"
+    std::cout << "* std::lcm optimizado: lcm(a,b) = abs(a*b)/gcd(a,b) - evita overflow"
               << std::endl;
-    std::cout << "• std::pow usa exponenciación rápida con signos - O(log(exp))" << std::endl;
-    std::cout << "• std::sqrt usa método de Newton para valores no-negativos" << std::endl;
-    std::cout << "• std::midpoint evita overflow: a + (b-a)/2" << std::endl;
-    std::cout << "• Todas las funciones constexpr son compatible con compile-time" << std::endl;
+    std::cout << "* std::pow usa exponenciación rápida con signos - O(log(exp))" << std::endl;
+    std::cout << "* std::sqrt usa método de Newton para valores no-negativos" << std::endl;
+    std::cout << "* std::midpoint evita overflow: a + (b-a)/2" << std::endl;
+    std::cout << "* Todas las funciones constexpr son compatible con compile-time" << std::endl;
 
     return (failed_tests == 0) ? 0 : 1;
 }

@@ -16,7 +16,7 @@ void test_traits()
     std::cout << "=== Testing INT128_T TRAITS ===" << std::endl;
 
     // Type traits fundamentales
-    std::cout << "\n📊 Type traits fundamentales:" << std::endl;
+    std::cout << "\n[INFO] Type traits fundamentales:" << std::endl;
     std::cout << "is_integral<int128_t>: " << std::is_integral_v<int128_t> << std::endl;
     std::cout << "is_arithmetic<int128_t>: " << std::is_arithmetic_v<int128_t> << std::endl;
     std::cout << "is_signed<int128_t>: " << std::is_signed_v<int128_t> << std::endl;
@@ -28,7 +28,7 @@ void test_traits()
     static_assert(!std::is_unsigned_v<int128_t>);
 
     // Transformación de tipos
-    std::cout << "\n📊 Type transformations:" << std::endl;
+    std::cout << "\n[INFO] Type transformations:" << std::endl;
     std::cout << "make_signed<int128_t> == int128_t: "
               << std::is_same_v<std::make_signed_t<int128_t>, int128_t> << std::endl;
     std::cout << "make_unsigned<int128_t> == uint128_t: "
@@ -38,7 +38,7 @@ void test_traits()
     static_assert(std::is_same_v<std::make_unsigned_t<int128_t>, uint128_t>);
 
     // Common types
-    std::cout << "\n📊 Common types:" << std::endl;
+    std::cout << "\n[INFO] Common types:" << std::endl;
     std::cout << "common_type<int128_t, int64_t> == int128_t: "
               << std::is_same_v<std::common_type_t<int128_t, int64_t>, int128_t> << std::endl;
     std::cout << "common_type<int128_t, uint64_t> == int128_t: "
@@ -50,7 +50,7 @@ void test_traits()
     static_assert(std::is_same_v<std::common_type_t<int128_t, uint64_t>, int128_t>);
     static_assert(std::is_same_v<std::common_type_t<int128_t, uint128_t>, uint128_t>);
 
-    std::cout << "✅ Traits OK" << std::endl;
+    std::cout << "[OK] Traits OK" << std::endl;
 }
 
 void test_limits()
@@ -60,7 +60,7 @@ void test_limits()
     using limits = std::numeric_limits<int128_t>;
 
     // Características básicas
-    std::cout << "\n📊 Características básicas:" << std::endl;
+    std::cout << "\n[INFO] Características básicas:" << std::endl;
     std::cout << "is_specialized: " << limits::is_specialized << std::endl;
     std::cout << "is_signed: " << limits::is_signed << std::endl;
     std::cout << "is_integer: " << limits::is_integer << std::endl;
@@ -77,7 +77,7 @@ void test_limits()
     static_assert(limits::digits == 127); // 128 - 1 bit de signo
 
     // Valores especiales
-    std::cout << "\n📊 Valores límite:" << std::endl;
+    std::cout << "\n[INFO] Valores límite:" << std::endl;
     auto min_val = limits::min();
     auto max_val = limits::max();
     auto lowest_val = limits::lowest();
@@ -96,7 +96,7 @@ void test_limits()
     assert(min_val.is_negative());
     assert(max_val.is_positive());
 
-    std::cout << "✅ Limits OK" << std::endl;
+    std::cout << "[OK] Limits OK" << std::endl;
 }
 
 void test_hash()
@@ -114,7 +114,7 @@ void test_hash()
     auto hash2 = hasher(val2);
     auto hash3 = hasher(val3);
 
-    std::cout << "\n📊 Hash values:" << std::endl;
+    std::cout << "\n[INFO] Hash values:" << std::endl;
     std::cout << "hash(42): " << hash1 << std::endl;
     std::cout << "hash(-42): " << hash2 << std::endl;
     std::cout << "hash(42) again: " << hash3 << std::endl;
@@ -126,7 +126,7 @@ void test_hash()
     std::cout << "Different values have different hashes: " << (hash1 != hash2) << std::endl;
 
     // Test con unordered_set
-    std::cout << "\n📊 Testing with unordered_set:" << std::endl;
+    std::cout << "\n[INFO] Testing with unordered_set:" << std::endl;
     std::unordered_set<int128_t> set;
 
     set.insert(int128_t(1));
@@ -145,7 +145,7 @@ void test_hash()
     assert(set.count(int128_t(-1000)) == 1);
     assert(set.count(int128_t(999)) == 0);
 
-    std::cout << "✅ Hash OK" << std::endl;
+    std::cout << "[OK] Hash OK" << std::endl;
 }
 
 void test_constexpr_compatibility()
@@ -157,7 +157,7 @@ void test_constexpr_compatibility()
     constexpr auto max_val = std::numeric_limits<int128_t>::max();
     constexpr auto digits = std::numeric_limits<int128_t>::digits;
 
-    std::cout << "\n📊 Constexpr values:" << std::endl;
+    std::cout << "\n[INFO] Constexpr values:" << std::endl;
     std::cout << "constexpr min: " << min_val << std::endl;
     std::cout << "constexpr max: " << max_val << std::endl;
     std::cout << "constexpr digits: " << digits << std::endl;
@@ -167,7 +167,7 @@ void test_constexpr_compatibility()
     static_assert(min_val.is_negative());
     static_assert(max_val.is_positive());
 
-    std::cout << "✅ Constexpr compatibility OK" << std::endl;
+    std::cout << "[OK] Constexpr compatibility OK" << std::endl;
 }
 
 int main()
@@ -183,17 +183,17 @@ int main()
 
         std::cout << "\n🎉 ¡TODOS LOS TESTS PASARON!" << std::endl;
         std::cout << "\n🔧 CARACTERÍSTICAS CONFIRMADAS:" << std::endl;
-        std::cout << "✅ std::is_integral<int128_t> == true" << std::endl;
-        std::cout << "✅ std::is_signed<int128_t> == true" << std::endl;
-        std::cout << "✅ std::is_arithmetic<int128_t> == true" << std::endl;
-        std::cout << "✅ std::numeric_limits<int128_t> especializado" << std::endl;
-        std::cout << "✅ std::hash<int128_t> funcional" << std::endl;
-        std::cout << "✅ std::common_type compatibilidad completa" << std::endl;
-        std::cout << "✅ make_signed/make_unsigned correcto" << std::endl;
-        std::cout << "✅ Compatibilidad constexpr total" << std::endl;
+        std::cout << "[OK] std::is_integral<int128_t> == true" << std::endl;
+        std::cout << "[OK] std::is_signed<int128_t> == true" << std::endl;
+        std::cout << "[OK] std::is_arithmetic<int128_t> == true" << std::endl;
+        std::cout << "[OK] std::numeric_limits<int128_t> especializado" << std::endl;
+        std::cout << "[OK] std::hash<int128_t> funcional" << std::endl;
+        std::cout << "[OK] std::common_type compatibilidad completa" << std::endl;
+        std::cout << "[OK] make_signed/make_unsigned correcto" << std::endl;
+        std::cout << "[OK] Compatibilidad constexpr total" << std::endl;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Error: " << e.what() << std::endl;
+        std::cout << "[FAIL] Error: " << e.what() << std::endl;
         return 1;
     }
 

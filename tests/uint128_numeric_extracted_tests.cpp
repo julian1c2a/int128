@@ -77,7 +77,7 @@ int main()
     auto fact_result = std::uint128_numeric::factorial(10);
     std::cout << "  - factorial(10) = " << fact_result << "\n";
 
-    std::cout << "\n✅ Todas las funciones numéricas C++20 implementadas y funcionando!\n";
+    std::cout << "\n[OK] Todas las funciones numéricas C++20 implementadas y funcionando!\n";
 
     return 0;
 }

@@ -110,6 +110,6 @@ int main()
     benchmark_safe_div();
     benchmark_safe_abs();
 
-    std::cout << "\n✓ Benchmarks completed" << std::endl;
+    std::cout << "\n[OK] Benchmarks completed" << std::endl;
     return 0;
 }

@@ -43,7 +43,7 @@ int main()
     static_assert(std::is_unsigned_v<uint128_t>, "uint128_t debe ser unsigned");
     static_assert(!std::is_signed_v<uint128_t>, "uint128_t no debe ser signed");
 
-    std::cout << "✓ Todas las especializaciones de type_traits funcionan\n\n";
+    std::cout << "[OK] Todas las especializaciones de type_traits funcionan\n\n";
 
     // ===============================================================================
     // TEST CONCEPTS PERSONALIZADOS
@@ -60,7 +60,7 @@ int main()
     static_assert(uint128_comparable<uint64_t>, "uint64_t debe ser comparable");
     static_assert(uint128_bitwise<unsigned>, "unsigned debe ser bitwise compatible");
 
-    std::cout << "✓ Todos los concepts personalizados funcionan\n\n";
+    std::cout << "[OK] Todos los concepts personalizados funcionan\n\n";
 
     // ===============================================================================
     // TEST HASH (para unordered containers)
@@ -78,7 +78,7 @@ int main()
     assert(map[key2] == "Second value");
     assert(map.size() == 2);
 
-    std::cout << "✓ Hash support funciona con unordered_map\n\n";
+    std::cout << "[OK] Hash support funciona con unordered_map\n\n";
 
     // ===============================================================================
     // TEST UTILITIES
@@ -104,7 +104,7 @@ int main()
     static_assert(!can_hold_uint128_v<uint32_t>, "uint32_t no puede contener uint128_t");
     static_assert(may_overflow_from_uint128_v<uint16_t>, "uint16_t puede overflow desde uint128_t");
 
-    std::cout << "✓ Utilidades funcionan correctamente\n\n";
+    std::cout << "[OK] Utilidades funcionan correctamente\n\n";
 
     // ===============================================================================
     // TEST INTEGRACIÓN CON STL
@@ -119,7 +119,7 @@ int main()
     auto clamped = std::clamp(uint128_t(500), min_128, uint128_t(1000));
     std::cout << "clamp(500, min, 1000) = " << clamped.low() << "\n";
 
-    std::cout << "✓ Integración con STL funciona\n\n";
+    std::cout << "[OK] Integración con STL funciona\n\n";
 
     std::cout << "¡Todas las extensiones funcionan perfectamente! 🎉\n";
     return 0;

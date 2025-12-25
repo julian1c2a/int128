@@ -19,10 +19,10 @@ template <typename T>
 void test_assert(const T& actual, const T& expected, const std::string& test_name)
 {
     if (actual == expected) {
-        std::cout << "✓ " << test_name << std::endl;
+        std::cout << "[OK] " << test_name << std::endl;
         test_count++;
     } else {
-        std::cout << "✗ " << test_name << " - Test failed" << std::endl;
+        std::cout << "[ERROR] " << test_name << " - Test failed" << std::endl;
         assert(false);
     }
 }
@@ -32,10 +32,10 @@ void test_assert(const uint128_safe::conversion_result& actual,
                  const uint128_safe::conversion_result& expected, const std::string& test_name)
 {
     if (actual == expected) {
-        std::cout << "✓ " << test_name << std::endl;
+        std::cout << "[OK] " << test_name << std::endl;
         test_count++;
     } else {
-        std::cout << "✗ " << test_name << " - Expected: " << static_cast<int>(expected)
+        std::cout << "[ERROR] " << test_name << " - Expected: " << static_cast<int>(expected)
                   << ", Actual: " << static_cast<int>(actual) << std::endl;
         assert(false);
     }
@@ -136,7 +136,7 @@ void test_extended_bit_functions()
 
     // Test bit extraction and insertion
     uint128_t extracted = uint128_bits::extract_bits(test_val, 4, 8);
-    std::cout << "✓ extract_bits(0x12345678, 4, 8) = 0x" << extracted.to_string_hex() << std::endl;
+    std::cout << "[OK] extract_bits(0x12345678, 4, 8) = 0x" << extracted.to_string_hex() << std::endl;
 
     uint128_t inserted = uint128_bits::insert_bits(0_u128, 0xFF_u128, 8, 8);
     test_assert(inserted, 0xFF00_u128, "insert_bits(0, 0xFF, 8, 8)");
@@ -173,7 +173,7 @@ void test_bitset_compatibility()
     auto from_small = std::from_bitset(small_bitset);
     test_assert(from_small, (uint128_t(1) | (uint128_t(1) << 63)), "small bitset conversion");
 
-    std::cout << "✓ bitset compatibility verified" << std::endl;
+    std::cout << "[OK] bitset compatibility verified" << std::endl;
 }
 
 void test_safe_conversions()
@@ -241,7 +241,7 @@ void test_parallel_bit_operations()
     auto deposited = uint128_bits::parallel_deposit(source, mask);
     auto extracted = uint128_bits::parallel_extract(deposited, mask);
 
-    std::cout << "✓ PDEP/PEXT operations completed" << std::endl;
+    std::cout << "[OK] PDEP/PEXT operations completed" << std::endl;
     std::cout << "  Source: 0b" << source.to_string_bin() << std::endl;
     std::cout << "  Mask:   0b" << mask.to_string_bin() << std::endl;
     std::cout << "  Result: 0b" << deposited.to_string_bin() << std::endl;
@@ -291,22 +291,22 @@ int main()
         performance_showcase();
 
         std::cout << "\n🎉 ALL ADVANCED FEATURES TESTS PASSED!" << std::endl;
-        std::cout << "✅ Bézout coefficients (Extended Euclidean Algorithm)" << std::endl;
-        std::cout << "✅ Complete bit manipulation library (std:: and extended)" << std::endl;
-        std::cout << "✅ std::bitset compatibility" << std::endl;
-        std::cout << "✅ Safe conversion system with error handling" << std::endl;
-        std::cout << "✅ Range utilities and saturating arithmetic" << std::endl;
-        std::cout << "✅ Parallel bit operations (PDEP/PEXT style)" << std::endl;
+        std::cout << "[OK] Bézout coefficients (Extended Euclidean Algorithm)" << std::endl;
+        std::cout << "[OK] Complete bit manipulation library (std:: and extended)" << std::endl;
+        std::cout << "[OK] std::bitset compatibility" << std::endl;
+        std::cout << "[OK] Safe conversion system with error handling" << std::endl;
+        std::cout << "[OK] Range utilities and saturating arithmetic" << std::endl;
+        std::cout << "[OK] Parallel bit operations (PDEP/PEXT style)" << std::endl;
 
-        std::cout << "\n📊 ADVANCED LIBRARY STATUS:" << std::endl;
+        std::cout << "\n[INFO] ADVANCED LIBRARY STATUS:" << std::endl;
         std::cout << "   🚀 Production-ready bit manipulation" << std::endl;
         std::cout << "   🔒 Memory-safe conversions with overflow detection" << std::endl;
-        std::cout << "   ⚡ Optimized algorithms with std:: compatibility" << std::endl;
+        std::cout << "   [RUN] Optimized algorithms with std:: compatibility" << std::endl;
         std::cout << "   🎯 Complete integration with C++ standard library" << std::endl;
         std::cout << "   🧮 Advanced mathematical operations (Bézout coefficients)" << std::endl;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Test failed with exception: " << e.what() << std::endl;
+        std::cout << "[FAIL] Test failed with exception: " << e.what() << std::endl;
         return 1;
     }
 

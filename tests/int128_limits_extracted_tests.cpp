@@ -18,7 +18,7 @@ bool test_is_specialized()
     bool result = std::numeric_limits<int128_t>::is_specialized;
     std::cout << "  is_specialized = " << result << "\n";
     assert(result && "numeric_limits debe estar especializado");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -31,7 +31,7 @@ bool test_is_signed()
     bool result = std::numeric_limits<int128_t>::is_signed;
     std::cout << "  is_signed = " << result << "\n";
     assert(result && "int128_t debe ser signed");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -44,7 +44,7 @@ bool test_is_integer()
     bool result = std::numeric_limits<int128_t>::is_integer;
     std::cout << "  is_integer = " << result << "\n";
     assert(result && "int128_t debe ser integer");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -57,7 +57,7 @@ bool test_is_exact()
     bool result = std::numeric_limits<int128_t>::is_exact;
     std::cout << "  is_exact = " << result << "\n";
     assert(result && "int128_t debe ser exacto");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -70,7 +70,7 @@ bool test_has_infinity()
     bool result = std::numeric_limits<int128_t>::has_infinity;
     std::cout << "  has_infinity = " << result << "\n";
     assert(!result && "int128_t no debe tener infinity");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -83,7 +83,7 @@ bool test_has_quiet_NaN()
     bool result = std::numeric_limits<int128_t>::has_quiet_NaN;
     std::cout << "  has_quiet_NaN = " << result << "\n";
     assert(!result && "int128_t no debe tener quiet_NaN");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -96,7 +96,7 @@ bool test_is_bounded()
     bool result = std::numeric_limits<int128_t>::is_bounded;
     std::cout << "  is_bounded = " << result << "\n";
     assert(result && "int128_t debe ser bounded");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -109,7 +109,7 @@ bool test_is_modulo()
     bool result = std::numeric_limits<int128_t>::is_modulo;
     std::cout << "  is_modulo = " << result << "\n";
     assert(!result && "int128_t signed no debe ser modulo");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -122,7 +122,7 @@ bool test_digits()
     int result = std::numeric_limits<int128_t>::digits;
     std::cout << "  digits = " << result << "\n";
     assert(result == 127 && "int128_t debe tener 127 bits (sin signo)");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -135,7 +135,7 @@ bool test_digits10()
     int result = std::numeric_limits<int128_t>::digits10;
     std::cout << "  digits10 = " << result << "\n";
     assert(result == 38 && "int128_t debe tener 38 dígitos decimales");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -148,7 +148,7 @@ bool test_radix()
     int result = std::numeric_limits<int128_t>::radix;
     std::cout << "  radix = " << result << "\n";
     assert(result == 2 && "int128_t debe ser binario (radix 2)");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -161,7 +161,7 @@ bool test_min()
     int128_t result = std::numeric_limits<int128_t>::min();
     std::cout << "  min() = " << result << "\n";
     assert(result < int128_t(0) && "min() debe ser negativo para signed");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -175,7 +175,7 @@ bool test_lowest()
     int128_t min_val = std::numeric_limits<int128_t>::min();
     std::cout << "  lowest() = " << result << "\n";
     assert(result == min_val && "lowest() debe ser igual a min() para enteros signed");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -191,7 +191,7 @@ bool test_max()
     // Verificar que max() + 1 hace overflow a negativo
     int128_t max_plus_one = result + int128_t(1);
     assert(max_plus_one < int128_t(0) && "max() + 1 debe hacer overflow a negativo");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -204,7 +204,7 @@ bool test_epsilon()
     int128_t result = std::numeric_limits<int128_t>::epsilon();
     std::cout << "  epsilon() = " << result << "\n";
     assert(result == int128_t(0) && "epsilon() debe ser 0 para enteros");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -217,7 +217,7 @@ bool test_round_error()
     int128_t result = std::numeric_limits<int128_t>::round_error();
     std::cout << "  round_error() = " << result << "\n";
     assert(result == int128_t(0) && "round_error() debe ser 0 para enteros");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -230,7 +230,7 @@ bool test_infinity()
     int128_t result = std::numeric_limits<int128_t>::infinity();
     std::cout << "  infinity() = " << result << "\n";
     assert(result == int128_t(0) && "infinity() debe ser 0 para enteros");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -243,7 +243,7 @@ bool test_quiet_NaN()
     int128_t result = std::numeric_limits<int128_t>::quiet_NaN();
     std::cout << "  quiet_NaN() = " << result << "\n";
     assert(result == int128_t(0) && "quiet_NaN() debe ser 0 para enteros");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -256,7 +256,7 @@ bool test_signaling_NaN()
     int128_t result = std::numeric_limits<int128_t>::signaling_NaN();
     std::cout << "  signaling_NaN() = " << result << "\n";
     assert(result == int128_t(0) && "signaling_NaN() debe ser 0 para enteros");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -270,7 +270,7 @@ bool test_denorm_min()
     int128_t min_val = std::numeric_limits<int128_t>::min();
     std::cout << "  denorm_min() = " << result << "\n";
     assert(result == min_val && "denorm_min() debe ser igual a min()");
-    std::cout << "  ✅ PASS\n";
+    std::cout << "  [OK] PASS\n";
     return true;
 }
 
@@ -292,7 +292,7 @@ int main()
         if (func())                                                                                \
             passed++;                                                                              \
     } catch (const std::exception& e) {                                                            \
-        std::cout << "  ❌ EXCEPTION: " << e.what() << "\n";                                       \
+        std::cout << "  [FAIL] EXCEPTION: " << e.what() << "\n";                                       \
     }
 
     // Tests de propiedades booleanas

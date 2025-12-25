@@ -88,6 +88,6 @@ int main()
     benchmark_partial_sum();
     benchmark_adjacent_difference();
 
-    std::cout << "\n✓ Benchmarks completed" << std::endl;
+    std::cout << "\n[OK] Benchmarks completed" << std::endl;
     return 0;
 }

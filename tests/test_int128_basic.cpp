@@ -36,7 +36,7 @@ void test_constructors()
     assert(d.high() == 0);
     assert(d.low() == UINT64_MAX);
 
-    std::cout << "✅ Constructors OK" << std::endl;
+    std::cout << "[OK] Constructors OK" << std::endl;
 }
 
 void test_arithmetic()
@@ -72,7 +72,7 @@ void test_arithmetic()
     assert(int128_t(17) % int128_t(5) == int128_t(2));
     assert(int128_t(-17) % int128_t(5) == int128_t(-2)); // Signo del dividendo
 
-    std::cout << "✅ Arithmetic OK" << std::endl;
+    std::cout << "[OK] Arithmetic OK" << std::endl;
 }
 
 void test_unary()
@@ -101,7 +101,7 @@ void test_unary()
     assert(c-- == int128_t(11));
     assert(c == int128_t(10));
 
-    std::cout << "✅ Unary operations OK" << std::endl;
+    std::cout << "[OK] Unary operations OK" << std::endl;
 }
 
 void test_comparisons()
@@ -138,7 +138,7 @@ void test_comparisons()
     assert(pos2 > pos);
     assert(pos >= zero);
 
-    std::cout << "✅ Comparisons OK" << std::endl;
+    std::cout << "[OK] Comparisons OK" << std::endl;
 }
 
 void test_bitwise()
@@ -162,7 +162,7 @@ void test_bitwise()
     int128_t not_c = ~c;
     assert(not_c == int128_t(-1));
 
-    std::cout << "✅ Bitwise operations OK" << std::endl;
+    std::cout << "[OK] Bitwise operations OK" << std::endl;
 }
 
 void test_shifts()
@@ -189,7 +189,7 @@ void test_shifts()
     assert((c >> 4) == int128_t(-1));
     assert((c >> 100) == int128_t(-1)); // Extensión completa
 
-    std::cout << "✅ Shift operations OK" << std::endl;
+    std::cout << "[OK] Shift operations OK" << std::endl;
 }
 
 void test_string_conversion()
@@ -214,7 +214,7 @@ void test_string_conversion()
     assert(int128_t(255).to_string_base(16) == "FF");
     assert(int128_t(-255).to_string_base(16) == "-FF");
 
-    std::cout << "✅ String conversions OK" << std::endl;
+    std::cout << "[OK] String conversions OK" << std::endl;
 }
 
 void test_literals()
@@ -231,7 +231,7 @@ void test_literals()
     assert(c.to_string() == "-987654321098765432109876543210");
     assert(c.is_negative());
 
-    std::cout << "✅ Literals OK" << std::endl;
+    std::cout << "[OK] Literals OK" << std::endl;
 }
 
 void test_edge_cases()
@@ -255,7 +255,7 @@ void test_edge_cases()
     int128_t neg_min = -min_val;
     assert(neg_min == min_val); // -INT128_MIN == INT128_MIN en complemento a 2
 
-    std::cout << "✅ Edge cases OK" << std::endl;
+    std::cout << "[OK] Edge cases OK" << std::endl;
 }
 
 void test_iostream()
@@ -269,7 +269,7 @@ void test_iostream()
     std::cout << "Large positive: " << "123456789012345678901234567890"_i128 << std::endl;
     std::cout << "Large negative: " << "-987654321098765432109876543210"_i128 << std::endl;
 
-    std::cout << "✅ Iostream OK" << std::endl;
+    std::cout << "[OK] Iostream OK" << std::endl;
 }
 
 int main()
@@ -289,14 +289,14 @@ int main()
         test_iostream();
 
         std::cout << "\n🎉 ¡Todos los tests pasaron! int128_t funciona correctamente." << std::endl;
-        std::cout << "\n📊 Datos internos:" << std::endl;
-        std::cout << "• Rango: -2^127 a 2^127-1" << std::endl;
-        std::cout << "• Representación: Complemento a 2" << std::endl;
-        std::cout << "• MSB de data[1] es el bit de signo" << std::endl;
-        std::cout << "• Misma estructura interna que uint128_t" << std::endl;
+        std::cout << "\n[INFO] Datos internos:" << std::endl;
+        std::cout << "* Rango: -2^127 a 2^127-1" << std::endl;
+        std::cout << "* Representación: Complemento a 2" << std::endl;
+        std::cout << "* MSB de data[1] es el bit de signo" << std::endl;
+        std::cout << "* Misma estructura interna que uint128_t" << std::endl;
 
     } catch (const std::exception& e) {
-        std::cout << "❌ Error: " << e.what() << std::endl;
+        std::cout << "[FAIL] Error: " << e.what() << std::endl;
         return 1;
     }
 

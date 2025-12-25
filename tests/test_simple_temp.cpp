@@ -68,7 +68,7 @@ int main()
     std::cout << "Multiplicador: 2" << std::endl;
     std::cout << "Resultado: 0x" << std::hex << result << " = " << std::dec << result << std::endl;
     std::cout << "Esperado: 1" << std::endl;
-    std::cout << "¿Correcto?: " << (result == 1 ? "SÍ ✓" : "NO ✗") << std::endl;
+    std::cout << "¿Correcto?: " << (result == 1 ? "SÍ [OK]" : "NO [ERROR]") << std::endl;
 
     // Test caso específico que funcionaba antes
     uint128_t_simple test1(0x123456789ABCDEF0ULL, 0xFEDCBA0987654321ULL);

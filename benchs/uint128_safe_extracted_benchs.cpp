@@ -91,6 +91,6 @@ int main()
     benchmark_safe_mul();
     benchmark_safe_div();
 
-    std::cout << "\n✓ Benchmarks completed" << std::endl;
+    std::cout << "\n[OK] Benchmarks completed" << std::endl;
     return 0;
 }

@@ -27,7 +27,7 @@ int main()
     std::cout << "=====================================================" << std::endl;
 
     // Caso 1: Número positivo pequeño
-    std::cout << "\n📊 CASO 1: Número positivo pequeño (42)" << std::endl;
+    std::cout << "\n[INFO] CASO 1: Número positivo pequeño (42)" << std::endl;
     uint128_t u_pos(42);
     int128_t i_pos(42);
 
@@ -38,10 +38,10 @@ int main()
 
     assert(u_pos.high() == i_pos.high());
     assert(u_pos.low() == i_pos.low());
-    std::cout << "✅ Datos internos idénticos" << std::endl;
+    std::cout << "[OK] Datos internos idénticos" << std::endl;
 
     // Caso 2: Número negativo
-    std::cout << "\n📊 CASO 2: Número negativo (-42)" << std::endl;
+    std::cout << "\n[INFO] CASO 2: Número negativo (-42)" << std::endl;
     int128_t i_neg(-42);
 
     std::cout << "int128_t(-42): " << i_neg << std::endl;
@@ -53,7 +53,7 @@ int main()
     show_bits(i_neg.high(), i_neg.low(), "Datos internos (complemento a 2):");
 
     // Caso 3: Valor límite - máximo positivo
-    std::cout << "\n📊 CASO 3: Máximo int128_t" << std::endl;
+    std::cout << "\n[INFO] CASO 3: Máximo int128_t" << std::endl;
     int128_t i_max = int128_t_MAX;
     uint128_t u_max_equivalent(i_max.high(), i_max.low());
 
@@ -63,7 +63,7 @@ int main()
     show_bits(i_max.high(), i_max.low(), "Datos internos (MSB=0, positivo):");
 
     // Caso 4: Valor límite - mínimo negativo
-    std::cout << "\n📊 CASO 4: Mínimo int128_t" << std::endl;
+    std::cout << "\n[INFO] CASO 4: Mínimo int128_t" << std::endl;
     int128_t i_min = int128_t_MIN;
     uint128_t u_min_equivalent(i_min.high(), i_min.low());
 
@@ -73,7 +73,7 @@ int main()
     show_bits(i_min.high(), i_min.low(), "Datos internos (MSB=1, negativo):");
 
     // Caso 5: Demostrar conversión bidireccional
-    std::cout << "\n📊 CASO 5: Conversión bidireccional" << std::endl;
+    std::cout << "\n[INFO] CASO 5: Conversión bidireccional" << std::endl;
     uint128_t original_uint(0x8000000000000000ULL, 0x123456789ABCDEFULL);
     int128_t converted_int(original_uint);
     uint128_t back_to_uint = converted_int.to_uint128();
@@ -88,17 +88,17 @@ int main()
 
     assert(original_uint.high() == back_to_uint.high());
     assert(original_uint.low() == back_to_uint.low());
-    std::cout << "✅ Conversión perfectamente reversible" << std::endl;
+    std::cout << "[OK] Conversión perfectamente reversible" << std::endl;
 
     // Análisis final
     std::cout << "\n🔧 ANÁLISIS FINAL:" << std::endl;
     std::cout << "==================" << std::endl;
-    std::cout << "✅ Misma estructura interna: data[0] (low) + data[1] (high)" << std::endl;
-    std::cout << "✅ Mismo tamaño: " << sizeof(uint128_t) << " bytes = " << sizeof(int128_t)
+    std::cout << "[OK] Misma estructura interna: data[0] (low) + data[1] (high)" << std::endl;
+    std::cout << "[OK] Mismo tamaño: " << sizeof(uint128_t) << " bytes = " << sizeof(int128_t)
               << " bytes" << std::endl;
-    std::cout << "✅ MSB de data[1] como bit de signo en int128_t" << std::endl;
-    std::cout << "✅ Complemento a 2 para números negativos" << std::endl;
-    std::cout << "✅ Conversiones bidireccionales perfectas" << std::endl;
+    std::cout << "[OK] MSB de data[1] como bit de signo en int128_t" << std::endl;
+    std::cout << "[OK] Complemento a 2 para números negativos" << std::endl;
+    std::cout << "[OK] Conversiones bidireccionales perfectas" << std::endl;
 
     std::cout << "\n📈 RANGOS:" << std::endl;
     std::cout << "uint128_t: 0 a 2^128-1" << std::endl;
