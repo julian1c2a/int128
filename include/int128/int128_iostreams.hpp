@@ -38,12 +38,159 @@
 /**
  * @brief Soporte completo de iostreams con iomanip para int128_t
  *
- * NOTA IMPORTANTE: Los operadores iostream básicos (operator<< y operator>>)
- * están definidos en int128_t.hpp para evitar conflictos de redefinición.
- *
- * Este archivo se enfoca en proporcionar funciones de formateo avanzado
- * que permiten control fino sobre el formato de salida usando manipuladores.
+ * Este header proporciona operadores iostream completos que soportan todos los
+ * manipuladores estándar de iomanip:
+ * - Bases: std::hex, std::oct, std::dec
+ * - Ancho: std::setw()
+ * - Relleno: std::setfill()
+ * - Alineación: std::left, std::right, std::internal
+ * - Prefijos: std::showbase, std::noshowbase
+ * - Signo: std::showpos, std::noshowpos
+ * - Mayúsculas: std::uppercase, std::nouppercase
  */
+
+namespace std
+{
+
+/**
+ * @brief Operador de salida mejorado que respeta iomanip
+ */
+inline std::ostream& operator<<(std::ostream& os, const int128_t& value)
+{
+    // Guardar el estado de formateo actual
+    const auto flags = os.flags();
+    const int base = (flags & std::ios_base::basefield);
+    const bool show_base = (flags & std::ios_base::showbase);
+    const bool show_pos = (flags & std::ios_base::showpos);
+    const bool uppercase = (flags & std::ios_base::uppercase);
+    const auto width = os.width();
+    const auto fill_char = os.fill();
+    const auto alignment = (flags & std::ios_base::adjustfield);
+
+    std::string result;
+    bool is_negative = value < int128_t(0);
+
+    // Determinar la base numérica
+    switch (base) {
+    case std::ios_base::hex:
+        if (is_negative) {
+            // Para hex, mostrar representación two's complement (sin signo)
+            uint128_t uval(value);
+            result = uval.to_string_hex(show_base);
+        } else {
+            result = value.to_string_hex(show_base);
+        }
+        if (uppercase) {
+            for (char& c : result) {
+                if (c >= 'a' && c <= 'f')
+                    c = c - 'a' + 'A';
+            }
+        }
+        break;
+
+    case std::ios_base::oct:
+        if (is_negative) {
+            uint128_t uval(value);
+            result = uval.to_string_oct(show_base);
+        } else {
+            result = value.to_string_oct(show_base);
+        }
+        break;
+
+    default: // std::ios_base::dec
+        result = value.to_string();
+        if (show_pos && !is_negative) {
+            result = "+" + result;
+        }
+        break;
+    }
+
+    // Aplicar ancho de campo y alineación
+    if (width > 0 && static_cast<int>(result.length()) < width) {
+        const int padding = width - static_cast<int>(result.length());
+
+        switch (alignment) {
+        case std::ios_base::left:
+            result += std::string(padding, fill_char);
+            break;
+
+        case std::ios_base::internal:
+            // Para internal, el relleno va después del prefijo/signo pero antes del número
+            if (is_negative && result[0] == '-') {
+                result = "-" + std::string(padding, fill_char) + result.substr(1);
+            } else if (show_pos && !is_negative && result[0] == '+') {
+                result = "+" + std::string(padding, fill_char) + result.substr(1);
+            } else if (show_base && (base == std::ios_base::hex || base == std::ios_base::oct)) {
+                if (base == std::ios_base::hex && result.length() >= 2 &&
+                    (result.substr(0, 2) == "0x" || result.substr(0, 2) == "0X")) {
+                    result =
+                        result.substr(0, 2) + std::string(padding, fill_char) + result.substr(2);
+                } else if (base == std::ios_base::oct && result[0] == '0') {
+                    result = "0" + std::string(padding, fill_char) + result.substr(1);
+                } else {
+                    result = std::string(padding, fill_char) + result;
+                }
+            } else {
+                result = std::string(padding, fill_char) + result;
+            }
+            break;
+
+        default: // std::ios_base::right
+            result = std::string(padding, fill_char) + result;
+            break;
+        }
+    }
+
+    // Resetear width (comportamiento estándar)
+    os.width(0);
+
+    return os << result;
+}
+
+/**
+ * @brief Operador de entrada mejorado que respeta la base
+ */
+inline std::istream& operator>>(std::istream& is, int128_t& value)
+{
+    const auto flags = is.flags();
+    const int base_flags = (flags & std::ios_base::basefield);
+
+    std::string str;
+    is >> str;
+
+    if (is.good() || is.eof()) {
+        int input_base = 10;
+
+        switch (base_flags) {
+        case std::ios_base::hex:
+            input_base = 16;
+            break;
+        case std::ios_base::oct:
+            input_base = 8;
+            break;
+        default:
+            // Auto-detectar
+            if (str.length() >= 2 && str.substr(0, 2) == "0x") {
+                input_base = 16;
+            } else if (str.length() >= 1 && str[0] == '0' && str.length() > 1) {
+                input_base = 8;
+            } else {
+                input_base = 10;
+            }
+            break;
+        }
+
+        try {
+            value = int128_t::from_string_base(str, input_base);
+        } catch (const std::exception&) {
+            is.setstate(std::ios_base::failbit);
+        }
+    }
+
+    return is;
+}
+
+} // namespace std
 
 // ===============================================================================
 // FUNCIONES DE CONVENIENCIA PARA FORMATEO ESPECÍFICO CON IOSTREAM

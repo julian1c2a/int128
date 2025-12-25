@@ -2642,21 +2642,25 @@ inline constexpr uint128_t operator^(std::uint64_t lhs, const uint128_t& rhs) no
     return uint128_t(lhs) ^ rhs;
 }
 
-// Operadores de flujo definidos fuera de la clase
-inline std::ostream& operator<<(std::ostream& os, const uint128_t& value)
-{
-    return os << value.to_string();
-}
-
-inline std::istream& operator>>(std::istream& is, uint128_t& value)
-{
-    std::string str;
-    is >> str;
-    if (is.good() || is.eof()) {
-        value = uint128_t::from_string(str);
-    }
-    return is;
-}
+// ========================= OPERADORES DE FLUJO =========================
+// NOTA: Las implementaciones básicas están comentadas.
+// Para soporte completo de iostream con manipuladores (hex, oct, setw, etc.),
+// incluye uint128/uint128_iostreams.hpp en lugar de usar estos operadores.
+//
+// inline std::ostream& operator<<(std::ostream& os, const uint128_t& value)
+// {
+//     return os << value.to_string();
+// }
+//
+// inline std::istream& operator>>(std::istream& is, uint128_t& value)
+// {
+//     std::string str;
+//     is >> str;
+//     if (is.good() || is.eof()) {
+//         value = uint128_t::from_string(str);
+//     }
+//     return is;
+// }
 
 // Constante MAX definida después de la clase
 constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);

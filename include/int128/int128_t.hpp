@@ -661,21 +661,24 @@ class int128_t
 // ===============================================================================
 // OPERADORES DE FLUJO
 // ===============================================================================
-
-inline std::ostream& operator<<(std::ostream& os, const int128_t& value)
-{
-    return os << value.to_string();
-}
-
-inline std::istream& operator>>(std::istream& is, int128_t& value)
-{
-    std::string str;
-    is >> str;
-    if (is.good() || is.eof()) {
-        value = int128_t::from_string(str);
-    }
-    return is;
-}
+// NOTA: Las implementaciones básicas están comentadas.
+// Para soporte completo de iostream con manipuladores (hex, oct, setw, showpos, etc.),
+// incluye int128/int128_iostreams.hpp en lugar de usar estos operadores.
+//
+// inline std::ostream& operator<<(std::ostream& os, const int128_t& value)
+// {
+//     return os << value.to_string();
+// }
+//
+// inline std::istream& operator>>(std::istream& is, int128_t& value)
+// {
+//     std::string str;
+//     is >> str;
+//     if (is.good() || is.eof()) {
+//         value = int128_t::from_string(str);
+//     }
+//     return is;
+// }
 
 // ===============================================================================
 // OPERADORES FRIEND FUERA DE LA CLASE
