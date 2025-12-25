@@ -18,8 +18,8 @@ echo "========================================="
 echo ""
 
 # Ejecutar benchmark int128_vs_uint128
-echo "📊 Building benchmark_int128_vs_uint128..."
+echo "[INFO] Building benchmark_int128_vs_uint128..."
 bash "$SCRIPT_DIR/build_benchmark_int128_vs_uint128.bash" "$COMPILER" "$MODE" "$PRINT"
 
 echo ""
-echo "✅ FEATURE interop - Benchmarks build complete"
+echo "[OK] FEATURE interop - Benchmarks build complete"

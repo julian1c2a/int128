@@ -9,7 +9,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 # Validar argumentos
 if [ $# -lt 2 ]; then
-    echo "❌ ERROR: Se requieren al menos 2 argumentos"
+    echo "[FAIL] ERROR: Se requieren al menos 2 argumentos"
     echo "Uso: $0 [compiler] [mode] [print]"
     echo "  compiler: intel, msvc, gcc, clang, all"
     echo "  mode: debug, release, all"
@@ -27,14 +27,14 @@ MODE=$(echo "$MODE" | tr '[:upper:]' '[:lower:]')
 
 # Validar compilador
 if [[ ! "$COMPILER" =~ ^(intel|msvc|gcc|clang|all)$ ]]; then
-    echo "❌ ERROR: Compilador inválido: $COMPILER"
+    echo "[FAIL] ERROR: Compilador inválido: $COMPILER"
     echo "Compiladores válidos: intel, msvc, gcc, clang, all"
     exit 1
 fi
 
 # Validar modo
 if [[ ! "$MODE" =~ ^(debug|release|all)$ ]]; then
-    echo "❌ ERROR: Modo inválido: $MODE"
+    echo "[FAIL] ERROR: Modo inválido: $MODE"
     echo "Modos válidos: debug, release, all"
     exit 1
 fi
@@ -51,7 +51,7 @@ echo "========================================="
 SOURCE_FILE="$PROJECT_ROOT/tests/int128_concepts_extracted_tests.cpp"
 
 if [ ! -f "$SOURCE_FILE" ]; then
-    echo "❌ ERROR: No se encuentra el archivo $SOURCE_FILE"
+    echo "[FAIL] ERROR: No se encuentra el archivo $SOURCE_FILE"
     exit 1
 fi
 
@@ -70,23 +70,23 @@ INCLUDE_DIR="-I$PROJECT_ROOT/include"
 # 1. GCC
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "gcc" ]; then
-    echo "🔨 [GCC] Compilando..."
+    echo "[BUILD] [GCC] Compilando..."
     
     if ! command -v g++ &> /dev/null; then
-        echo "   ⚠️  GCC no encontrado."
+        echo "   [WARN]  GCC no encontrado."
     else
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/gcc/debug"
             g++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
                 -o "$PROJECT_ROOT/build/build_tests/gcc/debug/int128_concepts_extracted_tests.exe"
-            echo "   ✅ GCC Debug OK"
+            echo "   [OK] GCC Debug OK"
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/gcc/release"
             g++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
                 -o "$PROJECT_ROOT/build/build_tests/gcc/release/int128_concepts_extracted_tests.exe"
-            echo "   ✅ GCC Release OK"
+            echo "   [OK] GCC Release OK"
         fi
     fi
 fi
@@ -96,23 +96,23 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
     echo ""
-    echo "🔨 [Clang] Compilando..."
+    echo "[BUILD] [Clang] Compilando..."
     
     if ! command -v clang++ &> /dev/null; then
-        echo "   ⚠️  Clang no encontrado."
+        echo "   [WARN]  Clang no encontrado."
     else
         if [ "$MODE" = "all" ] || [ "$MODE" = "debug" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/clang/debug"
             clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
                 -o "$PROJECT_ROOT/build/build_tests/clang/debug/int128_concepts_extracted_tests.exe"
-            echo "   ✅ Clang Debug OK"
+            echo "   [OK] Clang Debug OK"
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
             mkdir -p "$PROJECT_ROOT/build/build_tests/clang/release"
             clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
                 -o "$PROJECT_ROOT/build/build_tests/clang/release/int128_concepts_extracted_tests.exe"
-            echo "   ✅ Clang Release OK"
+            echo "   [OK] Clang Release OK"
         fi
     fi
 fi
@@ -122,12 +122,12 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
     echo ""
-    echo "🔨 [Intel] Compilando..."
+    echo "[BUILD] [Intel] Compilando..."
 
     INTEL_CMD="icx"
 
     if ! command -v "$INTEL_CMD" &> /dev/null; then
-        echo "   ⚠️  Intel compilador (icx) no disponible."
+        echo "   [WARN]  Intel compilador (icx) no disponible."
     else
         WIN_SOURCE=$(cygpath -m "$SOURCE_FILE")
         WIN_INCLUDE=$(cygpath -m "$PROJECT_ROOT/include")
@@ -140,7 +140,7 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
             WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_tests/intel/debug/int128_concepts_extracted_tests.exe")
             "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /Zi /Od \
                 "/Fe:$WIN_OUT_DEBUG" > /dev/null
-            if [ $? -eq 0 ]; then echo "   ✅ Intel Debug OK"; else echo "   ❌ Intel Debug FAILED"; fi
+            if [ $? -eq 0 ]; then echo "   [OK] Intel Debug OK"; else echo "   [FAIL] Intel Debug FAILED"; fi
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
@@ -148,7 +148,7 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
             WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/build_tests/intel/release/int128_concepts_extracted_tests.exe")
             "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /O2 /DNDEBUG \
                 "/Fe:$WIN_OUT_RELEASE" > /dev/null
-            if [ $? -eq 0 ]; then echo "   ✅ Intel Release OK"; else echo "   ❌ Intel Release FAILED"; fi
+            if [ $? -eq 0 ]; then echo "   [OK] Intel Release OK"; else echo "   [FAIL] Intel Release FAILED"; fi
         fi
         
         unset MSYS2_ARG_CONV_EXCL
@@ -160,10 +160,10 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
     echo ""
-    echo "🔨 [MSVC] Compilando..."
+    echo "[BUILD] [MSVC] Compilando..."
 
     if ! command -v cl &> /dev/null; then
-        echo "   ⚠️  MSVC no disponible."
+        echo "   [WARN]  MSVC no disponible."
     else
         WIN_SOURCE=$(cygpath -m "$SOURCE_FILE")
         WIN_INCLUDE=$(cygpath -m "$PROJECT_ROOT/include")
@@ -175,7 +175,7 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
             WIN_OUT_DEBUG=$(cygpath -m "$PROJECT_ROOT/build/build_tests/msvc/debug/int128_concepts_extracted_tests.exe")
             cl "$WIN_SOURCE" /I"$WIN_INCLUDE" /std:c++20 /W4 /Zi /Od /EHsc \
                 "/Fe:$WIN_OUT_DEBUG" > /dev/null
-            echo "   ✅ MSVC Debug OK"
+            echo "   [OK] MSVC Debug OK"
         fi
         
         if [ "$MODE" = "all" ] || [ "$MODE" = "release" ]; then
@@ -183,7 +183,7 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
             WIN_OUT_RELEASE=$(cygpath -m "$PROJECT_ROOT/build/build_tests/msvc/release/int128_concepts_extracted_tests.exe")
             cl "$WIN_SOURCE" /I"$WIN_INCLUDE" /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
                 "/Fe:$WIN_OUT_RELEASE" > /dev/null
-            echo "   ✅ MSVC Release OK"
+            echo "   [OK] MSVC Release OK"
         fi
         
         unset MSYS2_ARG_CONV_EXCL
@@ -192,6 +192,6 @@ fi
 
 echo ""
 echo "========================================="
-echo " ✅ COMPILACIÓN COMPLETADA"
+echo " [OK] COMPILACIÓN COMPLETADA"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================"

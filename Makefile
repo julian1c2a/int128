@@ -68,22 +68,22 @@ endef
 build_tests:
 	$(call validate_values,build_tests)
 	@echo "🔨 Compilando tests: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/build_$(TYPE)_$(FEATURE)_extracted_tests.bash $(COMPILER) $(MODE) $(PRINT)
+	@bash scripts/build_generic.bash $(TYPE) $(FEATURE) tests $(COMPILER) $(MODE) $(PRINT)
 
 build_benchs:
 	$(call validate_values,build_benchs)
 	@echo "🔨 Compilando benchmarks: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/build_$(TYPE)_$(FEATURE)_extracted_benchs.bash $(COMPILER) $(MODE) $(PRINT)
+	@bash scripts/build_generic.bash $(TYPE) $(FEATURE) benchs $(COMPILER) $(MODE) $(PRINT)
 
 check:
 	$(call validate_values,check)
 	@echo "🧪 Ejecutando tests: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/check_$(TYPE)_$(FEATURE)_extracted_tests.bash $(COMPILER) $(MODE) $(PRINT)
+	@bash scripts/check_generic.bash $(TYPE) $(FEATURE) $(COMPILER) $(MODE)
 
 run:
 	$(call validate_values,run)
 	@echo "⚡ Ejecutando benchmarks: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/run_$(TYPE)_$(FEATURE)_extracted_benchs.bash $(COMPILER) $(MODE) $(PRINT)
+	@bash scripts/run_generic.bash $(TYPE) $(FEATURE) $(COMPILER) $(MODE)
 
 # =============================================================================
 # SISTEMA DE ATAJOS GENÉRICOS POR FEATURE

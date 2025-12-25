@@ -184,3 +184,121 @@ Los resultados de la llamada serán los resultados de los tests o benchmarks res
          15.7.2. También muestra los resultados en terminal en tiempos y ciclos de reloj, y solo para el compiler y el mode expresamente indicados (y no los demás).
      15.8. Los resultados de los benchmarks se almacenan en:
          root_project/build/build_benchs_results/[compiler]/[mode]/[name_header]_extracted_benchs_results_[timestamp].txt
+
+     Scripts Genéricos (Sistema Estandarizado)
+     ==========================================
+     A partir de diciembre 2025, se implementó un sistema de scripts genéricos para eliminar la duplicación 
+     de código y garantizar la consistencia de rutas y nomenclatura.
+     
+     PROBLEMA RESUELTO:
+     - Anteriormente: 128 scripts individuales (~19,200 líneas, 98% duplicadas)
+       * 58 scripts build_[type_base]_[feature]_extracted_[ultimate_target].bash
+       * 28 scripts check_[type_base]_[feature]_extracted_tests.bash  
+       * 42 scripts run_[type_base]_[feature]_extracted_benchs.bash
+     - Ahora: 4 scripts genéricos (~800 líneas, mantenimiento centralizado)
+     
+     SCRIPTS GENÉRICOS DISPONIBLES:
+     1. build_generic.bash    - Compilación genérica (recomendado)
+     2. build_generic.py      - Compilación genérica en Python (alternativa)
+     3. check_generic.bash    - Ejecución de tests con matriz de resultados
+     4. run_generic.bash      - Ejecución de benchmarks
+     
+     SINTAXIS DE SCRIPTS GENÉRICOS:
+     
+     A) COMPILACIÓN (build):
+        bash scripts/build_generic.bash <type_base> <feature> <ultimate_target> [compiler] [mode] [print]
+        
+        Parámetros:
+        - type_base       : uint128 | int128
+        - feature         : t | traits | limits | concepts | algorithms | iostreams | bits | cmath | numeric | ranges | format | safe | thread_safety | comparison_boost | interop
+        - ultimate_target : tests | benchs
+        - compiler        : gcc | clang | intel | msvc | all (default: all)
+        - mode            : debug | release | all (default: all)
+        - print           : yes | no (default: no) - Imprime comandos de compilación
+        
+        Ejemplos:
+        bash scripts/build_generic.bash uint128 bits tests
+        bash scripts/build_generic.bash int128 numeric benchs gcc release
+        bash scripts/build_generic.bash uint128 algorithm tests all all yes
+        python scripts/build_generic.py uint128 bits tests gcc release
+     
+     B) TESTING (check):
+        bash scripts/check_generic.bash <type_base> <feature> [compiler] [mode]
+        
+        Parámetros:
+        - type_base : uint128 | int128
+        - feature   : t | traits | limits | concepts | algorithms | iostreams | bits | cmath | numeric | ranges | format | safe | thread_safety | comparison_boost | interop
+        - compiler  : gcc | clang | intel | msvc | all (default: all)
+        - mode      : debug | release | all (default: all)
+        
+        Ejemplos:
+        bash scripts/check_generic.bash uint128 bits
+        bash scripts/check_generic.bash uint128 numeric gcc release
+        bash scripts/check_generic.bash int128 cmath all all
+     
+     C) BENCHMARKING (run):
+        bash scripts/run_generic.bash <type_base> <feature> [compiler] [mode]
+        
+        Parámetros:
+        - type_base : uint128 | int128
+        - feature   : t | traits | limits | concepts | algorithms | iostreams | bits | cmath | numeric | ranges | format | safe | thread_safety | comparison_boost | interop
+        - compiler  : gcc | clang | intel | msvc | all (default: all)
+        - mode      : debug | release | all (default: all)
+        
+        Ejemplos:
+        bash scripts/run_generic.bash uint128 algorithm
+        bash scripts/run_generic.bash int128 numeric clang release
+        bash scripts/run_generic.bash uint128 bits all all
+     
+     USO CON MAKEFILE (RECOMENDADO):
+     El Makefile del proyecto ha sido actualizado para usar automáticamente los scripts genéricos:
+     
+     # Compilación
+     make build_tests TYPE=uint128 FEATURE=bits COMPILER=gcc MODE=release
+     make build_benchs TYPE=int128 FEATURE=numeric COMPILER=all MODE=all
+     
+     # Testing
+     make check TYPE=uint128 FEATURE=bits
+     make check TYPE=uint128 FEATURE=numeric COMPILER=gcc MODE=release
+     
+     # Benchmarking
+     make run TYPE=int128 FEATURE=algorithm
+     make run TYPE=uint128 FEATURE=numeric COMPILER=clang MODE=release
+     
+     NOMENCLATURA CONSISTENTE DE EJECUTABLES:
+     Los scripts genéricos SIEMPRE generan nombres consistentes según el estándar:
+     
+     Tests:    build/build_tests/[compiler]/[mode]/[type_base]_[feature]_tests_[compiler][.exe]
+     Benchs:   build/build_benchs/[compiler]/[mode]/[type_base]_[feature]_benchs_[compiler][.exe]
+     
+     Ejemplos:
+     - build/build_tests/gcc/release/uint128_bits_tests_gcc.exe
+     - build/build_benchs/msvc/debug/int128_numeric_benchs_msvc.exe
+     - build/build_tests/clang/debug/uint128_algorithm_tests_clang
+     
+     ARCHIVOS FUENTE ESPERADOS:
+     Los scripts genéricos buscan archivos en las siguientes rutas estándar:
+     
+     Tests:    tests/[type_base]_[feature]_extracted_tests.cpp
+     Benchs:   benchs/[type_base]_[feature]_extracted_benchs.cpp
+     
+     VENTAJAS DEL SISTEMA GENÉRICO:
+     ✅ Mantenimiento centralizado (4 archivos vs 128)
+     ✅ Imposible desajustar rutas (lógica en un solo lugar)
+     ✅ Validación automática de parámetros y archivos
+     ✅ Reducción del 96% de código duplicado (19,200 → 800 líneas)
+     ✅ Consistencia garantizada en nomenclatura y estructura
+     ✅ Python puede ejecutar compiladores sin problemas (subprocess)
+     
+     COMPATIBILIDAD:
+     Los scripts individuales (build_*_extracted_*.bash, check_*_extracted_tests.bash, 
+     run_*_extracted_benchs.bash) están deprecados pero se mantienen por compatibilidad.
+     Se recomienda migrar al sistema genérico para futuros desarrollos.
+     
+     DOCUMENTACIÓN COMPLETA:
+     Ver documentation/BUILD_SCRIPTS_GENERIC.md para información detallada sobre:
+     - Uso avanzado de scripts genéricos
+     - Variables de entorno personalizables
+     - Flags de compilación por modo
+     - Solución de problemas
+     - Comparación Bash vs Python

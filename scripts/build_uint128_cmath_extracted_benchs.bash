@@ -24,7 +24,7 @@ if [ -f "$SOURCE_FILE" ]; then
     echo "📄 Archivo fuente:"
     echo "   $(realpath --relative-to="$PROJECT_ROOT" "$SOURCE_FILE") ($SIZE)"
 else
-    echo "❌ ERROR: No se encontró $SOURCE_FILE"
+    echo "[FAIL] ERROR: No se encontró $SOURCE_FILE"
     exit 1
 fi
 
@@ -34,10 +34,10 @@ echo ""
 # COMPILACIÓN CON GCC
 # =============================================================================
 if [ "$1" = "gcc" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
-    echo "🔨 [1/4] Compilando con GCC..."
+    echo "[BUILD] [1/4] Compilando con GCC..."
     
     if ! command -v g++ &> /dev/null; then
-        echo "   ⚠️  GCC no disponible"
+        echo "   [WARN]  GCC no disponible"
     else
         # Debug
         mkdir -p "$PROJECT_ROOT/build/build_benchmarks/gcc/debug"
@@ -52,17 +52,17 @@ if [ "$1" = "gcc" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
         result_release=$?
         
         if [ $result_debug -eq 0 ] && [ $result_release -eq 0 ]; then
-            echo "   ✅ GCC Debug: build/build_benchmarks/gcc/debug/uint128_cmath_benchmarks_gcc"
-            echo "   ✅ GCC Release: build/build_benchmarks/gcc/release/uint128_cmath_benchmarks_gcc"
+            echo "   [OK] GCC Debug: build/build_benchmarks/gcc/debug/uint128_cmath_benchmarks_gcc"
+            echo "   [OK] GCC Release: build/build_benchmarks/gcc/release/uint128_cmath_benchmarks_gcc"
         elif [ $result_debug -eq 0 ]; then
-            echo "   ✅ GCC Debug: build/build_benchmarks/gcc/debug/uint128_cmath_benchmarks_gcc"
-            echo "   ❌ GCC Release FAILED"
+            echo "   [OK] GCC Debug: build/build_benchmarks/gcc/debug/uint128_cmath_benchmarks_gcc"
+            echo "   [FAIL] GCC Release FAILED"
         elif [ $result_release -eq 0 ]; then
-            echo "   ❌ GCC Debug FAILED"
-            echo "   ✅ GCC Release: build/build_benchmarks/gcc/release/uint128_cmath_benchmarks_gcc"
+            echo "   [FAIL] GCC Debug FAILED"
+            echo "   [OK] GCC Release: build/build_benchmarks/gcc/release/uint128_cmath_benchmarks_gcc"
         else
-            echo "   ❌ GCC Debug FAILED"
-            echo "   ❌ GCC Release FAILED"
+            echo "   [FAIL] GCC Debug FAILED"
+            echo "   [FAIL] GCC Release FAILED"
         fi
     fi
 fi
@@ -71,10 +71,10 @@ fi
 # COMPILACIÓN CON CLANG
 # =============================================================================
 if [ "$1" = "clang" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
-    echo "🔨 [2/4] Compilando con Clang..."
+    echo "[BUILD] [2/4] Compilando con Clang..."
     
     if ! command -v clang++ &> /dev/null; then
-        echo "   ⚠️  Clang no disponible"
+        echo "   [WARN]  Clang no disponible"
     else
         # Debug
         mkdir -p "$PROJECT_ROOT/build/build_benchmarks/clang/debug"
@@ -89,17 +89,17 @@ if [ "$1" = "clang" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
         result_release=$?
         
         if [ $result_debug -eq 0 ] && [ $result_release -eq 0 ]; then
-            echo "   ✅ Clang Debug: build/build_benchmarks/clang/debug/uint128_cmath_benchmarks_clang"
-            echo "   ✅ Clang Release: build/build_benchmarks/clang/release/uint128_cmath_benchmarks_clang"
+            echo "   [OK] Clang Debug: build/build_benchmarks/clang/debug/uint128_cmath_benchmarks_clang"
+            echo "   [OK] Clang Release: build/build_benchmarks/clang/release/uint128_cmath_benchmarks_clang"
         elif [ $result_debug -eq 0 ]; then
-            echo "   ✅ Clang Debug: build/build_benchmarks/clang/debug/uint128_cmath_benchmarks_clang"
-            echo "   ❌ Clang Release FAILED"
+            echo "   [OK] Clang Debug: build/build_benchmarks/clang/debug/uint128_cmath_benchmarks_clang"
+            echo "   [FAIL] Clang Release FAILED"
         elif [ $result_release -eq 0 ]; then
-            echo "   ❌ Clang Debug FAILED"
-            echo "   ✅ Clang Release: build/build_benchmarks/clang/release/uint128_cmath_benchmarks_clang"
+            echo "   [FAIL] Clang Debug FAILED"
+            echo "   [OK] Clang Release: build/build_benchmarks/clang/release/uint128_cmath_benchmarks_clang"
         else
-            echo "   ❌ Clang Debug FAILED"
-            echo "   ❌ Clang Release FAILED"
+            echo "   [FAIL] Clang Debug FAILED"
+            echo "   [FAIL] Clang Release FAILED"
         fi
     fi
 fi
@@ -108,10 +108,10 @@ fi
 # COMPILACIÓN CON INTEL ICX
 # =============================================================================
 if [ "$1" = "intel" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
-    echo "🔨 [3/4] Compilando con Intel ICX..."
+    echo "[BUILD] [3/4] Compilando con Intel ICX..."
     
     if ! command -v icpx &> /dev/null; then
-        echo "   ⚠️  Intel ICX no disponible"
+        echo "   [WARN]  Intel ICX no disponible"
     else
         # Debug
         mkdir -p "$PROJECT_ROOT/build/build_benchmarks/intel/debug"
@@ -126,17 +126,17 @@ if [ "$1" = "intel" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
         result_release=$?
         
         if [ $result_debug -eq 0 ] && [ $result_release -eq 0 ]; then
-            echo "   ✅ Intel Debug: build/build_benchmarks/intel/debug/uint128_cmath_benchmarks_intel"
-            echo "   ✅ Intel Release: build/build_benchmarks/intel/release/uint128_cmath_benchmarks_intel"
+            echo "   [OK] Intel Debug: build/build_benchmarks/intel/debug/uint128_cmath_benchmarks_intel"
+            echo "   [OK] Intel Release: build/build_benchmarks/intel/release/uint128_cmath_benchmarks_intel"
         elif [ $result_debug -eq 0 ]; then
-            echo "   ✅ Intel Debug: build/build_benchmarks/intel/debug/uint128_cmath_benchmarks_intel"
-            echo "   ❌ Intel Release FAILED"
+            echo "   [OK] Intel Debug: build/build_benchmarks/intel/debug/uint128_cmath_benchmarks_intel"
+            echo "   [FAIL] Intel Release FAILED"
         elif [ $result_release -eq 0 ]; then
-            echo "   ❌ Intel Debug FAILED"
-            echo "   ✅ Intel Release: build/build_benchmarks/intel/release/uint128_cmath_benchmarks_intel"
+            echo "   [FAIL] Intel Debug FAILED"
+            echo "   [OK] Intel Release: build/build_benchmarks/intel/release/uint128_cmath_benchmarks_intel"
         else
-            echo "   ❌ Intel Debug FAILED"
-            echo "   ❌ Intel Release FAILED"
+            echo "   [FAIL] Intel Debug FAILED"
+            echo "   [FAIL] Intel Release FAILED"
         fi
     fi
 fi
@@ -145,10 +145,10 @@ fi
 # COMPILACIÓN CON MSVC
 # =============================================================================
 if [ "$1" = "msvc" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
-    echo "🔨 [4/4] Compilando con MSVC..."
+    echo "[BUILD] [4/4] Compilando con MSVC..."
     
     if ! command -v cl.exe &> /dev/null; then
-        echo "   ⚠️  MSVC no disponible"
+        echo "   [WARN]  MSVC no disponible"
     else
         # Proteger argumentos de MSYS2 path conversion
         export MSYS2_ARG_CONV_EXCL="*"
@@ -183,23 +183,23 @@ if [ "$1" = "msvc" ] || [ "$1" = "all" ] || [ -z "$1" ]; then
         unset MSYS2_ARG_CONV_EXCL
         
         if [ $result_debug -eq 0 ] && [ $result_release -eq 0 ]; then
-            echo "   ✅ MSVC Debug: build/build_benchmarks/msvc/debug/uint128_cmath_benchmarks_msvc.exe"
-            echo "   ✅ MSVC Release: build/build_benchmarks/msvc/release/uint128_cmath_benchmarks_msvc.exe"
+            echo "   [OK] MSVC Debug: build/build_benchmarks/msvc/debug/uint128_cmath_benchmarks_msvc.exe"
+            echo "   [OK] MSVC Release: build/build_benchmarks/msvc/release/uint128_cmath_benchmarks_msvc.exe"
         elif [ $result_debug -eq 0 ]; then
-            echo "   ✅ MSVC Debug: build/build_benchmarks/msvc/debug/uint128_cmath_benchmarks_msvc.exe"
-            echo "   ❌ MSVC Release FAILED"
+            echo "   [OK] MSVC Debug: build/build_benchmarks/msvc/debug/uint128_cmath_benchmarks_msvc.exe"
+            echo "   [FAIL] MSVC Release FAILED"
         elif [ $result_release -eq 0 ]; then
-            echo "   ❌ MSVC Debug FAILED"
-            echo "   ✅ MSVC Release: build/build_benchmarks/msvc/release/uint128_cmath_benchmarks_msvc.exe"
+            echo "   [FAIL] MSVC Debug FAILED"
+            echo "   [OK] MSVC Release: build/build_benchmarks/msvc/release/uint128_cmath_benchmarks_msvc.exe"
         else
-            echo "   ❌ MSVC Debug FAILED"
-            echo "   ❌ MSVC Release FAILED"
+            echo "   [FAIL] MSVC Debug FAILED"
+            echo "   [FAIL] MSVC Release FAILED"
         fi
     fi
 fi
 
 echo ""
 echo "========================================================================"
-echo "                  ✅ COMPILACIÓN COMPLETADA"
+echo "                  [OK] COMPILACIÓN COMPLETADA"
 echo "                  $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================================================"

@@ -25,9 +25,9 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo_success() { echo -e "${GREEN}✓ $1${NC}"; }
-echo_error() { echo -e "${RED}✗ $1${NC}"; }
-echo_info() { echo -e "${YELLOW}➜ $1${NC}"; }
+echo_success() { echo -e "${GREEN}[OK] $1${NC}"; }
+echo_error() { echo -e "${RED}[ERROR] $1${NC}"; }
+echo_info() { echo -e "${YELLOW}-> $1${NC}"; }
 
 # ========================= Check Benchmark File =========================
 

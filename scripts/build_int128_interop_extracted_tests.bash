@@ -18,8 +18,8 @@ echo "========================================="
 echo ""
 
 # Ejecutar tests de interoperabilidad
-echo "🧪 Building test_interoperability..."
+echo "[TEST] Building test_interoperability..."
 bash "$SCRIPT_DIR/build_test_interoperability.bash" "$COMPILER" "$MODE" "$PRINT"
 
 echo ""
-echo "✅ FEATURE interop - Tests build complete"
+echo "[OK] FEATURE interop - Tests build complete"

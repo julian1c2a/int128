@@ -24,7 +24,7 @@ SOURCE_FILE="$PROJECT_ROOT/tests/int128_limits_extracted_tests.cpp"
 
 # Verificar que existe el archivo
 if [ ! -f "$SOURCE_FILE" ]; then
-    echo "❌ ERROR: No se encuentra el archivo $SOURCE_FILE"
+    echo "[FAIL] ERROR: No se encuentra el archivo $SOURCE_FILE"
     exit 1
 fi
 
@@ -42,17 +42,17 @@ INCLUDE_DIR="-I$PROJECT_ROOT/include"
 # 1. GCC
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "gcc" ]; then
-echo "🔨 [1/4] Compilando con GCC..."
+echo "[BUILD] [1/4] Compilando con GCC..."
 mkdir -p "$PROJECT_ROOT/build/int128_limits_extracted_tests/gcc/debug"
 mkdir -p "$PROJECT_ROOT/build/int128_limits_extracted_tests/gcc/release"
 
 g++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
     -o "$PROJECT_ROOT/build/int128_limits_extracted_tests/gcc/debug/int128_limits_extracted_tests"
-echo "   ✅ GCC Debug: build/int128_limits_extracted_tests/gcc/debug/int128_limits_extracted_tests"
+echo "   [OK] GCC Debug: build/int128_limits_extracted_tests/gcc/debug/int128_limits_extracted_tests"
 
 g++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
     -o "$PROJECT_ROOT/build/int128_limits_extracted_tests/gcc/release/int128_limits_extracted_tests"
-echo "   ✅ GCC Release: build/int128_limits_extracted_tests/gcc/release/int128_limits_extracted_tests"
+echo "   [OK] GCC Release: build/int128_limits_extracted_tests/gcc/release/int128_limits_extracted_tests"
 fi
 
 # ---------------------------------------
@@ -60,17 +60,17 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
 echo ""
-echo "🔨 [2/4] Compilando con Clang..."
+echo "[BUILD] [2/4] Compilando con Clang..."
 mkdir -p "$PROJECT_ROOT/build/int128_limits_extracted_tests/clang/debug"
 mkdir -p "$PROJECT_ROOT/build/int128_limits_extracted_tests/clang/release"
 
 clang++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
     -o "$PROJECT_ROOT/build/int128_limits_extracted_tests/clang/debug/int128_limits_extracted_tests"
-echo "   ✅ Clang Debug: build/int128_limits_extracted_tests/clang/debug/int128_limits_extracted_tests"
+echo "   [OK] Clang Debug: build/int128_limits_extracted_tests/clang/debug/int128_limits_extracted_tests"
 
 clang++ $SOURCE_FILE $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
     -o "$PROJECT_ROOT/build/int128_limits_extracted_tests/clang/release/int128_limits_extracted_tests"
-echo "   ✅ Clang Release: build/int128_limits_extracted_tests/clang/release/int128_limits_extracted_tests"
+echo "   [OK] Clang Release: build/int128_limits_extracted_tests/clang/release/int128_limits_extracted_tests"
 fi
 
 # ---------------------------------------
@@ -78,11 +78,11 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
 echo ""
-echo "🔨 [3/4] Compilando con Intel ICX..."
+echo "[BUILD] [3/4] Compilando con Intel ICX..."
 
 # Verificar si icx está disponible
 if ! command -v icx &> /dev/null; then
-    echo "   ⚠️  Intel ICX no disponible, omitiendo..."
+    echo "   [WARN]  Intel ICX no disponible, omitiendo..."
 else
     # Intel ICX necesita rutas sin espacios y formato Windows
     # Cambiar al directorio del proyecto para usar paths relativos
@@ -96,11 +96,11 @@ else
     
     icx tests/int128_limits_extracted_tests.cpp -Iinclude /std:c++20 /W4 /Zi /Od /EHsc \
         /Fe:build/int128_limits_extracted_tests/intel/debug/int128_limits_extracted_tests.exe
-    echo "   ✅ Intel ICX Debug: build/int128_limits_extracted_tests/intel/debug/int128_limits_extracted_tests.exe"
+    echo "   [OK] Intel ICX Debug: build/int128_limits_extracted_tests/intel/debug/int128_limits_extracted_tests.exe"
     
     icx tests/int128_limits_extracted_tests.cpp -Iinclude /std:c++20 /W4 /O3 /DNDEBUG /EHsc \
         /Fe:build/int128_limits_extracted_tests/intel/release/int128_limits_extracted_tests.exe
-    echo "   ✅ Intel ICX Release: build/int128_limits_extracted_tests/intel/release/int128_limits_extracted_tests.exe"
+    echo "   [OK] Intel ICX Release: build/int128_limits_extracted_tests/intel/release/int128_limits_extracted_tests.exe"
     
     # Volver al directorio del script
     cd "$SCRIPT_DIR"
@@ -112,11 +112,11 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
 echo ""
-echo "🔨 [4/4] Compilando con MSVC..."
+echo "[BUILD] [4/4] Compilando con MSVC..."
 
 # Verificar si cl está disponible
 if ! command -v cl &> /dev/null; then
-    echo "   ⚠️  MSVC no disponible, omitiendo..."
+    echo "   [WARN]  MSVC no disponible, omitiendo..."
 else
     MSVC_SOURCE="$PROJECT_ROOT/tests/int128_limits_extracted_tests.cpp"
     MSVC_INCLUDE="/I$PROJECT_ROOT/include"
@@ -135,10 +135,10 @@ else
     
     result_debug=$?
     if [ $result_debug -eq 0 ]; then
-        echo "   ✅ MSVC Debug OK"
+        echo "   [OK] MSVC Debug OK"
         rm -f build/build_tests/msvc/debug/*.obj build/build_tests/msvc/debug/*.pdb
     else
-        echo "   ❌ MSVC Debug FAILED"
+        echo "   [FAIL] MSVC Debug FAILED"
     fi
     
     cl.exe tests/int128_limits_extracted_tests.cpp /I./include /std:c++20 /W4 /O2 /DNDEBUG /EHsc \
@@ -146,10 +146,10 @@ else
     
     result_release=$?
     if [ $result_release -eq 0 ]; then
-        echo "   ✅ MSVC Release OK"
+        echo "   [OK] MSVC Release OK"
         rm -f build/build_tests/msvc/release/*.obj build/build_tests/msvc/release/*.pdb
     else
-        echo "   ❌ MSVC Release FAILED"
+        echo "   [FAIL] MSVC Release FAILED"
     fi
     
     unset MSYS2_ARG_CONV_EXCL
@@ -161,6 +161,6 @@ fi
 
 echo ""
 echo "========================================="
-echo " ✅ COMPILACIÓN COMPLETADA"
+echo " [OK] COMPILACIÓN COMPLETADA"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================="

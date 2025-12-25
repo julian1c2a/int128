@@ -24,7 +24,7 @@ echo "========================================="
 SOURCE_FILE="$PROJECT_ROOT/tests/uint128_limits_extracted_tests.cpp"
 
 if [ ! -f "$SOURCE_FILE" ]; then
-    echo "❌ ERROR: No se encuentra el archivo $SOURCE_FILE"
+    echo "[FAIL] ERROR: No se encuentra el archivo $SOURCE_FILE"
     exit 1
 fi
 
@@ -41,20 +41,20 @@ INCLUDE_DIR="-I$PROJECT_ROOT/include"
 # 1. GCC
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "gcc" ]; then
-    echo "🔨 [1/4] Compilando con GCC..."
+    echo "[BUILD] [1/4] Compilando con GCC..."
     mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/gcc/debug"
     mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/gcc/release"
 
     if command -v g++ &> /dev/null; then
         g++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
             -o "$PROJECT_ROOT/build/uint128_limits_extracted_tests/gcc/debug/uint128_limits_extracted_tests.exe"
-        echo "   ✅ GCC Debug OK"
+        echo "   [OK] GCC Debug OK"
 
         g++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
             -o "$PROJECT_ROOT/build/uint128_limits_extracted_tests/gcc/release/uint128_limits_extracted_tests.exe"
-        echo "   ✅ GCC Release OK"
+        echo "   [OK] GCC Release OK"
     else
-        echo "   ⚠️  GCC no encontrado."
+        echo "   [WARN]  GCC no encontrado."
     fi
 fi
 
@@ -63,20 +63,20 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "clang" ]; then
     echo ""
-    echo "🔨 [2/4] Compilando con Clang..."
+    echo "[BUILD] [2/4] Compilando con Clang..."
     mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/clang/debug"
     mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/clang/release"
 
     if command -v clang++ &> /dev/null; then
         clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -g -O0 \
             -o "$PROJECT_ROOT/build/uint128_limits_extracted_tests/clang/debug/uint128_limits_extracted_tests.exe"
-        echo "   ✅ Clang Debug OK"
+        echo "   [OK] Clang Debug OK"
 
         clang++ "$SOURCE_FILE" $INCLUDE_DIR $COMMON_FLAGS -O3 -DNDEBUG \
             -o "$PROJECT_ROOT/build/uint128_limits_extracted_tests/clang/release/uint128_limits_extracted_tests.exe"
-        echo "   ✅ Clang Release OK"
+        echo "   [OK] Clang Release OK"
     else
-        echo "   ⚠️  Clang no encontrado."
+        echo "   [WARN]  Clang no encontrado."
     fi
 fi
 
@@ -85,13 +85,13 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
     echo ""
-    echo "🔨 [3/4] Compilando con Intel OneAPI (icx)..."
+    echo "[BUILD] [3/4] Compilando con Intel OneAPI (icx)..."
 
     # Usamos explícitamente icx porque es el driver compatible con cl.exe
     INTEL_CMD="icx"
 
     if ! command -v "$INTEL_CMD" &> /dev/null; then
-        echo "   ⚠️  Intel compilador (icx) no disponible."
+        echo "   [WARN]  Intel compilador (icx) no disponible."
     else
         mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/intel/debug"
         mkdir -p "$PROJECT_ROOT/build/uint128_limits_extracted_tests/intel/release"
@@ -112,12 +112,12 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "intel" ]; then
         # DEBUG
         "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /Zi /Od \
             "/Fe:$WIN_OUT_DEBUG" > /dev/null
-        if [ $? -eq 0 ]; then echo "   ✅ Intel Debug OK"; else echo "   ❌ Intel Debug FAILED"; fi
+        if [ $? -eq 0 ]; then echo "   [OK] Intel Debug OK"; else echo "   [FAIL] Intel Debug FAILED"; fi
         
         # RELEASE
         "$INTEL_CMD" "$WIN_SOURCE" -I"$WIN_INCLUDE" $ICX_FLAGS_BASE /O2 /DNDEBUG \
             "/Fe:$WIN_OUT_RELEASE" > /dev/null
-        if [ $? -eq 0 ]; then echo "   ✅ Intel Release OK"; else echo "   ❌ Intel Release FAILED"; fi
+        if [ $? -eq 0 ]; then echo "   [OK] Intel Release OK"; else echo "   [FAIL] Intel Release FAILED"; fi
         
         unset MSYS2_ARG_CONV_EXCL
     fi
@@ -128,10 +128,10 @@ fi
 # ---------------------------------------
 if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
     echo ""
-    echo "🔨 [4/4] Compilando con MSVC..."
+    echo "[BUILD] [4/4] Compilando con MSVC..."
 
     if ! command -v cl &> /dev/null; then
-        echo "   ⚠️  MSVC no disponible, omitiendo..."
+        echo "   [WARN]  MSVC no disponible, omitiendo..."
     else
         mkdir -p "$PROJECT_ROOT/build/build_tests/msvc/debug"
         mkdir -p "$PROJECT_ROOT/build/build_tests/msvc/release"
@@ -151,10 +151,10 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
         result_debug=$?
         
         if [ $result_debug -eq 0 ]; then
-            echo "   ✅ MSVC Debug OK"
+            echo "   [OK] MSVC Debug OK"
             rm -f build/build_tests/msvc/debug/*.obj build/build_tests/msvc/debug/*.pdb
         else
-            echo "   ❌ MSVC Debug FAILED"
+            echo "   [FAIL] MSVC Debug FAILED"
         fi
         
         # RELEASE
@@ -167,10 +167,10 @@ if [ "$COMPILER" = "all" ] || [ "$COMPILER" = "msvc" ]; then
         result_release=$?
         
         if [ $result_release -eq 0 ]; then
-            echo "   ✅ MSVC Release OK"
+            echo "   [OK] MSVC Release OK"
             rm -f build/build_tests/msvc/release/*.obj build/build_tests/msvc/release/*.pdb
         else
-            echo "   ❌ MSVC Release FAILED"
+            echo "   [FAIL] MSVC Release FAILED"
         fi
         
         unset MSYS2_ARG_CONV_EXCL
@@ -179,6 +179,6 @@ fi
 
 echo ""
 echo "========================================="
-echo " ✅ COMPILACIÓN COMPLETADA"
+echo " [OK] COMPILACIÓN COMPLETADA"
 echo " $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================="

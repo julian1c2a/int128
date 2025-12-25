@@ -80,7 +80,7 @@ build_gcc() {
     echo -e "\n${YELLOW}[GCC] Compilando tests...${NC}"
     
     if ! command -v g++ &> /dev/null; then
-        echo -e "${RED}  ⚠️  g++ no encontrado en el PATH${NC}"
+        echo -e "${RED}  [WARN]  g++ no encontrado en el PATH${NC}"
         return 1
     fi
     
@@ -96,11 +96,11 @@ build_gcc() {
     g++ $FLAGS "${TEST_SRC}" -o "${OUTPUT}"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}    ✅ Tests compilados OK${NC}"
+        echo -e "${GREEN}    [OK] Tests compilados OK${NC}"
         ls -lh --time-style='+%Y-%m-%d %H:%M:%S' "${OUTPUT}" | awk -v path="${OUTPUT}" '{print "    Ejecutable:", $6, $7, "-", path, "(" $5 ")"}'
         return 0
     else
-        echo -e "${RED}    ❌ Error compilando tests${NC}"
+        echo -e "${RED}    [FAIL] Error compilando tests${NC}"
         return 1
     fi
 }
@@ -112,7 +112,7 @@ build_clang() {
     echo -e "\n${YELLOW}[CLANG] Compilando tests...${NC}"
     
     if ! command -v clang++ &> /dev/null; then
-        echo -e "${RED}  ⚠️  clang++ no encontrado en el PATH${NC}"
+        echo -e "${RED}  [WARN]  clang++ no encontrado en el PATH${NC}"
         return 1
     fi
     
@@ -129,11 +129,11 @@ build_clang() {
     clang++ $FLAGS "${TEST_SRC}" -o "${OUTPUT}"
     
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}    ✅ Tests compilados OK${NC}"
+        echo -e "${GREEN}    [OK] Tests compilados OK${NC}"
         ls -lh "${OUTPUT}" | awk '{print "    Ejecutable:", $9, "(" $5 ")"}'
         return 0
     else
-        echo -e "${RED}    ❌ Error compilando tests${NC}"
+        echo -e "${RED}    [FAIL] Error compilando tests${NC}"
         return 1
     fi
 }
@@ -145,7 +145,7 @@ build_intel() {
     echo -e "\n${YELLOW}[INTEL] Compilando tests con Intel OneAPI...${NC}"
     
     if ! command -v icx &> /dev/null; then
-        echo -e "${RED}  ⚠️  Intel 'icx' no encontrado en el PATH${NC}"
+        echo -e "${RED}  [WARN]  Intel 'icx' no encontrado en el PATH${NC}"
         echo -e "      Ejecuta primero: source scripts/setup_intel_combined.bash"
         return 1
     fi
@@ -172,11 +172,11 @@ build_intel() {
     unset MSYS2_ARG_CONV_EXCL
     
     if [ $result -eq 0 ]; then
-        echo -e "${GREEN}    ✅ Tests compilados OK${NC}"
+        echo -e "${GREEN}    [OK] Tests compilados OK${NC}"
         ls -lh --time-style='+%Y-%m-%d %H:%M:%S' "${OUTPUT}" | awk -v path="${OUTPUT}" '{print "    Ejecutable:", $6, $7, "-", path, "(" $5 ")"}'
         return 0
     else
-        echo -e "${RED}    ❌ Error compilando tests${NC}"
+        echo -e "${RED}    [FAIL] Error compilando tests${NC}"
         return 1
     fi
 }
@@ -196,7 +196,7 @@ build_msvc() {
         COMPILER="clang-cl"
         echo "  Usando: clang-cl (modo compatible MSVC)"
     else
-        echo -e "${RED}  ⚠️  Ni cl.exe ni clang-cl encontrados en el PATH${NC}"
+        echo -e "${RED}  [WARN]  Ni cl.exe ni clang-cl encontrados en el PATH${NC}"
         echo -e "      Ejecuta vcvarsall.bat o instala Clang"
         return 1
     fi
@@ -223,13 +223,13 @@ build_msvc() {
     unset MSYS2_ARG_CONV_EXCL
     
     if [ $result -eq 0 ]; then
-        echo -e "${GREEN}    ✅ Tests compilados OK${NC}"
+        echo -e "${GREEN}    [OK] Tests compilados OK${NC}"
         # Limpiar archivos temporales
         rm -f build/build_tests/msvc/${MODE}/*.obj build/build_tests/msvc/${MODE}/*.pdb
         ls -lh --time-style='+%Y-%m-%d %H:%M:%S' "${OUTPUT}" | awk -v path="${OUTPUT}" '{print "    Ejecutable:", $6, $7, "-", path, "(" $5 ")"}'
         return 0
     else
-        echo -e "${RED}    ❌ Error compilando tests${NC}"
+        echo -e "${RED}    [FAIL] Error compilando tests${NC}"
         return 1
     fi
 }

@@ -35,7 +35,7 @@ if [ -f "$SOURCE_FILE" ]; then
     echo "📄 Archivo fuente:"
     echo "   $(realpath --relative-to="$PROJECT_ROOT" "$SOURCE_FILE") ($SIZE)"
 else
-    echo "❌ ERROR: No se encontró $SOURCE_FILE"
+    echo "[FAIL] ERROR: No se encontró $SOURCE_FILE"
     exit 1
 fi
 
@@ -48,10 +48,10 @@ MODE_ARG="${2:-all}"
 # COMPILACIÓN CON GCC
 # =============================================================================
 if [ "$COMPILER_ARG" = "gcc" ] || [ "$COMPILER_ARG" = "all" ]; then
-    echo "🔨 [1/4] Compilando con GCC..."
+    echo "[BUILD] [1/4] Compilando con GCC..."
     
     if ! command -v g++ &> /dev/null; then
-        echo "   ⚠️  GCC no disponible"
+        echo "   [WARN]  GCC no disponible"
     else
         # Debug
         if [ "$MODE_ARG" = "debug" ] || [ "$MODE_ARG" = "all" ]; then
@@ -61,9 +61,9 @@ if [ "$COMPILER_ARG" = "gcc" ] || [ "$COMPILER_ARG" = "all" ]; then
             result_debug=$?
             
             if [ $result_debug -eq 0 ]; then
-                echo "   ✅ GCC Debug: build/build_benchmarks/gcc/debug/benchmark_comparison_boost_gcc"
+                echo "   [OK] GCC Debug: build/build_benchmarks/gcc/debug/benchmark_comparison_boost_gcc"
             else
-                echo "   ❌ GCC Debug FAILED"
+                echo "   [FAIL] GCC Debug FAILED"
             fi
         fi
         
@@ -75,9 +75,9 @@ if [ "$COMPILER_ARG" = "gcc" ] || [ "$COMPILER_ARG" = "all" ]; then
             result_release=$?
             
             if [ $result_release -eq 0 ]; then
-                echo "   ✅ GCC Release: build/build_benchmarks/gcc/release/benchmark_comparison_boost_gcc"
+                echo "   [OK] GCC Release: build/build_benchmarks/gcc/release/benchmark_comparison_boost_gcc"
             else
-                echo "   ❌ GCC Release FAILED"
+                echo "   [FAIL] GCC Release FAILED"
             fi
         fi
     fi
@@ -88,10 +88,10 @@ fi
 # COMPILACIÓN CON CLANG
 # =============================================================================
 if [ "$COMPILER_ARG" = "clang" ] || [ "$COMPILER_ARG" = "all" ]; then
-    echo "🔨 [2/4] Compilando con Clang..."
+    echo "[BUILD] [2/4] Compilando con Clang..."
     
     if ! command -v clang++ &> /dev/null; then
-        echo "   ⚠️  Clang no disponible"
+        echo "   [WARN]  Clang no disponible"
     else
         # Debug
         if [ "$MODE_ARG" = "debug" ] || [ "$MODE_ARG" = "all" ]; then
@@ -101,9 +101,9 @@ if [ "$COMPILER_ARG" = "clang" ] || [ "$COMPILER_ARG" = "all" ]; then
             result_debug=$?
             
             if [ $result_debug -eq 0 ]; then
-                echo "   ✅ Clang Debug: build/build_benchmarks/clang/debug/benchmark_comparison_boost_clang"
+                echo "   [OK] Clang Debug: build/build_benchmarks/clang/debug/benchmark_comparison_boost_clang"
             else
-                echo "   ❌ Clang Debug FAILED"
+                echo "   [FAIL] Clang Debug FAILED"
             fi
         fi
         
@@ -115,9 +115,9 @@ if [ "$COMPILER_ARG" = "clang" ] || [ "$COMPILER_ARG" = "all" ]; then
             result_release=$?
             
             if [ $result_release -eq 0 ]; then
-                echo "   ✅ Clang Release: build/build_benchmarks/clang/release/benchmark_comparison_boost_clang"
+                echo "   [OK] Clang Release: build/build_benchmarks/clang/release/benchmark_comparison_boost_clang"
             else
-                echo "   ❌ Clang Release FAILED"
+                echo "   [FAIL] Clang Release FAILED"
             fi
         fi
     fi
@@ -128,10 +128,10 @@ fi
 # COMPILACIÓN CON INTEL
 # =============================================================================
 if [ "$COMPILER_ARG" = "intel" ] || [ "$COMPILER_ARG" = "all" ]; then
-    echo "🔨 [3/4] Compilando con Intel..."
+    echo "[BUILD] [3/4] Compilando con Intel..."
     
     if ! command -v icpx &> /dev/null; then
-        echo "   ⚠️  Intel compiler (icpx) no disponible"
+        echo "   [WARN]  Intel compiler (icpx) no disponible"
     else
         # Debug
         if [ "$MODE_ARG" = "debug" ] || [ "$MODE_ARG" = "all" ]; then
@@ -141,9 +141,9 @@ if [ "$COMPILER_ARG" = "intel" ] || [ "$COMPILER_ARG" = "all" ]; then
             result_debug=$?
             
             if [ $result_debug -eq 0 ]; then
-                echo "   ✅ Intel Debug: build/build_benchmarks/intel/debug/benchmark_comparison_boost_intel"
+                echo "   [OK] Intel Debug: build/build_benchmarks/intel/debug/benchmark_comparison_boost_intel"
             else
-                echo "   ❌ Intel Debug FAILED"
+                echo "   [FAIL] Intel Debug FAILED"
             fi
         fi
         
@@ -155,9 +155,9 @@ if [ "$COMPILER_ARG" = "intel" ] || [ "$COMPILER_ARG" = "all" ]; then
             result_release=$?
             
             if [ $result_release -eq 0 ]; then
-                echo "   ✅ Intel Release: build/build_benchmarks/intel/release/benchmark_comparison_boost_intel"
+                echo "   [OK] Intel Release: build/build_benchmarks/intel/release/benchmark_comparison_boost_intel"
             else
-                echo "   ❌ Intel Release FAILED"
+                echo "   [FAIL] Intel Release FAILED"
             fi
         fi
     fi
@@ -168,9 +168,9 @@ fi
 # NOTA: MSVC NO SOPORTA __int128
 # =============================================================================
 if [ "$COMPILER_ARG" = "msvc" ] || [ "$COMPILER_ARG" = "all" ]; then
-    echo "🔨 [4/4] MSVC..."
-    echo "   ⚠️  MSVC no soporta __int128 (GCC/Clang builtin)"
-    echo "   ⚠️  Este benchmark solo funciona con GCC/Clang"
+    echo "[BUILD] [4/4] MSVC..."
+    echo "   [WARN]  MSVC no soporta __int128 (GCC/Clang builtin)"
+    echo "   [WARN]  Este benchmark solo funciona con GCC/Clang"
     echo ""
 fi
 
