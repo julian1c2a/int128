@@ -69,8 +69,8 @@ should_compile() {
 mkdir -p build/build_tests/{gcc,clang,intel,msvc}/{debug,release}
 
 # Archivos
-TEST_SRC="${PROJECT_DIR}/tests/int128_traits_extracted_tests.cpp"
-INCLUDE_DIR="${PROJECT_DIR}/include"
+TEST_SRC="tests/int128_traits_extracted_tests.cpp"
+INCLUDE_DIR="./include"
 
 # -----------------------------------------------------------------------------
 # GCC

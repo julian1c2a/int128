@@ -3,6 +3,10 @@
  * Pruebas individuales por función/especialización
  */
 
+// ⚠️ CRITICAL: Include traits specializations BEFORE any other header
+// that might include <type_traits>
+#include "../include/uint128/uint128_traits_specializations.hpp"
+
 #include "../include/int128/int128_limits.hpp"
 #include "../include/int128/int128_t.hpp"
 #include "../include/int128/int128_traits.hpp"
@@ -23,7 +27,7 @@
 bool test_is_integral()
 {
     std::cout << "\n=== TEST: is_integral ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_integral_v<int128_t>;
     std::cout << "  std::is_integral_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser integral");
@@ -40,7 +44,7 @@ bool test_is_integral()
 bool test_is_arithmetic()
 {
     std::cout << "\n=== TEST: is_arithmetic ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_arithmetic_v<int128_t>;
     std::cout << "  std::is_arithmetic_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser arithmetic");
@@ -57,7 +61,7 @@ bool test_is_arithmetic()
 bool test_is_unsigned()
 {
     std::cout << "\n=== TEST: is_unsigned ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_unsigned_v<int128_t>;
     std::cout << "  std::is_unsigned_v<int128_t> = " << result << "\n";
     assert(!result && "int128_t NO debe ser unsigned");
@@ -75,7 +79,7 @@ bool test_is_unsigned()
 bool test_is_signed()
 {
     std::cout << "\n=== TEST: is_signed ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_signed_v<int128_t>;
     std::cout << "  std::is_signed_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser signed");
@@ -105,7 +109,7 @@ bool test_is_trivially_copyable()
 bool test_is_trivially_copy_constructible()
 {
     std::cout << "\n=== TEST: is_trivially_copy_constructible ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_trivially_copy_constructible_v<int128_t>;
     std::cout << "  std::is_trivially_copy_constructible_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser trivialmente copy constructible");
@@ -122,7 +126,7 @@ bool test_is_trivially_copy_constructible()
 bool test_is_trivially_move_constructible()
 {
     std::cout << "\n=== TEST: is_trivially_move_constructible ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_trivially_move_constructible_v<int128_t>;
     std::cout << "  std::is_trivially_move_constructible_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser trivialmente move constructible");
@@ -139,7 +143,7 @@ bool test_is_trivially_move_constructible()
 bool test_is_trivially_copy_assignable()
 {
     std::cout << "\n=== TEST: is_trivially_copy_assignable ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_trivially_copy_assignable_v<int128_t>;
     std::cout << "  std::is_trivially_copy_assignable_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser trivialmente copy assignable");
@@ -156,7 +160,7 @@ bool test_is_trivially_copy_assignable()
 bool test_is_trivially_move_assignable()
 {
     std::cout << "\n=== TEST: is_trivially_move_assignable ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_trivially_move_assignable_v<int128_t>;
     std::cout << "  std::is_trivially_move_assignable_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser trivialmente move assignable");
@@ -173,7 +177,7 @@ bool test_is_trivially_move_assignable()
 bool test_is_trivially_destructible()
 {
     std::cout << "\n=== TEST: is_trivially_destructible ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_trivially_destructible_v<int128_t>;
     std::cout << "  std::is_trivially_destructible_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe ser trivialmente destructible");
@@ -190,7 +194,7 @@ bool test_is_trivially_destructible()
 bool test_is_standard_layout()
 {
     std::cout << "\n=== TEST: is_standard_layout ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     bool result = std::is_standard_layout_v<int128_t>;
     std::cout << "  std::is_standard_layout_v<int128_t> = " << result << "\n";
     assert(result && "int128_t debe tener standard layout");
@@ -207,7 +211,7 @@ bool test_is_standard_layout()
 bool test_make_signed()
 {
     std::cout << "\n=== TEST: make_signed ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     using signed_type = std::make_signed_t<int128_t>;
     bool result = std::is_same_v<signed_type, int128_t>;
     std::cout << "  std::make_signed_t<int128_t> es int128_t = " << result << "\n";
@@ -225,7 +229,7 @@ bool test_make_signed()
 bool test_make_unsigned()
 {
     std::cout << "\n=== TEST: make_unsigned ===\n";
-#if !int128_traits_NOT_AVAILABLE
+#if !INT128_USING_LIBCPP
     using unsigned_type = std::make_unsigned_t<int128_t>;
     bool result = std::is_same_v<unsigned_type, uint128_t>;
     std::cout << "  std::make_unsigned_t<int128_t> es uint128_t = " << result << "\n";

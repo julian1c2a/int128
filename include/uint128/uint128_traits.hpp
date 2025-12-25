@@ -27,17 +27,14 @@
 #ifndef UINT128_TRAITS_HPP
 #define UINT128_TRAITS_HPP
 
+// ⚠️ IMPORTANT: Trait specializations are defined in uint128_traits_specializations.hpp
+// That header MUST be included before uint128_t.hpp to ensure traits are available
+// when <type_traits> is first included.
+#include "uint128_traits_specializations.hpp"
+
 #include "uint128_t.hpp"
 #include <functional>
 #include <type_traits>
-
-// Detectar si estamos usando libc++ (Clang)
-// libc++ no permite especializar ciertos type traits
-#ifdef _LIBCPP_VERSION
-#define UINT128_USING_LIBCPP 1
-#else
-#define UINT128_USING_LIBCPP 0
-#endif
 
 namespace std
 {
@@ -45,104 +42,11 @@ namespace std
 // ===============================================================================
 // TYPE TRAITS FUNDAMENTALES
 // ===============================================================================
-// NOTA: libc++ (Clang) no permite especializar estos traits con _LIBCPP_NO_SPECIALIZATIONS
-// Por lo tanto, solo los especializamos para GCC/MSVC (libstdc++/MS STL)
+// NOTE: The fundamental trait specializations (is_integral, is_arithmetic, etc.)
+// are now defined in uint128_traits_specializations.hpp
+// This header contains additional specializations that don't require forward declaration.
 
 #if !UINT128_USING_LIBCPP
-
-/**
- * @brief Especialización para is_integral
- *
- * Marca uint128_t como un tipo integral, permitiendo su uso en contextos
- * que requieren tipos enteros.
- */
-template <> struct is_integral<uint128_t> : true_type {
-};
-
-/**
- * @brief Especialización para is_arithmetic
- *
- * Marca uint128_t como un tipo aritmético, habilitando operaciones
- * matemáticas estándar.
- */
-template <> struct is_arithmetic<uint128_t> : true_type {
-};
-
-/**
- * @brief Especialización para is_unsigned
- *
- * Marca uint128_t como un tipo sin signo.
- */
-template <> struct is_unsigned<uint128_t> : true_type {
-};
-
-/**
- * @brief Especialización para is_signed
- *
- * Marca uint128_t como NO siendo un tipo con signo.
- */
-template <> struct is_signed<uint128_t> : false_type {
-};
-
-// ===============================================================================
-// TRAITS DE TRIVIALIDAD
-// ===============================================================================
-
-/**
- * @brief uint128_t es trivialmente copiable
- *
- * Con constructores eliminados, ahora es trivialmente copiable.
- */
-template <> struct is_trivially_copyable<uint128_t> : true_type {
-};
-
-/**
- * @brief uint128_t es trivialmente constructible por defecto
- *
- * Solo tiene constructor por defecto trivial.
- */
-template <> struct is_trivially_default_constructible<uint128_t> : false_type {
-};
-
-/**
- * @brief uint128_t es trivialmente constructible por copia
- *
- * Puede ser copiado sin ejecutar código de constructor.
- */
-template <> struct is_trivially_copy_constructible<uint128_t> : true_type {
-};
-
-/**
- * @brief uint128_t es trivialmente constructible por movimiento
- *
- * Puede ser movido sin ejecutar código de constructor.
- */
-template <> struct is_trivially_move_constructible<uint128_t> : true_type {
-};
-
-/**
- * @brief uint128_t es trivialmente asignable por copia
- *
- * Puede ser asignado por copia usando memcpy.
- */
-template <> struct is_trivially_copy_assignable<uint128_t> : true_type {
-};
-
-/**
- * @brief uint128_t es trivialmente asignable por movimiento
- *
- * Puede ser asignado por movimiento sin código especial.
- */
-template <> struct is_trivially_move_assignable<uint128_t> : true_type {
-};
-
-/**
- * @brief uint128_t es trivialmente destructible
- *
- * No requiere código de destructor especial.
- */
-template <> struct is_trivially_destructible<uint128_t> : true_type {
-};
 
 /**
  * @brief uint128_t es un tipo trivial
@@ -151,14 +55,6 @@ template <> struct is_trivially_destructible<uint128_t> : true_type {
  * asignable y destructible trivialmente.
  */
 template <> struct is_trivial<uint128_t> : false_type {
-};
-
-/**
- * @brief uint128_t tiene layout estándar
- *
- * Garantiza que tiene el mismo layout que una estructura C equivalente.
- */
-template <> struct is_standard_layout<uint128_t> : true_type {
 };
 
 /**

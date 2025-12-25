@@ -9,6 +9,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Directorios
@@ -69,8 +70,8 @@ should_compile() {
 mkdir -p build/build_tests/{gcc,clang,intel,msvc}/{debug,release}
 
 # Archivos
-TEST_SRC="${PROJECT_DIR}/tests/uint128_traits_extracted_tests.cpp"
-INCLUDE_DIR="${PROJECT_DIR}/include"
+TEST_SRC="tests/uint128_traits_extracted_tests.cpp"
+INCLUDE_DIR="./include"
 
 # -----------------------------------------------------------------------------
 # GCC
@@ -124,6 +125,7 @@ build_clang() {
     
     local OUTPUT="build/build_tests/clang/${MODE}/uint128_traits_tests_clang"
     
+    echo -e "${CYAN}    Comando: clang++ $FLAGS ${TEST_SRC} -o ${OUTPUT}${NC}"
     clang++ $FLAGS "${TEST_SRC}" -o "${OUTPUT}"
     
     if [ $? -eq 0 ]; then

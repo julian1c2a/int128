@@ -3,6 +3,10 @@
  * Pruebas individuales por función/especialización
  */
 
+// ⚠️ CRITICAL: Include traits specializations BEFORE any other header
+// that might include <type_traits>
+#include "../include/uint128/uint128_traits_specializations.hpp"
+
 #include "../include/uint128/uint128_limits.hpp"
 #include "../include/uint128/uint128_t.hpp"
 #include "../include/uint128/uint128_traits.hpp"

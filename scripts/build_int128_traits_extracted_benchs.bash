@@ -70,8 +70,8 @@ mkdir -p build/build_benchmarks/{gcc,clang,intel,msvc}/{debug,release}
 mkdir -p benchmark_results/{gcc,clang,intel,msvc}/{debug,release}
 
 # Archivos
-BENCH_SRC="${PROJECT_DIR}/benchmarks/int128_traits_extracted_benchs.cpp"
-INCLUDE_DIR="${PROJECT_DIR}/include"
+BENCH_SRC="benchmarks/int128_traits_extracted_benchs.cpp"
+INCLUDE_DIR="./include"
 
 # -----------------------------------------------------------------------------
 # GCC
