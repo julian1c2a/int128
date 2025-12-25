@@ -2,8 +2,8 @@
  * Test para int128_numeric.hpp
  */
 
-#include "../include/int128_numeric.hpp"
-#include "../include/int128_t.hpp"
+#include "../include/int128/int128_numeric.hpp"
+#include "../include/int128/int128_t.hpp"
 #include <cassert>
 #include <iostream>
 

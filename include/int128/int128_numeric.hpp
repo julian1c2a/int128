@@ -86,7 +86,7 @@ constexpr int128_t clamp(const int128_t& v, const int128_t& lo, const int128_t& 
  *
  * Nota: abs(INT128_MIN) == INT128_MIN debido a overflow en complemento a 2
  */
-constexpr int128_t abs(int128_t x) noexcept
+inline int128_t abs(int128_t x) noexcept
 {
     return x.abs();
 }
