@@ -140,11 +140,45 @@ Ambos tipos tienen implementación
 ### Sistema de Benchmarks Completo
 
 El proyecto incluye un **sistema avanzado de benchmarks** con las siguientes capacidades:
- (uint128_t)**:
+
+#### 🆚 Benchmarks Comparativos con Boost.Multiprecision
+
+**Nuevo**: Benchmarks head-to-head con `boost::multiprecision::uint128_t`
+
+```bash
+# Ejecutar benchmarks comparativos (requiere Boost instalado)
+bash scripts/run_boost_comparison.bash
+```
+
+**Qué compara**:
+- ✅ **Construcción y asignación** (default, desde uint64_t, copy)
+- ✅ **Aritmética básica** (+, -, *, /, %)
+- ✅ **Operaciones bit a bit** (&, |, ^, <<, >>)
+- ✅ **Conversiones string** (to_string, from_string, hex)
+- ✅ **Funciones matemáticas** (gcd, lcm, pow, sqrt)
+
+**Resultados esperados**: uint128_t ~2-3× más rápido en operaciones 128-bit fijas
+
+**Documentación completa**:
+- [BOOST_COMPARISON_ANALYSIS.md](BOOST_COMPARISON_ANALYSIS.md) - Análisis detallado de features y performance
+- [BOOST_COMPARISON_QUICKSTART.md](BOOST_COMPARISON_QUICKSTART.md) - Guía rápida de uso
+
+**Comparación de características**:
+
+| Característica | uint128_t | Boost.Multiprecision |
+|---------------|-----------|---------------------|
+| **Performance (128-bit)** | ✅ ~2-3× más rápido | ⚠️ Genérico |
+| **std::is_integral** | ✅ true | ❌ false |
+| **C++20 concepts** | ✅ Completo | ❌ No |
+| **Thread safety** | ✅ 4 wrappers | ❌ No |
+| **Precisión arbitraria** | ❌ Solo 128-bit | ✅ Ilimitada |
+
+#### 📈 Benchmarks Internos
+
+- ✅ **Comparación de tipos (uint128_t)**:
   - `uint128_t` (nuestra implementación)
   - `uint64_t` y `uint32_t` (baseline)
   - `__uint128_t` (tipo nativo GCC/Clang)
-  - `boost::multiprecision` (cpp_int, GMP, tommath)
 - ✅ **Comparación de tipos (int128_t)**:
   - `int128_t` (nuestra implementación signed)
   - `int64_t` y `int32_t` (baseline signed)
