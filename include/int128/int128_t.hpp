@@ -28,6 +28,8 @@
 #define INT128_T_HPP
 
 #include "../uint128/uint128_t.hpp"
+#include <array>
+#include <bitset>
 #include <cstdint>
 #include <istream>
 #include <limits>
@@ -173,11 +175,26 @@ class int128_t
     }
 
     /**
-     * @brief Conversión a enteros (con overflow check)
+     * @brief Conversión a enteros o tipos de punto flotante
      */
     template <typename T> constexpr T to() const
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
+        static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value,
+                      "T must be an integral or floating point type");
+
+        // Conversión a tipos de punto flotante
+        if constexpr (std::is_floating_point<T>::value) {
+            // Manejar el signo correctamente
+            if (is_negative()) {
+                // Para negativos: -( abs(high) * 2^64 + abs(low) )
+                int128_t abs_val = abs();
+                return -static_cast<T>(static_cast<T>(abs_val.high()) * 18446744073709551616.0 +
+                                       static_cast<T>(abs_val.low()));
+            } else {
+                // Para positivos: high * 2^64 + low
+                return static_cast<T>(data[1]) * 18446744073709551616.0 + static_cast<T>(data[0]);
+            }
+        }
 
         if constexpr (std::is_signed<T>::value) {
             // Para tipos con signo
@@ -595,6 +612,46 @@ class int128_t
         }
 
         return to_uint128().to_string_base(base);
+    }
+
+    /**
+     * @brief Convierte el int128_t a un array de bytes (little-endian).
+     * @return std::array<std::byte, 16> con la representación en bytes.
+     * @details Preserva la representación two's complement para negativos.
+     */
+    constexpr std::array<std::byte, 16> to_bytes() const noexcept
+    {
+        return to_uint128().to_bytes();
+    }
+
+    /**
+     * @brief Crea un int128_t desde un array de bytes (little-endian).
+     * @param bytes Array de 16 bytes en formato little-endian.
+     * @return int128_t construido desde los bytes (interpreta como two's complement).
+     */
+    static constexpr int128_t from_bytes(const std::array<std::byte, 16>& bytes) noexcept
+    {
+        return int128_t(uint128_t::from_bytes(bytes));
+    }
+
+    /**
+     * @brief Convierte el int128_t a std::bitset<128>.
+     * @return std::bitset<128> con todos los 128 bits.
+     * @details Bit 127 = signo en representación two's complement.
+     */
+    constexpr std::bitset<128> to_bitset() const noexcept
+    {
+        return to_uint128().to_bitset();
+    }
+
+    /**
+     * @brief Crea un int128_t desde std::bitset<128>.
+     * @param bits Bitset de 128 bits.
+     * @return int128_t construido desde el bitset (interpreta como two's complement).
+     */
+    static constexpr int128_t from_bitset(const std::bitset<128>& bits) noexcept
+    {
+        return int128_t(uint128_t::from_bitset(bits));
     }
 
     // ===============================================================================

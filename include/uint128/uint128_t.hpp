@@ -5,6 +5,8 @@
 // This ensures std::is_integral and other traits are properly specialized
 #include "uint128_traits_specializations.hpp"
 
+#include <array>
+#include <bitset>
 #include <climits>
 #include <cstddef>
 #include <cstdint>
@@ -331,9 +333,18 @@ class uint128_t
      */
     template <typename TYPE> explicit constexpr operator TYPE() const noexcept
     {
-        static_assert(std::is_integral<TYPE>::value && (sizeof(TYPE) <= 8),
-                      "TYPE must be an integral type of 8 bytes or less");
-        return static_cast<TYPE>(data[0]);
+        static_assert((std::is_integral<TYPE>::value && sizeof(TYPE) <= 8) ||
+                          std::is_floating_point<TYPE>::value,
+                      "TYPE must be an integral type of 8 bytes or less, or a floating point type");
+
+        if constexpr (std::is_floating_point<TYPE>::value) {
+            // Conversión a tipos de punto flotante
+            // high * 2^64 + low
+            return static_cast<TYPE>(data[1]) * 18446744073709551616.0 + static_cast<TYPE>(data[0]);
+        } else {
+            // Conversión a tipos integrales (comportamiento original)
+            return static_cast<TYPE>(data[0]);
+        }
     }
 
 #if defined(__SIZEOF_INT128__)
@@ -2069,6 +2080,125 @@ class uint128_t
     {
         std::string result = to_string_base(8);
         return with_prefix ? "0" + result : result;
+    }
+
+    /**
+     * @brief Convierte el uint128_t a un array de bytes (little-endian).
+     * @return std::array<std::byte, 16> con la representación en bytes.
+     * @details Los bytes se organizan en orden little-endian:
+     *          - bytes[0-7]: 64 bits bajos (data[0])
+     *          - bytes[8-15]: 64 bits altos (data[1])
+     * @property Es constexpr y noexcept.
+     * @code{.cpp}
+     * uint128_t val(0x1234567890ABCDEF, 0xFEDCBA0987654321);
+     * auto bytes = val.to_bytes();
+     * // bytes[0] = 0x21, bytes[1] = 0x43, ..., bytes[15] = 0x12
+     * @endcode
+     */
+    constexpr std::array<std::byte, 16> to_bytes() const noexcept
+    {
+        std::array<std::byte, 16> result{};
+
+        // 64 bits bajos (data[0])
+        for (int i = 0; i < 8; ++i) {
+            result[i] = static_cast<std::byte>((data[0] >> (i * 8)) & 0xFF);
+        }
+
+        // 64 bits altos (data[1])
+        for (int i = 0; i < 8; ++i) {
+            result[8 + i] = static_cast<std::byte>((data[1] >> (i * 8)) & 0xFF);
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief Crea un uint128_t desde un array de bytes (little-endian).
+     * @param bytes Array de 16 bytes en formato little-endian.
+     * @return uint128_t construido desde los bytes.
+     * @property Es static, constexpr y noexcept.
+     * @code{.cpp}
+     * std::array<std::byte, 16> bytes = {...};
+     * uint128_t val = uint128_t::from_bytes(bytes);
+     * @endcode
+     */
+    static constexpr uint128_t from_bytes(const std::array<std::byte, 16>& bytes) noexcept
+    {
+        uint64_t low = 0;
+        uint64_t high = 0;
+
+        // Reconstruir 64 bits bajos
+        for (int i = 0; i < 8; ++i) {
+            low |= static_cast<uint64_t>(bytes[i]) << (i * 8);
+        }
+
+        // Reconstruir 64 bits altos
+        for (int i = 0; i < 8; ++i) {
+            high |= static_cast<uint64_t>(bytes[8 + i]) << (i * 8);
+        }
+
+        return uint128_t(high, low);
+    }
+
+    /**
+     * @brief Convierte el uint128_t a std::bitset<128>.
+     * @return std::bitset<128> con todos los 128 bits.
+     * @details Bit 0 = LSB de data[0], Bit 127 = MSB de data[1].
+     * @property Es constexpr y noexcept.
+     * @code{.cpp}
+     * uint128_t val(0xF, 0xFF);
+     * auto bits = val.to_bitset();
+     * assert(bits.test(0) == true);  // LSB de data[0]
+     * @endcode
+     */
+    constexpr std::bitset<128> to_bitset() const noexcept
+    {
+        std::bitset<128> result;
+
+        // Bits 0-63 desde data[0]
+        for (int i = 0; i < 64; ++i) {
+            result[i] = (data[0] >> i) & 1;
+        }
+
+        // Bits 64-127 desde data[1]
+        for (int i = 0; i < 64; ++i) {
+            result[64 + i] = (data[1] >> i) & 1;
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief Crea un uint128_t desde std::bitset<128>.
+     * @param bits Bitset de 128 bits.
+     * @return uint128_t construido desde el bitset.
+     * @property Es static, constexpr y noexcept.
+     * @code{.cpp}
+     * std::bitset<128> bits;
+     * bits.set(127);  // MSB = 1
+     * uint128_t val = uint128_t::from_bitset(bits);
+     * @endcode
+     */
+    static constexpr uint128_t from_bitset(const std::bitset<128>& bits) noexcept
+    {
+        uint64_t low = 0;
+        uint64_t high = 0;
+
+        // Reconstruir 64 bits bajos
+        for (int i = 0; i < 64; ++i) {
+            if (bits[i]) {
+                low |= (1ULL << i);
+            }
+        }
+
+        // Reconstruir 64 bits altos
+        for (int i = 0; i < 64; ++i) {
+            if (bits[64 + i]) {
+                high |= (1ULL << i);
+            }
+        }
+
+        return uint128_t(high, low);
     }
 
     /**

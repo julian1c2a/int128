@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['⚠️_20puntos_20clave_0',['⚠️ Puntos Clave',['../index.html#autotoc_md32',1,'']]]
+  ['validación_0',['Testing y Validación',['../architecture.html#arch_testing',1,'']]],
+  ['vista_20general_1',['Vista General',['../architecture.html#arch_overview',1,'']]]
 ];

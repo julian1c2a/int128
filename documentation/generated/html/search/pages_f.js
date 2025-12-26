@@ -1,19 +1,17 @@
 var searchData=
 [
-  ['pasos_0',['Siguientes Pasos',['../quickstart.html#qs_next',1,'']]],
-  ['performance_1',['⚡ Performance',['../index.html#autotoc_md60',1,'']]],
-  ['pipeline_20completo_20build_20check_20run_2',['Pipeline completo (build + check + run)',['../index.html#autotoc_md15',1,'']]],
-  ['pipeline_20completo_20build_20run_3',['Pipeline completo (build + run)',['../index.html#autotoc_md12',1,'']]],
-  ['planeadas_4',['Características Planeadas',['../architecture.html#arch_planned',1,'']]],
-  ['plataforma_20principal_20completamente_20testeada_5',['✅ Plataforma Principal (Completamente Testeada)',['../index.html#autotoc_md3',1,'']]],
-  ['plataformas_6',['Plataformas',['../quickstart.html#qs_platforms',1,'']]],
-  ['plataformas_20sin_20testear_20debería_20funcionar_7',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]],
-  ['plataformas_20soportadas_8',['🌍 Plataformas Soportadas',['../index.html#autotoc_md2',1,'']]],
-  ['prácticos_9',['Ejemplos Prácticos',['../examples.html#examples_intro',1,'']]],
-  ['prevención_20de_20errores_10',['Prevención de Errores',['../architecture.html#arch_nodiscard',1,'']]],
-  ['principal_20completamente_20testeada_11',['✅ Plataforma Principal (Completamente Testeada)',['../index.html#autotoc_md3',1,'']]],
-  ['principales_12',['Principales',['../index.html#autotoc_md51',1,'📁 Módulos Principales'],['../architecture.html#arch_types',1,'Tipos Principales']]],
-  ['proyecto_13',['Proyecto',['../index.html#autotoc_md5',1,'📦 Arquitectura del Proyecto'],['../architecture.html',1,'Arquitectura del Proyecto']]],
-  ['pruebas_14',['Lista de pruebas',['../test.html',1,'']]],
-  ['puntos_20clave_15',['⚠️ Puntos Clave',['../index.html#autotoc_md32',1,'']]]
+  ['más_20ejemplos_0',['Más Ejemplos',['../examples.html#examples_more',1,'']]],
+  ['módulos_20principales_1',['📁 Módulos Principales',['../index.html#autotoc_md65',1,'']]],
+  ['macos_2',['macOS',['../index.html#autotoc_md74',1,'En MSYS2/Linux/macOS'],['../index.html#autotoc_md77',1,'macOS']]],
+  ['main_20cpp_20demo_20principal_20interactivo_3',['1. &lt;b&gt;main.cpp&lt;/b&gt; - Demo Principal Interactivo',['../index.html#autotoc_md20',1,'']]],
+  ['makefile_20con_20feature_20interop_4',['Usando el Makefile con FEATURE=interop',['../index.html#autotoc_md14',1,'']]],
+  ['makefile_20genérico_5',['Makefile Genérico',['../architecture.html#arch_makefile',1,'']]],
+  ['markdown_6',['Markdown',['../architecture.html#arch_markdown',1,'']]],
+  ['matemáticas_7',['Funciones Matemáticas',['../quickstart.html#qs_math',1,'']]],
+  ['matemáticos_8',['Ejemplos Matemáticos',['../examples.html#examples_math',1,'']]],
+  ['mersenne_9',['5. &lt;b&gt;mersenne_primes.cpp&lt;/b&gt; - Primos de Mersenne',['../index.html#autotoc_md29',1,'']]],
+  ['mersenne_5fprimes_20cpp_20primos_20de_20mersenne_10',['5. &lt;b&gt;mersenne_primes.cpp&lt;/b&gt; - Primos de Mersenne',['../index.html#autotoc_md29',1,'']]],
+  ['modo_20release_11',['modo release',['../index.html#autotoc_md7',1,'Compilar en modo release'],['../index.html#autotoc_md9',1,'Compilar en modo release']]],
+  ['modular_12',['�️ Arquitectura Modular',['../index.html#autotoc_md64',1,'']]],
+  ['msys2_20linux_20macos_13',['En MSYS2/Linux/macOS',['../index.html#autotoc_md74',1,'']]]
 ];

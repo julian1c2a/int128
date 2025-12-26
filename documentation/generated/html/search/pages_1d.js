@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🌍_20plataformas_20soportadas_0',['🌍 Plataformas Soportadas',['../index.html#autotoc_md2',1,'']]]
+  ['⚡_20benchmarks_20incluidos_0',['⚡ Benchmarks Incluidos',['../index.html#autotoc_md36',1,'⚡ Benchmarks Incluidos'],['../index.html#autotoc_md52',1,'⚡ Benchmarks Incluidos']]]
 ];

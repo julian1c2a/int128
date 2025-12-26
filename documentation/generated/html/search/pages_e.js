@@ -1,11 +1,10 @@
 var searchData=
 [
-  ['only_0',['Header-Only',['../quickstart.html#qs_install_header',1,'']]],
-  ['operaciones_20aritméticas_1',['Operaciones Aritméticas',['../quickstart.html#qs_arithmetic',1,'']]],
-  ['operaciones_20bitwise_2',['Operaciones Bitwise',['../quickstart.html#qs_bitwise',1,'']]],
-  ['operaciones_20seguras_3',['Operaciones Seguras',['../quickstart.html#qs_safe',1,'']]],
-  ['optimización_20y_20rendimiento_4',['Optimización y Rendimiento',['../examples.html#examples_performance',1,'']]],
-  ['optimizaciones_5',['Optimizaciones',['../architecture.html#arch_optimization',1,'']]],
-  ['ordenamiento_6',['Ordenamiento',['../examples.html#ex_sorting',1,'']]],
-  ['otras_20plataformas_20sin_20testear_20debería_20funcionar_7',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]]
+  ['límites_20uint128_5flimits_20hpp_0',['Límites (&lt;span class=&quot;tt&quot;&gt;uint128_limits.hpp&lt;/span&gt;)',['../index.html#autotoc_md67',1,'']]],
+  ['licencia_1',['�📝 Licencia',['../index.html#autotoc_md82',1,'']]],
+  ['linux_2',['Linux',['../index.html#autotoc_md78',1,'']]],
+  ['linux_20macos_3',['En MSYS2/Linux/macOS',['../index.html#autotoc_md74',1,'']]],
+  ['lista_20de_20pruebas_4',['Lista de pruebas',['../test.html',1,'']]],
+  ['localhost_3a8000_5',['Abrir en navegador: &lt;a href=&quot;http://localhost:8000&quot;&gt;http://localhost:8000&lt;/a&gt;',['../index.html#autotoc_md80',1,'']]],
+  ['lock_20free_6',['Lock-Free',['../architecture.html#arch_lock_free',1,'']]]
 ];

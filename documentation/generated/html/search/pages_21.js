@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📁_20módulos_20principales_0',['📁 Módulos Principales',['../index.html#autotoc_md51',1,'']]]
+  ['🌍_20plataformas_20soportadas_0',['🌍 Plataformas Soportadas',['../index.html#autotoc_md2',1,'']]]
 ];

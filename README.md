@@ -166,6 +166,84 @@ int128/
 - [x] Operadores simétricos (friend functions)
 - [x] Operador de inserción para streams (`operator<<`)
 
+### ✅ Conversiones de Tipo
+
+#### Conversiones Numéricas
+- [x] **A tipos integrales**: `static_cast<uint64_t>(num)`, `static_cast<int>(num)`
+- [x] **A tipos flotantes**: `static_cast<float>(num)`, `static_cast<double>(num)`, `static_cast<long double>(num)`
+- [x] **A bool**: `static_cast<bool>(num)` - true si != 0
+- [x] **int128_t**: Método `to<T>()` para todas las conversiones anteriores
+
+```cpp
+uint128_t big(0x1234567890ABCDEF, 0xFEDCBA0987654321);
+
+// Conversión a flotantes (high * 2^64 + low)
+double d = static_cast<double>(big);
+float f = static_cast<float>(big);
+long double ld = static_cast<long double>(big);
+
+// int128_t usa .to<T>()
+int128_t signed_val(-12345);
+double d2 = signed_val.to<double>();  // Maneja signo correctamente
+```
+
+#### Conversión a/desde Bytes (std::array<std::byte, 16>)
+- [x] **to_bytes()**: Serialización a bytes (little-endian)
+- [x] **from_bytes()**: Deserialización desde bytes
+- [x] **Casos de uso**: Serialización de red, almacenamiento en disco, checksum
+
+```cpp
+uint128_t data(0x1234567890ABCDEF, 0xFEDCBA0987654321);
+
+// Serializar a bytes (little-endian)
+std::array<std::byte, 16> bytes = data.to_bytes();
+// bytes[0] = 0x21, bytes[1] = 0x43, ..., bytes[15] = 0x12
+
+// Deserializar desde bytes
+uint128_t recovered = uint128_t::from_bytes(bytes);
+assert(data == recovered);
+
+// Funciona también con int128_t (preserva two's complement)
+int128_t negative(-12345);
+auto neg_bytes = negative.to_bytes();
+int128_t restored = int128_t::from_bytes(neg_bytes);
+```
+
+#### Conversión a/desde Bitset (std::bitset<128>)
+- [x] **to_bitset()**: Conversión a bitset para manipulación de bits
+- [x] **from_bitset()**: Construcción desde bitset
+- [x] **Casos de uso**: Máscaras de bits, flags, permisos, análisis binario
+
+```cpp
+uint128_t value(0xF, 0xFF);
+
+// Convertir a bitset
+std::bitset<128> bits = value.to_bitset();
+std::cout << "Bits activados: " << bits.count() << "/128\n";
+
+// Manipular bits individuales
+bits.set(127);    // Activar MSB
+bits.reset(0);    // Desactivar LSB
+
+// Convertir de vuelta
+uint128_t modified = uint128_t::from_bitset(bits);
+
+// Sistema de permisos con 128 flags
+std::bitset<128> permissions;
+permissions.set(0);   // READ
+permissions.set(1);   // WRITE
+permissions.set(10);  // ADMIN
+uint128_t perms_compact = uint128_t::from_bitset(permissions);
+```
+
+#### Demo Completo
+Ver [`demos/demo_bytes_bitset.cpp`](demos/demo_bytes_bitset.cpp) para ejemplos prácticos de:
+- Serialización/deserialización para red o disco
+- Sistema de permisos con 128 flags
+- Análisis de datos binarios y checksums
+- Conversión entre representaciones (two's complement)
+- Operaciones con máscaras de bits
+
 ### ✅ Casos de Uso Prácticos
 - [x] Cálculos financieros de alta precisión
 - [x] Operaciones criptográficas
@@ -442,6 +520,28 @@ Resultados típicos:
 - Multiplicación: 50-80× más lento (esperado)
 - División: 10-20× más lento
 - Bitwise: 2-10× más lento
+
+#### 4. **demo_bytes_bitset.cpp** - Conversiones Bytes y Bitset
+Demo completo de nuevas capacidades de serialización y manipulación:
+
+**5 casos de uso prácticos**:
+1. **Serialización/Deserialización**: Conversión a bytes para red o disco
+2. **Sistema de permisos**: 128 flags en un solo uint128_t
+3. **Análisis binario**: Conteo de bits, checksums XOR
+4. **Representación two's complement**: Visualización de números negativos
+5. **Máscaras de bits**: Operaciones con patrones de bits
+
+```bash
+g++ -std=c++20 -I include demos/demo_bytes_bitset.cpp -o demos/demo_bytes_bitset.exe
+./demos/demo_bytes_bitset.exe
+```
+
+**Funciones demostradas**:
+- `to_bytes()` / `from_bytes()` - Serialización a std::array<std::byte, 16>
+- `to_bitset()` / `from_bitset()` - Conversión a std::bitset<128>
+- Manipulación de bits individuales
+- Verificación de checksums
+- Little-endian byte order
 
 ### 🔧 Ejemplos de Uso Real (5 archivos)
 

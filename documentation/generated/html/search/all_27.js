@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['📋_20características_0',['📋 Características',['../index.html#autotoc_md43',1,'']]],
-  ['📋_20otras_20plataformas_20sin_20testear_20debería_20funcionar_1',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]]
+  ['🎯_20dos_20tipos_20complementarios_0',['🎯 Dos Tipos Complementarios',['../index.html#autotoc_md1',1,'']]],
+  ['🎯_20uso_20recomendado_1',['🎯 Uso Recomendado',['../index.html#autotoc_md72',1,'']]]
 ];

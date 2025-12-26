@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['🧪_20tests_20y_20benchmarks_20extraídos_20de_20uint128_5ftraits_20hpp_0',['🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp',['../index.html#autotoc_md17',1,'']]]
+  ['📚_20contenido_20documentado_0',['📚 Contenido Documentado',['../index.html#autotoc_md81',1,'']]],
+  ['📚_20documentación_1',['📚 Documentación',['../index.html#autotoc_md16',1,'📚 Documentación'],['../index.html#autotoc_md37',1,'📚 Documentación'],['../index.html#autotoc_md45',1,'📚 Documentación'],['../index.html#autotoc_md53',1,'📚 Documentación']]],
+  ['📚_20tutoriales_2013_20archivos_2',['📚 Tutoriales (13 archivos)',['../index.html#autotoc_md18',1,'']]]
 ];

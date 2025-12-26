@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['⚠️_20puntos_20clave_0',['⚠️ Puntos Clave',['../index.html#autotoc_md32',1,'']]]
+  ['windows_0',['Windows',['../index.html#autotoc_md76',1,'']]],
+  ['windows_20powershell_1',['En Windows PowerShell',['../index.html#autotoc_md75',1,'']]]
 ];

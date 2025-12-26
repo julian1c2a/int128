@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📈_20resultados_0',['📈 Resultados',['../index.html#autotoc_md24',1,'📈 Resultados'],['../index.html#autotoc_md40',1,'📈 Resultados']]]
+  ['🎭_20showcases_20avanzados_204_20archivos_0',['🎭 Showcases Avanzados (4 archivos)',['../index.html#autotoc_md19',1,'']]]
 ];

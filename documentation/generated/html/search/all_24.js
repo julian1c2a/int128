@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📂_20archivos_0',['📂 Archivos',['../index.html#autotoc_md19',1,'📂 Archivos'],['../index.html#autotoc_md28',1,'📂 Archivos'],['../index.html#autotoc_md35',1,'📂 Archivos'],['../index.html#autotoc_md46',1,'📂 Archivos']]]
+  ['🎨_20formatting_20uint128_5fformat_20hpp_20int128_5fformat_20hpp_20✅_0',['🎨 Formatting - uint128_format.hpp &amp;amp; int128_format.hpp ✅',['../index.html#autotoc_md56',1,'']]]
 ];

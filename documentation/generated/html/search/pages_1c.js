@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🆕_0',['Numérico (&lt;span class=&quot;tt&quot;&gt;uint128_numeric.hpp&lt;/span&gt;) 🆕',['../index.html#autotoc_md57',1,'']]]
+  ['⚠️_20puntos_20clave_0',['⚠️ Puntos Clave',['../index.html#autotoc_md46',1,'']]]
 ];

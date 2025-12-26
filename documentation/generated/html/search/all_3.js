@@ -1,27 +1,6 @@
 var searchData=
 [
-  ['básica_0',['Calculadora Básica',['../examples.html#ex_basic_calc',1,'']]],
-  ['básico_1',['Uso Básico',['../quickstart.html#qs_basic_usage',1,'']]],
-  ['básicos_2',['Ejemplos Básicos',['../examples.html#examples_basic',1,'']]],
-  ['benchmarks_3',['Benchmarks',['../architecture.html#arch_benchmarks',1,'']]],
-  ['benchmarks_20comparativos_20requiere_20boost_20instalado_4',['Ejecutar benchmarks comparativos (requiere Boost instalado)',['../index.html#autotoc_md10',1,'']]],
-  ['benchmarks_20extraídos_5',['🧬 int128_traits.hpp - Tests y Benchmarks Extraídos',['../index.html#autotoc_md34',1,'']]],
-  ['benchmarks_20extraídos_20de_20uint128_5ftraits_20hpp_6',['🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp',['../index.html#autotoc_md17',1,'']]],
-  ['benchmarks_20incluidos_7',['Benchmarks Incluidos',['../index.html#autotoc_md22',1,'⚡ Benchmarks Incluidos'],['../index.html#autotoc_md38',1,'⚡ Benchmarks Incluidos']]],
-  ['bezout_5fcoeff_8',['bezout_coeff',['../structstd_1_1bezout__coeff.html',1,'std::bezout_coeff'],['../structstd_1_1bezout__coeff.html#a1e7fc94843d32da94564d4be2ad6505f',1,'std::bezout_coeff::bezout_coeff()']]],
-  ['bezout_5fcoeffs_9',['bezout_coeffs',['../namespacestd.html#a289852395ba506b3c182aa660745e569',1,'std']]],
-  ['binary_5fsearch_5fint128_10',['binary_search_int128',['../namespaceint128__algorithm.html#aab889b675509262ea4f87eda3a2388a8',1,'int128_algorithm']]],
-  ['binary_5fsearch_5fuint128_11',['binary_search_uint128',['../namespaceuint128__algorithm.html#a9afcd8e5b2b792ba2eb058b85a5fd341',1,'uint128_algorithm']]],
-  ['bit_12',['UUIDs (128-bit)',['../examples.html#ex_uuid',1,'']]],
-  ['bit_5fceil_13',['bit_ceil',['../namespacestd.html#af2e12575cb345bdf80c3ee02043a8136',1,'std::bit_ceil(const int128_t &amp;value) noexcept'],['../namespacestd.html#a2aec6fbc2a18be4be7442224f73e3a00',1,'std::bit_ceil(int128_t x)'],['../namespacestd.html#ad7d460139445b5d3ad7dc5a1a907f2ba',1,'std::bit_ceil(const uint128_t &amp;value) noexcept'],['../namespacestd.html#a254575f529d811fccdfa24e57c5398c6',1,'std::bit_ceil(uint128_t x) noexcept']]],
-  ['bit_5ffloor_14',['bit_floor',['../namespacestd.html#a660174ac59562a7f6df3b8453398b52e',1,'std::bit_floor(const int128_t &amp;value) noexcept'],['../namespacestd.html#ac8ba9b576ef49fc6d5432c549e10841f',1,'std::bit_floor(int128_t x) noexcept'],['../namespacestd.html#a5010f300dd04827cc0b97e208b3bc861',1,'std::bit_floor(const uint128_t &amp;value) noexcept'],['../namespacestd.html#aec9abbc98fa26cdb829ba11a8d0883cf',1,'std::bit_floor(uint128_t x) noexcept']]],
-  ['bit_5findex_5ftype_15',['bit_index_type',['../conceptint128__concepts_1_1bit__index__type.html',1,'int128_concepts'],['../conceptuint128__concepts_1_1bit__index__type.html',1,'uint128_concepts']]],
-  ['bit_5fwidth_16',['bit_width',['../namespacestd.html#add62845a0c2999b099e0089dce306532',1,'std::bit_width(const int128_t &amp;value) noexcept'],['../namespacestd.html#a303239d0059b51d7d17196cf24eef588',1,'std::bit_width(int128_t x) noexcept'],['../namespacestd.html#a48db9b9930a2040585f12eb1fc620bad',1,'std::bit_width(const uint128_t &amp;value) noexcept'],['../namespacestd.html#a10bcb2af3c24857709ebe00ad7ca8b65',1,'std::bit_width(uint128_t x) noexcept']]],
-  ['bits_17',['int128 - Implementación de enteros de 128 bits',['../index.html',1,'']]],
-  ['bitwise_18',['Operaciones Bitwise',['../quickstart.html#qs_bitwise',1,'']]],
-  ['boost_20instalado_19',['Ejecutar benchmarks comparativos (requiere Boost instalado)',['../index.html#autotoc_md10',1,'']]],
-  ['build_20',['Sistema de Build',['../architecture.html#arch_build',1,'']]],
-  ['build_20check_20run_21',['Pipeline completo (build + check + run)',['../index.html#autotoc_md15',1,'']]],
-  ['build_20run_22',['Pipeline completo (build + run)',['../index.html#autotoc_md12',1,'']]],
-  ['byteswap_23',['byteswap',['../namespaceint128__bits.html#adbbeb61bce8b355e2f7f3ab4ecd7b94f',1,'int128_bits::byteswap()'],['../namespaceuint128__bits.html#ade9e4d09e23eea8298710a505639e79c',1,'uint128_bits::byteswap()'],['../namespacestd.html#aa227ebc955a71446a466070fd2736fb9',1,'std::byteswap()']]]
+  ['4_20archivos_0',['🎭 Showcases Avanzados (4 archivos)',['../index.html#autotoc_md19',1,'']]],
+  ['4_20prime_5ffactorization_20cpp_20factorización_20de_20primos_1',['4. &lt;b&gt;prime_factorization.cpp&lt;/b&gt; - Factorización de Primos',['../index.html#autotoc_md28',1,'']]],
+  ['4_20showcase_5fperformance_20cpp_20análisis_20de_20rendimiento_2',['4. &lt;b&gt;showcase_performance.cpp&lt;/b&gt; - Análisis de Rendimiento',['../index.html#autotoc_md23',1,'']]]
 ];
