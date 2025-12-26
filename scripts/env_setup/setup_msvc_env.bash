@@ -34,13 +34,21 @@ export LIB="${VS_ROOT_WIN}\VC\Tools\MSVC\\${MSVC_VER}\lib\x64;\
 ${KIT_ROOT_WIN}\Lib\\${KIT_VER}\ucrt\x64;\
 ${KIT_ROOT_WIN}\Lib\\${KIT_VER}\um\x64"
 
-# Verificación
+# Verificación (usar cl.exe explícitamente para evitar conflicto con archivo 'cl' sin extensión)
 if command -v cl.exe &> /dev/null; then
-    echo "[OK] Entorno MSVC configurado correctamente"
-    echo "   Compilador: $(which cl.exe)"
-    echo "   Versión: $(cl.exe 2>&1 | head -n 1)"
+    # Capturar solo stderr que contiene la info de versión
+    CL_VERSION=$(cl.exe 2>&1 </dev/null | grep -i "compilador\|compiler\|microsoft\|versión\|version" | head -n 1 | sed 's/^[[:space:]]*//')
+    
+    if [ -n "$CL_VERSION" ] && [[ ! "$CL_VERSION" =~ "PHONON" ]]; then
+        echo "[OK] Entorno MSVC configurado correctamente"
+        echo "   Versión: $CL_VERSION"
+    else
+        echo "[FAIL] Error: cl.exe encontrado pero no es MSVC"
+        echo "   Respuesta: $CL_VERSION"
+        return 1
+    fi
 else
-    echo "[FAIL] Error: cl.exe no encontrado después de configurar PATH"
+    echo "[FAIL] Error: cl.exe no encontrado en PATH"
     echo "   PATH: $PATH"
     return 1
 fi
