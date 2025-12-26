@@ -95,15 +95,6 @@ template <> struct make_unsigned<int128_t> {
     using type = uint128_t;
 };
 
-/**
- * @brief Especialización para make_unsigned de uint128_t
- *
- * uint128_t ya es unsigned, retorna el mismo tipo.
- */
-template <> struct make_unsigned<uint128_t> {
-    using type = uint128_t;
-};
-
 #endif // !INT128_USING_LIBCPP
 
 // ===============================================================================

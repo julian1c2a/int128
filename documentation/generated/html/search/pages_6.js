@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['ejecutar_0',['Compilar y ejecutar',['../index.html#autotoc_md13',1,'']]],
+  ['ejecutar_20benchmarks_20comparativos_20requiere_20boost_20instalado_1',['Ejecutar benchmarks comparativos (requiere Boost instalado)',['../index.html#autotoc_md10',1,'']]],
+  ['ejecutar_20con_20gcc_2',['Compilar y ejecutar con GCC',['../index.html#autotoc_md11',1,'']]],
+  ['ejecutar_20un_20test_20específico_3',['Compilar y ejecutar un test específico',['../index.html#autotoc_md8',1,'']]],
+  ['ejecutar_20un_20test_20específico_20debug_4',['Compilar y ejecutar un test específico (debug)',['../index.html#autotoc_md6',1,'']]],
+  ['ejemplos_5',['Ejemplos',['../index.html#autotoc_md45',1,'💡 Ejemplos'],['../examples.html#examples_more',1,'Más Ejemplos']]],
+  ['ejemplos_20básicos_6',['Ejemplos Básicos',['../examples.html#examples_basic',1,'']]],
+  ['ejemplos_20de_20uso_7',['Ejemplos de Uso',['../examples.html',1,'']]],
+  ['ejemplos_20matemáticos_8',['Ejemplos Matemáticos',['../examples.html#examples_math',1,'']]],
+  ['ejemplos_20prácticos_9',['Ejemplos Prácticos',['../examples.html#examples_intro',1,'']]],
+  ['el_20makefile_20con_20feature_20interop_10',['Usando el Makefile con FEATURE=interop',['../index.html#autotoc_md14',1,'']]],
+  ['en_20modo_20release_11',['en modo release',['../index.html#autotoc_md7',1,'Compilar en modo release'],['../index.html#autotoc_md9',1,'Compilar en modo release']]],
+  ['en_20tiempo_20de_20compilación_12',['Evaluación en Tiempo de Compilación',['../architecture.html#arch_constexpr',1,'']]],
+  ['enteros_20de_20128_20bits_13',['int128 - Implementación de enteros de 128 bits',['../index.html',1,'']]],
+  ['entrada_20salida_14',['Entrada/Salida',['../quickstart.html#qs_io',1,'']]],
+  ['errores_15',['Prevención de Errores',['../architecture.html#arch_nodiscard',1,'']]],
+  ['específico_16',['Compilar y ejecutar un test específico',['../index.html#autotoc_md8',1,'']]],
+  ['específico_20debug_17',['Compilar y ejecutar un test específico (debug)',['../index.html#autotoc_md6',1,'']]],
+  ['especialización_20de_20traits_20stl_18',['Especialización de Traits STL',['../architecture.html#arch_std_traits',1,'']]],
+  ['estándar_20c_19',['Estándar C++',['../quickstart.html#qs_cpp_version',1,'']]],
+  ['estado_3a_20completo_20',['✅ Estado: COMPLETO',['../index.html#autotoc_md47',1,'']]],
+  ['evaluación_20en_20tiempo_20de_20compilación_21',['Evaluación en Tiempo de Compilación',['../architecture.html#arch_constexpr',1,'']]],
+  ['examples_22',['examples',['../md__2ucrt64_2home_2julian_2_cpp_projects_2int128_2documentation_2doxygen_2pages_2examples.html',1,'']]],
+  ['extraídos_23',['🧬 int128_traits.hpp - Tests y Benchmarks Extraídos',['../index.html#autotoc_md34',1,'']]],
+  ['extraídos_20de_20uint128_5ftraits_20hpp_24',['🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp',['../index.html#autotoc_md17',1,'']]]
+];

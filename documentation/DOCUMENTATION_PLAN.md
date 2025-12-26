@@ -227,7 +227,7 @@ int main() {
 ```
 
 ¿Te gustaría que empiece implementando:
-1. **La configuración de Doxygen** para generar la documentación HTML?
+1. **La configuración de Doxygen** para generar la documentación HTML? *Hecho ya*.
 2. **Reorganizar las demos** en la estructura propuesta?
 3. **Crear la showcase demo** interactiva?
 

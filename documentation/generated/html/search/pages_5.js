@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['de_20128_20bits_0',['int128 - Implementación de enteros de 128 bits',['../index.html',1,'']]],
+  ['de_20build_1',['Sistema de Build',['../architecture.html#arch_build',1,'']]],
+  ['de_20compilación_2',['Evaluación en Tiempo de Compilación',['../architecture.html#arch_constexpr',1,'']]],
+  ['de_20enteros_20de_20128_20bits_3',['int128 - Implementación de enteros de 128 bits',['../index.html',1,'']]],
+  ['de_20errores_4',['Prevención de Errores',['../architecture.html#arch_nodiscard',1,'']]],
+  ['de_20fibonacci_5',['Números de Fibonacci',['../examples.html#ex_fibonacci',1,'']]],
+  ['de_20inicio_20rápido_6',['Guía de Inicio Rápido',['../quickstart.html',1,'']]],
+  ['de_20interoperabilidad_20uint128_5ft_20↔_20int128_5ft_7',['🔄 Tests de Interoperabilidad uint128_t ↔ int128_t',['../index.html#autotoc_md26',1,'']]],
+  ['de_20intrínsecos_8',['Uso de Intrínsecos',['../examples.html#ex_intrinsics',1,'']]],
+  ['de_20números_9',['Creación de Números',['../quickstart.html#qs_creation',1,'']]],
+  ['de_20pruebas_10',['Lista de pruebas',['../test.html',1,'']]],
+  ['de_20tests_11',['Suite de Tests',['../architecture.html#arch_test_suite',1,'']]],
+  ['de_20traits_20stl_12',['Especialización de Traits STL',['../architecture.html#arch_std_traits',1,'']]],
+  ['de_20uint128_5ftraits_20hpp_13',['🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp',['../index.html#autotoc_md17',1,'']]],
+  ['de_20uso_14',['Ejemplos de Uso',['../examples.html',1,'']]],
+  ['de_20uso_20reales_15',['Casos de Uso Reales',['../examples.html#examples_real_world',1,'']]],
+  ['debería_20funcionar_16',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]],
+  ['debug_17',['Compilar y ejecutar un test específico (debug)',['../index.html#autotoc_md6',1,'']]],
+  ['del_20proyecto_18',['del Proyecto',['../index.html#autotoc_md5',1,'📦 Arquitectura del Proyecto'],['../architecture.html',1,'Arquitectura del Proyecto']]],
+  ['direcciones_20ipv6_19',['Direcciones IPv6',['../examples.html#ex_ipv6',1,'']]],
+  ['documentación_20',['Documentación',['../index.html#autotoc_md16',1,'📚 Documentación'],['../index.html#autotoc_md23',1,'📚 Documentación'],['../index.html#autotoc_md31',1,'📚 Documentación'],['../index.html#autotoc_md39',1,'📚 Documentación'],['../architecture.html#arch_documentation',1,'Documentación']]],
+  ['dos_20tipos_20complementarios_21',['🎯 Dos Tipos Complementarios',['../index.html#autotoc_md1',1,'']]],
+  ['doxygen_22',['Doxygen',['../architecture.html#arch_doxygen',1,'']]]
+];

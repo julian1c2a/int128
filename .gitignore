@@ -48,6 +48,9 @@ include/uint128_t_fixed.hpp.bakup
 external
 external/*
 external/*/*
+documentation/generated
+documentation/generated/*
+documentation/generated/*/*
 external/*/*/*
 external/*/*/*/*
 external/*/*/*/*/*

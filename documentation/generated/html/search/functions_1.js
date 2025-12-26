@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['bezout_5fcoeff_0',['bezout_coeff',['../structstd_1_1bezout__coeff.html#a1e7fc94843d32da94564d4be2ad6505f',1,'std::bezout_coeff']]],
+  ['bezout_5fcoeffs_1',['bezout_coeffs',['../namespacestd.html#a289852395ba506b3c182aa660745e569',1,'std']]],
+  ['binary_5fsearch_5fint128_2',['binary_search_int128',['../namespaceint128__algorithm.html#aab889b675509262ea4f87eda3a2388a8',1,'int128_algorithm']]],
+  ['binary_5fsearch_5fuint128_3',['binary_search_uint128',['../namespaceuint128__algorithm.html#a9afcd8e5b2b792ba2eb058b85a5fd341',1,'uint128_algorithm']]],
+  ['bit_5fceil_4',['bit_ceil',['../namespacestd.html#af2e12575cb345bdf80c3ee02043a8136',1,'std::bit_ceil(const int128_t &amp;value) noexcept'],['../namespacestd.html#a2aec6fbc2a18be4be7442224f73e3a00',1,'std::bit_ceil(int128_t x)'],['../namespacestd.html#ad7d460139445b5d3ad7dc5a1a907f2ba',1,'std::bit_ceil(const uint128_t &amp;value) noexcept'],['../namespacestd.html#a254575f529d811fccdfa24e57c5398c6',1,'std::bit_ceil(uint128_t x) noexcept']]],
+  ['bit_5ffloor_5',['bit_floor',['../namespacestd.html#a660174ac59562a7f6df3b8453398b52e',1,'std::bit_floor(const int128_t &amp;value) noexcept'],['../namespacestd.html#ac8ba9b576ef49fc6d5432c549e10841f',1,'std::bit_floor(int128_t x) noexcept'],['../namespacestd.html#a5010f300dd04827cc0b97e208b3bc861',1,'std::bit_floor(const uint128_t &amp;value) noexcept'],['../namespacestd.html#aec9abbc98fa26cdb829ba11a8d0883cf',1,'std::bit_floor(uint128_t x) noexcept']]],
+  ['bit_5fwidth_6',['bit_width',['../namespacestd.html#add62845a0c2999b099e0089dce306532',1,'std::bit_width(const int128_t &amp;value) noexcept'],['../namespacestd.html#a303239d0059b51d7d17196cf24eef588',1,'std::bit_width(int128_t x) noexcept'],['../namespacestd.html#a48db9b9930a2040585f12eb1fc620bad',1,'std::bit_width(const uint128_t &amp;value) noexcept'],['../namespacestd.html#a10bcb2af3c24857709ebe00ad7ca8b65',1,'std::bit_width(uint128_t x) noexcept']]],
+  ['byteswap_7',['byteswap',['../namespaceint128__bits.html#adbbeb61bce8b355e2f7f3ab4ecd7b94f',1,'int128_bits::byteswap()'],['../namespaceuint128__bits.html#ade9e4d09e23eea8298710a505639e79c',1,'uint128_bits::byteswap()'],['../namespacestd.html#aa227ebc955a71446a466070fd2736fb9',1,'std::byteswap()']]]
+];

@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>int128 - 128-bit Integer Types for C++: Referencia del archivo uint128/uint128_bits.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">int128 - 128-bit Integer Types for C++<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Complete and efficient 128-bit signed and unsigned integer implementation for C++20</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('uint128__bits_8hpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo uint128_bits.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &quot;<a class="el" href="uint128__t_8hpp_source.html">uint128_t.hpp</a>&quot;</code><br />
+<code>#include &lt;bitset&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
+</div><div class="textblock"><div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Gráfico de dependencias incluidas en uint128_bits.hpp:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="uint128__bits_8hpp__incl.svg" width="100%" height="508"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+</div>
+<p><a href="uint128__bits_8hpp_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Espacios de nombres</h2></td></tr>
+<tr class="memitem:std" id="r_std"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html">std</a></td></tr>
+<tr class="memdesc:namespacestd"><td class="mdescLeft">&#160;</td><td class="mdescRight">STL namespace. <br /></td></tr>
+<tr class="memitem:uint128_5Fbits" id="r_uint128_5Fbits"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html">uint128_bits</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:ab26ce7882a0ab146d34ebd9566d3df02" id="r_ab26ce7882a0ab146d34ebd9566d3df02"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#ab26ce7882a0ab146d34ebd9566d3df02">std::popcount</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:ab26ce7882a0ab146d34ebd9566d3df02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of set bits (population count)  <br /></td></tr>
+<tr class="memitem:ade3b4350335d52b7e43933c31fd0579b" id="r_ade3b4350335d52b7e43933c31fd0579b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#ade3b4350335d52b7e43933c31fd0579b">std::countl_zero</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:ade3b4350335d52b7e43933c31fd0579b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count leading zeros.  <br /></td></tr>
+<tr class="memitem:acfab3cbf92bf607c3d0981f022fc4060" id="r_acfab3cbf92bf607c3d0981f022fc4060"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#acfab3cbf92bf607c3d0981f022fc4060">std::countr_zero</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:acfab3cbf92bf607c3d0981f022fc4060"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count trailing zeros.  <br /></td></tr>
+<tr class="memitem:a9bdb2735667a81b78e016671a1ad746d" id="r_a9bdb2735667a81b78e016671a1ad746d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a9bdb2735667a81b78e016671a1ad746d">std::countl_one</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a9bdb2735667a81b78e016671a1ad746d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count leading ones.  <br /></td></tr>
+<tr class="memitem:a11a60a50d6937bbc9eae7243fd4ca4dc" id="r_a11a60a50d6937bbc9eae7243fd4ca4dc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a11a60a50d6937bbc9eae7243fd4ca4dc">std::countr_one</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a11a60a50d6937bbc9eae7243fd4ca4dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count trailing ones.  <br /></td></tr>
+<tr class="memitem:a48db9b9930a2040585f12eb1fc620bad" id="r_a48db9b9930a2040585f12eb1fc620bad"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a48db9b9930a2040585f12eb1fc620bad">std::bit_width</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a48db9b9930a2040585f12eb1fc620bad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bit width (number of bits needed to represent the value)  <br /></td></tr>
+<tr class="memitem:a85eae98eb0ce8297c10e2c39326df0cf" id="r_a85eae98eb0ce8297c10e2c39326df0cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a85eae98eb0ce8297c10e2c39326df0cf">std::has_single_bit</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a85eae98eb0ce8297c10e2c39326df0cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if value has only a single bit set.  <br /></td></tr>
+<tr class="memitem:a5010f300dd04827cc0b97e208b3bc861" id="r_a5010f300dd04827cc0b97e208b3bc861"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a5010f300dd04827cc0b97e208b3bc861">std::bit_floor</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a5010f300dd04827cc0b97e208b3bc861"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the largest power of 2 not greater than value.  <br /></td></tr>
+<tr class="memitem:ad7d460139445b5d3ad7dc5a1a907f2ba" id="r_ad7d460139445b5d3ad7dc5a1a907f2ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#ad7d460139445b5d3ad7dc5a1a907f2ba">std::bit_ceil</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:ad7d460139445b5d3ad7dc5a1a907f2ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the smallest power of 2 not less than value.  <br /></td></tr>
+<tr class="memitem:acd6c0b9cbaffb4bfa56a5d4d1ebdeab1" id="r_acd6c0b9cbaffb4bfa56a5d4d1ebdeab1"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#acd6c0b9cbaffb4bfa56a5d4d1ebdeab1">uint128_bits::rotl</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, int shift) noexcept</td></tr>
+<tr class="memdesc:acd6c0b9cbaffb4bfa56a5d4d1ebdeab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate left.  <br /></td></tr>
+<tr class="memitem:ac3257f412a3e26fd0ed1357040f13c35" id="r_ac3257f412a3e26fd0ed1357040f13c35"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#ac3257f412a3e26fd0ed1357040f13c35">uint128_bits::rotr</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, int shift) noexcept</td></tr>
+<tr class="memdesc:ac3257f412a3e26fd0ed1357040f13c35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate right.  <br /></td></tr>
+<tr class="memitem:af3accaf58a6e9c6370331b0047355cba" id="r_af3accaf58a6e9c6370331b0047355cba"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#af3accaf58a6e9c6370331b0047355cba">uint128_bits::reverse_bits</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:af3accaf58a6e9c6370331b0047355cba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse all bits.  <br /></td></tr>
+<tr class="memitem:ade9e4d09e23eea8298710a505639e79c" id="r_ade9e4d09e23eea8298710a505639e79c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#ade9e4d09e23eea8298710a505639e79c">uint128_bits::byteswap</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:ade9e4d09e23eea8298710a505639e79c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverse bytes (endianness swap)  <br /></td></tr>
+<tr class="memitem:ac98386e594e49be2a5d877819e4000b6" id="r_ac98386e594e49be2a5d877819e4000b6"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#ac98386e594e49be2a5d877819e4000b6">uint128_bits::extract_bits</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, int offset, int width) noexcept</td></tr>
+<tr class="memdesc:ac98386e594e49be2a5d877819e4000b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract bit field.  <br /></td></tr>
+<tr class="memitem:a8736f854229bd8db5d0b957b284777ee" id="r_a8736f854229bd8db5d0b957b284777ee"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#a8736f854229bd8db5d0b957b284777ee">uint128_bits::insert_bits</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;dest, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;src, int offset, int width) noexcept</td></tr>
+<tr class="memdesc:a8736f854229bd8db5d0b957b284777ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert bit field.  <br /></td></tr>
+<tr class="memitem:ad2349d7332284e9ff7d8e8302e540e28" id="r_ad2349d7332284e9ff7d8e8302e540e28"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#ad2349d7332284e9ff7d8e8302e540e28">uint128_bits::parallel_deposit</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;mask) noexcept</td></tr>
+<tr class="memdesc:ad2349d7332284e9ff7d8e8302e540e28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parallel bit deposit (PDEP)  <br /></td></tr>
+<tr class="memitem:af7b151dc885bba4a4a7d79654d5808be" id="r_af7b151dc885bba4a4a7d79654d5808be"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#af7b151dc885bba4a4a7d79654d5808be">uint128_bits::parallel_extract</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;mask) noexcept</td></tr>
+<tr class="memdesc:af7b151dc885bba4a4a7d79654d5808be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parallel bit extract (PEXT)  <br /></td></tr>
+<tr class="memitem:aeb70fb9e1e386c783c3ae52be6ee0f5a" id="r_aeb70fb9e1e386c783c3ae52be6ee0f5a"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#aeb70fb9e1e386c783c3ae52be6ee0f5a">uint128_bits::get_bit</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, int position) noexcept</td></tr>
+<tr class="memdesc:aeb70fb9e1e386c783c3ae52be6ee0f5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get bit at specific position.  <br /></td></tr>
+<tr class="memitem:a9528bae1e19df3285cd76df92f8cc8d1" id="r_a9528bae1e19df3285cd76df92f8cc8d1"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#a9528bae1e19df3285cd76df92f8cc8d1">uint128_bits::set_bit</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, int position, bool bit_value=true) noexcept</td></tr>
+<tr class="memdesc:a9528bae1e19df3285cd76df92f8cc8d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set bit at specific position.  <br /></td></tr>
+<tr class="memitem:a3c0b199528f0ee56c229e54383319f95" id="r_a3c0b199528f0ee56c229e54383319f95"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#a3c0b199528f0ee56c229e54383319f95">uint128_bits::flip_bit</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value, int position) noexcept</td></tr>
+<tr class="memdesc:a3c0b199528f0ee56c229e54383319f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flip bit at specific position.  <br /></td></tr>
+<tr class="memitem:a3f66ff798c2b6884d625596ca3b1fec4" id="r_a3f66ff798c2b6884d625596ca3b1fec4"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#a3f66ff798c2b6884d625596ca3b1fec4">uint128_bits::find_first_set</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a3f66ff798c2b6884d625596ca3b1fec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find first set bit (1-based index, 0 if none)  <br /></td></tr>
+<tr class="memitem:aa67bbc20d0381516a7ff3bef6fcafdbb" id="r_aa67bbc20d0381516a7ff3bef6fcafdbb"><td class="memItemLeft" align="right" valign="top">constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__bits.html#aa67bbc20d0381516a7ff3bef6fcafdbb">uint128_bits::find_last_set</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:aa67bbc20d0381516a7ff3bef6fcafdbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find last set bit (1-based index, 0 if none)  <br /></td></tr>
+<tr class="memitem:a06b50de9152a6c906ebf6c55b1a53413" id="r_a06b50de9152a6c906ebf6c55b1a53413"><td class="memItemLeft" align="right" valign="top">std::bitset&lt; 128 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a06b50de9152a6c906ebf6c55b1a53413">std::to_bitset</a> (const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value) noexcept</td></tr>
+<tr class="memdesc:a06b50de9152a6c906ebf6c55b1a53413"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="classuint128__t.html">uint128_t</a> to std::bitset&lt;128&gt;  <br /></td></tr>
+<tr class="memitem:a32663b49913900e3ad1f64368b70c8d7" id="r_a32663b49913900e3ad1f64368b70c8d7"><td class="memTemplParams" colspan="2">template&lt;size_t N&gt; </td></tr>
+<tr class="memitem:a32663b49913900e3ad1f64368b70c8d7 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacestd.html#a32663b49913900e3ad1f64368b70c8d7">std::from_bitset</a> (const std::bitset&lt; N &gt; &amp;bs) noexcept</td></tr>
+<tr class="memdesc:a32663b49913900e3ad1f64368b70c8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert std::bitset&lt;128&gt; to <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+</table>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_112d3ffe51c7b5a140d53e2d7d99bbd9.html">uint128</a></li><li class="navelem"><a href="uint128__bits_8hpp.html">uint128_bits.hpp</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para int128 - 128-bit Integer Types for C++ por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

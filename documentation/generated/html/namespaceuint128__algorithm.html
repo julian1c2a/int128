@@ -1,0 +1,983 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>int128 - 128-bit Integer Types for C++: Referencia del espacio de nombres uint128_algorithm</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">int128 - 128-bit Integer Types for C++<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Complete and efficient 128-bit signed and unsigned integer implementation for C++20</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('namespaceuint128__algorithm.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del espacio de nombres uint128_algorithm</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Algoritmos optimizados y especializados para <a class="el" href="classuint128__t.html">uint128_t</a>.  
+<a href="#details">Más...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Clases</h2></td></tr>
+<tr class="memitem:uint128_5Fstats" id="r_uint128_5Fstats"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structuint128__algorithm_1_1uint128__stats.html">uint128_stats</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estadisticas basicas de un rango de <a class="el" href="classuint128__t.html">uint128_t</a>.  <a href="structuint128__algorithm_1_1uint128__stats.html#details">Más...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:a9afcd8e5b2b792ba2eb058b85a5fd341" id="r_a9afcd8e5b2b792ba2eb058b85a5fd341"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a9afcd8e5b2b792ba2eb058b85a5fd341 template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9afcd8e5b2b792ba2eb058b85a5fd341">binary_search_uint128</a> (ForwardIt first, ForwardIt last, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value)</td></tr>
+<tr class="memdesc:a9afcd8e5b2b792ba2eb058b85a5fd341"><td class="mdescLeft">&#160;</td><td class="mdescRight">Busqueda binaria optimizada para rangos de <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+<tr class="memitem:a0503bb3e177fbf1a41fb5e594bbb70d9" id="r_a0503bb3e177fbf1a41fb5e594bbb70d9"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a0503bb3e177fbf1a41fb5e594bbb70d9 template"><td class="memItemLeft" align="right" valign="top">ForwardIt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0503bb3e177fbf1a41fb5e594bbb70d9">find_if_uint128</a> (ForwardIt first, ForwardIt last, <a class="el" href="conceptuint128__concepts_1_1uint128__predicate.html">uint128_concepts::uint128_predicate</a> auto pred)</td></tr>
+<tr class="memdesc:a0503bb3e177fbf1a41fb5e594bbb70d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el primer elemento que satisface el predicado.  <br /></td></tr>
+<tr class="memitem:a7c929c388d3f8c728bd9ee3039d1dbec" id="r_a7c929c388d3f8c728bd9ee3039d1dbec"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt, std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a7c929c388d3f8c728bd9ee3039d1dbec template"><td class="memItemLeft" align="right" valign="top">OutputIt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c929c388d3f8c728bd9ee3039d1dbec">transform_uint128</a> (InputIt first, InputIt last, OutputIt result, auto op)</td></tr>
+<tr class="memdesc:a7c929c388d3f8c728bd9ee3039d1dbec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforma un rango aplicando una operacion a cada elemento.  <br /></td></tr>
+<tr class="memitem:a0084c84bf0696e7fa1481e561ebc4518" id="r_a0084c84bf0696e7fa1481e561ebc4518"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a0084c84bf0696e7fa1481e561ebc4518 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0084c84bf0696e7fa1481e561ebc4518">for_each_uint128</a> (ForwardIt first, ForwardIt last, <a class="el" href="conceptuint128__concepts_1_1uint128__function.html">uint128_concepts::uint128_function</a>&lt;&gt; auto f)</td></tr>
+<tr class="memdesc:a0084c84bf0696e7fa1481e561ebc4518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aplica una funcion a cada elemento del rango.  <br /></td></tr>
+<tr class="memitem:acf5b431f73fc661bfc502596e522a806" id="r_acf5b431f73fc661bfc502596e522a806"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt, typename T&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:acf5b431f73fc661bfc502596e522a806 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf5b431f73fc661bfc502596e522a806">accumulate_uint128</a> (InputIt first, InputIt last, T init, <a class="el" href="conceptuint128__concepts_1_1uint128__reduce__operation.html">uint128_concepts::uint128_reduce_operation</a>&lt; T &gt; auto op)</td></tr>
+<tr class="memdesc:acf5b431f73fc661bfc502596e522a806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acumula valores en un rango usando una operacion especifica.  <br /></td></tr>
+<tr class="memitem:a0b1ced7ce71eda86b09bf7b0dd798bae" id="r_a0b1ced7ce71eda86b09bf7b0dd798bae"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a0b1ced7ce71eda86b09bf7b0dd798bae template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b1ced7ce71eda86b09bf7b0dd798bae">sum_uint128</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a0b1ced7ce71eda86b09bf7b0dd798bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Suma todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:a8d74d998d7a905cb0be0b2c698cc9526" id="r_a8d74d998d7a905cb0be0b2c698cc9526"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a8d74d998d7a905cb0be0b2c698cc9526 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d74d998d7a905cb0be0b2c698cc9526">product_uint128</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a8d74d998d7a905cb0be0b2c698cc9526"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el producto de todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:ab70fc578a16db1859d8c07ede3c738c2" id="r_ab70fc578a16db1859d8c07ede3c738c2"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:ab70fc578a16db1859d8c07ede3c738c2 template"><td class="memItemLeft" align="right" valign="top">ForwardIt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab70fc578a16db1859d8c07ede3c738c2">partition_uint128</a> (ForwardIt first, ForwardIt last, <a class="el" href="conceptuint128__concepts_1_1uint128__predicate.html">uint128_concepts::uint128_predicate</a> auto pred)</td></tr>
+<tr class="memdesc:ab70fc578a16db1859d8c07ede3c738c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particiona un rango segun un predicado.  <br /></td></tr>
+<tr class="memitem:a09bacaa3e38038ce3a1f376a0c64242c" id="r_a09bacaa3e38038ce3a1f376a0c64242c"><td class="memTemplParams" colspan="2">template&lt;std::random_access_iterator RandomIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;RandomIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a09bacaa3e38038ce3a1f376a0c64242c template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09bacaa3e38038ce3a1f376a0c64242c">sort_uint128</a> (RandomIt first, RandomIt last)</td></tr>
+<tr class="memdesc:a09bacaa3e38038ce3a1f376a0c64242c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ordena un rango de <a class="el" href="classuint128__t.html">uint128_t</a> usando una comparacion personalizada.  <br /></td></tr>
+<tr class="memitem:a22c59ba694fe99423eaad6787ea5d126" id="r_a22c59ba694fe99423eaad6787ea5d126"><td class="memTemplParams" colspan="2">template&lt;std::random_access_iterator RandomIt, typename Compare&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;RandomIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a22c59ba694fe99423eaad6787ea5d126 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22c59ba694fe99423eaad6787ea5d126">sort_uint128</a> (RandomIt first, RandomIt last, Compare comp)</td></tr>
+<tr class="memitem:a6fd3362e3e53eb992c39a6eab38e6c60" id="r_a6fd3362e3e53eb992c39a6eab38e6c60"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a6fd3362e3e53eb992c39a6eab38e6c60 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fd3362e3e53eb992c39a6eab38e6c60">gcd_range</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a6fd3362e3e53eb992c39a6eab38e6c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el maximo comun divisor de todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:a263c0979c07d369536b7d3f6e5fd1c7f" id="r_a263c0979c07d369536b7d3f6e5fd1c7f"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a263c0979c07d369536b7d3f6e5fd1c7f template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a263c0979c07d369536b7d3f6e5fd1c7f">lcm_range</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a263c0979c07d369536b7d3f6e5fd1c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el minimo comun multiplo de todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:ad7e2cffc6e059d663fcf33ed2c32f0b8" id="r_ad7e2cffc6e059d663fcf33ed2c32f0b8"><td class="memTemplParams" colspan="2">template&lt;std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; </td></tr>
+<tr class="memitem:ad7e2cffc6e059d663fcf33ed2c32f0b8 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad7e2cffc6e059d663fcf33ed2c32f0b8">generate_arithmetic_sequence</a> (OutputIt first, std::size_t count, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;start, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;step)</td></tr>
+<tr class="memdesc:ad7e2cffc6e059d663fcf33ed2c32f0b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Genera una secuencia aritmetica de <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+<tr class="memitem:a3b20625c20d5701f56c3fe961a23d5df" id="r_a3b20625c20d5701f56c3fe961a23d5df"><td class="memTemplParams" colspan="2">template&lt;std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; </td></tr>
+<tr class="memitem:a3b20625c20d5701f56c3fe961a23d5df template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b20625c20d5701f56c3fe961a23d5df">generate_geometric_sequence</a> (OutputIt first, std::size_t count, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;start, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;ratio)</td></tr>
+<tr class="memdesc:a3b20625c20d5701f56c3fe961a23d5df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Genera una secuencia geometrica de <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+<tr class="memitem:a8b4e67d830c0748fbd8f025a50da243e" id="r_a8b4e67d830c0748fbd8f025a50da243e"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a8b4e67d830c0748fbd8f025a50da243e template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structuint128__algorithm_1_1uint128__stats.html">uint128_stats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b4e67d830c0748fbd8f025a50da243e">calculate_stats</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a8b4e67d830c0748fbd8f025a50da243e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcula estadisticas basicas de un rango.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Descripción detallada</h2>
+<div class="textblock"><p>Algoritmos optimizados y especializados para <a class="el" href="classuint128__t.html">uint128_t</a>. </p>
+<p>Este archivo proporciona implementaciones optimizadas de algoritmos estandar especificamente disenados para trabajar con <a class="el" href="classuint128__t.html">uint128_t</a>. </p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Documentación de funciones</h2>
+<a id="acf5b431f73fc661bfc502596e522a806" name="acf5b431f73fc661bfc502596e522a806"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf5b431f73fc661bfc502596e522a806">&#9670;&#160;</a></span>accumulate_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt, typename T&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T uint128_algorithm::accumulate_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>init</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="conceptuint128__concepts_1_1uint128__reduce__operation.html">uint128_concepts::uint128_reduce_operation</a>&lt; T &gt; auto</td>          <td class="paramname"><span class="paramname"><em>op</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Acumula valores en un rango usando una operacion especifica. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador de entrada </td></tr>
+    <tr><td class="paramname">T</td><td>Tipo del valor inicial </td></tr>
+    <tr><td class="paramname">BinaryOp</td><td>Tipo de operacion binaria </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+    <tr><td class="paramname">init</td><td>Valor inicial </td></tr>
+    <tr><td class="paramname">op</td><td>Operacion binaria </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Resultado de la acumulacion</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000021">Prueba</a></b></dt><dd>test_accumulate_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Acumula con operaciones de suma y producto</span></div>
+<div class="line"><span class="keyword">auto</span> sum = <a class="code hl_function" href="#acf5b431f73fc661bfc502596e522a806">accumulate_uint128</a>(vec.begin(), vec.end(),</div>
+<div class="line">    <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0), std::plus&lt;uint128_t&gt;());</div>
+<div class="line">assert(sum == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(60));</div>
+<div class="ttc" id="aclassuint128__t_html"><div class="ttname"><a href="classuint128__t.html">uint128_t</a></div><div class="ttdef"><b>Definition</b> <a href="uint128__t_8hpp_source.html#l00037">uint128_t.hpp:38</a></div></div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_acf5b431f73fc661bfc502596e522a806"><div class="ttname"><a href="#acf5b431f73fc661bfc502596e522a806">uint128_algorithm::accumulate_uint128</a></div><div class="ttdeci">T accumulate_uint128(InputIt first, InputIt last, T init, uint128_concepts::uint128_reduce_operation&lt; T &gt; auto op)</div><div class="ttdoc">Acumula valores en un rango usando una operacion especifica.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00187">uint128_algorithm.hpp:187</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00187">187</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="uint128__ranges_8hpp_source.html#l00058">std::accumulate()</a>.</p>
+
+</div>
+</div>
+<a id="a9afcd8e5b2b792ba2eb058b85a5fd341" name="a9afcd8e5b2b792ba2eb058b85a5fd341"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9afcd8e5b2b792ba2eb058b85a5fd341">&#9670;&#160;</a></span>binary_search_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool uint128_algorithm::binary_search_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Busqueda binaria optimizada para rangos de <a class="el" href="classuint128__t.html">uint128_t</a>. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ForwardIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+    <tr><td class="paramname">value</td><td>Valor a buscar </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>true si se encuentra el valor, false en caso contrario</dd></dl>
+<p>Optimizada para aprovechar las caracteristicas especificas de <a class="el" href="classuint128__t.html">uint128_t</a>.</p>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000017">Prueba</a></b></dt><dd>test_binary_search_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Verifica busqueda de valores existentes e inexistentes</span></div>
+<div class="line">std::vector&lt;uint128_t&gt; vec = {10, 20, 30, 40, 50};</div>
+<div class="line">assert(<a class="code hl_function" href="#a9afcd8e5b2b792ba2eb058b85a5fd341">binary_search_uint128</a>(vec.begin(), vec.end(), <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(30)));</div>
+<div class="line">assert(!<a class="code hl_function" href="#a9afcd8e5b2b792ba2eb058b85a5fd341">binary_search_uint128</a>(vec.begin(), vec.end(), <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(15)));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a9afcd8e5b2b792ba2eb058b85a5fd341"><div class="ttname"><a href="#a9afcd8e5b2b792ba2eb058b85a5fd341">uint128_algorithm::binary_search_uint128</a></div><div class="ttdeci">bool binary_search_uint128(ForwardIt first, ForwardIt last, const uint128_t &amp;value)</div><div class="ttdoc">Busqueda binaria optimizada para rangos de uint128_t.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00073">uint128_algorithm.hpp:73</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00073">73</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8b4e67d830c0748fbd8f025a50da243e" name="a8b4e67d830c0748fbd8f025a50da243e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b4e67d830c0748fbd8f025a50da243e">&#9670;&#160;</a></span>calculate_stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structuint128__algorithm_1_1uint128__stats.html">uint128_stats</a> uint128_algorithm::calculate_stats </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calcula estadisticas basicas de un rango. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Estructura con estadisticas basicas</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000030">Prueba</a></b></dt><dd>test_calculate_stats </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Calcula min, max, sum, count y mean de un rango</span></div>
+<div class="line"><span class="keyword">auto</span> stats = <a class="code hl_function" href="#a8b4e67d830c0748fbd8f025a50da243e">calculate_stats</a>(vec.begin(), vec.end());</div>
+<div class="line">assert(stats.min_value == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(10) &amp;&amp; stats.max_value == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(50));</div>
+<div class="line">assert(stats.sum == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(150) &amp;&amp; stats.mean() == 30.0);</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a8b4e67d830c0748fbd8f025a50da243e"><div class="ttname"><a href="#a8b4e67d830c0748fbd8f025a50da243e">uint128_algorithm::calculate_stats</a></div><div class="ttdeci">uint128_stats calculate_stats(InputIt first, InputIt last)</div><div class="ttdoc">Calcula estadisticas basicas de un rango.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00456">uint128_algorithm.hpp:456</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00456">456</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="uint128__algorithm_8hpp_source.html#l00431">uint128_algorithm::uint128_stats::count</a>, <a class="el" href="int128__cmath_8hpp_source.html#l00226">std::max()</a>, <a class="el" href="uint128__algorithm_8hpp_source.html#l00429">uint128_algorithm::uint128_stats::max_value</a>, <a class="el" href="int128__cmath_8hpp_source.html#l00252">std::min()</a>, <a class="el" href="uint128__algorithm_8hpp_source.html#l00428">uint128_algorithm::uint128_stats::min_value</a> y <a class="el" href="uint128__algorithm_8hpp_source.html#l00430">uint128_algorithm::uint128_stats::sum</a>.</p>
+
+</div>
+</div>
+<a id="a0503bb3e177fbf1a41fb5e594bbb70d9" name="a0503bb3e177fbf1a41fb5e594bbb70d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0503bb3e177fbf1a41fb5e594bbb70d9">&#9670;&#160;</a></span>find_if_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ForwardIt uint128_algorithm::find_if_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="conceptuint128__concepts_1_1uint128__predicate.html">uint128_concepts::uint128_predicate</a> auto</td>          <td class="paramname"><span class="paramname"><em>pred</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Encuentra el primer elemento que satisface el predicado. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ForwardIt</td><td>Tipo de iterador </td></tr>
+    <tr><td class="paramname">Predicate</td><td>Tipo del predicado </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+    <tr><td class="paramname">pred</td><td>Predicado a aplicar </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Iterador al primer elemento que satisface el predicado</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000018">Prueba</a></b></dt><dd>test_find_if_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Encuentra primer elemento mayor que 12, numeros pares, etc.</span></div>
+<div class="line"><span class="keyword">auto</span> it = <a class="code hl_function" href="#a0503bb3e177fbf1a41fb5e594bbb70d9">find_if_uint128</a>(vec.begin(), vec.end(),</div>
+<div class="line">    [](<span class="keyword">const</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>&amp; x) { return x &gt; uint128_t(12); });</div>
+<div class="line">assert(it != vec.end() &amp;&amp; *it == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(15));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a0503bb3e177fbf1a41fb5e594bbb70d9"><div class="ttname"><a href="#a0503bb3e177fbf1a41fb5e594bbb70d9">uint128_algorithm::find_if_uint128</a></div><div class="ttdeci">ForwardIt find_if_uint128(ForwardIt first, ForwardIt last, uint128_concepts::uint128_predicate auto pred)</div><div class="ttdoc">Encuentra el primer elemento que satisface el predicado.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00099">uint128_algorithm.hpp:99</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00099">99</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0084c84bf0696e7fa1481e561ebc4518" name="a0084c84bf0696e7fa1481e561ebc4518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0084c84bf0696e7fa1481e561ebc4518">&#9670;&#160;</a></span>for_each_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void uint128_algorithm::for_each_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="conceptuint128__concepts_1_1uint128__function.html">uint128_concepts::uint128_function</a>&lt;&gt; auto</td>          <td class="paramname"><span class="paramname"><em>f</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Aplica una funcion a cada elemento del rango. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ForwardIt</td><td>Tipo de iterador </td></tr>
+    <tr><td class="paramname">Function</td><td>Tipo de funcion </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+    <tr><td class="paramname">f</td><td>Funcion a aplicar</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000020">Prueba</a></b></dt><dd>test_for_each_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Aplica funcion a cada elemento (contar, sumar)</span></div>
+<div class="line"><a class="code hl_class" href="classuint128__t.html">uint128_t</a> sum = 0;</div>
+<div class="line"><a class="code hl_function" href="#a0084c84bf0696e7fa1481e561ebc4518">for_each_uint128</a>(vec.begin(), vec.end(),</div>
+<div class="line">    [&amp;sum](<span class="keyword">const</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>&amp; x) { sum += x; });</div>
+<div class="line">assert(sum == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(6));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a0084c84bf0696e7fa1481e561ebc4518"><div class="ttname"><a href="#a0084c84bf0696e7fa1481e561ebc4518">uint128_algorithm::for_each_uint128</a></div><div class="ttdeci">void for_each_uint128(ForwardIt first, ForwardIt last, uint128_concepts::uint128_function&lt;&gt; auto f)</div><div class="ttdoc">Aplica una funcion a cada elemento del rango.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00156">uint128_algorithm.hpp:156</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00156">156</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6fd3362e3e53eb992c39a6eab38e6c60" name="a6fd3362e3e53eb992c39a6eab38e6c60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fd3362e3e53eb992c39a6eab38e6c60">&#9670;&#160;</a></span>gcd_range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classuint128__t.html">uint128_t</a> uint128_algorithm::gcd_range </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Encuentra el maximo comun divisor de todos los elementos en un rango. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>GCD de todos los elementos (0 si el rango esta vacio)</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000026">Prueba</a></b></dt><dd>test_gcd_range </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Calcula GCD de multiples numeros, verifica coprimos</span></div>
+<div class="line">std::vector&lt;uint128_t&gt; vec = {12, 18, 24};</div>
+<div class="line"><span class="keyword">auto</span> gcd = <a class="code hl_function" href="#a6fd3362e3e53eb992c39a6eab38e6c60">gcd_range</a>(vec.begin(), vec.end());</div>
+<div class="line">assert(gcd == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(6));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a6fd3362e3e53eb992c39a6eab38e6c60"><div class="ttname"><a href="#a6fd3362e3e53eb992c39a6eab38e6c60">uint128_algorithm::gcd_range</a></div><div class="ttdeci">uint128_t gcd_range(InputIt first, InputIt last)</div><div class="ttdoc">Encuentra el maximo comun divisor de todos los elementos en un rango.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00321">uint128_algorithm.hpp:321</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00321">321</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="int128__cmath_8hpp_source.html#l00020">std::gcd()</a>.</p>
+
+</div>
+</div>
+<a id="ad7e2cffc6e059d663fcf33ed2c32f0b8" name="ad7e2cffc6e059d663fcf33ed2c32f0b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7e2cffc6e059d663fcf33ed2c32f0b8">&#9670;&#160;</a></span>generate_arithmetic_sequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void uint128_algorithm::generate_arithmetic_sequence </td>
+          <td>(</td>
+          <td class="paramtype">OutputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>start</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>step</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Genera una secuencia aritmetica de <a class="el" href="classuint128__t.html">uint128_t</a>. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">OutputIt</td><td>Tipo de iterador de salida </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango de salida </td></tr>
+    <tr><td class="paramname">count</td><td>Numero de elementos a generar </td></tr>
+    <tr><td class="paramname">start</td><td>Valor inicial </td></tr>
+    <tr><td class="paramname">step</td><td>Paso de la secuencia</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000028">Prueba</a></b></dt><dd>test_generate_arithmetic_sequence </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Genera secuencias ascendentes/descendentes (10,15,20,...)</span></div>
+<div class="line"><a class="code hl_function" href="#ad7e2cffc6e059d663fcf33ed2c32f0b8">generate_arithmetic_sequence</a>(seq.begin(), 5, <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(10), <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(5));</div>
+<div class="line">assert(seq[0] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(10) &amp;&amp; seq[4] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(30));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_ad7e2cffc6e059d663fcf33ed2c32f0b8"><div class="ttname"><a href="#ad7e2cffc6e059d663fcf33ed2c32f0b8">uint128_algorithm::generate_arithmetic_sequence</a></div><div class="ttdeci">void generate_arithmetic_sequence(OutputIt first, std::size_t count, const uint128_t &amp;start, const uint128_t &amp;step)</div><div class="ttdoc">Genera una secuencia aritmetica de uint128_t.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00383">uint128_algorithm.hpp:383</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00383">383</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3b20625c20d5701f56c3fe961a23d5df" name="a3b20625c20d5701f56c3fe961a23d5df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b20625c20d5701f56c3fe961a23d5df">&#9670;&#160;</a></span>generate_geometric_sequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void uint128_algorithm::generate_geometric_sequence </td>
+          <td>(</td>
+          <td class="paramtype">OutputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>start</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>ratio</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Genera una secuencia geometrica de <a class="el" href="classuint128__t.html">uint128_t</a>. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">OutputIt</td><td>Tipo de iterador de salida </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango de salida </td></tr>
+    <tr><td class="paramname">count</td><td>Numero de elementos a generar </td></tr>
+    <tr><td class="paramname">start</td><td>Valor inicial </td></tr>
+    <tr><td class="paramname">ratio</td><td>Razon de la secuencia</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000029">Prueba</a></b></dt><dd>test_generate_geometric_sequence </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Genera progresiones geometricas (2,4,8,16,...)</span></div>
+<div class="line"><a class="code hl_function" href="#a3b20625c20d5701f56c3fe961a23d5df">generate_geometric_sequence</a>(seq.begin(), 5, <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(2), <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(2));</div>
+<div class="line">assert(seq[0] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(2) &amp;&amp; seq[4] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(32));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a3b20625c20d5701f56c3fe961a23d5df"><div class="ttname"><a href="#a3b20625c20d5701f56c3fe961a23d5df">uint128_algorithm::generate_geometric_sequence</a></div><div class="ttdeci">void generate_geometric_sequence(OutputIt first, std::size_t count, const uint128_t &amp;start, const uint128_t &amp;ratio)</div><div class="ttdoc">Genera una secuencia geometrica de uint128_t.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00410">uint128_algorithm.hpp:410</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00410">410</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a263c0979c07d369536b7d3f6e5fd1c7f" name="a263c0979c07d369536b7d3f6e5fd1c7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a263c0979c07d369536b7d3f6e5fd1c7f">&#9670;&#160;</a></span>lcm_range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classuint128__t.html">uint128_t</a> uint128_algorithm::lcm_range </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Encuentra el minimo comun multiplo de todos los elementos en un rango. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>LCM de todos los elementos (0 si algun elemento es 0)</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000027">Prueba</a></b></dt><dd>test_lcm_range </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Calcula LCM de multiples numeros, verifica con cero</span></div>
+<div class="line">std::vector&lt;uint128_t&gt; vec = {4, 6, 8};</div>
+<div class="line"><span class="keyword">auto</span> lcm = <a class="code hl_function" href="#a263c0979c07d369536b7d3f6e5fd1c7f">lcm_range</a>(vec.begin(), vec.end());</div>
+<div class="line">assert(lcm == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(24));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a263c0979c07d369536b7d3f6e5fd1c7f"><div class="ttname"><a href="#a263c0979c07d369536b7d3f6e5fd1c7f">uint128_algorithm::lcm_range</a></div><div class="ttdeci">uint128_t lcm_range(InputIt first, InputIt last)</div><div class="ttdoc">Encuentra el minimo comun multiplo de todos los elementos en un rango.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00353">uint128_algorithm.hpp:353</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00353">353</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="int128__cmath_8hpp_source.html#l00091">std::lcm()</a>.</p>
+
+</div>
+</div>
+<a id="ab70fc578a16db1859d8c07ede3c738c2" name="ab70fc578a16db1859d8c07ede3c738c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab70fc578a16db1859d8c07ede3c738c2">&#9670;&#160;</a></span>partition_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ForwardIt uint128_algorithm::partition_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ForwardIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="conceptuint128__concepts_1_1uint128__predicate.html">uint128_concepts::uint128_predicate</a> auto</td>          <td class="paramname"><span class="paramname"><em>pred</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Particiona un rango segun un predicado. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ForwardIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+    <tr><td class="paramname">pred</td><td>Predicado de particion </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Iterador al primer elemento que no satisface el predicado</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000024">Prueba</a></b></dt><dd>test_partition_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Particiona en pares/impares, verifica separacion correcta</span></div>
+<div class="line"><span class="keyword">auto</span> middle = <a class="code hl_function" href="#ab70fc578a16db1859d8c07ede3c738c2">partition_uint128</a>(vec.begin(), vec.end(),</div>
+<div class="line">    [](<span class="keyword">const</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>&amp; x) { return (x % uint128_t(2)) == uint128_t(0); });</div>
+<div class="line"><span class="comment">// Verifica que elementos antes de middle son pares</span></div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_ab70fc578a16db1859d8c07ede3c738c2"><div class="ttname"><a href="#ab70fc578a16db1859d8c07ede3c738c2">uint128_algorithm::partition_uint128</a></div><div class="ttdeci">ForwardIt partition_uint128(ForwardIt first, ForwardIt last, uint128_concepts::uint128_predicate auto pred)</div><div class="ttdoc">Particiona un rango segun un predicado.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00262">uint128_algorithm.hpp:262</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00262">262</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8d74d998d7a905cb0be0b2c698cc9526" name="a8d74d998d7a905cb0be0b2c698cc9526"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d74d998d7a905cb0be0b2c698cc9526">&#9670;&#160;</a></span>product_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classuint128__t.html">uint128_t</a> uint128_algorithm::product_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Encuentra el producto de todos los elementos en un rango. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Producto de todos los elementos</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000023">Prueba</a></b></dt><dd>test_product_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Calcula producto, verifica comportamiento con cero</span></div>
+<div class="line">std::vector&lt;uint128_t&gt; vec = {2, 3, 4};</div>
+<div class="line"><span class="keyword">auto</span> product = <a class="code hl_function" href="#a8d74d998d7a905cb0be0b2c698cc9526">product_uint128</a>(vec.begin(), vec.end());</div>
+<div class="line">assert(product == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(24));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a8d74d998d7a905cb0be0b2c698cc9526"><div class="ttname"><a href="#a8d74d998d7a905cb0be0b2c698cc9526">uint128_algorithm::product_uint128</a></div><div class="ttdeci">uint128_t product_uint128(InputIt first, InputIt last)</div><div class="ttdoc">Encuentra el producto de todos los elementos en un rango.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00234">uint128_algorithm.hpp:234</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00234">234</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="uint128__ranges_8hpp_source.html#l00058">std::accumulate()</a>.</p>
+
+</div>
+</div>
+<a id="a09bacaa3e38038ce3a1f376a0c64242c" name="a09bacaa3e38038ce3a1f376a0c64242c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09bacaa3e38038ce3a1f376a0c64242c">&#9670;&#160;</a></span>sort_uint128() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::random_access_iterator RandomIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;RandomIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void uint128_algorithm::sort_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">RandomIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RandomIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ordena un rango de <a class="el" href="classuint128__t.html">uint128_t</a> usando una comparacion personalizada. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">RandomIt</td><td>Tipo de iterador de acceso aleatorio </td></tr>
+    <tr><td class="paramname">Compare</td><td>Tipo de funcion de comparacion </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+    <tr><td class="paramname">comp</td><td>Funcion de comparacion</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000025">Prueba</a></b></dt><dd>test_sort_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Ordena ascendente y descendente, verifica orden correcto</span></div>
+<div class="line"><a class="code hl_function" href="#a09bacaa3e38038ce3a1f376a0c64242c">sort_uint128</a>(vec.begin(), vec.end());</div>
+<div class="line">assert(vec[0] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(10) &amp;&amp; vec[4] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(80));</div>
+<div class="line"><a class="code hl_function" href="#a09bacaa3e38038ce3a1f376a0c64242c">sort_uint128</a>(vec.begin(), vec.end(), std::greater&lt;uint128_t&gt;());</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a09bacaa3e38038ce3a1f376a0c64242c"><div class="ttname"><a href="#a09bacaa3e38038ce3a1f376a0c64242c">uint128_algorithm::sort_uint128</a></div><div class="ttdeci">void sort_uint128(RandomIt first, RandomIt last)</div><div class="ttdoc">Ordena un rango de uint128_t usando una comparacion personalizada.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00287">uint128_algorithm.hpp:287</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00287">287</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a22c59ba694fe99423eaad6787ea5d126" name="a22c59ba694fe99423eaad6787ea5d126"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22c59ba694fe99423eaad6787ea5d126">&#9670;&#160;</a></span>sort_uint128() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::random_access_iterator RandomIt, typename Compare&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;RandomIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void uint128_algorithm::sort_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">RandomIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RandomIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Compare</td>          <td class="paramname"><span class="paramname"><em>comp</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00294">294</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0b1ced7ce71eda86b09bf7b0dd798bae" name="a0b1ced7ce71eda86b09bf7b0dd798bae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b1ced7ce71eda86b09bf7b0dd798bae">&#9670;&#160;</a></span>sum_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classuint128__t.html">uint128_t</a> uint128_algorithm::sum_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Suma todos los elementos en un rango. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Suma de todos los elementos</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000022">Prueba</a></b></dt><dd>test_sum_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Suma elementos del rango, verifica rango vacio</span></div>
+<div class="line">std::vector&lt;uint128_t&gt; vec = {5, 10, 15, 20};</div>
+<div class="line"><span class="keyword">auto</span> sum = <a class="code hl_function" href="#a0b1ced7ce71eda86b09bf7b0dd798bae">sum_uint128</a>(vec.begin(), vec.end());</div>
+<div class="line">assert(sum == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(50));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a0b1ced7ce71eda86b09bf7b0dd798bae"><div class="ttname"><a href="#a0b1ced7ce71eda86b09bf7b0dd798bae">uint128_algorithm::sum_uint128</a></div><div class="ttdeci">uint128_t sum_uint128(InputIt first, InputIt last)</div><div class="ttdoc">Suma todos los elementos en un rango.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00211">uint128_algorithm.hpp:211</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00211">211</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="uint128__ranges_8hpp_source.html#l00058">std::accumulate()</a>.</p>
+
+</div>
+</div>
+<a id="a7c929c388d3f8c728bd9ee3039d1dbec" name="a7c929c388d3f8c728bd9ee3039d1dbec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c929c388d3f8c728bd9ee3039d1dbec">&#9670;&#160;</a></span>transform_uint128()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::input_iterator InputIt, std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">OutputIt uint128_algorithm::transform_uint128 </td>
+          <td>(</td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">InputIt</td>          <td class="paramname"><span class="paramname"><em>last</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">OutputIt</td>          <td class="paramname"><span class="paramname"><em>result</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">auto</td>          <td class="paramname"><span class="paramname"><em>op</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transforma un rango aplicando una operacion a cada elemento. </p>
+<dl class="tparams"><dt>Parámetros de plantilla</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">InputIt</td><td>Tipo de iterador de entrada </td></tr>
+    <tr><td class="paramname">OutputIt</td><td>Tipo de iterador de salida </td></tr>
+    <tr><td class="paramname">UnaryOp</td><td>Tipo de operacion unaria </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>Iterador al inicio del rango de entrada </td></tr>
+    <tr><td class="paramname">last</td><td>Iterador al final del rango de entrada </td></tr>
+    <tr><td class="paramname">result</td><td>Iterador al inicio del rango de salida </td></tr>
+    <tr><td class="paramname">op</td><td>Operacion a aplicar </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Devuelve</dt><dd>Iterador al final del rango de salida</dd></dl>
+<dl class="test"><dt><b><a class="el" href="test.html#_test000019">Prueba</a></b></dt><dd>test_transform_uint128 </dd></dl>
+<div class="fragment"><div class="line"><span class="comment">// Aplica transformaciones (duplicar, elevar al cuadrado)</span></div>
+<div class="line"><a class="code hl_function" href="#a7c929c388d3f8c728bd9ee3039d1dbec">transform_uint128</a>(input.begin(), input.end(), output.begin(),</div>
+<div class="line">    [](<span class="keyword">const</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>&amp; x) { return x * uint128_t(2); });</div>
+<div class="line">assert(output[0] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(2) &amp;&amp; output[1] == <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(4));</div>
+<div class="ttc" id="anamespaceuint128__algorithm_html_a7c929c388d3f8c728bd9ee3039d1dbec"><div class="ttname"><a href="#a7c929c388d3f8c728bd9ee3039d1dbec">uint128_algorithm::transform_uint128</a></div><div class="ttdeci">OutputIt transform_uint128(InputIt first, InputIt last, OutputIt result, auto op)</div><div class="ttdoc">Transforma un rango aplicando una operacion a cada elemento.</div><div class="ttdef"><b>Definition</b> <a href="uint128__algorithm_8hpp_source.html#l00131">uint128_algorithm.hpp:131</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definición en la línea <a class="el" href="uint128__algorithm_8hpp_source.html#l00131">131</a> del archivo <a class="el" href="uint128__algorithm_8hpp_source.html">uint128_algorithm.hpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespaceuint128__algorithm.html">uint128_algorithm</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para int128 - 128-bit Integer Types for C++ por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

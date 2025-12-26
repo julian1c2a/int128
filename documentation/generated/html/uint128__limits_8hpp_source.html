@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>int128 - 128-bit Integer Types for C++: Archivo de código fuente uint128/uint128_limits.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">int128 - 128-bit Integer Types for C++<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Complete and efficient 128-bit signed and unsigned integer implementation for C++20</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('uint128__limits_8hpp_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">uint128_limits.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="uint128__limits_8hpp.html">Ir a la documentación de este archivo.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Boost Software License - Version 1.0 - August 17th, 2003</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * Permission is hereby granted, free of charge, to any person or organization</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * obtaining a copy of the software and accompanying documentation covered by</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * this license (the &quot;Software&quot;) to use, reproduce, display, distribute,</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * execute, and transmit the Software, and to prepare derivative works of the</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Software, and to permit third-parties to whom the Software is furnished to</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * do so, all subject to the following:</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * The copyright notices in the Software and this entire statement, including</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * the above license grant, this restriction and the following disclaimer,</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * must be included in all copies of the Software, in whole or in part, and</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> * all derivative works of the Software, unless such copies or derivative</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> * works are solely in the form of machine-executable object code generated by</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * a source language processor.</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> * FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> * SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> * DEALINGS IN THE SOFTWARE.</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifndef UINT128_LIMITS_HPP</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define UINT128_LIMITS_HPP</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="uint128__t_8hpp.html">uint128_t.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;limits&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacestd.html">std</a></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"></span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment"> * @brief Especialización de std::numeric_limits para uint128_t</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"> * Proporciona información sobre las propiedades numéricas del tipo uint128_t,</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment"> * incluyendo rangos de valores, precisión y características especiales.</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="};">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html">   42</a></span><span class="keyword">template</span> &lt;&gt; <span class="keyword">class </span>numeric_limits&lt;<a class="code hl_class" href="classuint128__t.html">uint128_t</a>&gt;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#af48a19584e9824b9e860fde1b6856b71">   45</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#af48a19584e9824b9e860fde1b6856b71">is_specialized</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a927db1258a8d73685c60b9ebc5762b8a">   46</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a927db1258a8d73685c60b9ebc5762b8a">is_signed</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aeab5db22167fb41440f4694a8b9db89b">   47</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aeab5db22167fb41440f4694a8b9db89b">is_integer</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a66402f443cc2d34d34cd79e4450c913b">   48</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a66402f443cc2d34d34cd79e4450c913b">is_exact</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3dfead21f5c69e70760f44664837cdab">   49</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3dfead21f5c69e70760f44664837cdab">has_infinity</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a776ede290ca0a2309302d61a2f975e6e">   50</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a776ede290ca0a2309302d61a2f975e6e">has_quiet_NaN</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#abda1aabae8a602bdba4ab0e33fcf0b7b">   51</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#abda1aabae8a602bdba4ab0e33fcf0b7b">has_signaling_NaN</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a1be842df9173dec1dbfe802eb28b0b50">   52</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a1be842df9173dec1dbfe802eb28b0b50">has_denorm_loss</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a449c5ddf16224e4efa4cabd59444bef2">   53</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a449c5ddf16224e4efa4cabd59444bef2">is_iec559</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ad38eacffa339794338a1cf3280ccf161">   54</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ad38eacffa339794338a1cf3280ccf161">is_bounded</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a7f2b5737c0f756df725cbea1b79d2875">   55</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a7f2b5737c0f756df725cbea1b79d2875">is_modulo</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a27c6b949e965de30cdbddea47d49b9a9">   56</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a27c6b949e965de30cdbddea47d49b9a9">traps</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3411777cc8878b95a292f58aeedc7383">   57</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3411777cc8878b95a292f58aeedc7383">tinyness_before</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aaf0669103a64af128a805cfbe64985d9">   59</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aaf0669103a64af128a805cfbe64985d9">digits</a> = 128;     <span class="comment">// Número de bits significativos</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acae7c7c39c768e3355abb2835db0e8c2">   60</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acae7c7c39c768e3355abb2835db0e8c2">digits10</a> = 38;    <span class="comment">// floor(128 * log10(2)) = 38</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ae1004bcd85d6831c65171890b4915e2d">   61</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ae1004bcd85d6831c65171890b4915e2d">max_digits10</a> = 0; <span class="comment">// No aplicable para enteros</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a99dc30ecd09bd11f9292a923bbbf27be">   62</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a99dc30ecd09bd11f9292a923bbbf27be">radix</a> = 2;        <span class="comment">// Base binaria</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#afcc2d414e6d7bc7c8a2bf11568a7a345">   64</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#afcc2d414e6d7bc7c8a2bf11568a7a345">min_exponent</a> = 0;   <span class="comment">// No aplicable para enteros</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ab416b91852e455c8305d987306556d8a">   65</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ab416b91852e455c8305d987306556d8a">min_exponent10</a> = 0; <span class="comment">// No aplicable para enteros</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acaf266a9df5c208e74e3ad0ccb4b6e47">   66</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acaf266a9df5c208e74e3ad0ccb4b6e47">max_exponent</a> = 0;   <span class="comment">// No aplicable para enteros</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#af0cda40f183195c8a353b0680da66971">   67</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#af0cda40f183195c8a353b0680da66971">max_exponent10</a> = 0; <span class="comment">// No aplicable para enteros</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a337666ad8e4c2db5b0d83a2ae085d85c">   69</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> float_denorm_style <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a337666ad8e4c2db5b0d83a2ae085d85c">has_denorm</a> = denorm_absent;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aaff6dbc7f7479f6777267c120c008164">   70</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> float_round_style <a class="code hl_variable" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aaff6dbc7f7479f6777267c120c008164">round_style</a> = round_toward_zero;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// ===== MÉTODOS DE VALORES ESPECIALES =====</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment"></span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">     * @brief Valor mínimo representable</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a0d53e0ad7cc49e61778c7600bf980883">   78</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a0d53e0ad7cc49e61778c7600bf980883">min</a>() noexcept</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0, 0);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
+</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment"></span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">     * @brief Valor más bajo representable (igual a min para enteros sin signo)</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a4c6c1741e53d714fefb7e10f44dbf3a4">   87</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a4c6c1741e53d714fefb7e10f44dbf3a4">lowest</a>() noexcept</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a0d53e0ad7cc49e61778c7600bf980883">min</a>();</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    }</div>
+</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment"></span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">     * @brief Valor máximo representable</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">     * @return 2^128 - 1</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00096" data-start="{" data-end="}">
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#adac45cdff41337a00be74fa965dc6f80">   96</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#adac45cdff41337a00be74fa965dc6f80">max</a>() noexcept</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(UINT64_MAX, UINT64_MAX);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
+</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment"></span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">     * @brief Error de precisión de máquina (no aplicable para enteros)</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00105" data-start="{" data-end="}">
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aeca02a6c44f24315f2fbe55384734f11">  105</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aeca02a6c44f24315f2fbe55384734f11">epsilon</a>() noexcept</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0, 0);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
+</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment"></span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment">     * @brief Error de redondeo (no aplicable para enteros)</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00114" data-start="{" data-end="}">
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acecc8080c58faa919847b59945ac3e6d">  114</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acecc8080c58faa919847b59945ac3e6d">round_error</a>() noexcept</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    {</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0, 0);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
+</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment"></span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment">     * @brief Representación de infinito (no aplicable para enteros)</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00123" data-start="{" data-end="}">
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3e64b75c65143db4104a5c218a43692b">  123</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3e64b75c65143db4104a5c218a43692b">infinity</a>() noexcept</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0, 0);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    }</div>
+</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment"></span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="comment">     * @brief Representación de NaN silencioso (no aplicable para enteros)</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00132" data-start="{" data-end="}">
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acfb65a689bcf380515847321e82bd629">  132</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acfb65a689bcf380515847321e82bd629">quiet_NaN</a>() noexcept</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    {</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0, 0);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
+</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="comment"></span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="comment">     * @brief Representación de NaN señalizante (no aplicable para enteros)</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00141" data-start="{" data-end="}">
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a07b7d6c96477efc23060cfd06fa886bf">  141</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a07b7d6c96477efc23060cfd06fa886bf">signaling_NaN</a>() noexcept</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a>(0, 0);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    }</div>
+</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="comment"></span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="comment">     * @brief Valor desnormalizado mínimo (igual a min para enteros)</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="comment">     * @return uint128_t(0)</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00150" data-start="{" data-end="}">
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a941f4e7b257b66d51701b6247b7805d0">  150</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="classuint128__t.html">uint128_t</a> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a941f4e7b257b66d51701b6247b7805d0">denorm_min</a>() noexcept</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a0d53e0ad7cc49e61778c7600bf980883">min</a>();</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    }</div>
+</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>};</div>
+</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>} <span class="comment">// namespace std</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="preprocessor">#endif </span><span class="comment">// UINT128_LIMITS_HPP</span></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a07b7d6c96477efc23060cfd06fa886bf"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a07b7d6c96477efc23060cfd06fa886bf">std::numeric_limits&lt; uint128_t &gt;::signaling_NaN</a></div><div class="ttdeci">static constexpr uint128_t signaling_NaN() noexcept</div><div class="ttdoc">Representación de NaN señalizante (no aplicable para enteros)</div><div class="ttdef"><b>Definition</b> <a href="#l00141">uint128_limits.hpp:141</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a0d53e0ad7cc49e61778c7600bf980883"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a0d53e0ad7cc49e61778c7600bf980883">std::numeric_limits&lt; uint128_t &gt;::min</a></div><div class="ttdeci">static constexpr uint128_t min() noexcept</div><div class="ttdoc">Valor mínimo representable.</div><div class="ttdef"><b>Definition</b> <a href="#l00078">uint128_limits.hpp:78</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a1be842df9173dec1dbfe802eb28b0b50"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a1be842df9173dec1dbfe802eb28b0b50">std::numeric_limits&lt; uint128_t &gt;::has_denorm_loss</a></div><div class="ttdeci">static constexpr bool has_denorm_loss</div><div class="ttdef"><b>Definition</b> <a href="#l00052">uint128_limits.hpp:52</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a27c6b949e965de30cdbddea47d49b9a9"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a27c6b949e965de30cdbddea47d49b9a9">std::numeric_limits&lt; uint128_t &gt;::traps</a></div><div class="ttdeci">static constexpr bool traps</div><div class="ttdef"><b>Definition</b> <a href="#l00056">uint128_limits.hpp:56</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a337666ad8e4c2db5b0d83a2ae085d85c"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a337666ad8e4c2db5b0d83a2ae085d85c">std::numeric_limits&lt; uint128_t &gt;::has_denorm</a></div><div class="ttdeci">static constexpr float_denorm_style has_denorm</div><div class="ttdef"><b>Definition</b> <a href="#l00069">uint128_limits.hpp:69</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a3411777cc8878b95a292f58aeedc7383"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3411777cc8878b95a292f58aeedc7383">std::numeric_limits&lt; uint128_t &gt;::tinyness_before</a></div><div class="ttdeci">static constexpr bool tinyness_before</div><div class="ttdef"><b>Definition</b> <a href="#l00057">uint128_limits.hpp:57</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a3dfead21f5c69e70760f44664837cdab"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3dfead21f5c69e70760f44664837cdab">std::numeric_limits&lt; uint128_t &gt;::has_infinity</a></div><div class="ttdeci">static constexpr bool has_infinity</div><div class="ttdef"><b>Definition</b> <a href="#l00049">uint128_limits.hpp:49</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a3e64b75c65143db4104a5c218a43692b"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a3e64b75c65143db4104a5c218a43692b">std::numeric_limits&lt; uint128_t &gt;::infinity</a></div><div class="ttdeci">static constexpr uint128_t infinity() noexcept</div><div class="ttdoc">Representación de infinito (no aplicable para enteros)</div><div class="ttdef"><b>Definition</b> <a href="#l00123">uint128_limits.hpp:123</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a449c5ddf16224e4efa4cabd59444bef2"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a449c5ddf16224e4efa4cabd59444bef2">std::numeric_limits&lt; uint128_t &gt;::is_iec559</a></div><div class="ttdeci">static constexpr bool is_iec559</div><div class="ttdef"><b>Definition</b> <a href="#l00053">uint128_limits.hpp:53</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a4c6c1741e53d714fefb7e10f44dbf3a4"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a4c6c1741e53d714fefb7e10f44dbf3a4">std::numeric_limits&lt; uint128_t &gt;::lowest</a></div><div class="ttdeci">static constexpr uint128_t lowest() noexcept</div><div class="ttdoc">Valor más bajo representable (igual a min para enteros sin signo)</div><div class="ttdef"><b>Definition</b> <a href="#l00087">uint128_limits.hpp:87</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a66402f443cc2d34d34cd79e4450c913b"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a66402f443cc2d34d34cd79e4450c913b">std::numeric_limits&lt; uint128_t &gt;::is_exact</a></div><div class="ttdeci">static constexpr bool is_exact</div><div class="ttdef"><b>Definition</b> <a href="#l00048">uint128_limits.hpp:48</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a776ede290ca0a2309302d61a2f975e6e"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a776ede290ca0a2309302d61a2f975e6e">std::numeric_limits&lt; uint128_t &gt;::has_quiet_NaN</a></div><div class="ttdeci">static constexpr bool has_quiet_NaN</div><div class="ttdef"><b>Definition</b> <a href="#l00050">uint128_limits.hpp:50</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a7f2b5737c0f756df725cbea1b79d2875"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a7f2b5737c0f756df725cbea1b79d2875">std::numeric_limits&lt; uint128_t &gt;::is_modulo</a></div><div class="ttdeci">static constexpr bool is_modulo</div><div class="ttdef"><b>Definition</b> <a href="#l00055">uint128_limits.hpp:55</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a927db1258a8d73685c60b9ebc5762b8a"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a927db1258a8d73685c60b9ebc5762b8a">std::numeric_limits&lt; uint128_t &gt;::is_signed</a></div><div class="ttdeci">static constexpr bool is_signed</div><div class="ttdef"><b>Definition</b> <a href="#l00046">uint128_limits.hpp:46</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a941f4e7b257b66d51701b6247b7805d0"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a941f4e7b257b66d51701b6247b7805d0">std::numeric_limits&lt; uint128_t &gt;::denorm_min</a></div><div class="ttdeci">static constexpr uint128_t denorm_min() noexcept</div><div class="ttdoc">Valor desnormalizado mínimo (igual a min para enteros)</div><div class="ttdef"><b>Definition</b> <a href="#l00150">uint128_limits.hpp:150</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_a99dc30ecd09bd11f9292a923bbbf27be"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#a99dc30ecd09bd11f9292a923bbbf27be">std::numeric_limits&lt; uint128_t &gt;::radix</a></div><div class="ttdeci">static constexpr int radix</div><div class="ttdef"><b>Definition</b> <a href="#l00062">uint128_limits.hpp:62</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_aaf0669103a64af128a805cfbe64985d9"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aaf0669103a64af128a805cfbe64985d9">std::numeric_limits&lt; uint128_t &gt;::digits</a></div><div class="ttdeci">static constexpr int digits</div><div class="ttdef"><b>Definition</b> <a href="#l00059">uint128_limits.hpp:59</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_aaff6dbc7f7479f6777267c120c008164"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aaff6dbc7f7479f6777267c120c008164">std::numeric_limits&lt; uint128_t &gt;::round_style</a></div><div class="ttdeci">static constexpr float_round_style round_style</div><div class="ttdef"><b>Definition</b> <a href="#l00070">uint128_limits.hpp:70</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_ab416b91852e455c8305d987306556d8a"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ab416b91852e455c8305d987306556d8a">std::numeric_limits&lt; uint128_t &gt;::min_exponent10</a></div><div class="ttdeci">static constexpr int min_exponent10</div><div class="ttdef"><b>Definition</b> <a href="#l00065">uint128_limits.hpp:65</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_abda1aabae8a602bdba4ab0e33fcf0b7b"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#abda1aabae8a602bdba4ab0e33fcf0b7b">std::numeric_limits&lt; uint128_t &gt;::has_signaling_NaN</a></div><div class="ttdeci">static constexpr bool has_signaling_NaN</div><div class="ttdef"><b>Definition</b> <a href="#l00051">uint128_limits.hpp:51</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_acae7c7c39c768e3355abb2835db0e8c2"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acae7c7c39c768e3355abb2835db0e8c2">std::numeric_limits&lt; uint128_t &gt;::digits10</a></div><div class="ttdeci">static constexpr int digits10</div><div class="ttdef"><b>Definition</b> <a href="#l00060">uint128_limits.hpp:60</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_acaf266a9df5c208e74e3ad0ccb4b6e47"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acaf266a9df5c208e74e3ad0ccb4b6e47">std::numeric_limits&lt; uint128_t &gt;::max_exponent</a></div><div class="ttdeci">static constexpr int max_exponent</div><div class="ttdef"><b>Definition</b> <a href="#l00066">uint128_limits.hpp:66</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_acecc8080c58faa919847b59945ac3e6d"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acecc8080c58faa919847b59945ac3e6d">std::numeric_limits&lt; uint128_t &gt;::round_error</a></div><div class="ttdeci">static constexpr uint128_t round_error() noexcept</div><div class="ttdoc">Error de redondeo (no aplicable para enteros)</div><div class="ttdef"><b>Definition</b> <a href="#l00114">uint128_limits.hpp:114</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_acfb65a689bcf380515847321e82bd629"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#acfb65a689bcf380515847321e82bd629">std::numeric_limits&lt; uint128_t &gt;::quiet_NaN</a></div><div class="ttdeci">static constexpr uint128_t quiet_NaN() noexcept</div><div class="ttdoc">Representación de NaN silencioso (no aplicable para enteros)</div><div class="ttdef"><b>Definition</b> <a href="#l00132">uint128_limits.hpp:132</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_ad38eacffa339794338a1cf3280ccf161"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ad38eacffa339794338a1cf3280ccf161">std::numeric_limits&lt; uint128_t &gt;::is_bounded</a></div><div class="ttdeci">static constexpr bool is_bounded</div><div class="ttdef"><b>Definition</b> <a href="#l00054">uint128_limits.hpp:54</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_adac45cdff41337a00be74fa965dc6f80"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#adac45cdff41337a00be74fa965dc6f80">std::numeric_limits&lt; uint128_t &gt;::max</a></div><div class="ttdeci">static constexpr uint128_t max() noexcept</div><div class="ttdoc">Valor máximo representable.</div><div class="ttdef"><b>Definition</b> <a href="#l00096">uint128_limits.hpp:96</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_ae1004bcd85d6831c65171890b4915e2d"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#ae1004bcd85d6831c65171890b4915e2d">std::numeric_limits&lt; uint128_t &gt;::max_digits10</a></div><div class="ttdeci">static constexpr int max_digits10</div><div class="ttdef"><b>Definition</b> <a href="#l00061">uint128_limits.hpp:61</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_aeab5db22167fb41440f4694a8b9db89b"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aeab5db22167fb41440f4694a8b9db89b">std::numeric_limits&lt; uint128_t &gt;::is_integer</a></div><div class="ttdeci">static constexpr bool is_integer</div><div class="ttdef"><b>Definition</b> <a href="#l00047">uint128_limits.hpp:47</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_aeca02a6c44f24315f2fbe55384734f11"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#aeca02a6c44f24315f2fbe55384734f11">std::numeric_limits&lt; uint128_t &gt;::epsilon</a></div><div class="ttdeci">static constexpr uint128_t epsilon() noexcept</div><div class="ttdoc">Error de precisión de máquina (no aplicable para enteros)</div><div class="ttdef"><b>Definition</b> <a href="#l00105">uint128_limits.hpp:105</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_af0cda40f183195c8a353b0680da66971"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#af0cda40f183195c8a353b0680da66971">std::numeric_limits&lt; uint128_t &gt;::max_exponent10</a></div><div class="ttdeci">static constexpr int max_exponent10</div><div class="ttdef"><b>Definition</b> <a href="#l00067">uint128_limits.hpp:67</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_af48a19584e9824b9e860fde1b6856b71"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#af48a19584e9824b9e860fde1b6856b71">std::numeric_limits&lt; uint128_t &gt;::is_specialized</a></div><div class="ttdeci">static constexpr bool is_specialized</div><div class="ttdef"><b>Definition</b> <a href="#l00045">uint128_limits.hpp:45</a></div></div>
+<div class="ttc" id="aclassstd_1_1numeric__limits_3_01uint128__t_01_4_html_afcc2d414e6d7bc7c8a2bf11568a7a345"><div class="ttname"><a href="classstd_1_1numeric__limits_3_01uint128__t_01_4.html#afcc2d414e6d7bc7c8a2bf11568a7a345">std::numeric_limits&lt; uint128_t &gt;::min_exponent</a></div><div class="ttdeci">static constexpr int min_exponent</div><div class="ttdef"><b>Definition</b> <a href="#l00064">uint128_limits.hpp:64</a></div></div>
+<div class="ttc" id="aclassuint128__t_html"><div class="ttname"><a href="classuint128__t.html">uint128_t</a></div><div class="ttdef"><b>Definition</b> <a href="uint128__t_8hpp_source.html#l00037">uint128_t.hpp:38</a></div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
+<div class="ttc" id="auint128__t_8hpp_html"><div class="ttname"><a href="uint128__t_8hpp.html">uint128_t.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_112d3ffe51c7b5a140d53e2d7d99bbd9.html">uint128</a></li><li class="navelem"><a href="uint128__limits_8hpp.html">uint128_limits.hpp</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para int128 - 128-bit Integer Types for C++ por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.14.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>int128 - 128-bit Integer Types for C++: Referencia del archivo uint128/uint128_algorithm.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">int128 - 128-bit Integer Types for C++<span id="projectnumber">&#160;1.0.0</span>
+   </div>
+   <div id="projectbrief">Complete and efficient 128-bit signed and unsigned integer implementation for C++20</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.14.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Buscar',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('uint128__algorithm_8hpp.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">Referencia del archivo uint128_algorithm.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &quot;<a class="el" href="uint128__cmath_8hpp_source.html">uint128_cmath.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="uint128__concepts_8hpp_source.html">uint128_concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="uint128__t_8hpp_source.html">uint128_t.hpp</a>&quot;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;iterator&gt;</code><br />
+<code>#include &lt;numeric&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
+</div><div class="textblock"><div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;"><span class="dynarrow"><span class="arrowhead closed"></span></span>Gráfico de dependencias incluidas en uint128_algorithm.hpp:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="uint128__algorithm_8hpp__incl.svg" width="100%" height="564"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+</div>
+<p><a href="uint128__algorithm_8hpp_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Clases</h2></td></tr>
+<tr class="memitem:uint128_5Falgorithm_3A_3Auint128_5Fstats" id="r_uint128_5Falgorithm_3A_3Auint128_5Fstats"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structuint128__algorithm_1_1uint128__stats.html">uint128_algorithm::uint128_stats</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estadisticas basicas de un rango de <a class="el" href="classuint128__t.html">uint128_t</a>.  <a href="structuint128__algorithm_1_1uint128__stats.html#details">Más...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Espacios de nombres</h2></td></tr>
+<tr class="memitem:uint128_5Falgorithm" id="r_uint128_5Falgorithm"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html">uint128_algorithm</a></td></tr>
+<tr class="memdesc:namespaceuint128__algorithm"><td class="mdescLeft">&#160;</td><td class="mdescRight">Algoritmos optimizados y especializados para <a class="el" href="classuint128__t.html">uint128_t</a>. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:a9afcd8e5b2b792ba2eb058b85a5fd341" id="r_a9afcd8e5b2b792ba2eb058b85a5fd341"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a9afcd8e5b2b792ba2eb058b85a5fd341 template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a9afcd8e5b2b792ba2eb058b85a5fd341">uint128_algorithm::binary_search_uint128</a> (ForwardIt first, ForwardIt last, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;value)</td></tr>
+<tr class="memdesc:a9afcd8e5b2b792ba2eb058b85a5fd341"><td class="mdescLeft">&#160;</td><td class="mdescRight">Busqueda binaria optimizada para rangos de <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+<tr class="memitem:a0503bb3e177fbf1a41fb5e594bbb70d9" id="r_a0503bb3e177fbf1a41fb5e594bbb70d9"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a0503bb3e177fbf1a41fb5e594bbb70d9 template"><td class="memItemLeft" align="right" valign="top">ForwardIt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a0503bb3e177fbf1a41fb5e594bbb70d9">uint128_algorithm::find_if_uint128</a> (ForwardIt first, ForwardIt last, <a class="el" href="conceptuint128__concepts_1_1uint128__predicate.html">uint128_concepts::uint128_predicate</a> auto pred)</td></tr>
+<tr class="memdesc:a0503bb3e177fbf1a41fb5e594bbb70d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el primer elemento que satisface el predicado.  <br /></td></tr>
+<tr class="memitem:a7c929c388d3f8c728bd9ee3039d1dbec" id="r_a7c929c388d3f8c728bd9ee3039d1dbec"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt, std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a7c929c388d3f8c728bd9ee3039d1dbec template"><td class="memItemLeft" align="right" valign="top">OutputIt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a7c929c388d3f8c728bd9ee3039d1dbec">uint128_algorithm::transform_uint128</a> (InputIt first, InputIt last, OutputIt result, auto op)</td></tr>
+<tr class="memdesc:a7c929c388d3f8c728bd9ee3039d1dbec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforma un rango aplicando una operacion a cada elemento.  <br /></td></tr>
+<tr class="memitem:a0084c84bf0696e7fa1481e561ebc4518" id="r_a0084c84bf0696e7fa1481e561ebc4518"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a0084c84bf0696e7fa1481e561ebc4518 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a0084c84bf0696e7fa1481e561ebc4518">uint128_algorithm::for_each_uint128</a> (ForwardIt first, ForwardIt last, <a class="el" href="conceptuint128__concepts_1_1uint128__function.html">uint128_concepts::uint128_function</a>&lt;&gt; auto f)</td></tr>
+<tr class="memdesc:a0084c84bf0696e7fa1481e561ebc4518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aplica una funcion a cada elemento del rango.  <br /></td></tr>
+<tr class="memitem:acf5b431f73fc661bfc502596e522a806" id="r_acf5b431f73fc661bfc502596e522a806"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt, typename T&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:acf5b431f73fc661bfc502596e522a806 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#acf5b431f73fc661bfc502596e522a806">uint128_algorithm::accumulate_uint128</a> (InputIt first, InputIt last, T init, <a class="el" href="conceptuint128__concepts_1_1uint128__reduce__operation.html">uint128_concepts::uint128_reduce_operation</a>&lt; T &gt; auto op)</td></tr>
+<tr class="memdesc:acf5b431f73fc661bfc502596e522a806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acumula valores en un rango usando una operacion especifica.  <br /></td></tr>
+<tr class="memitem:a0b1ced7ce71eda86b09bf7b0dd798bae" id="r_a0b1ced7ce71eda86b09bf7b0dd798bae"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a0b1ced7ce71eda86b09bf7b0dd798bae template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a0b1ced7ce71eda86b09bf7b0dd798bae">uint128_algorithm::sum_uint128</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a0b1ced7ce71eda86b09bf7b0dd798bae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Suma todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:a8d74d998d7a905cb0be0b2c698cc9526" id="r_a8d74d998d7a905cb0be0b2c698cc9526"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a8d74d998d7a905cb0be0b2c698cc9526 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a8d74d998d7a905cb0be0b2c698cc9526">uint128_algorithm::product_uint128</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a8d74d998d7a905cb0be0b2c698cc9526"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el producto de todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:ab70fc578a16db1859d8c07ede3c738c2" id="r_ab70fc578a16db1859d8c07ede3c738c2"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator ForwardIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;ForwardIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:ab70fc578a16db1859d8c07ede3c738c2 template"><td class="memItemLeft" align="right" valign="top">ForwardIt&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#ab70fc578a16db1859d8c07ede3c738c2">uint128_algorithm::partition_uint128</a> (ForwardIt first, ForwardIt last, <a class="el" href="conceptuint128__concepts_1_1uint128__predicate.html">uint128_concepts::uint128_predicate</a> auto pred)</td></tr>
+<tr class="memdesc:ab70fc578a16db1859d8c07ede3c738c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Particiona un rango segun un predicado.  <br /></td></tr>
+<tr class="memitem:a09bacaa3e38038ce3a1f376a0c64242c" id="r_a09bacaa3e38038ce3a1f376a0c64242c"><td class="memTemplParams" colspan="2">template&lt;std::random_access_iterator RandomIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;RandomIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a09bacaa3e38038ce3a1f376a0c64242c template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a09bacaa3e38038ce3a1f376a0c64242c">uint128_algorithm::sort_uint128</a> (RandomIt first, RandomIt last)</td></tr>
+<tr class="memdesc:a09bacaa3e38038ce3a1f376a0c64242c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ordena un rango de <a class="el" href="classuint128__t.html">uint128_t</a> usando una comparacion personalizada.  <br /></td></tr>
+<tr class="memitem:a22c59ba694fe99423eaad6787ea5d126" id="r_a22c59ba694fe99423eaad6787ea5d126"><td class="memTemplParams" colspan="2">template&lt;std::random_access_iterator RandomIt, typename Compare&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;RandomIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a22c59ba694fe99423eaad6787ea5d126 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a22c59ba694fe99423eaad6787ea5d126">uint128_algorithm::sort_uint128</a> (RandomIt first, RandomIt last, Compare comp)</td></tr>
+<tr class="memitem:a6fd3362e3e53eb992c39a6eab38e6c60" id="r_a6fd3362e3e53eb992c39a6eab38e6c60"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a6fd3362e3e53eb992c39a6eab38e6c60 template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a6fd3362e3e53eb992c39a6eab38e6c60">uint128_algorithm::gcd_range</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a6fd3362e3e53eb992c39a6eab38e6c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el maximo comun divisor de todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:a263c0979c07d369536b7d3f6e5fd1c7f" id="r_a263c0979c07d369536b7d3f6e5fd1c7f"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a263c0979c07d369536b7d3f6e5fd1c7f template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classuint128__t.html">uint128_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a263c0979c07d369536b7d3f6e5fd1c7f">uint128_algorithm::lcm_range</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a263c0979c07d369536b7d3f6e5fd1c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encuentra el minimo comun multiplo de todos los elementos en un rango.  <br /></td></tr>
+<tr class="memitem:ad7e2cffc6e059d663fcf33ed2c32f0b8" id="r_ad7e2cffc6e059d663fcf33ed2c32f0b8"><td class="memTemplParams" colspan="2">template&lt;std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; </td></tr>
+<tr class="memitem:ad7e2cffc6e059d663fcf33ed2c32f0b8 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#ad7e2cffc6e059d663fcf33ed2c32f0b8">uint128_algorithm::generate_arithmetic_sequence</a> (OutputIt first, std::size_t count, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;start, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;step)</td></tr>
+<tr class="memdesc:ad7e2cffc6e059d663fcf33ed2c32f0b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Genera una secuencia aritmetica de <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+<tr class="memitem:a3b20625c20d5701f56c3fe961a23d5df" id="r_a3b20625c20d5701f56c3fe961a23d5df"><td class="memTemplParams" colspan="2">template&lt;std::output_iterator&lt; <a class="el" href="classuint128__t.html">uint128_t</a> &gt; OutputIt&gt; </td></tr>
+<tr class="memitem:a3b20625c20d5701f56c3fe961a23d5df template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a3b20625c20d5701f56c3fe961a23d5df">uint128_algorithm::generate_geometric_sequence</a> (OutputIt first, std::size_t count, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;start, const <a class="el" href="classuint128__t.html">uint128_t</a> &amp;ratio)</td></tr>
+<tr class="memdesc:a3b20625c20d5701f56c3fe961a23d5df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Genera una secuencia geometrica de <a class="el" href="classuint128__t.html">uint128_t</a>.  <br /></td></tr>
+<tr class="memitem:a8b4e67d830c0748fbd8f025a50da243e" id="r_a8b4e67d830c0748fbd8f025a50da243e"><td class="memTemplParams" colspan="2">template&lt;std::input_iterator InputIt&gt; <br />
+requires std::same_as&lt;typename std::iterator_traits&lt;InputIt&gt;::value_type, <a class="el" href="classuint128__t.html">uint128_t</a>&gt;</td></tr>
+<tr class="memitem:a8b4e67d830c0748fbd8f025a50da243e template"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structuint128__algorithm_1_1uint128__stats.html">uint128_stats</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceuint128__algorithm.html#a8b4e67d830c0748fbd8f025a50da243e">uint128_algorithm::calculate_stats</a> (InputIt first, InputIt last)</td></tr>
+<tr class="memdesc:a8b4e67d830c0748fbd8f025a50da243e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcula estadisticas basicas de un rango.  <br /></td></tr>
+</table>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_112d3ffe51c7b5a140d53e2d7d99bbd9.html">uint128</a></li><li class="navelem"><a href="uint128__algorithm_8hpp.html">uint128_algorithm.hpp</a></li>
+    <li class="footer">Generado el <span class="timestamp"></span> para int128 - 128-bit Integer Types for C++ por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
+  </ul>
+</div>
+</body>
+</html>

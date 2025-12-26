@@ -1,0 +1,9 @@
+<map id="std::bezout_coeff" name="std::bezout_coeff">
+<area shape="rect" id="Node000001" title="Represents a signed coefficient for Bézout&#39;s identity Since uint128_t is unsigned,..." alt="" coords="60,203,182,229"/>
+<area shape="rect" id="Node000002" href="$classuint128__t.html" title=" " alt="" coords="34,104,109,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,146,71,162,75,177,85,190,98,200,94,204,81,194,70,180,65,163,64,146"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,138,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,48,74,104,69,104,69,48"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="148,104,193,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,146,143,180,130,203,126,201,138,177,155,143"/>
+</map>

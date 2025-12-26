@@ -86,12 +86,8 @@ template <> struct make_unsigned<uint128_t> {
 /**
  * @brief Especialización para make_signed
  *
- * NOTA: Esta especialización requiere la implementación de int128_t.
- * Actualmente está comentada hasta que int128_t esté disponible.
- *
- * template <> struct make_signed<uint128_t> {
- *     using type = int128_t;
- * };
+ * NOTA: Esta especialización está definida en uint128_traits_specializations.hpp
+ * que se incluye desde uint128_t.hpp. No la definimos aquí para evitar conflictos.
  */
 
 #endif // !UINT128_USING_LIBCPP

@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['uint128_5falgorithm_20hpp_0',['Algoritmos (&lt;span class=&quot;tt&quot;&gt;uint128_algorithm.hpp&lt;/span&gt;)',['../index.html#autotoc_md56',1,'']]],
+  ['uint128_5fconcepts_20hpp_1',['Conceptos (&lt;span class=&quot;tt&quot;&gt;uint128_concepts.hpp&lt;/span&gt;)',['../index.html#autotoc_md55',1,'']]],
+  ['uint128_5fformat_20hpp_20int128_5fformat_20hpp_20✅_2',['🎨 Formatting - uint128_format.hpp &amp;amp; int128_format.hpp ✅',['../index.html#autotoc_md42',1,'']]],
+  ['uint128_5flimits_20hpp_3',['Límites (&lt;span class=&quot;tt&quot;&gt;uint128_limits.hpp&lt;/span&gt;)',['../index.html#autotoc_md53',1,'']]],
+  ['uint128_5fnumeric_20hpp_20🆕_4',['Numérico (&lt;span class=&quot;tt&quot;&gt;uint128_numeric.hpp&lt;/span&gt;) 🆕',['../index.html#autotoc_md57',1,'']]],
+  ['uint128_5ft_20↔_20int128_5ft_5',['🔄 Tests de Interoperabilidad uint128_t ↔ int128_t',['../index.html#autotoc_md26',1,'']]],
+  ['uint128_5ft_20hpp_6',['Core (&lt;span class=&quot;tt&quot;&gt;uint128_t.hpp&lt;/span&gt;)',['../index.html#autotoc_md52',1,'']]],
+  ['uint128_5ft_20unsigned_7',['uint128_t (Unsigned)',['../architecture.html#arch_uint128',1,'']]],
+  ['uint128_5ftraits_20hpp_8',['uint128_traits hpp',['../index.html#autotoc_md17',1,'🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp'],['../index.html#autotoc_md54',1,'Traits (<span class="tt">uint128_traits.hpp</span>)']]],
+  ['un_20test_20específico_9',['Compilar y ejecutar un test específico',['../index.html#autotoc_md8',1,'']]],
+  ['un_20test_20específico_20debug_10',['Compilar y ejecutar un test específico (debug)',['../index.html#autotoc_md6',1,'']]],
+  ['unsigned_11',['uint128_t (Unsigned)',['../architecture.html#arch_uint128',1,'']]],
+  ['usando_20el_20makefile_20con_20feature_20interop_12',['Usando el Makefile con FEATURE=interop',['../index.html#autotoc_md14',1,'']]],
+  ['uso_13',['Ejemplos de Uso',['../examples.html',1,'']]],
+  ['uso_20básico_14',['Uso Básico',['../quickstart.html#qs_basic_usage',1,'']]],
+  ['uso_20de_20intrínsecos_15',['Uso de Intrínsecos',['../examples.html#ex_intrinsics',1,'']]],
+  ['uso_20rápido_16',['Uso Rápido',['../index.html#autotoc_md20',1,'🚀 Uso Rápido'],['../index.html#autotoc_md29',1,'🚀 Uso Rápido'],['../index.html#autotoc_md36',1,'🚀 Uso Rápido']]],
+  ['uso_20reales_17',['Casos de Uso Reales',['../examples.html#examples_real_world',1,'']]],
+  ['uso_20recomendado_18',['🎯 Uso Recomendado',['../index.html#autotoc_md58',1,'']]],
+  ['uuids_20128_20bit_19',['UUIDs (128-bit)',['../examples.html#ex_uuid',1,'']]]
+];
