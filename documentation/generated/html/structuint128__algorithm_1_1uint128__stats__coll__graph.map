@@ -1,9 +1,0 @@
-<map id="uint128_algorithm::uint128_stats" name="uint128_algorithm::uint128_stats">
-<area shape="rect" id="Node000001" title="Estadisticas basicas de un rango de uint128_t." alt="" coords="56,245,188,288"/>
-<area shape="rect" id="Node000002" href="$classuint128__t.html" title=" " alt="" coords="34,104,109,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,146,67,183,69,202,75,220,93,243,89,246,70,223,64,203,61,183,63,146"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,138,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,48,74,104,69,104,69,48"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="145,104,201,131"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,146,146,222,135,246,130,244,141,220,164,145"/>
-</map>
