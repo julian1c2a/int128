@@ -7,7 +7,7 @@ make.py - Sistema de build centralizado para int128 project
 Reemplaza Makefile tradicional con lógica Python y entornos aislados.
 
 COMANDOS PRINCIPALES:
-    init                 Detecta y configura compiladores
+    init                Detecta y configura compiladores
     build <args>        Compila tests o benchmarks
     check <args>        Ejecuta tests
     run <args>          Ejecuta benchmarks
