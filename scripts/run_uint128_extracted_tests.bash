@@ -4,7 +4,8 @@
 #   compiler: gcc, clang, msvc, intel
 #   build_type: debug, release
 
-set -e  # Exit on error
+# No set -e aquí, queremos continuar ejecutando todos los tests
+set -o pipefail
 
 COMPILER="${1:-gcc}"
 BUILD_TYPE="${2:-release}"
@@ -34,7 +35,12 @@ fi
 if [ "$COMPILER" = "msvc" ]; then
     TEST_BINARIES=("$BUILD_DIR"/*_extracted_tests.exe)
 else
-    TEST_BINARIES=("$BUILD_DIR"/*_extracted_tests)
+    # En Linux: sin extensión, en Windows/Cygwin: .exe
+    if [ -f "$BUILD_DIR"/int128_algorithm_extracted_tests.exe ]; then
+        TEST_BINARIES=("$BUILD_DIR"/*_extracted_tests.exe)
+    else
+        TEST_BINARIES=("$BUILD_DIR"/*_extracted_tests)
+    fi
 fi
 
 if [ ${#TEST_BINARIES[@]} -eq 0 ]; then
