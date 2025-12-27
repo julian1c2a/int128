@@ -598,12 +598,12 @@ pacman -S mingw-w64-ucrt-x86_64-libtommath
 ```bash
 # Con GCC
 g++ -std=c++20 -O3 -I../include \
-    benchmarks/benchmark_comparison_boost.cpp \
+    benchs/benchmark_comparison_boost.cpp \
     -o build/benchmark_comparison_boost_gcc
 
 # Con Clang
 clang++ -std=c++20 -O3 -I../include \
-    benchmarks/benchmark_comparison_boost.cpp \
+    benchs/benchmark_comparison_boost.cpp \
     -o build/benchmark_comparison_boost_clang
 ```
 

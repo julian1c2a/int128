@@ -22,7 +22,7 @@ Tests y benchmarks completos para las funciones matemáticas de `uint128_cmath.h
   - Test de identidad de Bézout
 
 ### Benchmarks
-- **benchmarks/uint128_cmath_benchmarks.cpp** - Benchmarks de performance
+- **benchs/uint128_cmath_benchmarks.cpp** - Benchmarks de performance
   - Mide tiempo (nanosegundos) y ciclos CPU
   - Compara con tipos nativos (uint64_t, double)
   - Casos pequeños, medianos y grandes
@@ -75,8 +75,8 @@ g++ -std=c++20 -O3 -Wall -Wextra -Iinclude \
 #### Benchmarks
 ```bash
 g++ -std=c++20 -O3 -march=native -Iinclude \
-    benchmarks/uint128_cmath_benchmarks.cpp \
-    -o build/build_benchmarks/gcc/release/uint128_cmath_benchmarks
+    benchs/uint128_cmath_benchmarks.cpp \
+    -o build/build_benchs/gcc/release/uint128_cmath_benchmarks
 ```
 
 ## Cobertura de Tests

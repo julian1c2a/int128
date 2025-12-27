@@ -91,7 +91,7 @@ make run-all-comparison_boost
 ## 📁 Archivos Creados
 
 ### Benchmark
-- `benchmarks/benchmark_comparison_boost.cpp` (594 líneas)
+- `benchs/benchmark_comparison_boost.cpp` (594 líneas)
 
 ### Scripts de Compilación
 - `scripts/build_uint128_comparison_boost_extracted_benchs.bash`

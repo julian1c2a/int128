@@ -18,7 +18,7 @@ La **FEATURE interop** integra las herramientas de validación de interoperabili
 ## 📂 Archivos Incluidos
 
 ### Benchmarks
-- `benchmarks/benchmark_int128_vs_uint128.cpp` - Comparación de rendimiento
+- `benchs/benchmark_int128_vs_uint128.cpp` - Comparación de rendimiento
   - 30+ tests en 6 categorías
   - Medición de overhead porcentual
   - Construcción, aritmética, bitwise, strings, math, comparaciones

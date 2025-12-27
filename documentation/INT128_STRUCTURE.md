@@ -146,7 +146,7 @@ build/
 │   └── clang/
 │       ├── debug/
 │       └── release/
-├── build_benchmarks/              # Ejecutables de benchmarks
+├── build_benchs/              # Ejecutables de benchmarks
 │   ├── msvc/
 │   │   └── release/
 │   │       ├── uint128_thread_safety_bench.exe
@@ -226,7 +226,7 @@ sources/
 - **Comparaciones**: vs tipos nativos, __uint128_t/__int128_t, Boost
 - **Mediciones duales**: Tiempo (ns) + Ciclos de CPU (RDTSC)
 - **Visualización**: Gráficos matplotlib, reportes Markdown, CSV/JSON export
-- **Organización**: Ejecutables en `build/build_benchmarks/[compiler]/[mode]/`
+- **Organización**: Ejecutables en `build/build_benchs/[compiler]/[mode]/`
 ### uint128_t (Unsigned)
 ```cpp
 #include "include/uint128_t.hpp"
@@ -259,16 +259,16 @@ std::iota(values.begin(), values.end(), 1_u128);
 # 1. Compilar benchmarks (básico)
 ./scripts/build_benchmarks.bash gcc
 # Compila: uint128_benchmarks_gcc + int128_benchmarks_gcc
-# Output: build/build_benchmarks/gcc/release/
+# Output: build/build_benchs/gcc/release/
 
 # 2. Compilar con backends (Boost + GMP + tommath)
 ./scripts/build_with_backends.bash gcc --all-backends
 # Compila ambos con todos los backends
-# Output: build/build_benchmarks/gcc/release/
+# Output: build/build_benchs/gcc/release/
 
 # 3. Ejecutar benchmarks
 ./scripts/run_benchmarks.bash gcc
-# Ejecuta ambos desde build/build_benchmarks/gcc/release/
+# Ejecuta ambos desde build/build_benchs/gcc/release/
 # Reporta "N successful, M failed"
 
 # 4. Agregar y analizar resultados
@@ -390,7 +390,7 @@ std::cout << from_str.to_string() << "\n";  // "-999999999999999999"
 
 # Ejecutar benchmarks (Bash)
 ./scripts/run_benchmarks.bash gcc
-# Ejecutables desde: build/build_benchmarks/gcc/release/
+# Ejecutables desde: build/build_benchs/gcc/release/
 
 # Generar reporte de análisis
 .\scripts\report.ps1

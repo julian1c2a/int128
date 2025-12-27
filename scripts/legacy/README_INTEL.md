@@ -173,7 +173,7 @@ build/
 │   ├── clang/release/
 │   ├── msvc/release/
 │   └── intel/release/      ← Ejecutables de Intel
-├── build_benchmarks/
+├── build_benchs/
 │   ├── gcc/release/
 │   ├── clang/release/
 │   ├── msvc/release/

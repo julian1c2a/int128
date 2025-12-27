@@ -229,7 +229,7 @@ RUN_TEST(test_mi_nuevo_test);
 
 ### Añadir un nuevo benchmark
 
-1. Edita `benchmarks/uint128_traits_extracted_benchs.cpp`
+1. Edita `benchs/uint128_traits_extracted_benchs.cpp`
 2. Añade tu función de benchmark:
 ```cpp
 BenchmarkResult bench_mi_operacion()

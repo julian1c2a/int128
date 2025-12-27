@@ -149,7 +149,7 @@ Incluye todos los tests de uint128 más:
 
 ### Benchmarks
 
-#### `benchmarks/uint128_format_benchmarks.cpp` - 4 benchmarks
+#### `benchs/uint128_format_benchmarks.cpp` - 4 benchmarks
 
 1. **benchmark_format_decimal**: Formato decimal (50k ops)
 2. **benchmark_format_hexadecimal**: Formato hexadecimal con showbase + uppercase (50k ops)
@@ -164,7 +164,7 @@ Format with width:      60154 µs (50000 ops) ≈ 1.20 µs/op
 Format like iostream:  119057 µs (50000 ops) ≈ 2.38 µs/op
 ```
 
-#### `benchmarks/int128_format_benchmarks.cpp` - 5 benchmarks
+#### `benchs/int128_format_benchmarks.cpp` - 5 benchmarks
 
 1. **benchmark_format_decimal**: Formato decimal (50k ops)
 2. **benchmark_format_negative**: Formato de negativos (50k ops)

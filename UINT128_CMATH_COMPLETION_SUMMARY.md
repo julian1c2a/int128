@@ -14,7 +14,7 @@ Fecha: 19 de Diciembre, 2024
 - ✅ Cobertura completa de todas las funciones
 
 ### 2. Benchmarks Completos ✅
-- ✅ Creado `benchmarks/uint128_cmath_benchmarks.cpp` con **36+ benchmarks**
+- ✅ Creado `benchs/uint128_cmath_benchmarks.cpp` con **36+ benchmarks**
 - ✅ Medición de tiempo (nanosegundos) y ciclos de CPU
 - ✅ Compilación exitosa con GCC y Clang
 - ✅ Resultados guardados en archivos CSV/TXT
@@ -50,7 +50,7 @@ tests/test_uint128_cmath.cpp
 
 ### Benchmarks (497 líneas)
 ```
-benchmarks/uint128_cmath_benchmarks.cpp
+benchs/uint128_cmath_benchmarks.cpp
 ```
 **Contenido**:
 - Medición con rdtsc (CPU cycles)
@@ -351,7 +351,7 @@ volatile uint128_t dummy = rooted; // Prevenir optimización
 
 **Archivos Principales**:
 - Tests: `tests/test_uint128_cmath.cpp`
-- Benchmarks: `benchmarks/uint128_cmath_benchmarks.cpp`
+- Benchmarks: `benchs/uint128_cmath_benchmarks.cpp`
 - Header: `include/uint128/uint128_cmath.hpp`
 - Documentación: `UINT128_CMATH_TESTING.md`, `UINT128_CMATH_BENCHMARKS_RESULTS.md`
 

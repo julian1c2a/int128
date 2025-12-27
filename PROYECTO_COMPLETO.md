@@ -115,7 +115,7 @@ tests/
 ├── int128_format_extracted_tests.cpp       # 10 tests
 └── int128_thread_safety_extracted_tests.cpp
 
-benchmarks/
+benchs/
 ├── uint128_*_extracted_benchs.cpp × 13
 └── int128_*_extracted_benchs.cpp × 13
 ```

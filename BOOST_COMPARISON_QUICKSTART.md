@@ -54,7 +54,7 @@ Este script:
 ```bash
 # Con GCC
 g++ -std=c++20 -O3 -I./include \
-    benchmarks/benchmark_comparison_boost.cpp \
+    benchs/benchmark_comparison_boost.cpp \
     -o build/benchmark_comparison_boost_gcc
 
 # Ejecutar
@@ -64,7 +64,7 @@ g++ -std=c++20 -O3 -I./include \
 ```bash
 # Con Clang
 clang++ -std=c++20 -O3 -I./include \
-    benchmarks/benchmark_comparison_boost.cpp \
+    benchs/benchmark_comparison_boost.cpp \
     -o build/benchmark_comparison_boost_clang
 
 # Ejecutar
@@ -250,7 +250,7 @@ constexpr int ITERATIONS = 1000000;  // Cambiar de 100000 a 1000000
 ## 📚 Referencias Adicionales
 
 - **Análisis detallado**: [BOOST_COMPARISON_ANALYSIS.md](BOOST_COMPARISON_ANALYSIS.md)
-- **Código fuente**: [benchmark_comparison_boost.cpp](benchmarks/benchmark_comparison_boost.cpp)
+- **Código fuente**: [benchmark_comparison_boost.cpp](benchs/benchmark_comparison_boost.cpp)
 - **Boost docs**: https://www.boost.org/doc/libs/release/libs/multiprecision/
 - **Nuestra documentación**: [README.md](README.md)
 

@@ -306,7 +306,7 @@ Benchmarks de rendimiento completos para las funciones matemáticas en `uint128_
 - `benchmark_results/uint128_cmath_benchmarks_gcc.txt` - Resultados completos GCC
 - `benchmark_results/uint128_cmath_benchmarks_clang.txt` - Resultados completos Clang
 - `tests/test_uint128_cmath.cpp` - Suite de tests (96 tests, 100% éxito)
-- `benchmarks/uint128_cmath_benchmarks.cpp` - Suite de benchmarks
+- `benchs/uint128_cmath_benchmarks.cpp` - Suite de benchmarks
 - `scripts/build_uint128_cmath_test.bash` - Script de compilación de tests
 - `scripts/build_uint128_cmath_bench.bash` - Script de compilación de benchmarks
 - `scripts/run_uint128_cmath_test.bash` - Script de ejecución de tests

@@ -14,7 +14,7 @@ Este documento resume la implementación completa de tests y benchmarks extraíd
 - Cobertura completa: traits fundamentales, trivialidad, transformaciones, common_type, hash
 
 ### 2. Benchmarks
-**Archivo**: `benchmarks/int128_traits_extracted_benchs.cpp`
+**Archivo**: `benchs/int128_traits_extracted_benchs.cpp`
 - 11 benchmarks individuales
 - Medición dual: tiempo (nanosegundos) + ciclos de CPU (RDTSC)
 - 10,000,000 iteraciones por benchmark
@@ -25,7 +25,7 @@ Este documento resume la implementación completa de tests y benchmarks extraíd
 
 #### Bash: `scripts/compile_int128_traits_extracted.sh`
 - Compila con 4 compiladores: GCC, Clang, Intel, MSVC
-- Crea estructura de directorios: `build/build_tests/[compiler]/release/` y `build/build_benchmarks/[compiler]/release/`
+- Crea estructura de directorios: `build/build_tests/[compiler]/release/` y `build/build_benchs/[compiler]/release/`
 - Flags de optimización: `-O3` (GCC/Clang), `-O3` (Intel), `/O2` (MSVC)
 - Reporta éxito/fallo por compilador
 
@@ -136,7 +136,7 @@ build/
 │   ├── clang/release/int128_traits_tests_clang.exe
 │   ├── intel/release/int128_traits_tests_intel.exe
 │   └── msvc/release/int128_traits_tests_msvc.exe
-└── build_benchmarks/
+└── build_benchs/
     ├── gcc/release/int128_traits_benchs_gcc.exe
     ├── clang/release/int128_traits_benchs_clang.exe
     ├── intel/release/int128_traits_benchs_intel.exe
@@ -307,7 +307,7 @@ Listo para usar con `./scripts/master_int128_traits_all.sh` o `scripts\master_in
 - Documentación completa: [INT128_TRAITS_EXTRACTED_TESTS.md](documentation/INT128_TRAITS_EXTRACTED_TESTS.md)
 - Código fuente: [int128_traits.hpp](include/int128/int128_traits.hpp)
 - Tests: [int128_traits_extracted_tests.cpp](tests/int128_traits_extracted_tests.cpp)
-- Benchmarks: [int128_traits_extracted_benchs.cpp](benchmarks/int128_traits_extracted_benchs.cpp)
+- Benchmarks: [int128_traits_extracted_benchs.cpp](benchs/int128_traits_extracted_benchs.cpp)
 - README principal: [README.md](README.md)
 
 ---

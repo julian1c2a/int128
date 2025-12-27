@@ -19,7 +19,7 @@ Se han creado tests y benchmarks extraídos individualizados para cada función/
 - Verificación con assertions y output detallado
 
 ### 2. Benchmarks Extraídos
-**Ubicación:** `benchmarks/uint128_traits_extracted_benchs.cpp`
+**Ubicación:** `benchs/uint128_traits_extracted_benchs.cpp`
 
 **Contenido:** 11 benchmarks individuales
 - 5 benchmarks de compile-time traits (overhead)
@@ -230,7 +230,7 @@ scripts\master_uint128_traits_all.bat
 ```bash
 # Compilar tests y benchmarks manualmente
 g++ -std=c++20 -O3 tests/uint128_traits_extracted_tests.cpp -o build/test.exe
-g++ -std=c++20 -O3 benchmarks/uint128_traits_extracted_benchs.cpp -o build/bench.exe
+g++ -std=c++20 -O3 benchs/uint128_traits_extracted_benchs.cpp -o build/bench.exe
 
 # Ejecutar
 ./build/test.exe

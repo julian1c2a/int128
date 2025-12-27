@@ -9,12 +9,12 @@
 
 ### Benchmarks de Thread Safety ✅
 
-1. **`benchmarks/uint128_thread_safety_benchmarks.cpp`** (600 líneas)
+1. **`benchs/uint128_thread_safety_benchmarks.cpp`** (600 líneas)
    - 7 benchmarks de performance
    - Análisis de contención (1-16 hilos)
    - Comparación de wrappers
 
-2. **`benchmarks/int128_thread_safety_benchmarks.cpp`** (650 líneas)
+2. **`benchs/int128_thread_safety_benchmarks.cpp`** (650 líneas)
    - 9 benchmarks de performance (incluye operaciones signed)
    - Análisis de contención
    - Overhead de operaciones signed medido
@@ -169,8 +169,8 @@ bash run_thread_safety_demo.sh
 - `tests/int128_thread_safety_tests.cpp` (550 líneas)
 
 ### Benchmarks:
-- `benchmarks/uint128_thread_safety_benchmarks.cpp` (600 líneas) ⭐ **NUEVO**
-- `benchmarks/int128_thread_safety_benchmarks.cpp` (650 líneas) ⭐ **NUEVO**
+- `benchs/uint128_thread_safety_benchmarks.cpp` (600 líneas) ⭐ **NUEVO**
+- `benchs/int128_thread_safety_benchmarks.cpp` (650 líneas) ⭐ **NUEVO**
 
 ### Scripts:
 - `run_uint128_thread_safety_bench.sh` ⭐ **NUEVO**

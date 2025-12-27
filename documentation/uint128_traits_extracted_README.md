@@ -16,7 +16,7 @@ Documentación completa de tests y benchmarks individualizados para cada funció
   - Tests de numeric_limits
 
 #### Benchmarks
-- **`benchmarks/uint128_traits_extracted_benchs.cpp`** - Suite completa de benchmarks
+- **`benchs/uint128_traits_extracted_benchs.cpp`** - Suite completa de benchmarks
   - Mide tanto **tiempo (ns)** como **ciclos de reloj**
   - Benchmarks de verificación de traits (compile-time)
   - Benchmarks de operaciones de copia (runtime)

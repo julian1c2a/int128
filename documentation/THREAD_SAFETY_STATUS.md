@@ -278,8 +278,8 @@ bash run_int128_thread_safety_tests.sh
 ### 7. Benchmarks de Performance ✅
 
 **Archivos**:
-- `benchmarks/uint128_thread_safety_benchmarks.cpp` (~600 líneas)
-- `benchmarks/int128_thread_safety_benchmarks.cpp` (~650 líneas)
+- `benchs/uint128_thread_safety_benchmarks.cpp` (~600 líneas)
+- `benchs/int128_thread_safety_benchmarks.cpp` (~650 líneas)
 
 **Incluye**:
 - ✅ Thread-local (baseline, sin sincronización)

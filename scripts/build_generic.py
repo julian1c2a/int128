@@ -4,23 +4,32 @@
 build_generic.py - Script genérico de compilación en Python
 ============================================================
 
-Compila tests o benchmarks con todos los compiladores (GCC, Clang, Intel, MSVC)
+Compila tests, benchmarks o demos con todos los compiladores (GCC, Clang, Intel, MSVC)
 
 Uso:
+    # Para tests y benchs (sintaxis clásica):
     python build_generic.py <type> <feature> <target> [compiler] [mode] [print]
+    
+    # Para demos (nueva sintaxis):
+    python build_generic.py demos <category> <demo_name> [compiler] [mode] [print]
 
 Argumentos:
-    type     : uint128 | int128
-    feature  : bits | numeric | algorithm | iostreams | cmath | etc.
-    target   : tests | benchs
+    type     : uint128 | int128 | demos
+    feature  : bits | numeric | algorithm | etc. (o <category> si type=demos)
+    target   : tests | benchs | <demo_name> (si type=demos)
     compiler : gcc | clang | intel | msvc | all (default: all)
     mode     : debug | release | all (default: all)
     print    : yes | no (default: no) - Imprime comandos de compilación
 
-Ejemplos:
+Ejemplos Tests/Benchs:
     python build_generic.py uint128 bits tests
     python build_generic.py int128 numeric benchs gcc release
     python build_generic.py uint128 algorithm tests all all yes
+
+Ejemplos Demos:
+    python build_generic.py demos tutorials 01_basic_operations gcc release
+    python build_generic.py demos examples ipv6_address clang debug
+    python build_generic.py demos showcase main gcc release
 """
 
 import sys
@@ -117,7 +126,13 @@ def compile_with_compiler(
         output_dir = Path(build_dir) / compiler_name / mode
         output_dir.mkdir(parents=True, exist_ok=True)
         
-        output = output_dir / f"{type_name}_{feature}_{output_suffix}_{compiler_name}"
+        # Build output filename
+        if type_name and feature:
+            # Tests/benchs: <type>_<feature>_<suffix>_<compiler>
+            output = output_dir / f"{type_name}_{feature}_{output_suffix}_{compiler_name}"
+        else:
+            # Demos: just <demo_name>
+            output = output_dir / output_suffix
         
         # Add .exe extension for Windows compilers
         if compiler_name in ["msvc", "intel"]:
@@ -178,10 +193,13 @@ def main():
         print("Error: Se requieren al menos 3 argumentos")
         print(f"Uso: {sys.argv[0]} <type> <feature> <target> [compiler] [mode] [print]")
         print()
-        print("Ejemplos:")
+        print("Tests/Benchs:")
         print(f"  python {sys.argv[0]} uint128 bits tests")
         print(f"  python {sys.argv[0]} int128 numeric benchs gcc release")
-        print(f"  python {sys.argv[0]} uint128 algorithm tests all all yes")
+        print()
+        print("Demos:")
+        print(f"  python {sys.argv[0]} demos tutorials 01_basic_operations gcc release")
+        print(f"  python {sys.argv[0]} demos examples ipv6_address clang debug")
         sys.exit(1)
     
     type_name = sys.argv[1]
@@ -191,15 +209,31 @@ def main():
     mode = sys.argv[5] if len(sys.argv) > 5 else "all"
     print_commands = (sys.argv[6].lower() == "yes") if len(sys.argv) > 6 else False
     
-    # Validation
-    if type_name not in ["uint128", "int128"]:
-        print("Error: TYPE debe ser 'uint128' o 'int128'")
-        sys.exit(1)
+    # Determine if this is a demo build or tests/benchs build
+    is_demo = (type_name == "demos")
     
-    if target not in ["tests", "benchs"]:
-        print("Error: TARGET debe ser 'tests' o 'benchs'")
-        sys.exit(1)
+    if is_demo:
+        # For demos: feature=category, target=demo_name
+        category = feature
+        demo_name = target
+        
+        # Validation for demos
+        valid_categories = ["general", "tutorials", "examples", "showcase", 
+                           "comparison", "performance", "integration"]
+        if category not in valid_categories:
+            print(f"Error: CATEGORY debe ser uno de: {', '.join(valid_categories)}")
+            sys.exit(1)
+    else:
+        # Validation for tests/benchs
+        if type_name not in ["uint128", "int128"]:
+            print("Error: TYPE debe ser 'uint128' o 'int128'")
+            sys.exit(1)
+        
+        if target not in ["tests", "benchs"]:
+            print("Error: TARGET debe ser 'tests' o 'benchs'")
+            sys.exit(1)
     
+    # Common validation
     valid_compilers = ["gcc", "clang", "intel", "msvc", "all"]
     if compiler not in valid_compilers:
         print(f"Error: COMPILER debe ser uno de: {', '.join(valid_compilers)}")
@@ -214,21 +248,28 @@ def main():
     project_root = Path(__file__).parent.parent
     os.chdir(project_root)
     
-    if target == "tests":
+    # Determine source file and build directory
+    if is_demo:
+        source_file = f"demos/{category}/{demo_name}.cpp"
+        build_dir = "build/build_demos"
+        output_suffix = demo_name  # Output name is the demo name
+        echo_info(f"Building demo: {category}/{demo_name}...")
+    elif target == "tests":
         source_file = f"tests/{type_name}_{feature}_extracted_tests.cpp"
         build_dir = "build/build_tests"
         output_suffix = "tests"
-    else:
+        echo_info(f"Building {type_name} {feature} {target} for all compilers...")
+    else:  # benchs
         source_file = f"benchs/{type_name}_{feature}_extracted_benchs.cpp"
         build_dir = "build/build_benchs"
         output_suffix = "benchs"
+        echo_info(f"Building {type_name} {feature} {target} for all compilers...")
     
     # Check source file
     if not Path(source_file).exists():
         echo_error(f"Source file not found: {source_file}")
         sys.exit(1)
     
-    echo_info(f"Building {type_name} {feature} {target} for all compilers...")
     print()
     
     # Define modes to compile
@@ -240,37 +281,49 @@ def main():
     intel_cmd = os.environ.get("INTEL_CXX", "icx")
     msvc_cmd = os.environ.get("MSVC_CXX", "cl.exe")
     
+    # For demos, we need to pass empty strings for type_name and feature
+    # since they don't apply
+    if is_demo:
+        type_name_arg = ""
+        feature_arg = ""
+    else:
+        type_name_arg = type_name
+        feature_arg = feature
+    
     # Compile with each compiler
     if compiler in ["gcc", "all"]:
         compile_with_compiler(
             "gcc", gcc_cmd, source_file, build_dir,
-            type_name, feature, output_suffix, modes_to_compile,
+            type_name_arg, feature_arg, output_suffix, modes_to_compile,
             print_commands, skip_check=True, project_root=project_root
         )
     
     if compiler in ["clang", "all"]:
         compile_with_compiler(
             "clang", clang_cmd, source_file, build_dir,
-            type_name, feature, output_suffix, modes_to_compile,
+            type_name_arg, feature_arg, output_suffix, modes_to_compile,
             print_commands, project_root=project_root
         )
     
     if compiler in ["intel", "all"]:
         compile_with_compiler(
             "intel", intel_cmd, source_file, build_dir,
-            type_name, feature, output_suffix, modes_to_compile,
+            type_name_arg, feature_arg, output_suffix, modes_to_compile,
             print_commands, project_root=project_root
         )
     
     if compiler in ["msvc", "all"]:
         compile_with_compiler(
             "msvc", msvc_cmd, source_file, build_dir,
-            type_name, feature, output_suffix, modes_to_compile,
+            type_name_arg, feature_arg, output_suffix, modes_to_compile,
             print_commands, project_root=project_root
         )
     
     # Summary
-    echo_success(f"Build complete for {type_name} {feature} {target}!")
+    if is_demo:
+        echo_success(f"Build complete for demo {category}/{demo_name}!")
+    else:
+        echo_success(f"Build complete for {type_name} {feature} {target}!")
 
 
 if __name__ == "__main__":

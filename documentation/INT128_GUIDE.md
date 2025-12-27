@@ -42,8 +42,8 @@ include/int128/
 tests/
 └── int128_extracted_tests.cpp    # Suite de tests completa
 
-benchmarks/
-└── int128_extracted_benchmarks.cpp   # Benchmarks exhaustivos
+benchs/
+└── int128_extracted_benchs.cpp   # Benchmarks exhaustivos
 
 demos/
 └── demo_int128_thread_safety.cpp     # 🆕 Demo de thread safety
@@ -461,9 +461,9 @@ auto c = int128_t::from_string("+789");    // 789
 El sistema de benchmarks de `int128_t` es completamente paralelo al de `uint128_t`:
 
 ```
-benchmarks/
-├── uint128_extracted_benchmarks.cpp   # Benchmarks unsigned
-└── int128_extracted_benchmarks.cpp    # Benchmarks signed
+benchs/
+├── uint128_extracted_benchs.cpp   # Benchmarks unsigned
+└── int128_extracted_benchs.cpp    # Benchmarks signed
 
 scripts/
 ├── build_benchmarks.bash              # Compila AMBOS

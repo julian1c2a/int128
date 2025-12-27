@@ -98,7 +98,7 @@ python scripts/aggregate_benchmark_results.py
 ```bash
 # Compilar
 g++ -std=c++20 -O3 -march=native -I./include \
-    benchmarks/uint128_extracted_benchmarks.cpp \
+    benchs/uint128_extracted_benchs.cpp \
     -o build/uint128_benchmarks_gcc
 
 # Ejecutar

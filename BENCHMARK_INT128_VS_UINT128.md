@@ -201,7 +201,7 @@ Operaciones sin overhead significativo:
 
 ## 📁 Archivos
 
-- **Benchmark**: `benchmarks/benchmark_int128_vs_uint128.cpp` (700+ líneas)
+- **Benchmark**: `benchs/benchmark_int128_vs_uint128.cpp` (700+ líneas)
 - **Build script**: `scripts/build_benchmark_int128_vs_uint128.bash`
 - **Run script**: `scripts/run_benchmark_int128_vs_uint128.bash`
 - **Documentación**: Este archivo

@@ -1,18 +1,37 @@
 # Demos - int128 Library
 
-Esta carpeta contiene todas las demostraciones de la biblioteca int128, organizadas en 3 categorías.
+Esta carpeta contiene todas las demostraciones de la biblioteca int128, organizadas en **7 categorías**.
 
 ## 📂 Estructura
 
 ```
 demos/
-├── tutorials/          # 13 tutoriales paso a paso
+├── general/            # Demos generales y experimentales
+├── tutorials/          # 13 tutoriales paso a paso (aprendizaje)
+├── examples/           # Casos de uso del mundo real
 ├── showcase/           # Demos impresionantes e interactivas
-└── examples/           # Casos de uso del mundo real
+├── comparison/         # Comparaciones con otras librerías
+├── performance/        # Análisis profundo de rendimiento
+└── integration/        # Integración con ecosistemas externos
 ```
 
-## 🎓 Tutoriales (Para Aprender)
+## 🎯 Guía por Categoría
 
+### 🔧 General - Demos Ad-hoc
+**Ubicación**: [`general/`](general/)
+
+Demostraciones experimentales, prototipo y características específicas que no encajan en otras categorías.
+
+- Demo de simetría de operadores
+- Conversiones bytes/bitset
+- Funciones constexpr con C-strings
+- Análisis de bits
+
+**Ideal para:** Investigación, experimentos, prototipos
+
+[Ver detalles →](general/README.md)
+
+### 🎓 Tutorials - Para Aprender
 **Ubicación**: [`tutorials/`](tutorials/)
 
 13 tutoriales progresivos que te enseñan desde lo básico hasta características avanzadas:
@@ -38,159 +57,264 @@ demos/
 
 [Ver índice completo →](tutorials/README.md)
 
-## 🌟 Showcase (Para Impresionar)
+### 💼 Examples - Casos de Uso Reales
+**Ubicación**: [`examples/`](examples/)
 
+Aplicaciones prácticas que resuelven problemas del mundo real:
+
+- **Gestión de direcciones IPv6**
+- **Generación de UUIDs v4** (RFC 4122)
+- **Calculadora de enteros grandes** (REPL interactivo)
+- **Factorización de números primos**
+- **Búsqueda de primos de Mersenne**
+- **Demos de thread safety**
+
+**Ideal para:**
+- 💡 Inspiración para tus propios proyectos
+- 🔨 Código base para aplicaciones reales
+- 🎯 Ver best practices en contexto
+
+[Ver catálogo →](examples/README.md)
+
+### 🌟 Showcase - Para Impresionar
 **Ubicación**: [`showcase/`](showcase/)
 
 Demos visuales e impresionantes que muestran el poder de la biblioteca:
 
 - **Demo Principal Interactiva**: 7 secciones con output colorido
-- Números gigantes (factoriales, fibonacci)
-- Magia bitwise avanzada
-- Benchmarks en tiempo real
-- Operaciones seguras con detección de errores
+- **Criptografía**: RSA toy, Miller-Rabin, búsqueda de primos
+- **Científico**: Factoriales, Fibonacci, cálculo de π y e
+- **Performance**: Benchmarks uint128 vs uint64 en vivo
 
 **Ideal para:**
-- 🎤 Presentaciones técnicas
-- 💼 Evaluación de la biblioteca
-- 🎨 Marketing y promoción
-- ⚡ Benchmarking
+- 🎪 Presentaciones y demos
+- 🎨 Mostrar capacidades visuales
+- 🚀 Impresionar con números grandes
 
 [Ver showcase →](showcase/README.md)
 
-## 💼 Examples (Casos de Uso Real)
+### ⚖️ Comparison - Comparar con Otras Librerías
+**Ubicación**: [`comparison/`](comparison/)
 
-**Ubicación**: [`examples/`](examples/)
+Comparaciones lado a lado con otras implementaciones:
 
-Implementaciones de casos de uso prácticos del mundo real:
-
-- Thread safety en aplicaciones concurrentes
-- Biblioteca matemática completa
-- IPv6 address handling (planeado)
-- UUID generation (planeado)
-- Calculadora de enteros grandes (planeado)
-- Prime factorization (planeado)
+- **Boost.Multiprecision** (cpp_int, uint128_t)
+- **Tipos nativos** (__uint128_t, __int128_t)
+- **GMP** (GNU Multiple Precision)
+- **Matriz de características** (type traits, concepts, STL)
 
 **Ideal para:**
-- 🔧 Implementaciones reales
-- 📖 Aprender patrones de uso
-- 🚀 Punto de partida para proyectos
+- 🤔 Decidir qué librería usar
+- 📊 Entender trade-offs
+- ⚡ Comparar rendimiento
 
-[Ver examples →](examples/README.md)
+[Ver comparaciones →](comparison/README.md)
 
-## 🚀 Inicio Rápido
+### 🔬 Performance - Análisis Profundo
+**Ubicación**: [`performance/`](performance/)
 
-### Opción 1: Tutoriales (Recomendado para nuevos usuarios)
+Deep-dive en rendimiento de operaciones específicas:
 
-```bash
-cd demos/tutorials
-g++ -std=c++20 -I../../include 01_basic_operations.cpp -o tutorial01
-./tutorial01
-```
+- **Algoritmos de división** (Knuth D, fast paths)
+- **Estrategias de multiplicación** (intrínsecos, Karatsuba)
+- **Conversiones string** (to_string, parsing)
+- **Efectos de caché** (alignment, memory layout)
+- **Branch prediction** (fast paths, mispredictions)
 
-### Opción 2: Showcase (Para ver algo impresionante)
+**Ideal para:**
+- 🔍 Entender optimizaciones
+- 📈 Análisis de bottlenecks
+- 🎯 Microarquitectura insights
 
-```bash
-cd demos/showcase
-g++ -std=c++20 -I../../include main.cpp -o showcase
-./showcase
-```
+[Ver análisis →](performance/README.md)
 
-### Opción 3: Examples (Para casos prácticos)
+### 🔌 Integration - Ecosistema Externo
+**Ubicación**: [`integration/`](integration/)
 
-```bash
-cd demos/examples
-g++ -std=c++20 -I../../include -pthread demo_int128_thread_safety.cpp -o thread_demo
-./thread_demo
-```
+Integración con bibliotecas y sistemas populares:
 
-## 📊 Mapa de Aprendizaje
+- **Serialización**: JSON (nlohmann), Protobuf, Cereal
+- **Bases de datos**: SQLite, PostgreSQL
+- **Networking**: Boost.Asio, gRPC
+- **Message queues**: ZeroMQ, Kafka
+- **Crypto**: OpenSSL, libsodium
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  PRINCIPIANTE                                               │
-│  └─> tutorials/01-05  (Básicos)                           │
-│                                                             │
-│  INTERMEDIO                                                 │
-│  └─> tutorials/06-10  (Funciones avanzadas)               │
-│                                                             │
-│  AVANZADO                                                   │
-│  └─> tutorials/11-13  (Thread safety, safe ops)           │
-│  └─> examples/        (Casos reales)                      │
-│                                                             │
-│  PRESENTACIÓN                                               │
-│  └─> showcase/        (Demostración completa)             │
-└─────────────────────────────────────────────────────────────┘
-```
+**Ideal para:**
+- 🌐 Aplicaciones del mundo real
+- 🔗 Interoperabilidad
+- 📦 Integrar en tu stack
 
-## 🎯 Selección Rápida
-
-| Quiero... | Ve a... |
-|-----------|---------|
-| Aprender desde cero | [`tutorials/01_basic_operations.cpp`](tutorials/01_basic_operations.cpp) |
-| Ver algo impresionante | [`showcase/main.cpp`](showcase/main.cpp) |
-| Implementar thread safety | [`examples/demo_int128_thread_safety.cpp`](examples/demo_int128_thread_safety.cpp) |
-| Usar funciones matemáticas | [`examples/demo_mathematical_library.cpp`](examples/demo_mathematical_library.cpp) |
-| Referencia rápida | [`tutorials/README.md`](tutorials/README.md) |
-
-## 🛠️ Compilación
-
-### Compilar todos con CMake:
-
-```bash
-mkdir build && cd build
-cmake ..
-cmake --build .
-
-# Ejecutar
-./demos/tutorials/01_basic_operations
-./demos/showcase/showcase_main
-./demos/examples/demo_int128_thread_safety
-```
-
-### Compilar individualmente:
-
-```bash
-# Cualquier demo
-g++ -std=c++20 -I../include -pthread <archivo.cpp> -o output
-./output
-```
-
-## 📚 Recursos Adicionales
-
-- **Documentación HTML**: [`documentation/generated/html/index.html`](../documentation/generated/html/index.html)
-- **Quick Start Guide**: [`documentation/doxygen/pages/quickstart.md`](../documentation/doxygen/pages/quickstart.md)
-- **API Reference**: Generada por Doxygen
-- **README Principal**: [`README.md`](../README.md)
-
-## 💡 Tips
-
-1. **Empieza con tutorials/** si eres nuevo
-2. **Usa showcase/** para presentaciones
-3. **Consulta examples/** para patrones reales
-4. **Lee la documentación** para detalles de API
-5. **Experimenta** modificando el código!
-
-## 🤝 Contribuir
-
-¿Tienes un ejemplo interesante? ¡Compártelo!
-
-1. Crea tu demo en la carpeta apropiada
-2. Sigue el estilo de código existente
-3. Documenta bien (comentarios + output esperado)
-4. Envía un Pull Request
-
-## ⚙️ Requisitos
-
-- **Compilador**: GCC 11+, Clang 14+, MSVC 19.30+, Intel ICX 2023+
-- **Estándar**: C++20 o superior
-- **Plataforma**: Windows, Linux, macOS
-- **Opcional**: pthread (para demos de threading)
-
-## 📄 Licencia
-
-Boost Software License 1.0 - Ver [`LICENSE.txt`](../LICENSE.txt)
+[Ver integraciones →](integration/README.md)
 
 ---
 
-**¡Explora, aprende y diviértete! 🚀**
+## 🚀 Quick Start
+
+### Compilar una Demo Específica
+
+```bash
+# Sintaxis genérica
+bash scripts/build_demo.bash [category] [demo_name] [compiler] [mode]
+
+# Ejemplos por categoría
+bash scripts/build_demo.bash tutorials 01_basic_operations gcc release
+bash scripts/build_demo.bash examples ipv6_address clang debug
+bash scripts/build_demo.bash showcase main gcc release
+bash scripts/build_demo.bash general bit_analysis gcc debug
+bash scripts/build_demo.bash comparison boost_vs_int128 clang release
+bash scripts/build_demo.bash performance division_algorithms intel release
+bash scripts/build_demo.bash integration json_nlohmann gcc debug
+```
+
+### Ejecutar Demos
+
+```bash
+# Sintaxis genérica
+bash scripts/run_demo.bash [category] [demo_name] [args...]
+
+# Ejemplos
+bash scripts/run_demo.bash tutorials 01_basic_operations
+bash scripts/run_demo.bash showcase main
+bash scripts/run_demo.bash examples uuid_generation 100  # genera 100 UUIDs
+```
+
+### Compilar Todas las Demos
+
+```bash
+# Todas las categorías con todos los compiladores
+bash scripts/build_all_demos.bash all gcc debug
+bash scripts/build_all_demos.bash all clang release
+
+# Solo una categoría
+bash scripts/build_all_demos.bash tutorials gcc release
+bash scripts/build_all_demos.bash examples all debug
+```
+
+### Atajos con Makefile
+
+```bash
+# Compilar demo específica
+make build_demo CATEGORY=tutorials DEMO=01_basic_operations COMPILER=gcc MODE=release
+
+# Compilar categoría completa
+make tutorials COMPILER=gcc MODE=release
+make examples COMPILER=clang MODE=debug
+
+# Compilar todas las demos
+make build_all_demos COMPILER=all MODE=release
+
+# Ejecutar demo
+make run_demo CATEGORY=showcase DEMO=main
+
+# Verificar que todas compilan
+make test_demos
+
+# Generar catálogo
+make catalog_demos
+```
+
+---
+
+## 📊 Catálogo Completo
+
+Para ver la lista completa de todas las demos disponibles con descripciones detalladas:
+
+👉 **[Ver DEMOS_CATALOG.md](../DEMOS_CATALOG.md)**
+
+Este catálogo se genera automáticamente con:
+```bash
+bash scripts/catalog_demos.bash
+# o
+make catalog_demos
+```
+
+---
+
+## 🧭 Navegación
+
+| Categoría | Cantidad | Para... | README |
+|-----------|----------|---------|--------|
+| **General** | 6+ | Experimentación y características ad-hoc | [→](general/README.md) |
+| **Tutorials** | 13 | Aprender paso a paso | [→](tutorials/README.md) |
+| **Examples** | 9+ | Aplicaciones reales | [→](examples/README.md) |
+| **Showcase** | 4 | Presentaciones impresionantes | [→](showcase/README.md) |
+| **Comparison** | 0 (TBD) | Comparar con otras librerías | [→](comparison/README.md) |
+| **Performance** | 0 (TBD) | Análisis profundo | [→](performance/README.md) |
+| **Integration** | 0 (TBD) | Integrar con ecosistemas | [→](integration/README.md) |
+
+---
+
+## 🔍 Recomendaciones por Nivel
+
+### 🆕 Principiante
+1. Empieza con [tutorials/](tutorials/) en orden secuencial (01 → 13)
+2. Experimenta modificando las [examples/](examples/) simples
+3. Ejecuta el [showcase/main.cpp](showcase/main.cpp) para ver posibilidades
+
+### 🔧 Usuario Intermedio
+1. Estudia [examples/](examples/) de casos de uso avanzados
+2. Lee [comparison/](comparison/) para entender trade-offs
+3. Analiza [performance/](performance/) para optimización
+
+### 🚀 Usuario Avanzado
+1. Explora [integration/](integration/) para conectar con tu stack
+2. Contribuye nuevas demos a las categorías
+3. Extiende [general/](general/) con tus propios experimentos
+
+---
+
+## 📝 Contribuir Nuevas Demos
+
+¿Tienes una demo útil? ¡Agrégala!
+
+1. **Elige la categoría correcta** según la tabla arriba
+2. **Crea tu archivo** `.cpp` en `demos/[category]/`
+3. **Documenta** tu demo con comentarios explicativos
+4. **Verifica** que compile con `bash scripts/test_demos.bash`
+5. **Actualiza** el catálogo: `bash scripts/catalog_demos.bash`
+6. **Haz un PR** con tu contribución
+
+**Naming conventions:**
+- Tutorials: `XX_descriptive_name.cpp` (XX = número secuencial)
+- Otros: `descriptive_name.cpp` (snake_case)
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+Las demos siguen la misma filosofía que `tests/` y `benchs/`:
+
+```
+demos/
+├── [category]/                    # 7 categorías
+│   ├── README.md                 # Guía de la categoría
+│   ├── demo1.cpp
+│   ├── demo2.cpp
+│   └── ...
+├── README.md (este archivo)      # Índice principal
+└── ../scripts/                   # Scripts genéricos
+    ├── build_demo.bash           # Compilar demo específica
+    ├── run_demo.bash             # Ejecutar demo
+    ├── build_all_demos.bash      # Compilar todas las demos
+    ├── test_demos.bash           # Verificar compilación
+    └── catalog_demos.bash        # Generar catálogo
+```
+
+**Variables del sistema:**
+- `[category]` = general | tutorials | examples | showcase | comparison | performance | integration
+- `[demo_name]` = nombre del archivo sin `.cpp`
+- `[compiler]` = gcc | clang | intel | msvc | all
+- `[mode]` = debug | release | all
+
+---
+
+## 📚 Recursos Adicionales
+
+- **Documentación completa**: [../README.md](../README.md)
+- **Guía de compilación**: [../PROMPT.md](../PROMPT.md)
+- **Estado del proyecto**: [../PROYECTO_COMPLETO.md](../PROYECTO_COMPLETO.md)
+- **Benchmark results**: [../RESULTADOS_BENCHMARK.md](../RESULTADOS_BENCHMARK.md)
+
+---
+
+**¡Feliz coding!** 🎉

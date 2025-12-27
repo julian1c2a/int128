@@ -263,8 +263,8 @@ cat benchmark_results/benchmark_summary.md
 ./scripts/build_with_backends.bash clang --all-backends
 
 # 2. Ejecutar benchmarks
-./build/benchmarks/benchmark_gcc
-./build/benchmarks/benchmark_clang
+./build/build_benchs/benchmark_gcc
+./build/build_benchs/benchmark_clang
 
 # 3. Consolidar resultados
 python scripts/aggregate_benchmark_results.py

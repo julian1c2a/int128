@@ -378,7 +378,7 @@ Resultados completos disponibles en:
 - `benchmark_results/int128_cmath_benchmarks_intel.txt`
 
 Código fuente del benchmark:
-- `benchmarks/int128_cmath_benchmarks.cpp`
+- `benchs/int128_cmath_benchmarks.cpp`
 
 ---
 

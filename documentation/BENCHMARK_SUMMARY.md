@@ -40,8 +40,8 @@ Se ha implementado un **sistema completo de benchmarks** para `uint128_t` que pe
 ### Código de Benchmarks
 
 ```
-benchmarks/
-└── uint128_extracted_benchmarks.cpp    # 700+ líneas de benchmarks completos
+benchs/
+└── uint128_extracted_benchs.cpp    # 700+ líneas de benchmarks completos
 ```
 
 ### Scripts de Automatización
@@ -226,7 +226,7 @@ Ejemplo típico:
 
 ### Añadir Nuevos Benchmarks
 
-1. Editar `benchmarks/uint128_extracted_benchmarks.cpp`
+1. Editar `benchs/uint128_extracted_benchs.cpp`
 2. Añadir función `benchmark_nueva_operacion()`
 3. Llamarla desde `main()`
 4. Recompilar: `./benchmark.bash build`
@@ -374,7 +374,7 @@ graph TD
 
 ## 📚 Referencias
 
-- **Código**: [benchmarks/uint128_extracted_benchmarks.cpp](../benchmarks/uint128_extracted_benchmarks.cpp)
+- **Código**: [benchs/uint128_extracted_benchs.cpp](../benchs/uint128_extracted_benchs.cpp)
 - **Guía**: [documentation/BENCHMARK_GUIDE.md](./BENCHMARK_GUIDE.md)
 - **Tests**: [tests/uint128_extracted_tests.cpp](../tests/uint128_extracted_tests.cpp)
 - **Header principal**: [include/uint128/uint128_t.hpp](../include/uint128/uint128_t.hpp)

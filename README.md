@@ -64,8 +64,8 @@ int128/
 │   ├── test_numeric_functions.cpp    # Test funciones numéricas
 │   └── ...
 ├── benchs/                    # Benchmarks de rendimiento
-│   ├── uint128_extracted_benchmarks.cpp  # Benchmarks uint128_t
-│   ├── int128_extracted_benchmarks.cpp   # Benchmarks int128_t
+│   ├── uint128_extracted_benchs.cpp  # Benchmarks uint128_t
+│   ├── int128_extracted_benchs.cpp   # Benchmarks int128_t
 │   └── ...
 ├── sources/                   # Código fuente compilado
 ├── build/                     # Archivos compilados
@@ -77,7 +77,7 @@ int128/
 │   ├── doxygen/              # Páginas Doxygen
 │   │   └── pages/           # Quick Start, Examples, Architecture
 │   ├── generated/            # HTML generado por Doxygen (10.68 MB, 1346 archivos)
-│   └── benchmarks/           # Resultados de benchmarks
+│   └── benchmarks/           # Resultados de benchmarks guardados
 ├── demos/                     # Ejemplos ejecutables interactivos
 │   ├── tutorials/            # 13 tutoriales básicos (01-13)
 │   ├── showcase/             # Demostraciones avanzadas
@@ -387,8 +387,8 @@ make interop-full COMPILER=gcc MODE=release
 
 # Benchmark con todos los backends (Boost + GMP + tommath)
 ./scripts/build_with_backends.bash gcc --all-backends
-./build/benchmarks/uint128_benchmark_gcc
-./build/benchmarks/int128_benchmark_gcc
+./build/build_benchs/gcc/release/uint128_benchmark_gcc
+./build/build_benchs/gcc/release/int128_benchmark_gcc
 
 # Agregar y analizar resultados (genera reportes separados)
 python scripts/aggregate_benchmark_results.py
@@ -630,7 +630,7 @@ g++ -std=c++20 -I include demos/examples/uuid_generation.cpp -o demos/examples/u
 #### 📂 Archivos
 
 - **Tests**: `tests/uint128_traits_extracted_tests.cpp`
-- **Benchmarks**: `benchmarks/uint128_traits_extracted_benchs.cpp`
+- **Benchmarks**: `benchs/uint128_traits_extracted_benchs.cpp`
 - **Scripts de compilación**: `scripts/compile_uint128_traits_extracted.{sh,bat}`
 - **Scripts de ejecución**: `scripts/run_uint128_traits_benchmarks.{sh,bat}`
 - **Script maestro**: `scripts/master_uint128_traits_all.{sh,bat}` - Ejecuta todo automáticamente
@@ -744,7 +744,7 @@ Suite completa de pruebas y benchmarks para `int128_traits.hpp` (tipo signed).
 #### 📂 Archivos
 
 - **Tests**: `tests/int128_traits_extracted_tests.cpp`
-- **Benchmarks**: `benchmarks/int128_traits_extracted_benchs.cpp`
+- **Benchmarks**: `benchs/int128_traits_extracted_benchs.cpp`
 - **Scripts de compilación**: `scripts/compile_int128_traits_extracted.{sh,bat}`
 - **Scripts de ejecución**: `scripts/run_int128_traits_benchmarks.{sh,bat}`
 - **Script maestro**: `scripts/master_int128_traits_all.{sh,bat}` - Ejecuta todo automáticamente
@@ -871,7 +871,7 @@ int128_format::hex(neg, 0, true);                     // two's complement
 
 - **Headers**: `include/uint128/uint128_format.hpp` (202 líneas), `include/int128/int128_format.hpp` (251 líneas)
 - **Tests**: `tests/uint128_format_tests.cpp` (9 tests), `tests/int128_format_tests.cpp` (10 tests)
-- **Benchmarks**: `benchmarks/uint128_format_benchmarks.cpp`, `benchmarks/int128_format_benchmarks.cpp`
+- **Benchmarks**: `benchs/uint128_format_benchmarks.cpp`, `benchs/int128_format_benchmarks.cpp`
 - **Scripts**: 8 scripts modernos (build/check/run × uint128/int128 × tests/benchs)
 
 #### ✅ Estado: COMPLETO
@@ -1182,7 +1182,7 @@ documentation/
 │       ├── quickstart.md   # Guía de inicio rápido
 │       ├── examples.md     # Ejemplos de uso
 │       └── architecture.md # Arquitectura interna
-└── benchmarks/             # 📊 Resultados de benchmarks
+└── benchmarks/             # 📊 Resultados guardados de benchmarks
 ```
 
 ### 🌐 Visualización

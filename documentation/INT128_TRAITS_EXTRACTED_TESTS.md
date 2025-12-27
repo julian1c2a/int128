@@ -10,7 +10,7 @@ Este documento describe las pruebas y benchmarks extraídos para cada especializ
 - **tests/int128_traits_extracted_tests.cpp**: Contiene 19 pruebas individuales para verificar el correcto funcionamiento de cada especialización de type traits.
 
 ### Benchmarks
-- **benchmarks/int128_traits_extracted_benchs.cpp**: Contiene 11 benchmarks que miden:
+- **benchs/int128_traits_extracted_benchs.cpp**: Contiene 11 benchmarks que miden:
   - Tiempo de ejecución en nanosegundos
   - Ciclos de CPU usando RDTSC
 
@@ -35,7 +35,7 @@ build/
 │   ├── clang/release/        # Tests compilados con Clang
 │   ├── intel/release/        # Tests compilados con Intel
 │   └── msvc/release/         # Tests compilados con MSVC
-└── build_benchmarks/
+└── build_benchs/
     ├── gcc/release/          # Benchmarks compilados con GCC
     ├── clang/release/        # Benchmarks compilados con Clang
     ├── intel/release/        # Benchmarks compilados con Intel
