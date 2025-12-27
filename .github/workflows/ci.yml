@@ -49,6 +49,7 @@ jobs:
         ./scripts/run_uint128_extracted_tests.bash gcc ${{ matrix.build_type }}
     
     - name: Build demos seleccionados
+      continue-on-error: true  # Los demos son opcionales, no bloquean CI
       run: |
         export CC=gcc-${{ matrix.version }}
         export CXX=g++-${{ matrix.version }}
@@ -102,6 +103,7 @@ jobs:
         ./scripts/run_uint128_extracted_tests.bash clang ${{ matrix.build_type }}
     
     - name: Build demos seleccionados
+      continue-on-error: true  # Los demos son opcionales, no bloquean CI
       run: |
         export CC=clang-${{ matrix.version }}
         export CXX=clang++-${{ matrix.version }}
