@@ -4,6 +4,7 @@
  */
 
 #include "../include/int128/int128_t.hpp"
+#include "test_iostream_helpers.hpp"
 #include <cassert>
 #include <iostream>
 #include <limits>

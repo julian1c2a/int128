@@ -1,3 +1,9 @@
+CICD_Results
+CICD_Results/*
+CICD_Results/*/*
+CICD_Results/*/*/*
+CICD_Results/*/*/*/*
+CICD_Results/*/*/*/*/*
 .exe
 *.exe
 */*.exe

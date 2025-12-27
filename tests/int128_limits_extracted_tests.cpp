@@ -5,6 +5,7 @@
 
 #include "../include/int128/int128_limits.hpp"
 #include "../include/int128/int128_t.hpp"
+#include "test_iostream_helpers.hpp"
 #include <cassert>
 #include <iostream>
 #include <limits>
@@ -292,7 +293,7 @@ int main()
         if (func())                                                                                \
             passed++;                                                                              \
     } catch (const std::exception& e) {                                                            \
-        std::cout << "  [FAIL] EXCEPTION: " << e.what() << "\n";                                       \
+        std::cout << "  [FAIL] EXCEPTION: " << e.what() << "\n";                                   \
     }
 
     // Tests de propiedades booleanas

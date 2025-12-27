@@ -27,6 +27,9 @@
 #ifndef UINT128_IOSTREAMS_HPP
 #define UINT128_IOSTREAMS_HPP
 
+// Feature test macro - indica que las sobrecargas de iostream están disponibles
+#define UINT128_IOSTREAMS_AVAILABLE 1
+
 #include "uint128_t.hpp"
 #include <iomanip>
 #include <iostream>

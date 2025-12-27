@@ -1,5 +1,6 @@
 #include "../include/uint128/uint128_numeric.hpp"
 #include "../include/uint128/uint128_t.hpp"
+#include "test_iostream_helpers.hpp"
 #include <iomanip>
 #include <iostream>
 

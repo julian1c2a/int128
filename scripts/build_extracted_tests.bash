@@ -4,7 +4,8 @@
 #   compiler: gcc, clang, msvc, intel
 #   build_type: debug, release
 
-set -e  # Exit on error
+# No set -e aquí, queremos continuar compilando todo
+set -o pipefail
 
 COMPILER="${1:-gcc}"
 BUILD_TYPE="${2:-release}"
@@ -85,6 +86,12 @@ for test_file in "${TEST_FILES[@]}"; do
     test_name=$(basename "$test_file" .cpp)
     output="$BUILD_DIR/${test_name}"
     
+    # Flags adicionales según el tipo de test
+    extra_libs=""
+    if [[ "$test_name" == *"thread_safety"* ]]; then
+        extra_libs="-latomic -pthread"
+    fi
+    
     echo "Compiling: $test_name..."
     
     if [ "$COMPILER" = "msvc" ]; then
@@ -93,18 +100,22 @@ for test_file in "${TEST_FILES[@]}"; do
             echo "  [OK] Success"
             ((COMPILED++))
         else
-            echo "  [FAIL] Failed (see ${output}.log)"
-            cat "${output}.log"
+            echo "  [FAIL] Failed"
+            echo "  === Error log (first 30 lines) ==="
+            head -30 "${output}.log"
+            echo "  ==================================="
             ((FAILED++))
         fi
     else
         # GCC/Clang/Intel
-        if $CXX $EXTRA_FLAGS $OPT_FLAGS -I"include" "$test_file" -o "$output" > "${output}.log" 2>&1; then
+        if $CXX $EXTRA_FLAGS $OPT_FLAGS -I"include" "$test_file" -o "$output" $extra_libs > "${output}.log" 2>&1; then
             echo "  [OK] Success"
             ((COMPILED++))
         else
-            echo "  [FAIL] Failed (see ${output}.log)"
-            cat "${output}.log"
+            echo "  [FAIL] Failed"
+            echo "  === Error log (first 30 lines) ==="
+            head -30 "${output}.log"
+            echo "  ==================================="
             ((FAILED++))
         fi
     fi
