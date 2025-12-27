@@ -96,9 +96,12 @@ for test_file in "${TEST_FILES[@]}"; do
     echo "Compiling: $test_name..."
     
     if [ "$COMPILER" = "msvc" ]; then
-        # MSVC usa sintaxis diferente
-        # Git Bash convierte /flag a rutas, usar // para escapar
-        if $CXX $EXTRA_FLAGS $OPT_FLAGS //I"include" "$test_file" //Fe:"${output}.exe" > "${output}.log" 2>&1; then
+        # MSVC: usar cmd.exe para evitar conversión de paths por Git Bash
+        # Convertir paths Unix a Windows
+        win_output=$(cygpath -w "${output}.exe" 2>/dev/null || echo "${output}.exe" | sed 's|/|\\|g')
+        win_test=$(cygpath -w "$test_file" 2>/dev/null || echo "$test_file" | sed 's|/|\\|g')
+        
+        if cmd.exe //C "cl /std:c++20 /EHsc /W4 $OPT_FLAGS /Iinclude \"$win_test\" /Fe:\"$win_output\" > ${output}.log 2>&1"; then
             echo "  [OK] Success"
             ((COMPILED++))
         else
