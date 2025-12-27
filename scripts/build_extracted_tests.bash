@@ -96,12 +96,22 @@ for test_file in "${TEST_FILES[@]}"; do
     echo "Compiling: $test_name..."
     
     if [ "$COMPILER" = "msvc" ]; then
-        # MSVC: usar cmd.exe para evitar conversión de paths por Git Bash
-        # Convertir paths Unix a Windows
-        win_output=$(cygpath -w "${output}.exe" 2>/dev/null || echo "${output}.exe" | sed 's|/|\\|g')
-        win_test=$(cygpath -w "$test_file" 2>/dev/null || echo "$test_file" | sed 's|/|\\|g')
+        # MSVC: necesitamos paths absolutos en formato Windows
+        abs_output=$(cd "$(dirname "${output}")" && pwd -W 2>/dev/null || pwd)
+        output_name=$(basename "${output}")
+        abs_test=$(cd "$(dirname "$test_file")" && pwd -W 2>/dev/null || pwd)
+        test_name_file=$(basename "$test_file")
+        abs_include=$(cd include && pwd -W 2>/dev/null || pwd)
         
-        if cmd.exe //C "cl /std:c++20 /EHsc /W4 $OPT_FLAGS /Iinclude \"$win_test\" /Fe:\"$win_output\" > ${output}.log 2>&1"; then
+        # Construir comando con paths absolutos Windows
+        if [ "$BUILD_TYPE" = "release" ]; then
+            flags="/O2 /DNDEBUG"
+        else
+            flags="/Od /Zi"
+        fi
+        
+        # Ejecutar cl.exe directamente (ya está en PATH por vcvarsall.bat)
+        if cl.exe /std:c++20 /EHsc /W4 $flags "/I$abs_include" "$abs_test\\$test_name_file" "/Fe:$abs_output\\${output_name}.exe" > "${output}.log" 2>&1; then
             echo "  [OK] Success"
             ((COMPILED++))
         else
