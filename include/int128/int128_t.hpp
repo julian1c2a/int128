@@ -166,7 +166,7 @@ class int128_t
     /**
      * @brief Valor absoluto
      */
-    int128_t abs() const noexcept
+    constexpr int128_t abs() const noexcept
     {
         if (is_negative()) {
             return -*this;
