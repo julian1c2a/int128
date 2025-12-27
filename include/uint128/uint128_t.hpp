@@ -541,9 +541,19 @@ class uint128_t
         // GCC/Clang: usar builtin cuando sea posible
 #if defined(__has_builtin)
 #if __has_builtin(__builtin_addcll) && defined(__x86_64__)
-        unsigned long long carry = 0;
-        data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
-        data[1] = __builtin_addcll(data[1], other.data[1], carry, &carry);
+        if (std::is_constant_evaluated()) {
+            // En contexto constexpr, usar método tradicional
+            const uint64_t old_low = data[0];
+            data[0] += other.data[0];
+            data[1] += other.data[1];
+            if (data[0] < old_low) {
+                ++data[1];
+            }
+        } else {
+            unsigned long long carry = 0;
+            data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+            data[1] = __builtin_addcll(data[1], other.data[1], carry, &carry);
+        }
 #else
         // Fallback: método tradicional confiable
         const uint64_t old_low = data[0];
@@ -610,9 +620,19 @@ class uint128_t
         // GCC/Clang: usar builtin cuando sea posible
 #if defined(__has_builtin)
 #if __has_builtin(__builtin_subcll) && defined(__x86_64__)
-        unsigned long long borrow = 0;
-        data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
-        data[1] = __builtin_subcll(data[1], other.data[1], borrow, &borrow);
+        if (std::is_constant_evaluated()) {
+            // En contexto constexpr, usar método tradicional
+            const uint64_t old_low = data[0];
+            data[0] -= other.data[0];
+            data[1] -= other.data[1];
+            if (data[0] > old_low) {
+                --data[1];
+            }
+        } else {
+            unsigned long long borrow = 0;
+            data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+            data[1] = __builtin_subcll(data[1], other.data[1], borrow, &borrow);
+        }
 #else
         // Fallback: método tradicional confiable
         const uint64_t old_low = data[0];
