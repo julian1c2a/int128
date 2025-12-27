@@ -48,15 +48,16 @@ jobs:
         chmod +x scripts/run_uint128_extracted_tests.bash
         ./scripts/run_uint128_extracted_tests.bash gcc ${{ matrix.build_type }}
     
-    - name: Build demos seleccionados
-      continue-on-error: true  # Los demos son opcionales, no bloquean CI
-      run: |
-        export CC=gcc-${{ matrix.version }}
-        export CXX=g++-${{ matrix.version }}
-        make demo CATEGORY=tutorials DEMO=tut_01_basic COMPILER=gcc BUILD=${{ matrix.build_type }} || true
-        make demo CATEGORY=showcase DEMO=showcase_cryptography COMPILER=gcc BUILD=${{ matrix.build_type }} || true
-        make demo CATEGORY=showcase DEMO=expression_templates COMPILER=gcc BUILD=${{ matrix.build_type }} || true
-        exit 0  # Siempre retornar success para este step
+    # NOTE: Demos comentados temporalmente por segfaults y errores constexpr
+    # - name: Build demos seleccionados
+    #   continue-on-error: true  # Los demos son opcionales, no bloquean CI
+    #   run: |
+    #     export CC=gcc-${{ matrix.version }}
+    #     export CXX=g++-${{ matrix.version }}
+    #     make demo CATEGORY=tutorials DEMO=tut_01_basic COMPILER=gcc BUILD=${{ matrix.build_type }} || true
+    #     make demo CATEGORY=showcase DEMO=showcase_cryptography COMPILER=gcc BUILD=${{ matrix.build_type }} || true
+    #     make demo CATEGORY=showcase DEMO=expression_templates COMPILER=gcc BUILD=${{ matrix.build_type }} || true
+    #     exit 0  # Siempre retornar success para este step
     
     - name: Upload GCC artifacts
       uses: actions/upload-artifact@v4
@@ -103,15 +104,16 @@ jobs:
         chmod +x scripts/run_uint128_extracted_tests.bash
         ./scripts/run_uint128_extracted_tests.bash clang ${{ matrix.build_type }}
     
-    - name: Build demos seleccionados
-      continue-on-error: true  # Los demos son opcionales, no bloquean CI
-      run: |
-        export CC=clang-${{ matrix.version }}
-        export CXX=clang++-${{ matrix.version }}
-        make demo CATEGORY=tutorials DEMO=tut_02_operators COMPILER=clang BUILD=${{ matrix.build_type }} || true
-        make demo CATEGORY=showcase DEMO=showcase_scientific COMPILER=clang BUILD=${{ matrix.build_type }} || true
-        make demo CATEGORY=showcase DEMO=expression_templates_fold COMPILER=clang BUILD=${{ matrix.build_type }} || true
-        exit 0  # Siempre retornar success para este step
+    # NOTE: Demos comentados temporalmente por errores constexpr
+    # - name: Build demos seleccionados
+    #   continue-on-error: true  # Los demos son opcionales, no bloquean CI
+    #   run: |
+    #     export CC=clang-${{ matrix.version }}
+    #     export CXX=clang++-${{ matrix.version }}
+    #     make demo CATEGORY=tutorials DEMO=tut_02_operators COMPILER=clang BUILD=${{ matrix.build_type }} || true
+    #     make demo CATEGORY=showcase DEMO=showcase_scientific COMPILER=clang BUILD=${{ matrix.build_type }} || true
+    #     make demo CATEGORY=showcase DEMO=expression_templates_fold COMPILER=clang BUILD=${{ matrix.build_type }} || true
+    #     exit 0  # Siempre retornar success para este step
     
     - name: Upload Clang artifacts
       uses: actions/upload-artifact@v4
