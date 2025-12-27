@@ -28,6 +28,9 @@
 #define INT128_NUMERIC_HPP
 
 #include "int128_t.hpp"
+
+// Incluir wrappers de intrínsecos multiplataforma de uint128
+#include "../uint128/uint128_numeric.hpp"
 #include <algorithm>
 #include <cstdint>
 
@@ -108,10 +111,10 @@ constexpr int popcount(int128_t x) noexcept
     // Trabajar con la representación binaria directa
     int count = 0;
     if (x.high() != 0) {
-        count += __builtin_popcountll(x.high());
+        count += uint128_detail::popcount64(x.high());
     }
     if (x.low() != 0) {
-        count += __builtin_popcountll(x.low());
+        count += uint128_detail::popcount64(x.low());
     }
     return count;
 }
@@ -132,9 +135,9 @@ constexpr int countl_zero(int128_t x) noexcept
     }
 
     if (x.high() != 0) {
-        return __builtin_clzll(x.high());
+        return uint128_detail::clz64(x.high());
     } else {
-        return 64 + __builtin_clzll(x.low());
+        return 64 + uint128_detail::clz64(x.low());
     }
 }
 
@@ -162,9 +165,9 @@ constexpr int countr_zero(int128_t x) noexcept
     }
 
     if (x.low() != 0) {
-        return __builtin_ctzll(x.low());
+        return uint128_detail::ctz64(x.low());
     } else {
-        return 64 + __builtin_ctzll(x.high());
+        return 64 + uint128_detail::ctz64(x.high());
     }
 }
 
