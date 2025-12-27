@@ -102,10 +102,42 @@ done
   - 1 por falta de `-latomic`
   - 1 por warnings
 
-### Después de los Arreglos (Primera Iteración)
+### Después de los Arreglos (Primera Iteración - Commit 32bcb0c)
 
 - ✅ **24/27 tests compilando** (89% éxito)
-- ⚠️ 3 tests siguen fallando (requiere investigación adicional)
+- ⚠️ 3 tests seguían fallando por `int128_t` incompleto
+
+### Después de los Arreglos (Segunda Iteración - Commit ddef654)
+
+- ✅ **27/27 tests compilando** (100% éxito) 🎉
+- ✅ Todos los builds locales pasan exitosamente
+
+**Problema identificado**: Los 3 tests fallidos tenían un error común:
+
+```
+error: invalid use of incomplete type 'const class int128_t'
+   23 |     return os << value.to_string();
+note: forward declaration of 'class int128_t'
+```
+
+**Causa**: `int128_t` era solo una forward declaration cuando se incluía `uint128_t.hpp`.
+
+**Solución**: Usar `__has_include()` para detectar si `int128/int128_t.hpp` está disponible:
+
+```cpp
+#if __has_include("int128/int128_t.hpp")
+    #include "int128/int128_t.hpp"
+    #define HAS_INT128_T 1
+#endif
+
+#ifdef HAS_INT128_T
+inline std::ostream& operator<<(std::ostream& os, const int128_t& value) {
+    return os << value.to_string();
+}
+#endif
+```
+
+Además, `uint128_t_extracted_tests.cpp` ahora usa el header completo `uint128_iostreams.hpp` porque necesita `operator>>` para input.
 
 ## Patrón de Diseño Utilizado
 
@@ -149,4 +181,6 @@ scripts/build_extracted_tests.bash             (detección automática -latomic)
 
 ## Siguiente Paso
 
-Investigar los 3 tests que siguen fallando después de estos arreglos.
+✅ **COMPLETADO**: Todos los tests compilan exitosamente localmente.
+
+Esperando resultados de CI/CD en GitHub Actions para confirmar que todos los compiladores (GCC 13/14, Clang 18/19, MSVC, Sanitizers) pasan correctamente.
