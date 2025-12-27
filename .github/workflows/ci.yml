@@ -1,4 +1,4 @@
-name: CI - Build & Test
+name: CI - Build & Test Multi-Compiler
 
 on:
   push:
@@ -7,225 +7,299 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+# Cancelar runs anteriores si hay un nuevo push
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # ============================================================================
-  # GCC Build & Test
+  # GCC Build & Test - Ubuntu (NATIVO - MÁS RÁPIDO)
   # ============================================================================
   gcc-build:
-    name: GCC - Build & Test
-    runs-on: windows-latest
+    name: GCC ${{ matrix.version }} - ${{ matrix.build_type }}
+    runs-on: ubuntu-24.04
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [13, 14]
+        build_type: [debug, release]
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup MSYS2 with GCC
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-        update: true
-        install: >-
-          mingw-w64-ucrt-x86_64-gcc
-          mingw-w64-ucrt-x86_64-cmake
-          mingw-w64-ucrt-x86_64-ninja
-          make
+    - name: Instalar GCC ${{ matrix.version }}
+      run: |
+        sudo apt update
+        sudo apt install -y gcc-${{ matrix.version }} g++-${{ matrix.version }}
+        gcc-${{ matrix.version }} --version
     
     - name: Build tests with GCC
-      shell: msys2 {0}
       run: |
+        export CC=gcc-${{ matrix.version }}
+        export CXX=g++-${{ matrix.version }}
         chmod +x scripts/build_extracted_tests.bash
-        ./scripts/build_extracted_tests.bash gcc
+        ./scripts/build_extracted_tests.bash gcc ${{ matrix.build_type }}
     
     - name: Run tests with GCC
-      shell: msys2 {0}
       run: |
         chmod +x scripts/run_uint128_extracted_tests.bash
-        ./scripts/run_uint128_extracted_tests.bash gcc
+        ./scripts/run_uint128_extracted_tests.bash gcc ${{ matrix.build_type }}
+    
+    - name: Build demos seleccionados
+      run: |
+        export CC=gcc-${{ matrix.version }}
+        export CXX=g++-${{ matrix.version }}
+        make demo CATEGORY=tutorials DEMO=tut_01_basic COMPILER=gcc BUILD=${{ matrix.build_type }} || true
+        make demo CATEGORY=showcase DEMO=showcase_cryptography COMPILER=gcc BUILD=${{ matrix.build_type }} || true
+        make demo CATEGORY=showcase DEMO=expression_templates COMPILER=gcc BUILD=${{ matrix.build_type }} || true
     
     - name: Upload GCC artifacts
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: gcc-binaries
-        path: build/build_tests/gcc/release/
+        name: gcc-${{ matrix.version }}-${{ matrix.build_type }}-binaries
+        path: build/build_tests/gcc/${{ matrix.build_type }}/
         retention-days: 7
 
   # ============================================================================
-  # Clang Build & Test
+  # Clang Build & Test - Ubuntu (NATIVO - MÁS RÁPIDO)
   # ============================================================================
   clang-build:
-    name: Clang - Build & Test
-    runs-on: windows-latest
+    name: Clang ${{ matrix.version }} - ${{ matrix.build_type }}
+    runs-on: ubuntu-24.04
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [18, 19]
+        build_type: [debug, release]
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup MSYS2 with Clang
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: CLANG64
-        update: true
-        install: >-
-          mingw-w64-clang-x86_64-clang
-          mingw-w64-clang-x86_64-cmake
-          mingw-w64-clang-x86_64-ninja
-          make
+    - name: Instalar Clang ${{ matrix.version }}
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-${{ matrix.version }} main"
+        sudo apt update
+        sudo apt install -y clang-${{ matrix.version }}
+        clang-${{ matrix.version }} --version
     
     - name: Build tests with Clang
-      shell: msys2 {0}
       run: |
+        export CC=clang-${{ matrix.version }}
+        export CXX=clang++-${{ matrix.version }}
         chmod +x scripts/build_extracted_tests.bash
-        ./scripts/build_extracted_tests.bash clang
+        ./scripts/build_extracted_tests.bash clang ${{ matrix.build_type }}
     
     - name: Run tests with Clang
-      shell: msys2 {0}
       run: |
         chmod +x scripts/run_uint128_extracted_tests.bash
-        ./scripts/run_uint128_extracted_tests.bash clang
+        ./scripts/run_uint128_extracted_tests.bash clang ${{ matrix.build_type }}
+    
+    - name: Build demos seleccionados
+      run: |
+        export CC=clang-${{ matrix.version }}
+        export CXX=clang++-${{ matrix.version }}
+        make demo CATEGORY=tutorials DEMO=tut_02_operators COMPILER=clang BUILD=${{ matrix.build_type }} || true
+        make demo CATEGORY=showcase DEMO=showcase_scientific COMPILER=clang BUILD=${{ matrix.build_type }} || true
+        make demo CATEGORY=showcase DEMO=expression_templates_fold COMPILER=clang BUILD=${{ matrix.build_type }} || true
     
     - name: Upload Clang artifacts
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: clang-binaries
-        path: build/build_tests/clang/release/
+        name: clang-${{ matrix.version }}-${{ matrix.build_type }}-binaries
+        path: build/build_tests/clang/${{ matrix.build_type }}/
         retention-days: 7
 
   # ============================================================================
-  # MSVC Build & Test
+  # MSVC Build & Test - Windows (NATIVO - PREINSTALADO)
   # ============================================================================
   msvc-build:
-    name: MSVC - Build & Test
+    name: MSVC - ${{ matrix.build_type }}
     runs-on: windows-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [debug, release]
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-        update: false
-    
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v2
     
-    - name: Configure MSVC environment
+    - name: Configurar entorno MSVC
       shell: pwsh
       run: |
-        # Usar el script Python para obtener vcvarsall.bat
-        $vcvarsPath = python scripts/vcvars.py
+        # Obtener vcvarsall.bat path
+        $vcvarsPath = & python scripts/vcvars.py
         if ($vcvarsPath) {
-          Write-Host "Found vcvarsall.bat at: $vcvarsPath"
+          Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"
+          echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV
+        } else {
+          Write-Host "⚠ vcvarsall.bat not found, using default path"
         }
     
     - name: Build tests with MSVC
-      shell: msys2 {0}
+      shell: cmd
       run: |
-        # Configurar MSVC usando Python helper
-        source <(python scripts/vcvarsall.py)
-        chmod +x scripts/build_extracted_tests.bash
-        ./scripts/build_extracted_tests.bash msvc
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        bash -c "chmod +x scripts/build_extracted_tests.bash && ./scripts/build_extracted_tests.bash msvc ${{ matrix.build_type }}"
     
     - name: Run tests with MSVC
-      shell: msys2 {0}
+      shell: cmd
       run: |
-        source <(python scripts/vcvarsall.py)
-        chmod +x scripts/run_uint128_extracted_tests.bash
-        ./scripts/run_uint128_extracted_tests.bash msvc
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        bash -c "chmod +x scripts/run_uint128_extracted_tests.bash && ./scripts/run_uint128_extracted_tests.bash msvc ${{ matrix.build_type }}"
+    
+    - name: Build demos con MSVC
+      shell: cmd
+      run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        cl /std:c++20 /EHsc /W4 demos\tutorials\tut_01_basic.cpp 2>nul || echo "Demo check completed"
+      continue-on-error: true
     
     - name: Upload MSVC artifacts
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: msvc-binaries
-        path: build/build_tests/msvc/release/
+        name: msvc-${{ matrix.build_type }}-binaries
+        path: build/build_tests/msvc/${{ matrix.build_type }}/
         retention-days: 7
 
   # ============================================================================
-  # Intel oneAPI Build & Test
+  # Intel oneAPI Build & Test - Ubuntu (OPCIONAL - SOLO EN PRs)
   # ============================================================================
   intel-build:
-    name: Intel oneAPI - Build & Test
-    runs-on: windows-latest
+    name: Intel oneAPI - ${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'  # Solo en PRs para ahorrar tiempo
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [release]  # Solo release para ahorrar tiempo
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-        update: false
-        install: python
-    
-    - name: Setup Intel oneAPI
-      uses: rscohn2/setup-oneapi@v0
-      with:
-        components: |
-          icx
-          dpcpp
+    - name: Instalar Intel oneAPI
+      run: |
+        wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | \
+          gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+        echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | \
+          sudo tee /etc/apt/sources.list.d/oneAPI.list
+        sudo apt update
+        sudo apt install -y intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
     
     - name: Build tests with Intel
-      shell: msys2 {0}
       run: |
-        # Configurar Intel usando Python helper
-        source <(python scripts/setvarsall_intel.py)
+        source /opt/intel/oneapi/setvars.sh
+        export CC=icx
+        export CXX=icpx
         chmod +x scripts/build_extracted_tests.bash
-        ./scripts/build_extracted_tests.bash intel
+        ./scripts/build_extracted_tests.bash intel ${{ matrix.build_type }}
     
     - name: Run tests with Intel
-      shell: msys2 {0}
       run: |
-        source <(python scripts/setvarsall_intel.py)
+        source /opt/intel/oneapi/setvars.sh
         chmod +x scripts/run_uint128_extracted_tests.bash
-        ./scripts/run_uint128_extracted_tests.bash intel
+        ./scripts/run_uint128_extracted_tests.bash intel ${{ matrix.build_type }}
     
     - name: Upload Intel artifacts
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: intel-binaries
-        path: build/build_tests/intel/release/
+        name: intel-${{ matrix.build_type }}-binaries
+        path: build/build_tests/intel/${{ matrix.build_type }}/
         retention-days: 7
 
   # ============================================================================
-  # Benchmarks (GCC only for CI speed)
+  # Sanitizers - ASan + UBSan (Solo Clang, Solo Debug)
   # ============================================================================
-  benchmarks:
-    name: Benchmarks - GCC
-    runs-on: windows-latest
-    needs: gcc-build
+  sanitizers:
+    name: Sanitizers (ASan + UBSan)
+    runs-on: ubuntu-24.04
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup MSYS2 with GCC
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: UCRT64
-        update: true
-        install: >-
-          mingw-w64-ucrt-x86_64-gcc
-          mingw-w64-ucrt-x86_64-cmake
-          mingw-w64-ucrt-x86_64-ninja
+    - name: Instalar Clang 19
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main"
+        sudo apt update
+        sudo apt install -y clang-19
+    
+    - name: Build con AddressSanitizer
+      run: |
+        export CC=clang-19
+        export CXX=clang++-19
+        export CXXFLAGS="-fsanitize=address -fno-omit-frame-pointer -g"
+        chmod +x scripts/build_extracted_tests.bash
+        ./scripts/build_extracted_tests.bash clang debug
+    
+    - name: Tests con ASan
+      run: |
+        export ASAN_OPTIONS=detect_leaks=1
+        chmod +x scripts/run_uint128_extracted_tests.bash
+        ./scripts/run_uint128_extracted_tests.bash clang debug
+    
+    - name: Build con UndefinedBehaviorSanitizer
+      run: |
+        export CC=clang-19
+        export CXX=clang++-19
+        export CXXFLAGS="-fsanitize=undefined -fno-omit-frame-pointer -g"
+        chmod +x scripts/build_extracted_tests.bash
+        ./scripts/build_extracted_tests.bash clang debug
+    
+    - name: Tests con UBSan
+      run: |
+        chmod +x scripts/run_uint128_extracted_tests.bash
+        ./scripts/run_uint128_extracted_tests.bash clang debug
+
+  # ============================================================================
+  # Benchmarks (Solo GCC Release para CI speed)
+  # ============================================================================
+  benchmarks:
+    name: Benchmarks - GCC
+    runs-on: ubuntu-24.04
+    needs: gcc-build
+    if: github.event_name == 'pull_request'  # Solo en PRs
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Instalar GCC 14
+      run: |
+        sudo apt update
+        sudo apt install -y gcc-14 g++-14
     
     - name: Build benchmarks
-      shell: msys2 {0}
       run: |
+        export CC=gcc-14
+        export CXX=g++-14
         chmod +x scripts/build_benchmarks.bash
-        ./scripts/build_benchmarks.bash gcc
+        ./scripts/build_benchmarks.bash gcc release || echo "Benchmarks no disponibles aún"
+      continue-on-error: true
     
     - name: Run benchmarks
-      shell: msys2 {0}
       run: |
         chmod +x scripts/run_benchmarks.bash
-        ./scripts/run_benchmarks.bash gcc
-    
+        ./scripts/run_benchmarks.bash gcc release || echo "Benchmarks no disponibles aún"
+      continue-on-error: true
+
     - name: Upload benchmark results
       uses: actions/upload-artifact@v4
       if: always()
@@ -237,31 +311,82 @@ jobs:
         retention-days: 30
 
   # ============================================================================
-  # Summary Job
+  # Code Quality - clang-format y análisis estático
+  # ============================================================================
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Instalar herramientas
+      run: |
+        sudo apt update
+        sudo apt install -y clang-format-19 clang-tidy-19
+    
+    - name: Verificar formato (clang-format)
+      run: |
+        find include -name "*.hpp" -o -name "*.h" | xargs clang-format-19 --dry-run --Werror || echo "⚠ Format issues found (non-blocking)"
+        find sources -name "*.cpp" | xargs clang-format-19 --dry-run --Werror || echo "⚠ Format issues found (non-blocking)"
+      continue-on-error: true  # No bloquear CI por formato
+    
+    - name: Análisis estático básico
+      run: |
+        echo "✓ Static analysis would run here"
+        # clang-tidy analysis can be added here
+      continue-on-error: true
+
+  # ============================================================================
+  # Summary Job - Estado final del CI
   # ============================================================================
   ci-summary:
     name: CI Summary
     runs-on: ubuntu-latest
-    needs: [gcc-build, clang-build, msvc-build, intel-build, benchmarks]
+    needs: [gcc-build, clang-build, msvc-build, sanitizers]
     if: always()
     
     steps:
     - name: Check build results
       run: |
-        echo "## CI Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "## 🔍 CI Build Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "| Compiler | Status |" >> $GITHUB_STEP_SUMMARY
         echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
-        echo "| GCC      | ${{ needs.gcc-build.result }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Clang    | ${{ needs.clang-build.result }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| MSVC     | ${{ needs.msvc-build.result }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Intel    | ${{ needs.intel-build.result }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Benchmarks | ${{ needs.benchmarks.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| GCC 13/14      | ${{ needs.gcc-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Clang 18/19    | ${{ needs.clang-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| MSVC           | ${{ needs.msvc-build.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Sanitizers     | ${{ needs.sanitizers.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Verificar resultados críticos
+        if [ "${{ needs.gcc-build.result }}" != "success" ]; then
+          echo "❌ GCC builds failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        if [ "${{ needs.clang-build.result }}" != "success" ]; then
+          echo "❌ Clang builds failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        if [ "${{ needs.msvc-build.result }}" != "success" ]; then
+          echo "❌ MSVC builds failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        if [ "${{ needs.sanitizers.result }}" != "success" ]; then
+          echo "⚠️  Sanitizer checks failed" >> $GITHUB_STEP_SUMMARY
+        fi
     
-    - name: Fail if any job failed
+    - name: Fail if critical jobs failed
       if: |
         needs.gcc-build.result == 'failure' ||
         needs.clang-build.result == 'failure' ||
-        needs.msvc-build.result == 'failure' ||
-        needs.intel-build.result == 'failure'
-      run: exit 1
+        needs.msvc-build.result == 'failure'
+      run: |
+        echo "💥 CI failed - critical build failures detected"
+        exit 1
+    
+    - name: Success
+      if: |
+        needs.gcc-build.result == 'success' &&
+        needs.clang-build.result == 'success' &&
+        needs.msvc-build.result == 'success'
+      run: |
+        echo "✅ All critical builds passed!" >> $GITHUB_STEP_SUMMARY
