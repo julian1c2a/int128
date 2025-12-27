@@ -96,22 +96,23 @@ for test_file in "${TEST_FILES[@]}"; do
     echo "Compiling: $test_name..."
     
     if [ "$COMPILER" = "msvc" ]; then
-        # MSVC: necesitamos paths absolutos en formato Windows
+        # MSVC: usar archivo de respuesta para evitar conversión de paths por Git Bash
         abs_output=$(cd "$(dirname "${output}")" && pwd -W 2>/dev/null || pwd)
         output_name=$(basename "${output}")
         abs_test=$(cd "$(dirname "$test_file")" && pwd -W 2>/dev/null || pwd)
         test_name_file=$(basename "$test_file")
         abs_include=$(cd include && pwd -W 2>/dev/null || pwd)
         
-        # Construir comando con paths absolutos Windows
+        # Crear archivo de respuesta temporal
+        rsp_file="${output}.rsp"
         if [ "$BUILD_TYPE" = "release" ]; then
-            flags="/O2 /DNDEBUG"
+            echo "/std:c++20 /EHsc /W4 /O2 /DNDEBUG /I\"$abs_include\" \"$abs_test\\$test_name_file\" /Fe:\"$abs_output\\${output_name}.exe\"" > "$rsp_file"
         else
-            flags="/Od /Zi"
+            echo "/std:c++20 /EHsc /W4 /Od /Zi /I\"$abs_include\" \"$abs_test\\$test_name_file\" /Fe:\"$abs_output\\${output_name}.exe\"" > "$rsp_file"
         fi
         
-        # Ejecutar cl.exe directamente (ya está en PATH por vcvarsall.bat)
-        if cl.exe /std:c++20 /EHsc /W4 $flags "/I$abs_include" "$abs_test\\$test_name_file" "/Fe:$abs_output\\${output_name}.exe" > "${output}.log" 2>&1; then
+        # Ejecutar cl.exe con archivo de respuesta
+        if cl.exe "@$rsp_file" > "${output}.log" 2>&1; then
             echo "  [OK] Success"
             ((COMPILED++))
         else
