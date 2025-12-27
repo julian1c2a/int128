@@ -27,7 +27,8 @@
 #ifndef UINT128_NUMERIC_HPP
 #define UINT128_NUMERIC_HPP
 
-#include "compiler_intrinsics.hpp"
+#include "../intrinsics/bit_operations.hpp"
+#include "../intrinsics/byte_operations.hpp"
 #include "uint128_t.hpp"
 
 #include <algorithm>
@@ -99,10 +100,10 @@ constexpr int popcount(uint128_t x) noexcept
     // Usar la implementación eficiente para cada parte
     int count = 0;
     if (x.high() != 0) {
-        count += uint128::intrinsics::popcount64(x.high());
+        count += intrinsics::popcount64(x.high());
     }
     if (x.low() != 0) {
-        count += uint128::intrinsics::popcount64(x.low());
+        count += intrinsics::popcount64(x.low());
     }
     return count;
 }
@@ -120,9 +121,9 @@ constexpr int countl_zero(uint128_t x) noexcept
     }
 
     if (x.high() != 0) {
-        return uint128::intrinsics::clz64(x.high());
+        return intrinsics::clz64(x.high());
     } else {
-        return 64 + uint128::intrinsics::clz64(x.low());
+        return 64 + intrinsics::clz64(x.low());
     }
 }
 
@@ -150,9 +151,9 @@ constexpr int countr_zero(uint128_t x) noexcept
     }
 
     if (x.low() != 0) {
-        return uint128::intrinsics::ctz64(x.low());
+        return intrinsics::ctz64(x.low());
     } else {
-        return 64 + uint128::intrinsics::ctz64(x.high());
+        return 64 + intrinsics::ctz64(x.high());
     }
 }
 
@@ -276,8 +277,8 @@ constexpr uint128_t rotr(uint128_t x, int s) noexcept
 constexpr uint128_t byteswap(uint128_t x) noexcept
 {
     // Intercambiar bytes de cada parte y luego intercambiar las partes
-    uint64_t high_swapped = uint128::intrinsics::bswap64(x.low());
-    uint64_t low_swapped = uint128::intrinsics::bswap64(x.high());
+    uint64_t high_swapped = intrinsics::bswap64(x.low());
+    uint64_t low_swapped = intrinsics::bswap64(x.high());
     return uint128_t(high_swapped, low_swapped);
 }
 

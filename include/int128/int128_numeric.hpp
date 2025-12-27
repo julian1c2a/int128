@@ -111,10 +111,10 @@ constexpr int popcount(int128_t x) noexcept
     // Trabajar con la representación binaria directa
     int count = 0;
     if (x.high() != 0) {
-        count += uint128::intrinsics::popcount64(x.high());
+        count += intrinsics::popcount64(x.high());
     }
     if (x.low() != 0) {
-        count += uint128::intrinsics::popcount64(x.low());
+        count += intrinsics::popcount64(x.low());
     }
     return count;
 }
@@ -135,9 +135,9 @@ constexpr int countl_zero(int128_t x) noexcept
     }
 
     if (x.high() != 0) {
-        return uint128::intrinsics::clz64(x.high());
+        return intrinsics::clz64(x.high());
     } else {
-        return 64 + uint128::intrinsics::clz64(x.low());
+        return 64 + intrinsics::clz64(x.low());
     }
 }
 
@@ -165,9 +165,9 @@ constexpr int countr_zero(int128_t x) noexcept
     }
 
     if (x.low() != 0) {
-        return uint128::intrinsics::ctz64(x.low());
+        return intrinsics::ctz64(x.low());
     } else {
-        return 64 + uint128::intrinsics::ctz64(x.high());
+        return 64 + intrinsics::ctz64(x.high());
     }
 }
 
