@@ -3,8 +3,8 @@
  * Plus additional tests for robustness (copy/move, UDL, streams, edge cases, constexpr)
  */
 
+#include "../include/uint128/uint128_iostreams.hpp"
 #include "../include/uint128/uint128_t.hpp"
-#include "test_iostream_helpers.hpp"
 #include <cassert>
 #include <iostream>
 #include <limits>
