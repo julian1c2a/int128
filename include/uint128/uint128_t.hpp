@@ -33,6 +33,9 @@
 // Include helpers de módulo optimizados
 #include "specializations/uint128_mod_helpers.hpp"
 
+namespace nstd
+{
+
 // Forward declaration para int128_t (necesario para constructor)
 class int128_t;
 
@@ -2876,4 +2879,7 @@ constexpr uint128_t operator""_u128_oct(const char* str, std::size_t)
 
 // NOTA: Esta implementación se proporciona en int128_t.hpp después de
 // la definición completa de int128_t para evitar errores de tipo incompleto
+
+} // namespace nstd
+
 #endif // UINT128_T_HPP

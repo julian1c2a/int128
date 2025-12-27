@@ -6,7 +6,7 @@
 #include <numeric>
 #include <type_traits>
 
-namespace std
+namespace nstd
 {
 
 // =============================================================================
@@ -313,4 +313,4 @@ inline std::pair<int128_t, int128_t> divmod(const int128_t& dividend, const int1
     return {quotient, remainder};
 }
 
-} // namespace std
+} // namespace nstd

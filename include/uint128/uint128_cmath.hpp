@@ -6,7 +6,7 @@
 #include <numeric>
 #include <type_traits>
 
-namespace std
+namespace nstd
 {
 
 // =============================================================================
@@ -320,4 +320,4 @@ constexpr std::pair<bezout_coeff, bezout_coeff> bezout_coeffs(const uint128_t& a
     return {{g / a, false}, {uint128_t(0), false}};
 }
 
-} // namespace std
+} // namespace nstd

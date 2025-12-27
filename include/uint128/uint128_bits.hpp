@@ -12,7 +12,7 @@
 // Bit manipulation functions for uint128_t
 // =============================================================================
 
-namespace std
+namespace nstd
 {
 
 /**
@@ -175,8 +175,7 @@ inline uint128_t bit_ceil(const uint128_t& value) noexcept
     return uint128_t(1) << width;
 }
 
-} // namespace std
-
+} // namespace nstd
 // =============================================================================
 // Extended bit manipulation functions
 // =============================================================================
@@ -400,7 +399,7 @@ constexpr int find_last_set(const uint128_t& value) noexcept
 // std::bitset compatibility
 // =============================================================================
 
-namespace std
+namespace nstd
 {
 
 /**
@@ -454,4 +453,4 @@ template <size_t N> inline uint128_t from_bitset(const std::bitset<N>& bs) noexc
     return uint128_t(high_part, low_part);
 }
 
-} // namespace std
+} // namespace nstd

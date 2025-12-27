@@ -42,7 +42,7 @@
  * std::abs, y funciones de manipulación de bits.
  */
 
-namespace std
+namespace nstd
 {
 
 // ===============================================================================
@@ -310,6 +310,5 @@ constexpr int128_t lcm(int128_t a, int128_t b)
     return (a / g) * b;
 }
 
-} // namespace std
-
+} // namespace nstd
 #endif // INT128_NUMERIC_HPP

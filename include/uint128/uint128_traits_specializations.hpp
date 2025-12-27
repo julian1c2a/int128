@@ -29,19 +29,22 @@
 
 /**
  * @file uint128_traits_specializations.hpp
- * @brief Forward declarations for uint128_t type traits specializations
+ * @brief Forward declarations for nstd::uint128_t type traits specializations
  *
  * ⚠️ CRITICAL: This header MUST be included BEFORE <type_traits> is included
  * for the first time. Otherwise, the specializations will not be recognized.
  *
  * This header only contains forward declarations and specializations for
- * std::type_traits. It does NOT include uint128_t.hpp to avoid circular
+ * std::type_traits. It does NOT include nstd::uint128_t.hpp to avoid circular
  * dependencies and ensure traits are available when type_traits is first included.
  */
 
-// Forward declare uint128_t (do NOT include uint128_t.hpp here!)
+// Forward declare nstd::uint128_t (do NOT include uint128_t.hpp here!)
+namespace nstd
+{
 class uint128_t;
 class int128_t;
+} // namespace nstd
 
 // Detectar si las especializaciones de traits están disponibles
 // NO están disponibles en:
@@ -65,75 +68,75 @@ namespace std
 {
 
 // ===============================================================================
-// TYPE TRAITS FUNDAMENTALES PARA uint128_t
+// TYPE TRAITS FUNDAMENTALES PARA nstd::uint128_t
 // ===============================================================================
 
 #if !UINT128_USING_LIBCPP
 
-template <> struct is_integral<uint128_t> : true_type {
+template <> struct is_integral<nstd::uint128_t> : true_type {
 };
-template <> struct is_arithmetic<uint128_t> : true_type {
+template <> struct is_arithmetic<nstd::uint128_t> : true_type {
 };
-template <> struct is_unsigned<uint128_t> : true_type {
+template <> struct is_unsigned<nstd::uint128_t> : true_type {
 };
-template <> struct is_signed<uint128_t> : false_type {
+template <> struct is_signed<nstd::uint128_t> : false_type {
 };
-template <> struct is_trivially_copyable<uint128_t> : true_type {
+template <> struct is_trivially_copyable<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_constructible<uint128_t> : true_type {
+template <> struct is_trivially_constructible<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_default_constructible<uint128_t> : true_type {
+template <> struct is_trivially_default_constructible<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_copy_constructible<uint128_t> : true_type {
+template <> struct is_trivially_copy_constructible<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_move_constructible<uint128_t> : true_type {
+template <> struct is_trivially_move_constructible<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_assignable<uint128_t, uint128_t> : true_type {
+template <> struct is_trivially_assignable<nstd::uint128_t, nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_copy_assignable<uint128_t> : true_type {
+template <> struct is_trivially_copy_assignable<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_move_assignable<uint128_t> : true_type {
+template <> struct is_trivially_move_assignable<nstd::uint128_t> : true_type {
 };
-template <> struct is_trivially_destructible<uint128_t> : true_type {
+template <> struct is_trivially_destructible<nstd::uint128_t> : true_type {
 };
-template <> struct is_standard_layout<uint128_t> : true_type {
+template <> struct is_standard_layout<nstd::uint128_t> : true_type {
 };
 
 #endif // !UINT128_USING_LIBCPP
 
 // ===============================================================================
-// TYPE TRAITS FUNDAMENTALES PARA int128_t
+// TYPE TRAITS FUNDAMENTALES PARA nstd::int128_t
 // ===============================================================================
 
 #if !UINT128_USING_LIBCPP
 
-template <> struct is_integral<int128_t> : true_type {
+template <> struct is_integral<nstd::int128_t> : true_type {
 };
-template <> struct is_arithmetic<int128_t> : true_type {
+template <> struct is_arithmetic<nstd::int128_t> : true_type {
 };
-template <> struct is_unsigned<int128_t> : false_type {
+template <> struct is_unsigned<nstd::int128_t> : false_type {
 };
-template <> struct is_signed<int128_t> : true_type {
+template <> struct is_signed<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_copyable<int128_t> : true_type {
+template <> struct is_trivially_copyable<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_constructible<int128_t> : true_type {
+template <> struct is_trivially_constructible<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_default_constructible<int128_t> : true_type {
+template <> struct is_trivially_default_constructible<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_copy_constructible<int128_t> : true_type {
+template <> struct is_trivially_copy_constructible<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_move_constructible<int128_t> : true_type {
+template <> struct is_trivially_move_constructible<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_assignable<int128_t, int128_t> : true_type {
+template <> struct is_trivially_assignable<nstd::int128_t, nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_copy_assignable<int128_t> : true_type {
+template <> struct is_trivially_copy_assignable<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_move_assignable<int128_t> : true_type {
+template <> struct is_trivially_move_assignable<nstd::int128_t> : true_type {
 };
-template <> struct is_trivially_destructible<int128_t> : true_type {
+template <> struct is_trivially_destructible<nstd::int128_t> : true_type {
 };
-template <> struct is_standard_layout<int128_t> : true_type {
+template <> struct is_standard_layout<nstd::int128_t> : true_type {
 };
 
 // ===============================================================================
@@ -141,18 +144,17 @@ template <> struct is_standard_layout<int128_t> : true_type {
 // ===============================================================================
 
 /**
- * @brief Especialización de std::make_signed para uint128_t
+ * @brief Especialización de std::make_signed para nstd::uint128_t
  *
- * Convierte uint128_t a su equivalente con signo (int128_t)
+ * Convierte nstd::uint128_t a su equivalente con signo (nstd::int128_t)
  */
-template <> struct make_signed<uint128_t> {
-    using type = int128_t;
+template <> struct make_signed<nstd::uint128_t> {
+    using type = nstd::int128_t;
 };
 
-// NOTA: make_unsigned<int128_t> está definido en int128_traits.hpp
+// NOTA: make_unsigned<nstd::int128_t> está definido en int128_traits.hpp
 
 #endif // !UINT128_USING_LIBCPP
 
 } // namespace std
-
 #endif // UINT128_TRAITS_SPECIALIZATIONS_HPP

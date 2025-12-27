@@ -42,7 +42,7 @@
  * y funciones de manipulación de bits.
  */
 
-namespace std
+namespace nstd
 {
 
 // ===============================================================================
@@ -452,6 +452,5 @@ uint128_t lcm(uint128_t a, uint128_t b) noexcept
 
 } // namespace uint128_numeric
 
-} // namespace std
-
+} // namespace nstd
 #endif // UINT128_NUMERIC_HPP

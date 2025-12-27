@@ -139,7 +139,7 @@ OutputIt adjacent_difference(InputIt first, InputIt last, OutputIt d_first)
 // FUNCIONES DE CONVENIENCIA EN EL NAMESPACE STD
 // ===============================================================================
 
-namespace std
+namespace nstd
 {
 
 /**
@@ -171,6 +171,5 @@ inline uint128_t accumulate(std::vector<uint128_t>::iterator first,
     return uint128_ranges::accumulate(first, last, init);
 }
 
-} // namespace std
-
+} // namespace nstd
 #endif // UINT128_RANGES_HPP

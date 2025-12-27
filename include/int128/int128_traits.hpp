@@ -52,20 +52,20 @@ namespace std
 #if !INT128_USING_LIBCPP
 
 /**
- * @brief int128_t es un tipo trivial
+ * @brief nstd::int128_t es un tipo trivial
  *
  * Combina todas las propiedades triviales: constructible, copiable,
  * asignable y destructible trivialmente.
  */
-template <> struct is_trivial<int128_t> : false_type {
+template <> struct is_trivial<nstd::int128_t> : false_type {
 };
 
 /**
- * @brief int128_t es un tipo POD (Plain Old Data)
+ * @brief nstd::int128_t es un tipo POD (Plain Old Data)
  *
  * Combina ser trivial y tener layout estándar.
  */
-template <> struct is_pod<int128_t> : true_type {
+template <> struct is_pod<nstd::int128_t> : true_type {
 };
 
 #endif // !INT128_USING_LIBCPP
@@ -82,8 +82,8 @@ template <> struct is_pod<int128_t> : true_type {
  * Para int128_t, make_signed devuelve el mismo tipo ya que
  * int128_t ya es con signo.
  */
-template <> struct make_signed<int128_t> {
-    using type = int128_t;
+template <> struct make_signed<nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
 /**
@@ -91,8 +91,8 @@ template <> struct make_signed<int128_t> {
  *
  * Convierte int128_t a su equivalente sin signo uint128_t.
  */
-template <> struct make_unsigned<int128_t> {
-    using type = uint128_t;
+template <> struct make_unsigned<nstd::int128_t> {
+    using type = nstd::uint128_t;
 };
 
 #endif // !INT128_USING_LIBCPP
@@ -108,72 +108,72 @@ template <> struct make_unsigned<int128_t> {
  * en templates que dependen de std::common_type.
  */
 
-template <> struct common_type<int128_t, int64_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, int64_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int64_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<int64_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, int32_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, int32_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int32_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<int32_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, int16_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, int16_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int16_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<int16_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, int8_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, int8_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int8_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<int8_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, uint64_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, uint64_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<uint64_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<uint64_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, uint32_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, uint32_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<uint32_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<uint32_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, uint16_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, uint16_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<uint16_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<uint16_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, uint8_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, uint8_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<uint8_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<uint8_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<int128_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
 // ===============================================================================
@@ -182,12 +182,12 @@ template <> struct common_type<int128_t, int128_t> {
 
 // El tipo común entre int128_t y uint128_t es int128_t (signed)
 // Esto preserva la capacidad de representar valores negativos
-template <> struct common_type<int128_t, uint128_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::int128_t, nstd::uint128_t> {
+    using type = nstd::int128_t;
 };
 
-template <> struct common_type<uint128_t, int128_t> {
-    using type = int128_t;
+template <> struct common_type<nstd::uint128_t, nstd::int128_t> {
+    using type = nstd::int128_t;
 };
 
 // ===============================================================================
@@ -201,7 +201,7 @@ template <> struct common_type<uint128_t, int128_t> {
  * del int128_t para su uso en containers no ordenados como
  * std::unordered_set y std::unordered_map.
  */
-template <> struct hash<int128_t> {
+template <> struct hash<nstd::int128_t> {
     /**
      * @brief Calcula el valor hash de un int128_t
      * @param value Valor a hashear
@@ -210,7 +210,7 @@ template <> struct hash<int128_t> {
      * La implementación combina los hashes de las partes high y low
      * usando XOR y desplazamiento para reducir colisiones.
      */
-    size_t operator()(const int128_t& value) const noexcept
+    size_t operator()(const nstd::int128_t& value) const noexcept
     {
         hash<uint64_t> hasher;
         return hasher(value.high()) ^ (hasher(value.low()) << 1);
@@ -218,5 +218,4 @@ template <> struct hash<int128_t> {
 };
 
 } // namespace std
-
 #endif // INT128_TRAITS_HPP

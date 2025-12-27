@@ -37,6 +37,9 @@
 #include <string>
 #include <type_traits>
 
+namespace nstd
+{
+
 /**
  * @brief Entero con signo de 128 bits
  *
@@ -901,5 +904,7 @@ inline constexpr uint128_t::uint128_t(const int128_t& value) noexcept
     : data{value.low(), value.high()}
 {
 }
+
+} // namespace nstd
 
 #endif // INT128_T_HPP

@@ -4,7 +4,10 @@
 #include <cstdint>
 
 // Forward declaration
+namespace nstd
+{
 class uint128_t;
+}
 
 /**
  * @file uint128_mod_helpers.hpp

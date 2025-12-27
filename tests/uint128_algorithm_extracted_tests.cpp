@@ -10,6 +10,12 @@
 #include <iostream>
 #include <vector>
 
+using namespace nstd;
+
+// Para que std::traits funcionen con 'uint128_t' a secas
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 using namespace uint128_algorithm;
 
 // ===============================================================================

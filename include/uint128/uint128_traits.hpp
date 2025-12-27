@@ -49,20 +49,20 @@ namespace std
 #if !UINT128_USING_LIBCPP
 
 /**
- * @brief uint128_t es un tipo trivial
+ * @brief nstd::uint128_t es un tipo trivial
  *
  * Combina todas las propiedades triviales: constructible, copiable,
  * asignable y destructible trivialmente.
  */
-template <> struct is_trivial<uint128_t> : false_type {
+template <> struct is_trivial<nstd::uint128_t> : false_type {
 };
 
 /**
- * @brief uint128_t es un tipo POD (Plain Old Data)
+ * @brief nstd::uint128_t es un tipo POD (Plain Old Data)
  *
  * Combina ser trivial y tener layout estándar.
  */
-template <> struct is_pod<uint128_t> : true_type {
+template <> struct is_pod<nstd::uint128_t> : true_type {
 };
 
 #endif // !UINT128_USING_LIBCPP
@@ -79,8 +79,8 @@ template <> struct is_pod<uint128_t> : true_type {
  * Para uint128_t, make_unsigned devuelve el mismo tipo ya que
  * uint128_t ya es sin signo.
  */
-template <> struct make_unsigned<uint128_t> {
-    using type = uint128_t;
+template <> struct make_unsigned<nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
 /**
@@ -103,56 +103,56 @@ template <> struct make_unsigned<uint128_t> {
  * en templates que dependen de std::common_type.
  */
 
-template <> struct common_type<uint128_t, uint64_t> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, uint64_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint64_t, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<uint64_t, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint128_t, uint32_t> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, uint32_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint32_t, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<uint32_t, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint128_t, uint16_t> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, uint16_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint16_t, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<uint16_t, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint128_t, uint8_t> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, uint8_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint8_t, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<uint8_t, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint128_t, int> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, int> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<int, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<int, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint128_t, long> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, long> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<long, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<long, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
-template <> struct common_type<uint128_t, uint128_t> {
-    using type = uint128_t;
+template <> struct common_type<nstd::uint128_t, nstd::uint128_t> {
+    using type = nstd::uint128_t;
 };
 
 // NOTA: Las especializaciones common_type entre uint128_t e int128_t
@@ -169,7 +169,7 @@ template <> struct common_type<uint128_t, uint128_t> {
  * del uint128_t para su uso en containers no ordenados como
  * std::unordered_set y std::unordered_map.
  */
-template <> struct hash<uint128_t> {
+template <> struct hash<nstd::uint128_t> {
     /**
      * @brief Calcula el valor hash de un uint128_t
      * @param value Valor a hashear
@@ -178,7 +178,7 @@ template <> struct hash<uint128_t> {
      * La implementación combina los hashes de las partes high y low
      * usando XOR y desplazamiento para reducir colisiones.
      */
-    size_t operator()(const uint128_t& value) const noexcept
+    size_t operator()(const nstd::uint128_t& value) const noexcept
     {
         hash<uint64_t> hasher;
         return hasher(value.high()) ^ (hasher(value.low()) << 1);
@@ -186,5 +186,4 @@ template <> struct hash<uint128_t> {
 };
 
 } // namespace std
-
 #endif // UINT128_TRAITS_HPP

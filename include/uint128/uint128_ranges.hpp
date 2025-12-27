@@ -37,7 +37,7 @@
  * estándar (std::iota, std::accumulate, etc.) para trabajar con uint128_t.
  */
 
-namespace std
+namespace nstd
 {
 
 /**
@@ -99,6 +99,5 @@ uint128_t inner_product(InputIt1 first1, InputIt1 last1, InputIt2 first2, uint12
 // Solo especializamos iota() y accumulate() porque toman valores por copia
 // y podemos optimizar pasándolos directamente como uint128_t.
 
-} // namespace std
-
+} // namespace nstd
 #endif // UINT128_RANGES_HPP

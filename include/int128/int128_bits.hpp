@@ -14,7 +14,7 @@
 // Bit manipulation functions for int128_t
 // =============================================================================
 
-namespace std
+namespace nstd
 {
 
 /**
@@ -208,8 +208,7 @@ inline int128_t bit_ceil(const int128_t& value) noexcept
     return int128_t(1) << width;
 }
 
-} // namespace std
-
+} // namespace nstd
 // =============================================================================
 // Extended bit manipulation functions
 // =============================================================================

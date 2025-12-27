@@ -49,7 +49,7 @@
  * - Mayúsculas: std::uppercase, std::nouppercase
  */
 
-namespace std
+namespace nstd
 {
 
 /**
@@ -180,8 +180,7 @@ inline std::istream& operator>>(std::istream& is, uint128_t& value)
     return is;
 }
 
-} // namespace std
-
+} // namespace nstd
 // ===============================================================================
 // FUNCIONES DE CONVENIENCIA PARA FORMATEO ESPECÍFICO
 // ===============================================================================
