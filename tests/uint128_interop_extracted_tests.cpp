@@ -454,6 +454,10 @@ void test_type_traits_conversions()
 {
     TEST("Conversiones con std::make_signed/unsigned");
 
+#ifndef _MSC_VER
+    // MSVC no soporta make_unsigned/make_signed para tipos custom
+    // Solo GCC/Clang los reconocen como tipos integrales
+
     // make_unsigned<int128_t> debe dar uint128_t
     using UnsignedVersion = std::make_unsigned_t<int128_t>;
     static_assert(std::is_same_v<UnsignedVersion, uint128_t>, "make_unsigned debe dar uint128_t");
@@ -470,6 +474,7 @@ void test_type_traits_conversions()
     uint128_t u2(84);
     SignedVersion i2 = static_cast<SignedVersion>(u2);
     ASSERT(i2 == int128_t(84));
+#endif // !_MSC_VER
 
     END_TEST;
 }
