@@ -45,9 +45,10 @@ case "$COMPILER" in
         ;;
     msvc)
         CXX="cl"
-        OPT_FLAGS="/Od /Zi"
-        [ "$BUILD_TYPE" = "release" ] && OPT_FLAGS="/O2 /DNDEBUG"
-        EXTRA_FLAGS="/std:c++20 /EHsc /W4"
+        # Git Bash convierte /flag a rutas, usar // para escapar
+        OPT_FLAGS="//Od //Zi"
+        [ "$BUILD_TYPE" = "release" ] && OPT_FLAGS="//O2 //DNDEBUG"
+        EXTRA_FLAGS="//std:c++20 //EHsc //W4"
         ;;
     intel)
         CXX="${CXX:-icpx}"
@@ -96,7 +97,8 @@ for test_file in "${TEST_FILES[@]}"; do
     
     if [ "$COMPILER" = "msvc" ]; then
         # MSVC usa sintaxis diferente
-        if $CXX $EXTRA_FLAGS $OPT_FLAGS /I"include" "$test_file" /Fe:"${output}.exe" > "${output}.log" 2>&1; then
+        # Git Bash convierte /flag a rutas, usar // para escapar
+        if $CXX $EXTRA_FLAGS $OPT_FLAGS //I"include" "$test_file" //Fe:"${output}.exe" > "${output}.log" 2>&1; then
             echo "  [OK] Success"
             ((COMPILED++))
         else
