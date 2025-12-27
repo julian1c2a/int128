@@ -3,6 +3,7 @@
 ## Problema Identificado
 
 Los tests de CI/CD fallaban con dos errores principales:
+
 1. **Missing operator<<**: Tests usaban `std::cout << int128_t` sin incluir headers apropiados
 2. **Missing -latomic**: Tests atómicos necesitaban linkear con libatomic
 
@@ -54,6 +55,7 @@ inline std::ostream& operator<<(std::ostream& os, const int128_t& value) {
 ```
 
 **Características**:
+
 - ✅ Solo define `operator<<` si NO está incluido `uint128_iostreams.hpp`
 - ✅ Versión simplificada (usa `to_string()`)
 - ✅ Funciona con `std::cout` y `std::ostringstream`
@@ -62,6 +64,7 @@ inline std::ostream& operator<<(std::ostream& os, const int128_t& value) {
 ### 3. Actualización de Tests
 
 **Tests modificados** (agregado `#include "test_iostream_helpers.hpp"`):
+
 - `int128_limits_extracted_tests.cpp`
 - `int128_numeric_extracted_tests.cpp`
 - `int128_t_extracted_tests.cpp`
@@ -92,6 +95,7 @@ done
 ## Resultados
 
 ### Antes de los Arreglos
+
 - ❌ **20/27 tests compilando** (74% éxito)
 - ❌ 7 tests fallaban:
   - 5 por falta de `operator<<`
@@ -99,6 +103,7 @@ done
   - 1 por warnings
 
 ### Después de los Arreglos (Primera Iteración)
+
 - ✅ **24/27 tests compilando** (89% éxito)
 - ⚠️ 3 tests siguen fallando (requiere investigación adicional)
 
