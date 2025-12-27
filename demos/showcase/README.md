@@ -58,6 +58,7 @@ cmake --build . --target showcase_main
 ### Output Esperado
 
 La demo produce output **colorido** con:
+
 - ✅ Marcadores de éxito en verde
 - ⚠️ Advertencias en amarillo
 - ❌ Errores detectados en rojo
@@ -66,26 +67,143 @@ La demo produce output **colorido** con:
 
 ## 🎭 Demos Adicionales
 
-### Crypto Demo (Próximamente)
+### Expression Templates (★ NUEVO - Diciembre 2025)
+
+Demostraciones completas de técnicas avanzadas de Expression Templates para eliminar temporales intermedios en operaciones con uint128_t.
+
+#### [expression_templates.cpp](expression_templates.cpp) - Introducción a ET
+
+- Comparación con/sin Expression Templates
+- Explicación del método CRTP
+- Árbol de expresiones lazy
+- Benchmarks de rendimiento
+- **Complejidad**: 582 líneas, nivel intermedio
+
+```bash
+make demo CATEGORY=showcase DEMO=expression_templates
+```
+
+#### [expression_templates_complete.cpp](expression_templates_complete.cpp) - Sistema Completo
+
+- ✅ **10 operaciones binarias**: +, -, *, /, %, &, |, ^, <<, >>
+- ✅ **Operaciones unarias**: ~, !
+- ✅ **Operaciones multi-asociativas**: sum(), product(), bitwise_or/and()
+- ✅ **Optimización CSE**: Common Subexpression Elimination
+- ✅ **Operadores de asignación**: +=, -=, *=, /=
+- ✅ **constexpr completo**: Evaluación en compile-time
+- **Complejidad**: 895 líneas, nivel avanzado
+
+```bash
+make demo CATEGORY=showcase DEMO=expression_templates_complete
+```
+
+**Features destacados**:
+
+- Desenrollado automático de operaciones n-arias
+- Memoización para subexpresiones comunes
+- Type-safe con SFINAE
+- Benchmarks comparativos
+
+#### [expression_templates_fold.cpp](expression_templates_fold.cpp) - Fold Expressions C++17
+
+- **Fold expressions nativos**: `(... + args)` y `(args + ...)`
+- Comparación: implementación manual vs fold nativo
+- Operaciones múltiples: suma, producto, OR, AND, XOR
+- Evaluación constexpr
+- **Complejidad**: 489 líneas, nivel intermedio-avanzado
+
+```bash
+make demo CATEGORY=showcase DEMO=expression_templates_fold
+```
+
+**Conceptos demostrados**:
+
+```cpp
+// Left fold: (... + args)
+template<typename... Args>
+auto sum_fold(Args... args) {
+    return (... + args.eval());  // ¡Una sola línea!
+}
+
+// Expande a: ((((arg1 + arg2) + arg3) + arg4) + ...)
+```
+
+#### [expression_templates_horner.cpp](expression_templates_horner.cpp) - Evaluación de Polinomios
+
+- **Método de Horner** optimizado con ET
+- Composición recursiva: `(a*x + b)` → `(a*x + b)*y + c` → ...
+- Zero temporales en evaluación polinomial
+- Polinomios de grado arbitrario
+- **Complejidad**: 644 líneas, nivel avanzado
+
+```bash
+make demo CATEGORY=showcase DEMO=expression_templates_horner
+```
+
+**Ejemplo de uso**:
+
+```cpp
+// P(x) = 3x² + 2x + 5
+// Horner: ((3x + 2)x + 5)
+Terminal x(10);
+auto expr = ((Terminal(3) * x + 2) * x + 5);
+uint128_t result = expr.eval();  // Una sola evaluación
+```
+
+**Características especiales**:
+
+- Composición incremental sin temporales
+- Visualización del árbol de expresiones
+- Benchmarks para polinomios de grado 3, 5 y 10
+- Demostración de evaluación compile-time
+
+#### [expression_templates_simple.cpp](expression_templates_simple.cpp) - Versión Simplificada
+
+- Implementación didáctica con value semantics
+- Más fácil de entender para principiantes
+- Operaciones básicas (+, -, *, /)
+- **Complejidad**: 620 líneas, nivel principiante
+
+```bash
+make demo CATEGORY=showcase DEMO=expression_templates_simple
+```
+
+**Resumen de Expression Templates**:
+
+| Demo | Líneas | Nivel | Características Principales |
+|------|--------|-------|----------------------------|
+| simple | 620 | Principiante | Value semantics, operaciones básicas |
+| expression_templates | 582 | Intermedio | Introducción CRTP, lazy evaluation |
+| fold | 489 | Intermedio-Avanzado | Fold expressions C++17 nativos |
+| complete | 895 | Avanzado | Sistema completo con CSE y multi-assoc |
+| horner | 644 | Avanzado | Polinomios con método de Horner |
+
+### Crypto Demo
+
 ```bash
 demos/showcase/showcase_cryptography.cpp
 ```
+
 - Aritmética modular de 128 bits
 - Ejemplo de RSA toy
 - Generación de números primos grandes
 
 ### Scientific Computing (Próximamente)
+
 ```bash
 demos/showcase/showcase_scientific.cpp
 ```
+
 - Cálculos astronómicos
 - Constantes físicas de alta precisión
 - Simulaciones numéricas
 
 ### Performance Comparison (Próximamente)
+
 ```bash
 demos/showcase/showcase_performance.cpp
 ```
+
 - Comparación vs __uint128_t (GCC builtin)
 - Comparación vs Boost.Multiprecision
 - Gráficos de rendimiento

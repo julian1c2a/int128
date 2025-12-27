@@ -140,8 +140,22 @@ def check_demo_compilation(category: str, demo_file: Path, compiler: str, mode: 
         # Flags
         common_flags = ["-std=c++20", f"-I{project_root}/include"]
         mode_flags = ["-O0", "-g"] if mode == "debug" else ["-O3", "-DNDEBUG"]
+        link_flags = []
         
-        cmd = [compiler_cmd] + common_flags + mode_flags + [str(demo_file), "-o", str(output)]
+        # Check if source file uses threading (for pthread and atomic flags)
+        try:
+            with open(demo_file, 'r', encoding='utf-8') as f:
+                content = f.read(4000)
+                if ('<thread>' in content or 'std::thread' in content or 'pthread' in content):
+                    common_flags.append("-pthread")
+                if ('<atomic>' in content or 'std::atomic' in content or 
+                    'atomic_' in content or 'thread_safety.hpp' in content):
+                    if compiler in ["gcc", "clang"]:
+                        link_flags.append("-latomic")
+        except:
+            pass
+        
+        cmd = [compiler_cmd] + common_flags + mode_flags + [str(demo_file), "-o", str(output)] + link_flags
         
         result = subprocess.run(
             cmd,

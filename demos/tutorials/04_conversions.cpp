@@ -14,10 +14,10 @@
 
 #include <cstdint>
 #include <int128.hpp>
-#include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
 #include <limits>
+#include <uint128/uint128_iostreams.hpp>
 
 int main()
 {
@@ -98,6 +98,10 @@ int main()
     // ============================================================
     std::cout << "--- 5. Conversión entre uint128_t y int128_t ---\n";
 
+    // NOTA: uint128_t no soporta conversión directa a/desde float/double
+    // debido a limitaciones del tamaño del tipo. Para tales conversiones,
+    // se recomienda usar conversión manual dividiendo en partes.
+
     uint128_t unsigned_val = 1000;
     int128_t signed_val = static_cast<int128_t>(unsigned_val);
 
@@ -116,31 +120,24 @@ int main()
     // 6. CONVERSIÓN DESDE DOUBLE/FLOAT
     // ============================================================
     std::cout << "--- 6. Conversión desde punto flotante ---\n";
+    std::cout << "NOTA: uint128_t no soporta conversión directa desde double/float\n";
+    std::cout << "Se requiere conversión manual para tipos de punto flotante\n\n";
 
-    double dbl = 123.456;
-    float flt = 789.012f;
-
-    uint128_t from_double = static_cast<uint128_t>(dbl);
-    uint128_t from_float = static_cast<uint128_t>(flt);
-
-    std::cout << "double " << dbl << " → uint128_t " << from_double << "\n";
-    std::cout << "float  " << flt << " → uint128_t " << from_float << "\n";
-    std::cout << "Nota: Se trunca la parte decimal\n\n";
+    // double dbl = 123.456;
+    // float flt = 789.012f;
+    // uint128_t from_double = static_cast<uint128_t>(dbl);  // NO SOPORTADO
+    // uint128_t from_float = static_cast<uint128_t>(flt);   // NO SOPORTADO
 
     // ============================================================
     // 7. CONVERSIÓN A DOUBLE/FLOAT
     // ============================================================
     std::cout << "--- 7. Conversión a punto flotante ---\n";
+    std::cout << "NOTA: uint128_t no soporta conversión directa a double/float\n";
+    std::cout << "Se requiere conversión manual para tipos de punto flotante\n\n";
 
-    uint128_t integer = 123456789;
-
-    double to_double = static_cast<double>(integer);
-    float to_float = static_cast<float>(integer);
-
-    std::cout << "uint128_t: " << integer << "\n";
-    std::cout << "→ double:   " << to_double << "\n";
-    std::cout << "→ float:    " << to_float << "\n";
-    std::cout << "⚠️  Puede perder precisión con números muy grandes\n\n";
+    // uint128_t integer = 123456789;
+    // double to_double = static_cast<double>(integer);  // NO SOPORTADO
+    // float to_float = static_cast<float>(integer);     // NO SOPORTADO
 
     // ============================================================
     // 8. CONVERSIÓN DESDE BOOL

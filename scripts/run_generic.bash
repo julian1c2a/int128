@@ -1,22 +1,32 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# run_generic.bash - Script genérico de ejecución de benchmarks
+# run_generic.bash - Script genérico de ejecución
 # ==============================================================================
-# Ejecuta benchmarks compilados con todos los compiladores y modos
+# Ejecuta benchmarks o demos compilados con todos los compiladores y modos
 # 
 # Uso:
+#   # Para benchs (sintaxis clásica):
 #   run_generic.bash <type> <feature> [compiler] [mode]
+#   
+#   # Para demos (nueva sintaxis):
+#   run_generic.bash demos <category> <demo_name> [compiler] [mode] [args...]
 #
 # Argumentos:
-#   type     : uint128 | int128
-#   feature  : bits | numeric | algorithm | iostreams | cmath | etc.
+#   type     : uint128 | int128 | demos
+#   feature  : bits | numeric | algorithm | etc. (o <category> si type=demos)
 #   compiler : gcc | clang | intel | msvc | all (default: all)
 #   mode     : debug | release | all (default: all)
+#   args     : (solo demos) argumentos adicionales para pasar al demo
 #
-# Ejemplos:
+# Ejemplos Benchs:
 #   run_generic.bash uint128 bits
 #   run_generic.bash int128 numeric gcc release
 #   run_generic.bash uint128 algorithm all all
+#
+# Ejemplos Demos:
+#   run_generic.bash demos tutorials 01_basic_operations gcc release
+#   run_generic.bash demos examples ipv6_address clang debug
+#   run_generic.bash demos showcase main gcc release --verbose
 # ==============================================================================
 
 set -euo pipefail
@@ -25,25 +35,55 @@ set -euo pipefail
 
 if [[ $# -lt 2 ]]; then
     echo "Error: Se requieren al menos 2 argumentos"
-    echo "Uso: $0 <type> <feature> [compiler] [mode]"
+    echo "Uso: $0 <type> <feature> [compiler] [mode] [args...]"
     echo ""
-    echo "Ejemplos:"
+    echo "Benchs:"
     echo "  $0 uint128 bits"
     echo "  $0 int128 numeric gcc release"
     echo "  $0 uint128 algorithm all all"
+    echo ""
+    echo "Demos:"
+    echo "  $0 demos tutorials 01_basic_operations gcc release"
+    echo "  $0 demos examples ipv6_address clang debug arg1 arg2"
     exit 1
 fi
 
 TYPE="$1"
 FEATURE="$2"
-COMPILER="${3:-all}"
-MODE="${4:-all}"
 
-# ========================= Validation =========================
-
-if [[ "$TYPE" != "uint128" && "$TYPE" != "int128" ]]; then
-    echo "Error: TYPE debe ser 'uint128' o 'int128'"
-    exit 1
+# Determine if this is a demo or benchmark
+IS_DEMO=false
+if [[ "$TYPE" == "demos" ]]; then
+    IS_DEMO=true
+    CATEGORY="$FEATURE"
+    DEMO_NAME="${3:-}"
+    COMPILER="${4:-all}"
+    MODE="${5:-all}"
+    # Remaining arguments are extra args for the demo
+    shift 5 2>/dev/null || true
+    DEMO_ARGS=("$@")
+    
+    if [[ -z "$DEMO_NAME" ]]; then
+        echo "Error: Se requiere el nombre del demo"
+        exit 1
+    fi
+    
+    # Validate category
+    VALID_CATEGORIES=("general" "tutorials" "examples" "showcase" "comparison" "performance" "integration")
+    if [[ ! " ${VALID_CATEGORIES[*]} " =~ " ${CATEGORY} " ]]; then
+        echo "Error: CATEGORY debe ser uno de: ${VALID_CATEGORIES[*]}"
+        exit 1
+    fi
+else
+    COMPILER="${3:-all}"
+    MODE="${4:-all}"
+    DEMO_ARGS=()
+    
+    # Validate type for benchmarks
+    if [[ "$TYPE" != "uint128" && "$TYPE" != "int128" ]]; then
+        echo "Error: TYPE debe ser 'uint128', 'int128' o 'demos'"
+        exit 1
+    fi
 fi
 
 VALID_COMPILERS=("gcc" "clang" "intel" "msvc" "all")
@@ -63,7 +103,11 @@ fi
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-BUILD_DIR="$PROJECT_ROOT/build/build_benchs"
+if [[ "$IS_DEMO" == true ]]; then
+    BUILD_DIR="$PROJECT_ROOT/build/build_demos"
+else
+    BUILD_DIR="$PROJECT_ROOT/build/build_benchs"
+fi
 
 # ========================= Color Output =========================
 
@@ -78,7 +122,7 @@ echo_error() { echo -e "${RED}[ERROR] $1${NC}"; }
 echo_info() { echo -e "${YELLOW}-> $1${NC}"; }
 echo_header() { echo -e "${BLUE}$1${NC}"; }
 
-# ========================= Execution Function =========================
+# ========================= Execution Functions =========================
 
 run_benchmark() {
     local comp="$1"
@@ -110,12 +154,60 @@ run_benchmark() {
     fi
 }
 
-# ========================= Execute Benchmarks =========================
+run_demo() {
+    local comp="$1"
+    local mod="$2"
+    shift 2
+    local extra_args=("$@")
+    
+    local exe_name="${DEMO_NAME}"
+    
+    if [[ "$comp" == "msvc" || "$comp" == "intel" ]]; then
+        exe_name="${exe_name}.exe"
+    fi
+    
+    local exe_path="$BUILD_DIR/$comp/$mod/$exe_name"
+    
+    if [[ ! -f "$exe_path" ]]; then
+        echo_info "Skipping: $comp [$mod] (not found)"
+        return 1
+    fi
+    
+    echo_header "--------------------------------------------------------------------"
+    echo_info "Running demo: ${CATEGORY}/${DEMO_NAME} with $comp [$mod]"
+    if [[ ${#extra_args[@]} -gt 0 ]]; then
+        echo_info "Arguments: ${extra_args[*]}"
+    fi
+    echo_header "--------------------------------------------------------------------"
+    echo ""
+    
+    # Run demo with arguments and show output
+    "$exe_path" "${extra_args[@]}"
+    local exit_code=$?
+    
+    echo ""
+    if [[ $exit_code -eq 0 ]]; then
+        echo_success "  $comp [$mod]: completed (exit code: $exit_code)"
+        return 0
+    else
+        echo_error "  $comp [$mod]: failed (exit code: $exit_code)"
+        return 1
+    fi
+}
 
-echo_header "========================================================================"
-echo_header "  ${TYPE^^} ${FEATURE^^} BENCHMARKS - Execution"
-echo_header "========================================================================"
-echo ""
+# ========================= Execute Benchmarks or Demos =========================
+
+if [[ "$IS_DEMO" == true ]]; then
+    echo_header "========================================================================"
+    echo_header "  DEMO EXECUTION: ${CATEGORY}/${DEMO_NAME}"
+    echo_header "========================================================================"
+    echo ""
+else
+    echo_header "========================================================================"
+    echo_header "  ${TYPE^^} ${FEATURE^^} BENCHMARKS - Execution"
+    echo_header "========================================================================"
+    echo ""
+fi
 
 executed=0
 failed=0
@@ -137,16 +229,33 @@ else
     modes_to_test=("$MODE")
 fi
 
-# Execute benchmarks
+# Execute benchmarks or demos
 for comp in "${compilers_to_test[@]}"; do
     for mod in "${modes_to_test[@]}"; do
-        if run_benchmark "$comp" "$mod"; then
-            ((executed++))
-        else
-            if [[ -f "$BUILD_DIR/$comp/$mod/${TYPE}_${FEATURE}_benchs_${comp}"* ]]; then
-                ((failed++))
+        if [[ "$IS_DEMO" == true ]]; then
+            if run_demo "$comp" "$mod" "${DEMO_ARGS[@]}"; then
+                executed=$((executed + 1))
             else
-                ((skipped++))
+                # Check if file exists to determine if skipped or failed
+                local check_exe="${DEMO_NAME}"
+                if [[ "$comp" == "msvc" || "$comp" == "intel" ]]; then
+                    check_exe="${check_exe}.exe"
+                fi
+                if [[ -f "$BUILD_DIR/$comp/$mod/$check_exe" ]]; then
+                    failed=$((failed + 1))
+                else
+                    skipped=$((skipped + 1))
+                fi
+            fi
+        else
+            if run_benchmark "$comp" "$mod"; then
+                executed=$((executed + 1))
+            else
+                if [[ -f "$BUILD_DIR/$comp/$mod/${TYPE}_${FEATURE}_benchs_${comp}"* ]]; then
+                    failed=$((failed + 1))
+                else
+                    skipped=$((skipped + 1))
+                fi
             fi
         fi
         echo ""
@@ -156,7 +265,11 @@ done
 # ========================= Summary =========================
 
 echo_header "========================================================================"
-echo_header "  BENCHMARK EXECUTION SUMMARY"
+if [[ "$IS_DEMO" == true ]]; then
+    echo_header "  DEMO EXECUTION SUMMARY"
+else
+    echo_header "  BENCHMARK EXECUTION SUMMARY"
+fi
 echo_header "========================================================================"
 echo ""
 echo "Executed: $executed"

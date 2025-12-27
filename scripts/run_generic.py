@@ -317,10 +317,6 @@ def main():
             echo_info(f"Success rate: {successful_runs}/{total_runs} ({success_rate:.1f}%)")
         
         sys.exit(0 if successful_runs == total_runs else 1)
-    
-    echo_header(f"Success rate: {successful_runs}/{total_runs}")
-    
-    return 0 if successful_runs == total_runs else 1
 
 
 if __name__ == "__main__":

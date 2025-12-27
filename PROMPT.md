@@ -198,15 +198,18 @@ Los resultados de la llamada serán los resultados de los tests o benchmarks res
      - Ahora: 4 scripts genéricos (~800 líneas, mantenimiento centralizado)
      
      SCRIPTS GENÉRICOS DISPONIBLES:
-     1. build_generic.bash    - Compilación genérica (recomendado)
+     1. build_generic.bash    - Compilación genérica (recomendado para tests/benchs)
      2. build_generic.py      - Compilación genérica en Python (alternativa)
      3. check_generic.bash    - Ejecución de tests con matriz de resultados
-     4. run_generic.bash      - Ejecución de benchmarks
+     4. check_generic.py      - Verificación de compilación Python
+     5. run_generic.bash      - Ejecución de benchmarks y demos
+     6. run_generic.py        - Ejecución genérica Python
      
-     SINTAXIS DE SCRIPTS GENÉRICOS:
+     SINTAXIS DE SCRIPTS GENÉRICOS PARA TESTS/BENCHS:
      
      A) COMPILACIÓN (build):
         bash scripts/build_generic.bash <type_base> <feature> <ultimate_target> [compiler] [mode] [print]
+        python scripts/build_generic.py <type_base> <feature> <ultimate_target> [compiler] [mode] [print]
         
         Parámetros:
         - type_base       : uint128 | int128
@@ -224,6 +227,7 @@ Los resultados de la llamada serán los resultados de los tests o benchmarks res
      
      B) TESTING (check):
         bash scripts/check_generic.bash <type_base> <feature> [compiler] [mode]
+        python scripts/check_generic.py <type_base> <feature> [compiler] [mode]
         
         Parámetros:
         - type_base : uint128 | int128
@@ -248,6 +252,159 @@ Los resultados de la llamada serán los resultados de los tests o benchmarks res
         Ejemplos:
         bash scripts/run_generic.bash uint128 algorithm
         bash scripts/run_generic.bash int128 numeric clang release
+     
+     SISTEMA DE DEMOS (Diciembre 2025)
+     ==================================
+     
+     ESTRUCTURA DE DEMOS:
+     El sistema de demos proporciona ejemplos ejecutables organizados en 7 categorías:
+     
+     demos/
+     ├── general/          - Conceptos generales y análisis (6 demos)
+     ├── tutorials/        - Tutoriales paso a paso (16 demos: 01-13 + extras)
+     ├── examples/         - Casos de uso reales (9 demos)
+     ├── showcase/         - Demostraciones avanzadas (4 demos)
+     ├── comparison/       - Comparaciones con otras bibliotecas
+     ├── performance/      - Análisis de rendimiento
+     └── integration/      - Ejemplos de integración
+     
+     SCRIPTS GENÉRICOS PARA DEMOS:
+     
+     D) COMPILACIÓN DE DEMOS:
+        bash scripts/build_generic.bash demos <category> <demo_name> [compiler] [mode]
+        python scripts/build_generic.py demos <category> <demo_name> [compiler] [mode] [print]
+        
+        Parámetros:
+        - category   : general | tutorials | examples | showcase | comparison | performance | integration
+        - demo_name  : Nombre del demo (sin extensión .cpp)
+        - compiler   : gcc | clang | intel | msvc | all (default: all)
+        - mode       : debug | release | all (default: all)
+        - print      : yes | no (default: no) - Solo Python
+        
+        Ejemplos:
+        bash scripts/build_generic.bash demos tutorials 01_basic_operations gcc release
+        bash scripts/build_generic.bash demos examples ipv6_address clang debug
+        python scripts/build_generic.py demos showcase main gcc release
+        
+        NOTA: Los demos que usan threading se compilan automáticamente con -pthread y -latomic.
+     
+     E) EJECUCIÓN DE DEMOS:
+        bash scripts/run_generic.bash demos <category> <demo_name> [compiler] [mode] [args...]
+        python scripts/run_generic.py demos <category> <demo_name> [compiler] [mode] [args...]
+        
+        Parámetros:
+        - category   : general | tutorials | examples | showcase | comparison | performance | integration
+        - demo_name  : Nombre del demo (sin extensión .cpp)
+        - compiler   : gcc | clang | intel | msvc (default: gcc)
+        - mode       : debug | release (default: release)
+        - args...    : Argumentos adicionales para el demo
+        
+        Ejemplos:
+        bash scripts/run_generic.bash demos tutorials 01_basic_operations
+        bash scripts/run_generic.bash demos examples big_integer_calculator gcc release
+        python scripts/run_generic.py demos showcase main clang release --help
+        
+     F) VERIFICACIÓN DE DEMOS (compilación masiva):
+        python scripts/check_generic.py demos <category|all> [compiler] [mode]
+        
+        Parámetros:
+        - category   : general | tutorials | examples | showcase | all
+        - compiler   : gcc | clang | intel | msvc | all (default: all)
+        - mode       : debug | release | all (default: all)
+        
+        Ejemplos:
+        python scripts/check_generic.py demos tutorials gcc release
+        python scripts/check_generic.py demos all gcc release
+        
+        Salida: Matriz de resultados mostrando cuántos demos compilan correctamente.
+     
+     SCRIPTS BASH ESPECÍFICOS DE DEMOS:
+     - build_demo.bash          - Compila un demo individual
+     - run_demo.bash            - Ejecuta un demo individual  
+     - build_all_demos.bash     - Compila todos los demos de una categoría
+     - test_demos.bash          - Verifica compilación de demos
+     - catalog_demos.bash       - Genera catálogo de demos disponibles
+     
+     Ejemplos:
+     bash scripts/build_demo.bash tutorials 01_basic_operations gcc release
+     bash scripts/run_demo.bash examples ipv6_address gcc release
+     bash scripts/build_all_demos.bash tutorials gcc release
+     bash scripts/test_demos.bash tutorials gcc
+     bash scripts/catalog_demos.bash > DEMOS_CATALOG.md
+     
+     INTEGRACIÓN CON MAKE.PY Y MAKEFILE:
+     
+     G) MAKE.PY (Sistema Python unificado):
+        python make.py <command> [type] [feature] [compiler] [mode] [args...]
+        
+        Comandos disponibles:
+        - build       : Compila tests, benchs o demos
+        - run         : Ejecuta benchs o demos
+        - check       : Verifica tests o demos
+        - demo        : Compila y ejecuta un demo (atajo)
+        - list        : Lista tests/benchs/demos disponibles
+        - clean       : Limpia directorios build
+        
+        Ejemplos para demos:
+        python make.py build demos tutorials 01_basic_operations gcc release
+        python make.py run demos examples ipv6_address gcc release
+        python make.py check demos all gcc release
+        python make.py demo tutorials 01_basic_operations gcc release
+        python make.py list demos
+        
+        Ejemplos para tests/benchs (sintaxis tradicional):
+        python make.py build uint128 bits tests gcc release
+        python make.py check uint128 bits gcc release
+        python make.py run uint128 algorithm benchs gcc release
+        
+     H) MAKEFILE (Interfaz GNU Make):
+        make <target> [VARIABLES]
+        
+        Targets para demos:
+        - build_demo    : Compila un demo
+        - run_demo      : Ejecuta un demo
+        - check_demos   : Verifica compilación de demos
+        - demo          : Compila y ejecuta (atajo)
+        
+        Variables:
+        - CATEGORY=<category>   - Categoría del demo
+        - DEMO=<demo_name>      - Nombre del demo
+        - COMPILER=<compiler>   - Compilador (default: gcc)
+        - MODE=<mode>          - Modo (default: release)
+        
+        Ejemplos:
+        make build_demo CATEGORY=tutorials DEMO=01_basic_operations COMPILER=gcc MODE=release
+        make run_demo CATEGORY=examples DEMO=ipv6_address
+        make check_demos CATEGORY=all COMPILER=gcc MODE=release
+        make demo CATEGORY=tutorials DEMO=01_basic_operations
+        
+        Targets tradicionales (tests/benchs):
+        make build_tests TYPE=uint128 FEATURE=bits
+        make check_tests TYPE=uint128 FEATURE=bits
+        make run_benchs TYPE=uint128 FEATURE=algorithm
+     
+     DETECCIÓN AUTOMÁTICA DE THREADING:
+     Los scripts de compilación detectan automáticamente si un demo/test/bench usa:
+     - <thread> o std::thread → Agrega -pthread
+     - <atomic> o thread_safety.hpp → Agrega -latomic (GCC/Clang)
+     
+     Esto garantiza que los demos de threading compilen sin flags manuales.
+     
+     DIRECTORIOS DE BUILD PARA DEMOS:
+     - build/build_demos/<compiler>/<mode>/<demo_name>
+     
+     Ejemplos:
+     - build/build_demos/gcc/release/01_basic_operations
+     - build/build_demos/clang/debug/ipv6_address
+     
+     CATÁLOGO DE DEMOS:
+     El archivo DEMOS_CATALOG.md contiene una lista completa de todos los demos con:
+     - Categoría, nombre y descripción
+     - Líneas de código y características usadas
+     - Comandos de compilación y ejecución
+     
+     Generación:
+     bash scripts/catalog_demos.bash > DEMOS_CATALOG.md
         bash scripts/run_generic.bash uint128 bits all all
      
      USO CON MAKEFILE (RECOMENDADO):
@@ -353,12 +510,14 @@ python scripts/init_project.py
 ```
 
 Este comando:
+
 1. Detecta todos los compiladores disponibles en tu sistema
 2. Configura sus entornos (PATH, INCLUDE, LIB, etc.)
 3. Guarda las configuraciones en `build/compiler_envs/*.json`
 4. Muestra un resumen de compiladores detectados
 
 **Salida esperada:**
+
 ```
 ╔════════════════════════════════════════════════════════════╗
 ║        INT128 PROJECT - COMPILER CONFIGURATION             ║
@@ -425,7 +584,7 @@ python scripts/run_generic.py int128 numeric intel release
 
 ### Gestión Manual de Entornos
 
-#### Detectar un compilador específico:
+#### Detectar un compilador específico
 
 ```bash
 python scripts/env_setup/compiler_env.py --detect gcc
@@ -433,7 +592,7 @@ python scripts/env_setup/compiler_env.py --detect msvc
 python scripts/env_setup/compiler_env.py --detect intel
 ```
 
-#### Ver configuración guardada:
+#### Ver configuración guardada
 
 ```bash
 python scripts/env_setup/compiler_env.py --show gcc
@@ -441,7 +600,7 @@ python scripts/env_setup/compiler_env.py --show gcc
 
 Muestra el JSON con todas las variables de entorno para ese compilador.
 
-#### Listar compiladores configurados:
+#### Listar compiladores configurados
 
 ```bash
 python scripts/env_setup/compiler_env.py --list
@@ -450,6 +609,7 @@ python scripts/env_setup/compiler_env.py --list
 ### Entornos Aislados: Cómo Funciona
 
 **Problema tradicional:**
+
 ```python
 # Configurar MSVC contamina el entorno global
 subprocess.run(["vcvarsall.bat", "x64"], shell=True)
@@ -457,6 +617,7 @@ subprocess.run(["vcvarsall.bat", "x64"], shell=True)
 ```
 
 **Solución con entornos aislados:**
+
 ```python
 from compiler_env import CompilerEnvironment
 
@@ -503,6 +664,7 @@ Ejemplo de `msvc_env.json`:
 ### Flujo de Trabajo Recomendado
 
 1. **Instalación inicial:**
+
    ```bash
    git clone <repo>
    cd int128
@@ -510,6 +672,7 @@ Ejemplo de `msvc_env.json`:
    ```
 
 2. **Desarrollo:**
+
    ```bash
    # Compilar tests con GCC rápido
    python scripts/build_generic.py uint128 bits tests gcc release
@@ -519,6 +682,7 @@ Ejemplo de `msvc_env.json`:
    ```
 
 3. **Validación completa:**
+
    ```bash
    # Compilar con todos los compiladores
    python scripts/build_generic.py uint128 bits tests all all
@@ -528,6 +692,7 @@ Ejemplo de `msvc_env.json`:
    ```
 
 4. **Benchmarking:**
+
    ```bash
    # Compilar benchmarks optimizados
    python scripts/build_generic.py uint128 algorithm benchs all release
@@ -548,12 +713,14 @@ Ejemplo de `msvc_env.json`:
 ### Solución de Problemas
 
 **Compilador no detectado:**
+
 ```bash
 # Re-detectar después de instalar un nuevo compilador
 python scripts/env_setup/compiler_env.py --detect <compiler>
 ```
 
 **Error "compilador no encontrado" al ejecutar scripts:**
+
 ```bash
 # Verificar que la detección fue exitosa
 python scripts/env_setup/compiler_env.py --list
@@ -564,6 +731,7 @@ python scripts/env_setup/compiler_env.py --detect <compiler>
 ```
 
 **Limpiar configuraciones:**
+
 ```bash
 # Borrar configuraciones antiguas
 rm -rf build/compiler_envs/*.json
@@ -651,6 +819,7 @@ python make.py list
 ### Ejemplos de Uso
 
 **Desarrollo rápido:**
+
 ```bash
 # Editas código de uint128_bits
 python make.py build uint128 bits tests gcc release
@@ -658,6 +827,7 @@ python make.py check uint128 bits gcc release
 ```
 
 **Validación completa:**
+
 ```bash
 # Compilar todo el proyecto
 python make.py all
@@ -670,6 +840,7 @@ python make.py bench
 ```
 
 **Workflow típico:**
+
 ```bash
 # Inicialización (solo primera vez)
 python make.py init
@@ -740,6 +911,7 @@ usan entornos aislados de `compiler_env.py`.
 ### Migración desde Makefile
 
 **Antes (Makefile):**
+
 ```bash
 make TYPE=uint128 FEATURE=bits COMPILER=gcc MODE=release build_tests
 make TYPE=uint128 FEATURE=bits COMPILER=gcc MODE=release check
@@ -747,6 +919,7 @@ make clean
 ```
 
 **Ahora (make.py):**
+
 ```bash
 python make.py build uint128 bits tests gcc release
 python make.py check uint128 bits gcc release
@@ -754,6 +927,7 @@ python make.py clean
 ```
 
 **O incluso más simple:**
+
 ```bash
 python make.py test gcc release
 ```
@@ -806,6 +980,7 @@ commands = {
 ### Flujo de Trabajo Recomendado
 
 1. **Setup inicial:**
+
    ```bash
    git clone <repo>
    cd int128
@@ -813,6 +988,7 @@ commands = {
    ```
 
 2. **Desarrollo diario:**
+
    ```bash
    # Editar código
    python make.py build uint128 bits tests gcc debug
@@ -820,17 +996,20 @@ commands = {
    ```
 
 3. **Validación pre-commit:**
+
    ```bash
    python make.py test gcc release
    ```
 
 4. **Validación completa:**
+
    ```bash
    python make.py all
    python make.py test
    ```
 
 5. **Benchmarking:**
+
    ```bash
    python make.py bench all
    ```
@@ -839,4 +1018,3 @@ commands = {
 
 **Con make.py, el proyecto tiene un sistema de build moderno, portable y
 mantenible que reemplaza completamente el Makefile tradicional.**
-

@@ -13,9 +13,9 @@
 
 #include <algorithm>
 #include <int128.hpp>
-#include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
+#include <uint128/uint128_iostreams.hpp>
 #include <vector>
 
 int main()
@@ -181,12 +181,22 @@ int main()
     // ============================================================
     // 11. OPERADOR SPACESHIP (C++20)
     // ============================================================
-    std::cout << "--- 11. Three-way comparison (spaceship) ---\n";
+    // NOTA: El operador <=> aún no está implementado para uint128_t/int128_t
+    // Se puede simular usando los operadores de comparación tradicionales
+    std::cout << "--- 11. Three-way comparison (simulado) ---\n";
 
     uint128_t p = 100;
     uint128_t q = 200;
 
-    auto cmp = (p <=> q);
+    // Simulamos el comportamiento de operator<=>
+    int cmp;
+    if (p < q) {
+        cmp = -1;
+    } else if (p > q) {
+        cmp = 1;
+    } else {
+        cmp = 0;
+    }
 
     if (cmp < 0) {
         std::cout << p << " < " << q << "\n";

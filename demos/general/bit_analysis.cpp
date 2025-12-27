@@ -1,7 +1,7 @@
-#include "include/uint128_bits.hpp"
-#include "include/uint128_t.hpp"
 #include <bitset>
+#include <int128.hpp>
 #include <iostream>
+#include <uint128/uint128_bits.hpp>
 
 using namespace uint128_literals;
 
@@ -41,8 +41,8 @@ int main()
     // Verify the conversion back
     auto back_converted = std::from_bitset(bitset_max);
     std::cout << "\nRound trip test:" << std::endl;
-    std::cout << "Original: " << max_val << std::endl;
-    std::cout << "Back:     " << back_converted << std::endl;
+    std::cout << "Original: " << max_val.to_string() << std::endl;
+    std::cout << "Back:     " << back_converted.to_string() << std::endl;
     std::cout << "Match:    " << (max_val == back_converted ? "✓" : "✗") << std::endl;
 
     return 0;

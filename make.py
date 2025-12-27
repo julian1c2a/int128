@@ -8,15 +8,16 @@ Reemplaza Makefile tradicional con lógica Python y entornos aislados.
 
 COMANDOS PRINCIPALES:
     init                Detecta y configura compiladores
-    build <args>        Compila tests o benchmarks
-    check <args>        Ejecuta tests
-    run <args>          Ejecuta benchmarks
+    build <args>        Compila tests, benchmarks o demos
+    check <args>        Ejecuta tests o verifica demos
+    run <args>          Ejecuta benchmarks o demos
     clean               Limpia directorios de build
     
 TARGETS ESPECIALES:
     all                 Compila todo (tests + benchs) con todos los compiladores
     test                Compila y ejecuta todos los tests
     bench               Compila y ejecuta todos los benchmarks
+    demo <args>         Compila y ejecuta un demo específico
     list                Lista todas las combinaciones disponibles
 
 EJEMPLOS:
@@ -26,11 +27,17 @@ EJEMPLOS:
     python make.py test
     python make.py all
     python make.py clean
+    
+    # Demos:
+    python make.py build demos tutorials 01_basic_operations gcc release
+    python make.py run demos tutorials 01_basic_operations gcc release
+    python make.py check demos tutorials
+    python make.py demo tutorials 01_basic_operations
 
 ARGUMENTOS PARA BUILD/CHECK/RUN:
-    <type>      uint128 | int128
-    <feature>   bits | numeric | algorithm | iostreams | cmath | etc.
-    <target>    tests | benchs (solo para build)
+    <type>      uint128 | int128 | demos
+    <feature>   bits | numeric | algorithm | etc. (o <category> si type=demos)
+    <target>    tests | benchs | <demo_name> (si type=demos)
     <compiler>  gcc | clang | intel | msvc | all
     <mode>      debug | release | all
 """
@@ -57,6 +64,7 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 BUILD_DIR = PROJECT_ROOT / "build"
 TESTS_DIR = PROJECT_ROOT / "tests"
 BENCHS_DIR = PROJECT_ROOT / "benchs"
+DEMOS_DIR = PROJECT_ROOT / "demos"
 COMPILER_ENVS_DIR = BUILD_DIR / "compiler_envs"
 
 # Colors
@@ -109,10 +117,20 @@ def cmd_init(args: argparse.Namespace) -> int:
 
 
 def cmd_build(args: argparse.Namespace) -> int:
-    """Compila tests o benchmarks"""
-    if not args.type or not args.feature or not args.target:
-        echo_error("build requiere: <type> <feature> <target> [compiler] [mode]")
-        return 1
+    """Compila tests, benchmarks o demos"""
+    # Detectar si es demo (type=demos)
+    is_demo = (args.type == "demos")
+    
+    if is_demo:
+        # Para demos: type=demos, feature=category, target=demo_name
+        if not args.type or not args.feature or not args.target:
+            echo_error("build demos requiere: demos <category> <demo_name> [compiler] [mode]")
+            return 1
+    else:
+        # Para tests/benchs: type=uint128/int128, feature=bits/etc, target=tests/benchs
+        if not args.type or not args.feature or not args.target:
+            echo_error("build requiere: <type> <feature> <target> [compiler] [mode]")
+            return 1
     
     build_args = [
         args.type,
@@ -129,10 +147,19 @@ def cmd_build(args: argparse.Namespace) -> int:
 
 
 def cmd_check(args: argparse.Namespace) -> int:
-    """Ejecuta tests"""
-    if not args.type or not args.feature:
-        echo_error("check requiere: <type> <feature> [compiler] [mode]")
-        return 1
+    """Ejecuta tests o verifica compilación de demos"""
+    is_demo = (args.type == "demos")
+    
+    if is_demo:
+        # Para demos: verifica que compilen correctamente
+        if not args.type or not args.feature:
+            echo_error("check demos requiere: demos <category|all> [compiler] [mode]")
+            return 1
+    else:
+        # Para tests: ejecuta los tests
+        if not args.type or not args.feature:
+            echo_error("check requiere: <type> <feature> [compiler] [mode]")
+            return 1
     
     check_args = [
         args.type,
@@ -145,17 +172,42 @@ def cmd_check(args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    """Ejecuta benchmarks"""
-    if not args.type or not args.feature:
-        echo_error("run requiere: <type> <feature> [compiler] [mode]")
-        return 1
+    """Ejecuta benchmarks o demos"""
+    is_demo = (args.type == "demos")
     
-    run_args = [
-        args.type,
-        args.feature,
-        args.compiler or "all",
-        args.mode or "release"  # Default to release for benchmarks
-    ]
+    if is_demo:
+        # Para demos: type=demos, feature=category, target=demo_name (en extra_args)
+        if not args.type or not args.feature:
+            echo_error("run demos requiere: demos <category> <demo_name> [compiler] [mode] [args...]")
+            return 1
+        
+        # El demo_name estará en extra_args[0] si se proporcionó
+        if not hasattr(args, 'extra_args') or not args.extra_args:
+            echo_error("run demos requiere el nombre del demo")
+            return 1
+        
+        demo_name = args.extra_args[0]
+        demo_args = args.extra_args[1:] if len(args.extra_args) > 1 else []
+        
+        run_args = [
+            args.type,           # demos
+            args.feature,        # category
+            demo_name,          # demo_name
+            args.compiler or "all",
+            args.mode or "release"
+        ] + demo_args
+    else:
+        # Para benchmarks: type=uint128/int128, feature=bits/etc
+        if not args.type or not args.feature:
+            echo_error("run requiere: <type> <feature> [compiler] [mode]")
+            return 1
+        
+        run_args = [
+            args.type,
+            args.feature,
+            args.compiler or "all",
+            args.mode or "release"  # Default to release for benchmarks
+        ]
     
     return run_script("run_generic.py", run_args)
 
@@ -164,7 +216,7 @@ def cmd_clean(args: argparse.Namespace) -> int:
     """Limpia directorios de build"""
     echo_info("Limpiando directorios de build...")
     
-    # Limpiar build_tests y build_benchs
+    # Limpiar build_tests, build_benchs y build_demos
     cleaned = []
     
     build_tests = BUILD_DIR / "build_tests"
@@ -176,6 +228,11 @@ def cmd_clean(args: argparse.Namespace) -> int:
     if build_benchs.exists():
         shutil.rmtree(build_benchs)
         cleaned.append("build_benchs/")
+    
+    build_demos = BUILD_DIR / "build_demos"
+    if build_demos.exists():
+        shutil.rmtree(build_demos)
+        cleaned.append("build_demos/")
     
     # Opcional: limpiar compiler_envs si se pide
     if args.all:
@@ -383,33 +440,90 @@ def cmd_bench(args: argparse.Namespace) -> int:
     return 0 if len(failed) == 0 else 1
 
 
-def cmd_list(args: argparse.Namespace) -> int:
-    """Lista todas las combinaciones disponibles"""
-    combinations = get_all_combinations()
-    
-    if not combinations:
-        echo_error("No se encontraron archivos de tests/benchs")
+def cmd_demo(args: argparse.Namespace) -> int:
+    """Compila y ejecuta un demo específico"""
+    if not args.category or not args.demo_name:
+        echo_error("demo requiere: <category> <demo_name> [compiler] [mode] [args...]")
         return 1
     
+    compiler = args.compiler or "gcc"
+    mode = args.mode or "release"
+    demo_args = args.extra_args if hasattr(args, 'extra_args') else []
+    
     echo_header("=" * 60)
-    echo_header("  COMBINACIONES DISPONIBLES")
+    echo_header(f"  DEMO: {args.category}/{args.demo_name}")
     echo_header("=" * 60)
     print()
     
-    # Agrupar por tipo
-    by_type: Dict[str, List[str]] = {}
-    for type_name, feature in combinations:
-        if type_name not in by_type:
-            by_type[type_name] = []
-        by_type[type_name].append(feature)
+    # Build
+    echo_info("Compilando...")
+    ret = run_script("build_generic.py", [
+        "demos",
+        args.category,
+        args.demo_name,
+        compiler,
+        mode
+    ])
     
-    for type_name in sorted(by_type.keys()):
-        echo_info(f"{type_name}:")
-        for feature in sorted(by_type[type_name]):
-            print(f"  • {feature}")
-        print()
+    if ret != 0:
+        echo_error("Compilación fallida")
+        return 1
     
-    echo_header(f"Total: {len(combinations)} combinaciones")
+    print()
+    
+    # Run
+    echo_info("Ejecutando...")
+    run_args = [
+        "demos",
+        args.category,
+        args.demo_name,
+        compiler,
+        mode
+    ] + demo_args
+    
+    ret = run_script("run_generic.py", run_args)
+    
+    return ret
+
+
+def cmd_list(args: argparse.Namespace) -> int:
+    """Lista todas las combinaciones disponibles"""
+    echo_header("=" * 60)
+    echo_header("  TESTS/BENCHMARKS DISPONIBLES")
+    echo_header("=" * 60)
+    print()
+    
+    combinations = get_all_combinations()
+    
+    if combinations:
+        echo_info(f"Encontradas {len(combinations)} combinaciones:")
+        for type_name, feature in combinations:
+            print(f"  • {type_name}_{feature}")
+    else:
+        echo_warning("No se encontraron archivos de tests/benchs")
+    
+    # Listar demos
+    print()
+    echo_header("=" * 60)
+    echo_header("  DEMOS DISPONIBLES")
+    echo_header("=" * 60)
+    print()
+    
+    categories = ["general", "tutorials", "examples", "showcase", "comparison", "performance", "integration"]
+    total_demos = 0
+    
+    for category in categories:
+        category_dir = DEMOS_DIR / category
+        if category_dir.exists():
+            demos = list(category_dir.glob("*.cpp"))
+            if demos:
+                echo_info(f"{category}/ ({len(demos)} demos):")
+                for demo in sorted(demos):
+                    print(f"  • {demo.stem}")
+                total_demos += len(demos)
+    
+    print()
+    echo_success(f"Total: {len(combinations)} tests/benchs + {total_demos} demos")
     
     # Mostrar compiladores disponibles
     if COMPILER_ENVS_DIR.exists():
@@ -441,6 +555,12 @@ Ejemplos:
   python make.py all
   python make.py clean
   python make.py list
+  
+  # Demos:
+  python make.py build demos tutorials 01_basic_operations gcc release
+  python make.py run demos tutorials 01_basic_operations gcc release
+  python make.py check demos tutorials
+  python make.py demo tutorials 01_basic_operations
         """
     )
     
@@ -450,27 +570,28 @@ Ejemplos:
     subparsers.add_parser('init', help='Detecta y configura compiladores')
     
     # build
-    build_parser = subparsers.add_parser('build', help='Compila tests o benchmarks')
-    build_parser.add_argument('type', nargs='?', help='uint128 | int128')
-    build_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | etc.')
-    build_parser.add_argument('target', nargs='?', help='tests | benchs')
+    build_parser = subparsers.add_parser('build', help='Compila tests, benchmarks o demos')
+    build_parser.add_argument('type', nargs='?', help='uint128 | int128 | demos')
+    build_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | <category> (si demos)')
+    build_parser.add_argument('target', nargs='?', help='tests | benchs | <demo_name> (si demos)')
     build_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
     build_parser.add_argument('mode', nargs='?', help='debug | release | all')
     build_parser.add_argument('-v', '--verbose', action='store_true', help='Modo verbose')
     
     # check
-    check_parser = subparsers.add_parser('check', help='Ejecuta tests')
-    check_parser.add_argument('type', nargs='?', help='uint128 | int128')
-    check_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | etc.')
+    check_parser = subparsers.add_parser('check', help='Ejecuta tests o verifica demos')
+    check_parser.add_argument('type', nargs='?', help='uint128 | int128 | demos')
+    check_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | <category> (si demos)')
     check_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
     check_parser.add_argument('mode', nargs='?', help='debug | release | all')
     
     # run
-    run_parser = subparsers.add_parser('run', help='Ejecuta benchmarks')
-    run_parser.add_argument('type', nargs='?', help='uint128 | int128')
-    run_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | etc.')
+    run_parser = subparsers.add_parser('run', help='Ejecuta benchmarks o demos')
+    run_parser.add_argument('type', nargs='?', help='uint128 | int128 | demos')
+    run_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | <category> (si demos)')
     run_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
     run_parser.add_argument('mode', nargs='?', help='debug | release | all')
+    run_parser.add_argument('extra_args', nargs='*', help='<demo_name> y args adicionales (solo demos)')
     
     # clean
     clean_parser = subparsers.add_parser('clean', help='Limpia directorios de build')
@@ -487,6 +608,14 @@ Ejemplos:
     # bench
     bench_parser = subparsers.add_parser('bench', help='Compila y ejecuta todos los benchmarks')
     bench_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
+    
+    # demo
+    demo_parser = subparsers.add_parser('demo', help='Compila y ejecuta un demo específico')
+    demo_parser.add_argument('category', nargs='?', help='tutorials | examples | showcase | etc.')
+    demo_parser.add_argument('demo_name', nargs='?', help='Nombre del demo sin .cpp')
+    demo_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc (default: gcc)')
+    demo_parser.add_argument('mode', nargs='?', help='debug | release (default: release)')
+    demo_parser.add_argument('extra_args', nargs='*', help='Argumentos adicionales para el demo')
     
     # list
     subparsers.add_parser('list', help='Lista todas las combinaciones disponibles')
@@ -508,6 +637,7 @@ Ejemplos:
         'all': cmd_all,
         'test': cmd_test,
         'bench': cmd_bench,
+        'demo': cmd_demo,
         'list': cmd_list,
     }
     

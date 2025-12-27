@@ -10,9 +10,9 @@
  *   ./demo_int128_thread_safety
  */
 
-#include "int128/int128_t.hpp"
-#include "int128/int128_thread_safety.hpp"
 #include <chrono>
+#include <int128.hpp>
+#include <int128/int128_thread_safety.hpp>
 #include <iostream>
 #include <thread>
 #include <vector>

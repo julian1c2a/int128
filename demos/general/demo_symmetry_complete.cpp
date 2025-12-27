@@ -1,6 +1,6 @@
-#include "include/uint128_t.hpp"
 #include <algorithm>
 #include <cassert>
+#include <int128.hpp>
 #include <iostream>
 #include <vector>
 
@@ -61,21 +61,21 @@ void demo_bitwise_symmetry()
     uint128_t and1 = flags & uint128_t(mask);
     uint128_t and2 = mask & flags; // friend operator
     std::cout << "AND simétrico: " << (and1 == and2 ? "✓" : "✗") << std::endl;
-    std::cout << "  Resultado: " << and1.to_string() << " (decimal: " << and1.data[1] << ")"
+    std::cout << "  Resultado: " << and1.to_string() << " (decimal: " << and1.low() << ")"
               << std::endl;
 
     // OR simétrico
     uint128_t or1 = flags | uint128_t(mask);
     uint128_t or2 = mask | flags; // friend operator
     std::cout << "OR simétrico: " << (or1 == or2 ? "✓" : "✗") << std::endl;
-    std::cout << "  Resultado: " << or1.to_string() << " (decimal: " << or1.data[1] << ")"
+    std::cout << "  Resultado: " << or1.to_string() << " (decimal: " << or1.low() << ")"
               << std::endl;
 
     // XOR simétrico
     uint128_t xor1 = flags ^ uint128_t(mask);
     uint128_t xor2 = mask ^ flags; // friend operator
     std::cout << "XOR simétrico: " << (xor1 == xor2 ? "✓" : "✗") << std::endl;
-    std::cout << "  Resultado: " << xor1.to_string() << " (decimal: " << xor1.data[1] << ")"
+    std::cout << "  Resultado: " << xor1.to_string() << " (decimal: " << xor1.low() << ")"
               << std::endl;
 }
 
@@ -89,7 +89,7 @@ void demo_practical_usage()
 
     std::cout << "Vector original: ";
     for (const auto& num : big_numbers) {
-        std::cout << num.data[1] << " ";
+        std::cout << num.low() << " ";
     }
     std::cout << std::endl;
 
@@ -100,7 +100,7 @@ void demo_practical_usage()
                  [](const uint128_t& num) { return 100u < num; }); // friend operator<
 
     for (const auto& num : filtered) {
-        std::cout << num.data[1] << " ";
+        std::cout << num.low() << " ";
     }
     std::cout << std::endl;
 
@@ -110,7 +110,7 @@ void demo_practical_usage()
                    [](const uint128_t& num) { return 3u * num; }); // friend operator*
 
     for (const auto& num : big_numbers) {
-        std::cout << num.data[1] << " ";
+        std::cout << num.low() << " ";
     }
     std::cout << std::endl;
 }

@@ -10,6 +10,7 @@ Una implementación completa y eficiente de enteros de 128 bits (signed y unsign
 ## 🌍 Plataformas Soportadas
 
 ### ✅ Plataforma Principal (Completamente Testeada)
+
 - **Windows x86_64** (MSYS2)
   - ✅ GCC 15.2+ (UCRT64) - Recomendado
   - ✅ Clang 19.1+ (CLANG64)
@@ -17,7 +18,9 @@ Una implementación completa y eficiente de enteros de 128 bits (signed y unsign
   - ✅ MSVC 2022 (Visual Studio 17.12+)
 
 ### 📋 Otras Plataformas (Sin Testear - Debería Funcionar)
+
 La biblioteca usa C++20 estándar portable. Debería compilar sin problemas en:
+
 - **Linux x86_64**: GCC 10+, Clang 12+, Intel ICX
 - **macOS x86_64/ARM64**: Clang (Apple), GCC (Homebrew)
 - **ARM 32/64-bit**: GCC, Clang (con fallback a código genérico)
@@ -101,6 +104,7 @@ int128/
 ├── LICENSE.txt               # Licencia Boost Software License 1.0
 └── TODO.md                   # Roadmap del proyecto
 ```
+
 ```
 
 ## 🛠️ Sistema de Build
@@ -123,7 +127,8 @@ int128/
 .\build_msvc.ps1 user_literals_test release
 ```
 
-#### En terminal MSYS2/Bash:
+#### En terminal MSYS2/Bash
+
 ```bash
 # Compilar y ejecutar un test específico
 ./msys_build.sh user_literals_test debug
@@ -133,6 +138,7 @@ int128/
 ```
 
 ### Estructura de Compilación (uint128_t y int128_t)
+
 - [x] Constructores (default, copia, move, desde integrales)
 - [x] Operadores aritméticos (`+`, `-`, `*`, `/`, `%`)
 - [x] Operadores de comparación (`==`, `!=`, `<`, `<=`, `>`, `>=`)
@@ -142,6 +148,7 @@ int128/
 - [x] **int128_t**: Sign extension, two's complement, aritmética signed
 
 ### ✅ Funcionalidades Básicas
+
 - [x] Constructores (default, copia, move, desde integrales)
 - [x] Operadores aritméticos (`+`, `-`, `*`, `/`, `%`)
 - [x] Operadores de comparación (`==`, `!=`, `<`, `<=`, `>`, `>=`)
@@ -150,16 +157,19 @@ int128/
 - [x] Operadores de incremento/decremento (`++`, `--`)
 
 ### ✅ Extensiones STL
+
 - [x] `std::numeric_limits<uint128_t>` y `std::numeric_limits<int128_t>`
 - [x] `std::hash<uint128_t>` para contenedores unordered
 - [x] Concepts personalizados (`uint128_concepts`)
 - [x] Compatibilidad con `std::iota`
 
 ### ✅ Thread Safety
+
 - [x] **uint128_t**: Thread-safe para lectura concurrente + 4 wrappers + Tests ✅ + Benchmarks ✅
 - [x] **int128_t**: Thread-safe para lectura concurrente + 4 wrappers + Tests ✅ + Benchmarks ✅ **COMPLETO**
 
 ### ✅ Funcionalidades Avanzadas
+
 - [x] Constructor desde cadenas: `uint128_t("12345")`
 - [x] Método `from_string()` estático
 - [x] Literales de usuario: `42_u128`, `"123456789"_U128`
@@ -169,6 +179,7 @@ int128/
 ### ✅ Conversiones de Tipo
 
 #### Conversiones Numéricas
+
 - [x] **A tipos integrales**: `static_cast<uint64_t>(num)`, `static_cast<int>(num)`
 - [x] **A tipos flotantes**: `static_cast<float>(num)`, `static_cast<double>(num)`, `static_cast<long double>(num)`
 - [x] **A bool**: `static_cast<bool>(num)` - true si != 0
@@ -188,6 +199,7 @@ double d2 = signed_val.to<double>();  // Maneja signo correctamente
 ```
 
 #### Conversión a/desde Bytes (std::array<std::byte, 16>)
+
 - [x] **to_bytes()**: Serialización a bytes (little-endian)
 - [x] **from_bytes()**: Deserialización desde bytes
 - [x] **Casos de uso**: Serialización de red, almacenamiento en disco, checksum
@@ -210,6 +222,7 @@ int128_t restored = int128_t::from_bytes(neg_bytes);
 ```
 
 #### Conversión a/desde Bitset (std::bitset<128>)
+
 - [x] **to_bitset()**: Conversión a bitset para manipulación de bits
 - [x] **from_bitset()**: Construcción desde bitset
 - [x] **Casos de uso**: Máscaras de bits, flags, permisos, análisis binario
@@ -237,7 +250,9 @@ uint128_t perms_compact = uint128_t::from_bitset(permissions);
 ```
 
 #### Demo Completo
+
 Ver [`demos/demo_bytes_bitset.cpp`](demos/demo_bytes_bitset.cpp) para ejemplos prácticos de:
+
 - Serialización/deserialización para red o disco
 - Sistema de permisos con 128 flags
 - Análisis de datos binarios y checksums
@@ -245,6 +260,7 @@ Ver [`demos/demo_bytes_bitset.cpp`](demos/demo_bytes_bitset.cpp) para ejemplos p
 - Operaciones con máscaras de bits
 
 ### ✅ Casos de Uso Prácticos
+
 - [x] Cálculos financieros de alta precisión
 - [x] Operaciones criptográficas
 - [x] Contadores de gran rango
@@ -267,6 +283,7 @@ bash scripts/run_boost_comparison.bash
 ```
 
 **Qué compara**:
+
 - ✅ **Construcción y asignación** (default, desde uint64_t, copy)
 - ✅ **Aritmética básica** (+, -, *, /, %)
 - ✅ **Operaciones bit a bit** (&, |, ^, <<, >>)
@@ -276,6 +293,7 @@ bash scripts/run_boost_comparison.bash
 **Resultados esperados**: uint128_t ~2-3× más rápido en operaciones 128-bit fijas
 
 **Usando Makefile**:
+
 ```bash
 # Compilar y ejecutar con GCC
 make build_benchs TYPE=uint128 FEATURE=comparison_boost COMPILER=gcc MODE=release
@@ -286,6 +304,7 @@ make comparison_boost-full
 ```
 
 **Documentación completa**:
+
 - [COMPARISON_BOOST_FEATURE_SUMMARY.md](COMPARISON_BOOST_FEATURE_SUMMARY.md) - Documentación de la FEATURE
 - [BOOST_COMPARISON_ANALYSIS.md](BOOST_COMPARISON_ANALYSIS.md) - Análisis detallado de features y performance
 - [BOOST_COMPARISON_QUICKSTART.md](BOOST_COMPARISON_QUICKSTART.md) - Guía rápida de uso
@@ -312,6 +331,7 @@ bash scripts/run_benchmark_int128_vs_uint128.bash gcc release
 ```
 
 **6 categorías evaluadas** (30+ tests):
+
 1. Construcción y asignación (4 tests)
 2. Aritmética básica (6 tests: +, -, *, /, %, negación)
 3. Operaciones bitwise (5 tests: &, |, ^, <<, >>)
@@ -339,6 +359,7 @@ make interop-full COMPILER=gcc MODE=release
 ```
 
 **Incluye**:
+
 - **Benchmark int128_vs_uint128**: Medición de overhead signed (30+ tests)
 - **Tests de interoperabilidad**: ✅ **17/17 tests PASSING (100%)**
   - Conversiones explícitas uint128_t ↔ int128_t
@@ -348,6 +369,7 @@ make interop-full COMPILER=gcc MODE=release
   - Casos límite y asignaciones seguras
 
 **Ventajas**:
+
 - ✅ **Unificación**: Un solo comando para toda la validación
 - ✅ **Consistencia**: Mismo patrón que otras FEATURES del Makefile
 - ✅ **Atajos automáticos**: `make interop-full` ejecuta todo
@@ -355,6 +377,7 @@ make interop-full COMPILER=gcc MODE=release
 - ✅ **Completo**: Cobertura 100% de operaciones mixtas
 
 **Documentación**:
+
 - [INTEROP_FEATURE_SUMMARY.md](INTEROP_FEATURE_SUMMARY.md) - Resumen general
 - [TYPE_TRAITS_IMPLEMENTATION.md](TYPE_TRAITS_IMPLEMENTATION.md) - Type traits y gcd/lcm
 
@@ -386,24 +409,29 @@ make interop-full COMPILER=gcc MODE=release
 ./scripts/run_benchmarks.bash gcc
 
 # Benchmark con todos los backends (Boost + GMP + tommath)
+
 ./scripts/build_with_backends.bash gcc --all-backends
 ./build/build_benchs/gcc/release/uint128_benchmark_gcc
 ./build/build_benchs/gcc/release/int128_benchmark_gcc
 
 # Agregar y analizar resultados (genera reportes separados)
+
 python scripts/aggregate_benchmark_results.py
 
 # Generar gráficos (detecta uint128 e int128 automáticamente)
+
 python scripts/plot_benchmark_results.py
 
 # Ver resultados
+
 cat benchmark_results/benchmark_report_uint128_*.md
 cat benchmark_results/benchmark_report_int128_*
 **uint128_t (unsigned)**:
-  - [BENCHMARK_GUIDE.md](documentation/BENCHMARK_GUIDE.md) - Guía completa uint128
-  - [BENCHMARK_IMPROVEMENTS.md](documentation/BENCHMARK_IMPROVEMENTS.md) - Mejoras implementadas
-  - [BENCHMARK_SUMMARY.md](documentation/BENCHMARK_SUMMARY.md) - Resumen ejecutivo
-- **int128_t (signed)**: 
+
+- [BENCHMARK_GUIDE.md](documentation/BENCHMARK_GUIDE.md) - Guía completa uint128
+- [BENCHMARK_IMPROVEMENTS.md](documentation/BENCHMARK_IMPROVEMENTS.md) - Mejoras implementadas
+- [BENCHMARK_SUMMARY.md](documentation/BENCHMARK_SUMMARY.md) - Resumen ejecutivo
+- **int128_t (signed)**:
   - [INT128_GUIDE.md](documentation/INT128_GUIDE.md) - 📘 **Guía completa int128_t** (NEW)
     - Two's complement y sign extension
     - Aritmética signed vs unsigned
@@ -416,6 +444,7 @@ cat benchmark_results/benchmark_report_int128_*
   - `int128_time_*.png`, `int128_cycles_*.png`, etc.
 cat benchmark_results/benchmark_summary.md
 ls benchmark_results/plots/
+
 ```
 
 #### 📚 Documentación
@@ -437,37 +466,121 @@ ls benchmark_results/plots/
     - uint128_t: ✅ Completo (4 wrappers disponibles)
     - int128_t: ⏳ Pendiente (implementación trivial)
 
-## 🎮 Demos Interactivos
+## 🎮 Demos y Ejemplos Interactivos
 
-El proyecto incluye **8 demos compilables** que demuestran las capacidades de `uint128_t` en escenarios reales:
+El proyecto incluye un **sistema completo de 35 demos** organizados en 7 categorías, demostrando las capacidades de `uint128_t` e `int128_t` en escenarios reales.
 
-### 📚 Tutoriales (13 archivos)
+### 📂 Estructura de Demos
+
+```
+
+demos/
+├── general/          - 6 demos de conceptos generales y análisis
+├── tutorials/        - 16 demos tutoriales paso a paso (01-13 + extras)
+├── examples/         - 9 demos de casos de uso reales
+├── showcase/         - 4 demos de demostraciones avanzadas
+├── comparison/       - Comparaciones con otras bibliotecas (vacío)
+├── performance/      - Análisis de rendimiento (vacío)
+└── integration/      - Ejemplos de integración (vacío)
+
+```
+
+### 🚀 Sistema de Build de Demos
+
+#### Compilar un Demo Individual
+
+```bash
+# Usando scripts bash (recomendado)
+bash scripts/build_demo.bash <category> <demo_name> [compiler] [mode]
+
+# Ejemplos
+bash scripts/build_demo.bash tutorials 01_basic_operations gcc release
+bash scripts/build_demo.bash examples ipv6_address clang debug
+
+# Usando Python (alternativa)
+python make.py build demos <category> <demo_name> [compiler] [mode]
+python make.py build demos tutorials 01_basic_operations gcc release
+
+# Usando Makefile
+make build_demo CATEGORY=tutorials DEMO=01_basic_operations COMPILER=gcc MODE=release
+```
+
+#### Ejecutar un Demo
+
+```bash
+# Scripts bash
+bash scripts/run_demo.bash <category> <demo_name> [compiler] [mode] [args...]
+
+# Ejemplos
+bash scripts/run_demo.bash tutorials 01_basic_operations
+bash scripts/run_demo.bash examples big_integer_calculator gcc release
+
+# Python (con argumentos)
+python make.py run demos examples big_integer_calculator gcc release --help
+
+# Makefile (atajo: compilar + ejecutar)
+make demo CATEGORY=tutorials DEMO=01_basic_operations
+```
+
+#### Verificar Compilación de Todos los Demos
+
+```bash
+# Verificar todos los demos
+python make.py check demos all gcc release
+
+# Verificar una categoría específica
+python make.py check demos tutorials gcc release
+
+# Salida: Matriz mostrando 35/35 demos OK
+# -> Total checks: 35
+# [OK] Passed: 35
+```
+
+### 📚 Tutoriales (16 demos)
 
 Ubicación: `demos/tutorials/`
 
 Progresión paso a paso desde conceptos básicos hasta operaciones avanzadas:
-- `01_introduction.cpp` - Constructores y conceptos básicos
-- `02_arithmetic.cpp` - Operaciones aritméticas (+, -, *, /, %)
-- `03_comparison.cpp` - Comparaciones y ordenamiento
-- `04_conversions.cpp` - Conversión desde/hacia otros tipos
-- `05_bitwise.cpp` - Operaciones bit a bit (&, |, ^, <<, >>)
-- `06_literals.cpp` - Literales de usuario (_u128, _U128)
-- `07_iostream.cpp` - Entrada/salida con streams
-- `08_string_formatting.cpp` - Formateo hex/oct/bin
-- `09_stl_containers.cpp` - Uso en vector, map, set
-- `10_algorithms.cpp` - Algoritmos STL (sort, find, accumulate)
-- `11_safe_operations.cpp` - Detección de overflow/underflow
-- `12_cmath_functions.cpp` - Funciones matemáticas (sqrt, pow, gcd)
-- `13_advanced.cpp` - Características avanzadas y optimizaciones
 
-### 🎭 Showcases Avanzados (4 archivos)
+| Demo | Descripción | LOC |
+|------|-------------|-----|
+| **01_basic_operations.cpp** | Constructores y operaciones básicas | 150 |
+| **02_bitwise_operations.cpp** | Operaciones bit a bit (&, \|, ^, <<, >>) | 180 |
+| **03_comparisons.cpp** | Comparaciones y ordenamiento | 200 |
+| **04_conversions.cpp** | Conversión desde/hacia otros tipos | 250 |
+| **05_string_conversion.cpp** | Conversiones string (decimal, hex, oct, bin) | 170 |
+| **06_iostream.cpp** | Entrada/salida con streams | 140 |
+| **07_format.cpp** | Formateo con std::format (C++20) | 160 |
+| **08_cmath_functions.cpp** | Funciones matemáticas (sqrt, pow, gcd) | 190 |
+| **09_algorithms_stl.cpp** | Algoritmos STL (sort, find, accumulate) | 220 |
+| **10_numeric_functions.cpp** | Funciones numéricas (iota, accumulate) | 180 |
+| **11_thread_safety.cpp** | Wrappers thread-safe y sincronización | 200 |
+| **12_safe_operations.cpp** | Detección de overflow/underflow | 170 |
+| **13_udl_literals.cpp** | Literales de usuario (_u128,_U128) | 130 |
+| **demo_practical_udl.cpp** | UDL en casos prácticos | 150 |
+| **test_simple.cpp** | Tests simples de funcionalidad | 100 |
+| **test_uint128_only.cpp** | Tests específicos uint128_t | 120 |
+
+**Total**: 16 demos, ~2,710 líneas de código
+
+```bash
+# Compilar todos los tutoriales
+bash scripts/build_all_demos.bash tutorials gcc release
+
+# Ejecutar un tutorial específico
+bash scripts/run_demo.bash tutorials 01_basic_operations
+```
+
+### 🎭 Showcases Avanzados (4 demos)
 
 Ubicación: `demos/showcase/`
 
-Demostraciones interactivas con múltiples secciones:
+Demostraciones interactivas avanzadas:
 
-#### 1. **main.cpp** - Demo Principal Interactivo
+#### 1. **main.cpp** - Demo Principal Interactivo (640 LOC)
+
 Demo principal con 7 secciones navegables:
+
 - Operaciones aritméticas básicas
 - Operaciones bit a bit
 - Conversiones y formateo
@@ -477,12 +590,11 @@ Demo principal con 7 secciones navegables:
 - Funciones matemáticas (sqrt, pow, gcd, lcm)
 
 ```bash
-# Compilar y ejecutar
-g++ -std=c++20 -I include demos/showcase/main.cpp -o demos/showcase/main.exe
-./demos/showcase/main.exe
+make demo CATEGORY=showcase DEMO=main
 ```
 
-#### 2. **showcase_cryptography.cpp** - Aplicaciones Criptográficas
+#### 2. **showcase_cryptography.cpp** - Aplicaciones Criptográficas (580 LOC)
+
 - **RSA toy implementation** (cifrado/descifrado educativo)
 - **Test de primalidad Miller-Rabin** (5 iteraciones)
 - **Búsqueda de primos** cerca de 10^9
@@ -492,7 +604,8 @@ g++ -std=c++20 -I include demos/showcase/main.cpp -o demos/showcase/main.exe
 
 ⚠️ Solo para fines educativos - usar OpenSSL en producción
 
-#### 3. **showcase_scientific.cpp** - Computación Científica
+#### 3. **showcase_scientific.cpp** - Computación Científica (620 LOC)
+
 - **Combinatoria avanzada**:
   - Factoriales grandes (hasta 34!)
   - Coeficientes binomiales C(n, k)
@@ -508,7 +621,9 @@ g++ -std=c++20 -I include demos/showcase/main.cpp -o demos/showcase/main.exe
   - Convergencia iterativa
 
 #### 4. **showcase_performance.cpp** - Análisis de Rendimiento
+
 Benchmarks comparativos **uint128_t vs uint64_t** (1M iteraciones):
+
 - **Operaciones aritméticas**: suma, multiplicación, división
 - **Operaciones bitwise**: AND, shift left, popcount
 - **Algoritmos STL**: sort, accumulate, find
@@ -516,15 +631,112 @@ Benchmarks comparativos **uint128_t vs uint64_t** (1M iteraciones):
 - **Recomendaciones de uso** basadas en overhead medido
 
 Resultados típicos:
+
 - Suma: 2-3× más lento
 - Multiplicación: 50-80× más lento (esperado)
 - División: 10-20× más lento
 - Bitwise: 2-10× más lento
 
-#### 4. **demo_bytes_bitset.cpp** - Conversiones Bytes y Bitset
+#### 5. **Expression Templates** - Técnicas Avanzadas de Metaprogramación ★ NUEVO
+
+**Colección completa de 5 demos sobre Expression Templates** para eliminar temporales intermedios en operaciones con uint128_t.
+
+##### [expression_templates_simple.cpp](demos/showcase/expression_templates_simple.cpp) (620 LOC)
+
+- **Nivel**: Principiante
+- Implementación didáctica con value semantics
+- Operaciones básicas: +, -, *, /
+- Introducción a CRTP y lazy evaluation
+- Ideal para aprender el concepto
+
+##### [expression_templates.cpp](demos/showcase/expression_templates.cpp) (582 LOC)
+
+- **Nivel**: Intermedio
+- Explicación detallada del método CRTP
+- Comparación con/sin Expression Templates
+- Árbol de expresiones visualizado
+- Benchmarks de rendimiento
+
+##### [expression_templates_fold.cpp](demos/showcase/expression_templates_fold.cpp) (489 LOC)
+
+- **Nivel**: Intermedio-Avanzado
+- **Fold expressions C++17**: `(... + args)` y `(args + ...)`
+- Comparación: implementación manual vs fold nativo
+- Operaciones múltiples: sum, product, OR, AND, XOR
+- Evaluación constexpr completa
+
+```cpp
+// Ejemplo de fold expression
+template<typename... Args>
+auto sum_fold(Args... args) {
+    return (... + args.eval());  // ¡Una sola línea!
+}
+// Expande a: ((((arg1 + arg2) + arg3) + arg4) + ...)
+```
+
+##### [expression_templates_complete.cpp](demos/showcase/expression_templates_complete.cpp) (895 LOC)
+
+- **Nivel**: Avanzado
+- ✅ **10 operaciones binarias**: +, -, *, /, %, &, |, ^, <<, >>
+- ✅ **Operaciones unarias**: ~, !
+- ✅ **Multi-asociativas**: sum(), product(), bitwise_or/and()
+- ✅ **CSE (Common Subexpression Elimination)**: Optimización de subexpresiones comunes
+- ✅ **constexpr completo**: Evaluación en compile-time
+- ✅ Type-safe con SFINAE
+
+##### [expression_templates_horner.cpp](demos/showcase/expression_templates_horner.cpp) (644 LOC)
+
+- **Nivel**: Avanzado
+- **Método de Horner** optimizado con ET para evaluación polinomial
+- Composición recursiva: `(a*x + b)` → `(a*x + b)*y + c` → ...
+- Zero temporales en evaluación de polinomios de grado arbitrario
+- Visualización del árbol de expresiones
+- Benchmarks para polinomios de grado 3, 5 y 10
+
+```cpp
+// Ejemplo de composición incremental sin temporales
+Terminal x(3), y(4), z(2);
+auto expr1 = 2*x + 5;              // No evalúa, construye árbol
+auto expr2 = expr1 * y + 7;        // Extiende el árbol
+auto expr3 = expr2 * z + 1;        // Continúa extendiendo
+uint128_t result = expr3.eval();   // ¡Evalúa todo de una vez!
+```
+
+**Resumen de Expression Templates**:
+
+| Demo | LOC | Nivel | Características Principales |
+|------|-----|-------|----------------------------|
+| simple | 620 | Principiante | Value semantics, operaciones básicas |
+| expression_templates | 582 | Intermedio | Introducción CRTP, lazy evaluation |
+| fold | 489 | Intermedio-Avanzado | Fold expressions C++17 nativos |
+| complete | 895 | Avanzado | Sistema completo con CSE y multi-assoc |
+| horner | 644 | Avanzado | Polinomios con método de Horner |
+
+**Total**: 5 demos, ~3,230 líneas de código
+
+```bash
+# Compilar y ejecutar demos de Expression Templates
+make demo CATEGORY=showcase DEMO=expression_templates_simple
+make demo CATEGORY=showcase DEMO=expression_templates_fold
+make demo CATEGORY=showcase DEMO=expression_templates_horner
+make demo CATEGORY=showcase DEMO=expression_templates_complete
+```
+
+**Beneficios de Expression Templates**:
+
+- ✅ Eliminación de temporales intermedios (16 bytes cada uno)
+- ✅ Una sola evaluación al final del árbol de expresiones
+- ✅ Zero overhead con optimizaciones del compilador
+- ✅ Sintaxis natural (igual que operaciones normales)
+- ✅ Funciona con constexpr para compile-time
+- ✅ Type-safe en compile-time
+
+#### 6. **demo_bytes_bitset.cpp** - Conversiones Bytes y Bitset
+
 Demo completo de nuevas capacidades de serialización y manipulación:
 
 **5 casos de uso prácticos**:
+
 1. **Serialización/Deserialización**: Conversión a bytes para red o disco
 2. **Sistema de permisos**: 128 flags en un solo uint128_t
 3. **Análisis binario**: Conteo de bits, checksums XOR
@@ -537,20 +749,37 @@ g++ -std=c++20 -I include demos/demo_bytes_bitset.cpp -o demos/demo_bytes_bitset
 ```
 
 **Funciones demostradas**:
+
 - `to_bytes()` / `from_bytes()` - Serialización a std::array<std::byte, 16>
 - `to_bitset()` / `from_bitset()` - Conversión a std::bitset<128>
 - Manipulación de bits individuales
 - Verificación de checksums
 - Little-endian byte order
 
-### 🔧 Ejemplos de Uso Real (5 archivos)
+### 🔧 Ejemplos de Uso Real (9 demos)
 
 Ubicación: `demos/examples/`
 
 Implementaciones completas de casos de uso prácticos:
 
-#### 1. **ipv6_address.cpp** - Gestión de Direcciones IPv6
+| Demo | Descripción | LOC |
+|------|-------------|-----|
+| **ipv6_address.cpp** | Gestión completa de direcciones IPv6 | 320 |
+| **uuid_generation.cpp** | Generación y manejo de UUIDs (RFC 4122) | 280 |
+| **big_integer_calculator.cpp** | REPL interactivo para aritmética 128-bit | 410 |
+| **prime_factorization.cpp** | Factorización de primos con Pollard's Rho | 350 |
+| **mersenne_primes.cpp** | Búsqueda de primos de Mersenne (M_p = 2^p - 1) | 290 |
+| **demo_int128_thread_safety.cpp** | Wrappers thread-safe para int128_t | 350 |
+| **demo_mathematical_library.cpp** | Biblioteca matemática avanzada | 195 |
+| **example_thread_safety.cpp** | Ejemplos completos de thread safety | 254 |
+| **int128.cpp** | Casos de uso con int128_t (signed) | 340 |
+
+**Total**: 9 demos, ~2,789 líneas de código
+
+#### 1. **ipv6_address.cpp** - Gestión de Direcciones IPv6 (320 LOC)
+
 Clase completa `IPv6Address` con:
+
 - Parsing desde strings (formato estándar y comprimido)
 - Conversión a strings (::ffff:192.0.2.1)
 - Operaciones de subred (apply_mask, in_subnet)
@@ -558,11 +787,13 @@ Clase completa `IPv6Address` con:
 - Detección de tipos (loopback, link-local, multicast)
 
 ```bash
-g++ -std=c++20 -I include demos/examples/ipv6_address.cpp -o ipv6.exe
+make demo CATEGORY=examples DEMO=ipv6_address
 ```
 
-#### 2. **uuid_generation.cpp** - Generación de UUIDs
+#### 2. **uuid_generation.cpp** - Generación de UUIDs (280 LOC)
+
 Clase `UUID` compatible con RFC 4122:
+
 - Generación UUID v4 (aleatorio)
 - Parsing desde strings (550e8400-e29b-41d4-a716-446655440000)
 - Conversión a strings con guiones
@@ -570,8 +801,10 @@ Clase `UUID` compatible con RFC 4122:
 - Operadores de comparación y ordenamiento
 - UUID nil (00000000-0000-0000-0000-000000000000)
 
-#### 3. **big_integer_calculator.cpp** - Calculadora Interactiva
+#### 3. **big_integer_calculator.cpp** - Calculadora Interactiva (410 LOC)
+
 REPL completo con:
+
 - **Operaciones básicas**: add, sub, mul, div, mod, pow
 - **Funciones especiales**: factorial, fibonacci, gcd, lcm
 - **Memoria**: guardar/recuperar valores
@@ -579,41 +812,290 @@ REPL completo con:
 - **Interactivo**: comandos tipo CLI
 
 ```bash
-g++ -std=c++20 -I include demos/examples/big_integer_calculator.cpp -o calc.exe
-./calc.exe
+make demo CATEGORY=examples DEMO=big_integer_calculator
 > fact 30
 30! = 265252859812191058636308480000000
 ```
 
-#### 4. **prime_factorization.cpp** - Factorización de Primos
-- Algoritmo de división por tentativa
-- Test de primalidad simple
-- Verificación de resultados
+#### 4. **prime_factorization.cpp** - Factorización de Primos (350 LOC)
+
+Implementación completa de factorización:
+
+- Algoritmo de división por tentativa optimizado
+- Test de primalidad probabilístico
+- Pollard's Rho para factores grandes
+- Verificación de resultados (producto = original)
 - Detección de cuadrados perfectos
 - Análisis de potencias de 2
-- Ejemplos con números grandes (10^15)
+- Ejemplos con números grandes (>10^15)
 
-#### 5. **mersenne_primes.cpp** - Primos de Mersenne
-- Generación de números de Mersenne (M_p = 2^p - 1)
-- Test de primalidad (simplificado)
-- Tabla de primos conocidos (M_2 a M_127)
+#### 5. **mersenne_primes.cpp** - Primos de Mersenne (290 LOC)
+
+Exploración de números de Mersenne (M_p = 2^p - 1):
+
+- Generación eficiente con desplazamientos de bits
+- Test de primalidad Lucas-Lehmer (simplificado)
+- Tabla de primos de Mersenne conocidos (M_2 a M_127)
 - Análisis de crecimiento exponencial
-- Ejemplos de números compuestos
+- Detección de números compuestos
 - Relación con números perfectos (Teorema de Euclides-Euler)
+- Visualización de magnitudes
 
-### 🚀 Compilación de Demos
+#### 6. **demo_int128_thread_safety.cpp** - Thread Safety Wrappers (350 LOC)
+
+Wrappers thread-safe para operaciones 128-bit:
+
+- `SafeInt128`: Wrapper con std::mutex
+- `AtomicInt128`: Wrapper con std::atomic (si disponible)
+- Operaciones thread-safe: add, sub, mul, div
+- Lectura/escritura atómica
+- Ejemplos de race conditions y su prevención
+- Benchmarks de overhead de sincronización
+
+#### 7. **demo_mathematical_library.cpp** - Biblioteca Matemática (195 LOC)
+
+Funciones matemáticas avanzadas para uint128_t:
+
+- **NOTA**: Muchas funciones aún no implementadas (sqrt, cbrt, exp, log, sin, cos)
+- Operaciones básicas implementadas: abs, min, max, clamp
+- Funciones auxiliares: is_power_of_two, count_leading_zeros
+- Framework para extensión futura
+- Ejemplos de uso y casos de prueba
+
+#### 8. **example_thread_safety.cpp** - Ejemplos Thread Safety (254 LOC)
+
+Casos completos de uso concurrente:
+
+- Counter concurrente con std::atomic
+- Suma paralela con múltiples threads
+- Producer-consumer con queue thread-safe
+- Comparación: mutex vs lock-free
+- Medición de performance con diferentes niveles de contención
+- Ejemplos de deadlock y su prevención
+
+#### 9. **int128.cpp** - Casos de Uso con int128_t (340 LOC)
+
+Ejemplos prácticos usando int128_t (signed):
+
+- Aritmética con valores negativos
+- Overflow y underflow detection
+- Conversiones signed/unsigned
+- Operaciones mixtas (int128_t con uint128_t)
+- Comparaciones con negativos
+- Formateo e I/O con signos
+
+### 🧩 Demos Generales (6 demos)
+
+Ubicación: `demos/general/`
+
+Análisis y demostraciones técnicas:
+
+| Demo | Descripción | LOC |
+|------|-------------|-----|
+| **analysis_summary.cpp** | Resumen de análisis de la biblioteca | 156 |
+| **bit_analysis.cpp** | Análisis detallado de representación de bits | 189 |
+| **demo_bytes_bitset.cpp** | Conversiones bytes/bitset con endianness | 198 |
+| **demo_constexpr_cstr.cpp** | Validación de constexpr con C-strings | 95 |
+| **demo_symmetry_complete.cpp** | Pruebas de simetría de operadores | 287 |
+| **demo_symmetry_fixed.cpp** | Corrección de asimetrías detectadas | 234 |
+
+**Total**: 6 demos, ~1,159 líneas de código
+
+#### 1. **analysis_summary.cpp** - Resumen de Análisis (156 LOC)
+
+Análisis global de la biblioteca:
+
+- Estadísticas de implementación (operadores, funciones, traits)
+- Análisis de conformidad con estándares (std::numeric_limits, type_traits)
+- Resumen de features (I/O, conversiones, operadores bitwise)
+- Compatibilidad de compiladores
+- Métricas de cobertura
+
+#### 2. **bit_analysis.cpp** - Análisis de Bits (189 LOC)
+
+Exploración detallada de representación interna:
+
+- Visualización de bits (formato binario con separadores)
+- Análisis little-endian vs big-endian
+- Estructura interna (low 64 bits, high 64 bits)
+- Operaciones bit a bit (set, clear, flip, test)
+- Máscaras y patrones comunes
+- Ejemplos con números especiales (0, max, potencias de 2)
+
+#### 3. **demo_bytes_bitset.cpp** - Conversiones Bytes/Bitset (198 LOC)
+
+Sistema completo de conversiones:
+
+- `uint128_t` ↔ `std::array<uint8_t, 16>` (bytes)
+- `uint128_t` ↔ `std::bitset<128>` (bits)
+- Soporte para little-endian y big-endian
+- Validación de reversibilidad (roundtrip)
+- Casos de prueba exhaustivos
+- Utilidades de visualización
+
+#### 4. **demo_constexpr_cstr.cpp** - Validación Constexpr (95 LOC)
+
+Pruebas de evaluación en tiempo de compilación:
+
+- Parsing de C-strings en constexpr context
+- Validación de operaciones constexpr
+- Comparación compile-time vs runtime
+- Casos límite y manejo de errores
+- Ejemplos con literales UDL
+
+#### 5. **demo_symmetry_complete.cpp** - Pruebas de Simetría (287 LOC)
+
+Testing exhaustivo de simetría de operadores:
+
+- Operadores aritméticos: +, -, *, /, %
+- Operadores bitwise: &, |, ^
+- Operadores de comparación: ==, !=, <, <=, >, >=
+- Operadores de desplazamiento: <<, >>
+- Mixtos: uint128_t vs tipos nativos (int, long, unsigned)
+- Detección de asimetrías y bugs
+
+#### 6. **demo_symmetry_fixed.cpp** - Corrección de Asimetrías (234 LOC)
+
+Implementación de correcciones:
+
+- Friend operators para simetría completa
+- Sobrecarga de operadores mixtos
+- Validación de correcciones aplicadas
+- Comparación antes/después
+- Test regression para evitar regresiones futuras
+
+### � Catálogo Completo de Demos
+
+Para una referencia rápida de todos los 35 demos disponibles, consulta el catálogo auto-generado:
+
+```bash
+# Generar catálogo actualizado
+bash scripts/catalog_demos.bash
+
+# Ver catálogo
+cat DEMOS_CATALOG.md
+```
+
+El catálogo incluye:
+
+- Lista completa por categoría con líneas de código
+- Descripción breve de cada demo
+- Comandos de compilación sugeridos
+- Totales y estadísticas
+
+---
+
+## Sistema de Construccion para Demos
+
+El sistema de construccion unificado soporta compilar, ejecutar y verificar demos usando **tres interfaces diferentes**: bash scripts, Python scripts, y Make.
+
+### Opcion 1: Scripts Bash (recomendado para uso interactivo)
 
 ```bash
 # Compilar un demo individual
-g++ -std=c++20 -I include demos/showcase/main.cpp -o demos/showcase/main.exe
-g++ -std=c++20 -I include demos/examples/uuid_generation.cpp -o demos/examples/uuid.exe
+bash scripts/build_generic.bash demos tutorials 01_basic_operations
 
-# Ejecutar
-./demos/showcase/main.exe
-./demos/examples/uuid.exe
+# Ejecutar un demo compilado
+bash scripts/run_generic.bash demos tutorials 01_basic_operations arg1 arg2
+
+# Compilar y ejecutar todos los demos
+bash scripts/build_all_demos.bash
+
+# Verificar todos los demos (compilacion + estadisticas)
+bash scripts/check_generic.bash demos
 ```
 
-**Todos los demos han sido testeados y funcionan correctamente** ✅
+### Opcion 2: Scripts Python (recomendado para automatizacion)
+
+```bash
+# Compilar un demo individual
+python scripts/build_generic.py demos tutorials 01_basic_operations
+
+# Ejecutar un demo compilado con argumentos
+python scripts/run_generic.py demos tutorials 01_basic_operations arg1 arg2
+
+# Verificar todos los demos (matriz de resultados)
+python scripts/check_generic.py demos
+```
+
+### Opcion 3: Make (recomendado para integracion con IDEs)
+
+```bash
+# Compilar y ejecutar un demo en un solo comando
+make demo CATEGORY=tutorials DEMO=01_basic_operations
+
+# Compilar un demo sin ejecutarlo
+make build_demo CATEGORY=tutorials DEMO=01_basic_operations
+
+# Ejecutar un demo ya compilado
+make run_demo CATEGORY=tutorials DEMO=01_basic_operations
+
+# Verificar todos los demos
+make check_demos
+```
+
+### make.py - Interfaz Unificada (nueva en diciembre 2025)
+
+El script `make.py` proporciona una interfaz tipo Make con comandos intuitivos:
+
+```bash
+# Ver ayuda con todos los comandos disponibles
+python make.py help
+
+# Listar todos los tests, benchs y demos
+python make.py list
+
+# Compilar y ejecutar un demo
+python make.py demo tutorials/01_basic_operations
+
+# Compilar sin ejecutar
+python make.py build demos/tutorials/01_basic_operations
+
+# Ejecutar un demo ya compilado
+python make.py run demos/tutorials/01_basic_operations arg1 arg2
+
+# Verificar todos los demos (matriz de compilacion)
+python make.py check demos
+```
+
+### Deteccion Automatica de Threading
+
+**Todos los scripts de compilacion** (bash, Python, make.py) detectan automaticamente cuando un demo usa threads/atomic y anaden las flags necesarias:
+
+- Deteccion de `<thread>`, `std::thread`, `pthread_*`
+- Deteccion de `<atomic>`, `std::atomic`, `thread_safety.hpp`
+- Anade automaticamente: `-pthread -latomic`
+- **Sin necesidad de configuracion manual**
+
+Ejemplos de demos con threading:
+
+- `demos/examples/demo_int128_thread_safety.cpp`
+- `demos/examples/example_thread_safety.cpp`
+- `demos/showcase/showcase_thread_safety.cpp`
+
+### Resultados de Verificacion
+
+Ejecutar `python scripts/check_generic.py demos` muestra una matriz con el estado de compilacion de cada demo:
+
+```
+========================================
+RESULTADOS DE COMPILACION - DEMOS
+========================================
+
+[✓] general/analysis_summary.cpp
+[✓] general/bit_analysis.cpp
+[✓] general/demo_bytes_bitset.cpp
+...
+[✓] showcase/showcase_thread_safety.cpp
+
+========================================
+RESUMEN: 35/35 demos compilaron exitosamente (100%)
+========================================
+```
+
+**Estado actual**: ✅ **35/35 demos compilando correctamente** (100% de exito)
+
+---
 
 ### 🧪 Tests y Benchmarks Extraídos de uint128_traits.hpp
 
@@ -671,6 +1153,7 @@ scripts\master_uint128_traits_all.bat
 #### 📈 Resultados
 
 Los resultados se guardan en `benchmark_results/`:
+
 - `summary_[timestamp].csv` - CSV consolidado con todos los resultados
 - `report_[timestamp].txt` - Reporte completo con análisis
 - `benchmarks_[compiler]_[timestamp].txt` - Resultados por compilador
@@ -784,6 +1267,7 @@ scripts\master_int128_traits_all.bat
 #### 📈 Resultados
 
 Los resultados se guardan en `benchmark_results/`:
+
 - `summary_[timestamp].csv` - CSV consolidado con todos los resultados
 - `report_[timestamp].txt` - Reporte completo con análisis
 - `benchmarks_[compiler]_[timestamp].txt` - Resultados por compilador
@@ -809,6 +1293,7 @@ Funciones avanzadas de formateo para uint128_t e int128_t con control total sobr
 #### 🚀 API Completa
 
 **uint128_format namespace:**
+
 ```cpp
 #include "uint128/uint128_format.hpp"
 
@@ -834,6 +1319,7 @@ std::string format_like_iostream(uint128_t value, std::ios_base::fmtflags flags,
 ```
 
 **int128_format namespace (con showpos):**
+
 ```cpp
 #include "int128/int128_format.hpp"
 
@@ -899,31 +1385,37 @@ uint128_t utiliza una **arquitectura modular** para mejor organización y manten
 ### 📁 Módulos Principales
 
 #### Core (`uint128_t.hpp`)
+
 - Implementación principal de la clase uint128_t
 - Todas las operaciones aritméticas, bitwise y de comparación
 - Optimizaciones con intrínsecos del compilador
 - Conversiones string y literales de usuario
 
-#### Límites (`uint128_limits.hpp`) 
+#### Límites (`uint128_limits.hpp`)
+
 - Especialización completa de `std::numeric_limits<uint128_t>`
 - Constantes numéricas y propiedades del tipo
 
 #### Traits (`uint128_traits.hpp`)
+
 - Type traits: `std::is_integral`, `std::is_unsigned`, etc.
 - `std::common_type` especializaciones
 - `std::hash<uint128_t>` para containers
 
 #### Conceptos (`uint128_concepts.hpp`)
+
 - Conceptos C++20 personalizados
 - Metaprogramación avanzada
 - Verificaciones automáticas de compatibilidad
 
-#### Algoritmos (`uint128_algorithm.hpp`) 
+#### Algoritmos (`uint128_algorithm.hpp`)
+
 - Algoritmos STL optimizados para uint128_t
 - Funciones especializadas (GCD/LCM de rangos, estadísticas)
 - Templates con concepts para type safety
 
 #### Numérico (`uint128_numeric.hpp`) 🆕
+
 - **Funciones C++20**: `std::midpoint`, `std::clamp`
 - **Manipulación de bits**: `std::popcount`, `std::countl_zero`, `std::bit_width`
 - **Potencias de 2**: `std::has_single_bit`, `std::bit_ceil`, `std::bit_floor`
@@ -1091,11 +1583,13 @@ int128_t mid = std::midpoint(int128_t(10), int128_t(20));  // 15
 ```
 
 **Documentation:**
+
 - [INT128_CMATH_TESTING_COMPLETE.md](documentation/INT128_CMATH_TESTING_COMPLETE.md) - Full test results
 - [INT128_VS_UINT128_CMATH_COMPARISON.md](documentation/INT128_VS_UINT128_CMATH_COMPARISON.md) - Comparative analysis
 - [INT128_CMATH_COMPLETION_SUMMARY.md](documentation/INT128_CMATH_COMPLETION_SUMMARY.md) - Executive summary
 
 **Key Features:**
+
 - ✅ **Standard Library Compatible**: Drop-in replacements for `std::gcd`, `std::lcm`, etc.
 - ✅ **Performance Optimized**: Binary GCD (O(log n)), fast exponentiation (O(log n))
 - ✅ **Overflow Safe**: LCM and midpoint implementations prevent overflow
@@ -1162,6 +1656,7 @@ powershell -ExecutionPolicy Bypass -File scripts/generate_docs.ps1
 ```
 
 El script:
+
 1. ✅ Verifica que Doxygen esté instalado
 2. ✅ Genera documentación HTML en `documentation/generated/`
 3. ✅ Genera 265 archivos HTML + 184 gráficos SVG (~10.68 MB)
@@ -1188,6 +1683,7 @@ documentation/
 ### 🌐 Visualización
 
 **Opción 1** - Abrir directamente:
+
 ```bash
 # Windows
 start documentation/generated/html/index.html
@@ -1200,6 +1696,7 @@ xdg-open documentation/generated/html/index.html
 ```
 
 **Opción 2** - Servidor HTTP local:
+
 ```bash
 # Python 3
 cd documentation/generated/html
@@ -1219,11 +1716,13 @@ python -m http.server 8000
 ### 📝 .gitignore
 
 `documentation/generated/` está **excluido del control de versiones** para evitar:
+
 - ❌ Commits innecesarios de 10.68 MB (1346 archivos)
 - ❌ Conflictos de merge en archivos generados
 - ❌ Histórico inflado del repositorio
 
 **Regenerar documentación después de clonar**:
+
 ```bash
 git clone <repository>
 cd int128
@@ -1233,6 +1732,7 @@ bash scripts/generate_docs.bash  # Genera documentation/generated/
 ### 📚 Contenido Documentado
 
 La documentación incluye:
+
 - ✅ **API completa** de `uint128_t` y `int128_t`
 - ✅ **Type traits** y especializaciones STL
 - ✅ **Funciones matemáticas** (cmath, algorithm)

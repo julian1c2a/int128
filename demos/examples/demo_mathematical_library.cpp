@@ -1,6 +1,6 @@
-#include "include/uint128_cmath.hpp"
-#include "include/uint128_t.hpp"
+#include <int128.hpp>
 #include <iostream>
+#include <uint128/uint128_cmath.hpp>
 
 using namespace uint128_literals;
 
@@ -38,75 +38,84 @@ void demo_basic_math()
 void demo_cryptographic_functions()
 {
     std::cout << "\n=== DEMO: Funciones Criptográficas ===" << std::endl;
+    std::cout
+        << "NOTA: Funciones avanzadas (is_prime, powmod, is_perfect_square) no implementadas aún"
+        << std::endl;
 
     // Números primos grandes
     auto mersenne_31 = std::pow(2_u128, 31_u128) - 1_u128; // 2^31 - 1
-    std::cout << "2^31 - 1 = " << mersenne_31.to_string()
-              << " es primo: " << (std::is_prime(mersenne_31) ? "Sí" : "No") << std::endl;
+    std::cout << "2^31 - 1 = " << mersenne_31.to_string() << std::endl;
+    // std::cout << " es primo: " << (std::is_prime(mersenne_31) ? "Sí" : "No") << std::endl;
 
     // Exponenciación modular (usado en RSA)
-    uint128_t base = 12345_u128;
-    uint128_t exponent = 65537_u128; // Exponente público común en RSA
-    uint128_t modulus = mersenne_31;
+    // uint128_t base = 12345_u128;
+    // uint128_t exponent = 65537_u128; // Exponente público común en RSA
+    // uint128_t modulus = mersenne_31;
 
-    auto powmod_result = std::powmod(base, exponent, modulus);
-    std::cout << "Exponenciación modular: " << base.to_string() << "^" << exponent.to_string()
-              << " mod " << modulus.to_string() << " = " << powmod_result.to_string() << std::endl;
+    // auto powmod_result = std::powmod(base, exponent, modulus);
+    // std::cout << "Exponenciación modular: " << base.to_string() << "^" << exponent.to_string()
+    //           << " mod " << modulus.to_string() << " = " << powmod_result.to_string() <<
+    //           std::endl;
 
     // Verificar si números grandes son cuadrados perfectos
     uint128_t perfect_square = 123456789_u128 * 123456789_u128;
-    std::cout << "¿Es " << perfect_square.to_string() << " un cuadrado perfecto? "
-              << (std::is_perfect_square(perfect_square) ? "Sí" : "No") << std::endl;
+    std::cout << "Número: " << perfect_square.to_string() << std::endl;
+    // std::cout << "¿Es " << perfect_square.to_string() << " un cuadrado perfecto? "
+    //           << (std::is_perfect_square(perfect_square) ? "Sí" : "No") << std::endl;
 
-    uint128_t not_perfect = perfect_square + 1_u128;
-    std::cout << "¿Es " << not_perfect.to_string() << " un cuadrado perfecto? "
-              << (std::is_perfect_square(not_perfect) ? "Sí" : "No") << std::endl;
+    // uint128_t not_perfect = perfect_square + 1_u128;
+    // std::cout << "¿Es " << not_perfect.to_string() << " un cuadrado perfecto? "
+    //           << (std::is_perfect_square(not_perfect) ? "Sí" : "No") << std::endl;
 }
 
 void demo_combinatorics()
 {
     std::cout << "\n=== DEMO: Combinatoria y Estadística ===" << std::endl;
+    std::cout << "NOTA: Funciones de combinatoria (factorial, binomial) no implementadas aún"
+              << std::endl;
 
     // Factoriales
-    std::cout << "Factoriales:" << std::endl;
-    for (unsigned i = 0; i <= 15; i += 5) {
-        auto fact = uint128_math::factorial(i);
-        std::cout << "  " << i << "! = " << fact.to_string() << std::endl;
-    }
+    // std::cout << "Factoriales:" << std::endl;
+    // for (unsigned i = 0; i <= 15; i += 5) {
+    //     auto fact = uint128_math::factorial(i);
+    //     std::cout << "  " << i << "! = " << fact.to_string() << std::endl;
+    // }
 
     // Coeficientes binomiales (combinaciones)
-    std::cout << "\nCoeficientes binomiales C(n,k):" << std::endl;
+    // std::cout << "\nCoeficientes binomiales C(n,k):" << std::endl;
 
-    uint128_t n = 20_u128;
-    for (uint128_t k = 0_u128; k <= 10_u128; k += 2_u128) {
-        auto binomial = uint128_math::binomial(n, k);
-        std::cout << "  C(20," << k.to_string() << ") = " << binomial.to_string() << std::endl;
-    }
+    // uint128_t n = 20_u128;
+    // for (uint128_t k = 0_u128; k <= 10_u128; k += 2_u128) {
+    //     auto binomial = uint128_math::binomial(n, k);
+    //     std::cout << "  C(20," << k.to_string() << ") = " << binomial.to_string() << std::endl;
+    // }
 
     // Coeficiente binomial muy grande
-    auto large_binomial = uint128_math::binomial(100_u128, 50_u128);
-    std::cout << "\nC(100,50) = " << large_binomial.to_string() << std::endl;
-    std::cout << "Este es el coeficiente binomial más grande que puede calcular uint128_t!"
-              << std::endl;
+    // auto large_binomial = uint128_math::binomial(100_u128, 50_u128);
+    // std::cout << "\nC(100,50) = " << large_binomial.to_string() << std::endl;
+    // std::cout << "Este es el coeficiente binomial más grande que puede calcular uint128_t!"
+    //           << std::endl;
 }
 
 void demo_multiple_args()
 {
-    std::cout << "\n=== DEMO: Funciones con Múltiples Argumentos ===" << std::endl;
+    std::cout << "NOTA: Funciones con múltiples argumentos (gcd_multiple, lcm_multiple) no "
+                 "implementadas aún"
+              << std::endl;
 
     // GCD de múltiples números
-    auto gcd_multi = uint128_math::gcd_multiple(48_u128, 18_u128, 24_u128, 36_u128);
-    std::cout << "GCD(48, 18, 24, 36) = " << gcd_multi.to_string() << std::endl;
+    // auto gcd_multi = uint128_math::gcd_multiple(48_u128, 18_u128, 24_u128, 36_u128);
+    // std::cout << "GCD(48, 18, 24, 36) = " << gcd_multi.to_string() << std::endl;
 
     // LCM de múltiples números
-    auto lcm_multi = uint128_math::lcm_multiple(4_u128, 6_u128, 8_u128, 12_u128);
-    std::cout << "LCM(4, 6, 8, 12) = " << lcm_multi.to_string() << std::endl;
+    // auto lcm_multi = uint128_math::lcm_multiple(4_u128, 6_u128, 8_u128, 12_u128);
+    // std::cout << "LCM(4, 6, 8, 12) = " << lcm_multi.to_string() << std::endl;
 
     // Demostrar con números más grandes
-    auto large_gcd =
-        uint128_math::gcd_multiple(std::pow(2_u128, 20_u128), std::pow(2_u128, 15_u128) * 3_u128,
-                                   std::pow(2_u128, 12_u128) * 5_u128);
-    std::cout << "GCD(2^20, 2^15×3, 2^12×5) = " << large_gcd.to_string() << std::endl;
+    // auto large_gcd =
+    //     uint128_math::gcd_multiple(std::pow(2_u128, 20_u128), std::pow(2_u128, 15_u128) * 3_u128,
+    //                                std::pow(2_u128, 12_u128) * 5_u128);
+    // std::cout << "GCD(2^20, 2^15×3, 2^12×5) = " << large_gcd.to_string() << std::endl;
 }
 
 void demo_mixed_types()

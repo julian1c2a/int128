@@ -141,6 +141,24 @@ def compile_with_compiler(
         # Define compilation flags
         common_flags = ["-std=c++20", "-I./include"]
         
+        # Check if source file uses threading (for pthread flag)
+        needs_pthread = False
+        needs_atomic = False
+        try:
+            with open(source_file, 'r', encoding='utf-8') as f:
+                content = f.read(4000)  # Read first 4000 chars
+                if '<thread>' in content or 'std::thread' in content or 'pthread' in content:
+                    needs_pthread = True
+                # Check for atomic usage or thread_safety headers
+                if ('<atomic>' in content or 'std::atomic' in content or 'atomic_' in content or
+                    'thread_safety.hpp' in content):
+                    needs_atomic = True
+        except:
+            pass
+        
+        if needs_pthread and compiler_name in ["gcc", "clang", "intel"]:
+            common_flags.append("-pthread")
+        
         if mode == "debug":
             mode_flags = ["-O0", "-g", "-DDEBUG"]
         else:
@@ -153,6 +171,10 @@ def compile_with_compiler(
         output_str = str(output).replace("\\", "/")
         
         cmd = [compiler_cmd] + common_flags + mode_flags + [source_str, "-o", output_str]
+        
+        # Add linker flags after -o output
+        if needs_atomic and compiler_name in ["gcc", "clang"]:
+            cmd.append("-latomic")
         
         # Print command if requested
         if print_commands:

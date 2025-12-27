@@ -3,10 +3,11 @@
  * @brief Comprehensive examples of using uint128_thread_safety.hpp
  */
 
-#include "../include/uint128/uint128_thread_safety.hpp"
 #include <chrono>
+#include <int128.hpp>
 #include <iostream>
 #include <thread>
+#include <uint128/uint128_thread_safety.hpp>
 #include <vector>
 
 using namespace uint128_threadsafe;
