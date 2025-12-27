@@ -27,108 +27,9 @@
 #ifndef UINT128_NUMERIC_HPP
 #define UINT128_NUMERIC_HPP
 
+#include "compiler_intrinsics.hpp"
 #include "uint128_t.hpp"
 
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
-
-// Wrappers para intrínsecos específicos del compilador
-namespace uint128_detail
-{
-
-#ifdef _MSC_VER
-// MSVC: usar intrínsecos de intrin.h
-inline constexpr int popcount64(uint64_t x) noexcept
-{
-    if (std::is_constant_evaluated()) {
-        // Implementación constexpr manual
-        int count = 0;
-        while (x) {
-            count += x & 1;
-            x >>= 1;
-        }
-        return count;
-    } else {
-        return static_cast<int>(__popcnt64(x));
-    }
-}
-
-inline constexpr int clz64(uint64_t x) noexcept
-{
-    if (std::is_constant_evaluated()) {
-        // Implementación constexpr manual
-        if (x == 0)
-            return 64;
-        int count = 0;
-        uint64_t mask = 1ULL << 63;
-        while ((x & mask) == 0) {
-            count++;
-            mask >>= 1;
-        }
-        return count;
-    } else {
-        unsigned long index;
-        _BitScanReverse64(&index, x);
-        return 63 - static_cast<int>(index);
-    }
-}
-
-inline constexpr int ctz64(uint64_t x) noexcept
-{
-    if (std::is_constant_evaluated()) {
-        // Implementación constexpr manual
-        if (x == 0)
-            return 64;
-        int count = 0;
-        while ((x & 1) == 0) {
-            count++;
-            x >>= 1;
-        }
-        return count;
-    } else {
-        unsigned long index;
-        _BitScanForward64(&index, x);
-        return static_cast<int>(index);
-    }
-}
-
-inline constexpr uint64_t bswap64(uint64_t x) noexcept
-{
-    if (std::is_constant_evaluated()) {
-        // Implementación constexpr manual
-        return ((x & 0xFF00000000000000ULL) >> 56) | ((x & 0x00FF000000000000ULL) >> 40) |
-               ((x & 0x0000FF0000000000ULL) >> 24) | ((x & 0x000000FF00000000ULL) >> 8) |
-               ((x & 0x00000000FF000000ULL) << 8) | ((x & 0x0000000000FF0000ULL) << 24) |
-               ((x & 0x000000000000FF00ULL) << 40) | ((x & 0x00000000000000FFULL) << 56);
-    } else {
-        return _byteswap_uint64(x);
-    }
-}
-#else
-// GCC/Clang: usar builtins
-inline constexpr int popcount64(uint64_t x) noexcept
-{
-    return __builtin_popcountll(x);
-}
-
-inline constexpr int clz64(uint64_t x) noexcept
-{
-    return __builtin_clzll(x);
-}
-
-inline constexpr int ctz64(uint64_t x) noexcept
-{
-    return __builtin_ctzll(x);
-}
-
-inline constexpr uint64_t bswap64(uint64_t x) noexcept
-{
-    return __builtin_bswap64(x);
-}
-#endif
-
-} // namespace uint128_detail
 #include <algorithm>
 #include <cstdint>
 
@@ -198,10 +99,10 @@ constexpr int popcount(uint128_t x) noexcept
     // Usar la implementación eficiente para cada parte
     int count = 0;
     if (x.high() != 0) {
-        count += uint128_detail::popcount64(x.high());
+        count += uint128::intrinsics::popcount64(x.high());
     }
     if (x.low() != 0) {
-        count += uint128_detail::popcount64(x.low());
+        count += uint128::intrinsics::popcount64(x.low());
     }
     return count;
 }
@@ -219,9 +120,9 @@ constexpr int countl_zero(uint128_t x) noexcept
     }
 
     if (x.high() != 0) {
-        return uint128_detail::clz64(x.high());
+        return uint128::intrinsics::clz64(x.high());
     } else {
-        return 64 + uint128_detail::clz64(x.low());
+        return 64 + uint128::intrinsics::clz64(x.low());
     }
 }
 
@@ -249,9 +150,9 @@ constexpr int countr_zero(uint128_t x) noexcept
     }
 
     if (x.low() != 0) {
-        return uint128_detail::ctz64(x.low());
+        return uint128::intrinsics::ctz64(x.low());
     } else {
-        return 64 + uint128_detail::ctz64(x.high());
+        return 64 + uint128::intrinsics::ctz64(x.high());
     }
 }
 
@@ -375,8 +276,8 @@ constexpr uint128_t rotr(uint128_t x, int s) noexcept
 constexpr uint128_t byteswap(uint128_t x) noexcept
 {
     // Intercambiar bytes de cada parte y luego intercambiar las partes
-    uint64_t high_swapped = uint128_detail::bswap64(x.low());
-    uint64_t low_swapped = uint128_detail::bswap64(x.high());
+    uint64_t high_swapped = uint128::intrinsics::bswap64(x.low());
+    uint64_t low_swapped = uint128::intrinsics::bswap64(x.high());
     return uint128_t(high_swapped, low_swapped);
 }
 
