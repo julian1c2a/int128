@@ -42,6 +42,9 @@
 namespace uint128_ranges
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 /**
  * @brief Llena un rango con valores secuenciales incrementales
  * Equivalente a std::iota pero optimizado para uint128_t

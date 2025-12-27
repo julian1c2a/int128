@@ -6,6 +6,9 @@
 #include <sstream>
 #include <string>
 
+using namespace nstd;
+
+
 void test_output_decimal()
 {
     std::ostringstream oss;

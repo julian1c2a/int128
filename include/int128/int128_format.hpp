@@ -45,6 +45,9 @@
 namespace int128_format
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 /**
  * @brief Formatea int128_t imitando iostream con manipuladores
  */

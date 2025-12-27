@@ -54,6 +54,9 @@
 namespace int128_ranges
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 /**
  * @brief Genera secuencia aritmética de int128_t
  */

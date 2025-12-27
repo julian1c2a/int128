@@ -183,6 +183,8 @@ inline uint128_t bit_ceil(const uint128_t& value) noexcept
 namespace uint128_bits
 {
 
+using uint128_t = nstd::uint128_t;
+
 /**
  * @brief Rotate left
  */

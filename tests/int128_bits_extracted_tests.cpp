@@ -8,6 +8,9 @@
 #include <iostream>
 #include <vector>
 
+using namespace nstd;
+
+
 using namespace int128_bits;
 
 // Colores ASCII para output

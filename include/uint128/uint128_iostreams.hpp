@@ -188,6 +188,9 @@ inline std::istream& operator>>(std::istream& is, uint128_t& value)
 namespace uint128_format
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 /**
  * @brief Formatea uint128_t con especificaciones completas
  */

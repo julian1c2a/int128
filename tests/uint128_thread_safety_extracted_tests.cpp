@@ -13,6 +13,9 @@
 #include <thread>
 #include <vector>
 
+using namespace nstd;
+
+
 // ========================= BASIC THREAD-SAFETY TESTS =========================
 
 void test_concurrent_reads()

@@ -96,6 +96,9 @@
 namespace int128_verification
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // Verificar propiedades clave en tiempo de compilación
 static_assert(std::is_trivially_copyable_v<uint128_t>,
               "uint128_t debe ser trivialmente copiable para optimizaciones");

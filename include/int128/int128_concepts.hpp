@@ -41,6 +41,9 @@
 namespace int128_concepts
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // ===============================================================================
 // CONCEPTOS BÁSICOS
 // ===============================================================================
@@ -250,6 +253,10 @@ concept int128_safe_operation = requires(MathOp op, int128_t a, int128_t b) {
  */
 namespace int128_concept_checks
 {
+
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // Verificaciones básicas de conceptos
 // NOTA: std::integral requiere especialización de std::is_integral<int128_t>
 // static_assert(std::integral<int128_t>, "int128_t debe satisfacer std::integral");

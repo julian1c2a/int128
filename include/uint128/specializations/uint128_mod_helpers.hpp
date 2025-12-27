@@ -26,6 +26,9 @@ class uint128_t;
 namespace uint128_mod_details
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // ============================================================================
 // Funciones auxiliares para detección de patrones
 // ============================================================================

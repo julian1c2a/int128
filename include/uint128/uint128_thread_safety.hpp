@@ -33,6 +33,9 @@
 namespace uint128_threadsafe
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // ========================= Option 1: Mutex-Based (Recommended) =========================
 
 /**

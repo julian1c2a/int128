@@ -2838,6 +2838,9 @@ constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
 namespace uint128_literals
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // Literal para enteros pequeños (hasta uint64_t)
 constexpr uint128_t operator""_u128(unsigned long long value) noexcept
 {

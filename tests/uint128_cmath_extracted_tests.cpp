@@ -18,6 +18,9 @@
 #include <iostream>
 #include <vector>
 
+using namespace nstd;
+
+
 // ========================= TEST UTILITIES =========================
 
 uint64_t test_count = 0;

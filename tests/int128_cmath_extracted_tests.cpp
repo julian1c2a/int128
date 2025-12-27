@@ -9,6 +9,9 @@
 #include <iostream>
 #include <vector>
 
+using namespace nstd;
+
+
 // Test counter
 static int total_tests = 0;
 static int passed_tests = 0;

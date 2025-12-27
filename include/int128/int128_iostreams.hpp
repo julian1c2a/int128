@@ -207,6 +207,9 @@ inline std::istream& operator>>(std::istream& is, int128_t& value)
 namespace int128_iostream
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 /**
  * @brief Aplica formateo usando el estado actual del stream
  */
@@ -289,6 +292,9 @@ inline std::istream& formatted_input(std::istream& is, int128_t& value)
 
 namespace int128_format
 {
+
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
 
 /**
  * @brief Formatea int128_t usando ostringstream con manipuladores

@@ -17,6 +17,9 @@
 #include <unordered_map>
 #include <vector>
 
+using namespace nstd;
+
+
 // Los traits se definen en int128_traits.hpp
 // La macro INT128_USING_LIBCPP indica si las especializaciones están disponibles
 // (0 = disponibles en GCC/MSVC con libstdc++/MS STL, 1 = NO disponibles en libc++)

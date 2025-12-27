@@ -8,6 +8,9 @@
 #include <cassert>
 #include <iostream>
 
+using namespace nstd;
+
+
 using namespace int128_literals;
 
 void test_arithmetic_functions()

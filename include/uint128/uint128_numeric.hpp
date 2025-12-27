@@ -342,6 +342,9 @@ constexpr uint128_t abs_diff(uint128_t a, uint128_t b) noexcept
 namespace uint128_numeric
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 /**
  * @brief Calcula x^n de manera eficiente
  *

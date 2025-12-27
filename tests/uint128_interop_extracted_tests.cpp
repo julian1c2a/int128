@@ -23,6 +23,9 @@
 #include <iostream>
 #include <type_traits>
 
+using namespace nstd;
+
+
 // Colores para output
 #define GREEN "\033[32m"
 #define RED "\033[31m"

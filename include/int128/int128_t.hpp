@@ -882,6 +882,9 @@ constexpr int128_t int128_t_MIN = int128_t(0x8000000000000000ULL, 0);
 namespace int128_literals
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 constexpr int128_t operator""_i128(unsigned long long value) noexcept
 {
     return int128_t(static_cast<int64_t>(value));

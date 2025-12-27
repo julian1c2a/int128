@@ -41,6 +41,9 @@
 namespace uint128_concepts
 {
 
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // ===============================================================================
 // CONCEPTOS BÁSICOS
 // ===============================================================================
@@ -207,6 +210,10 @@ concept uint128_reduce_operation = requires(ReduceOp op, T acc, uint128_t u) {
  */
 namespace uint128_concept_checks
 {
+
+using uint128_t = nstd::uint128_t;
+using int128_t = nstd::int128_t;
+
 // Verificaciones básicas de conceptos
 // NOTA: uint128_t es una clase, no un tipo integral nativo de C++,
 // por lo que no satisface std::integral (requiere std::is_integral_v<T>)

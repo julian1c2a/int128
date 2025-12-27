@@ -4,6 +4,9 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace nstd;
+
+
 int main()
 {
     std::cout << "=== Test de Funciones Numéricas C++20 para uint128_t ===\n\n";

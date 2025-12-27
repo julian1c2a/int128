@@ -13,6 +13,9 @@
 #include <type_traits>
 #include <vector>
 
+using namespace nstd;
+
+
 // Helper for random generation
 std::mt19937_64 rng(std::random_device{}());
 
