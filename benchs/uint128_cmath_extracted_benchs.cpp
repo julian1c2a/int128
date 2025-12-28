@@ -99,7 +99,7 @@ void benchmark_gcd()
     benchmark(
         "gcd(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = nstd::gcd(test_pairs[rng() % test_pairs.size()].first,
+            volatile uint64_t result = std::gcd(test_pairs[rng() % test_pairs.size()].first,
                                                 test_pairs[rng() % test_pairs.size()].second);
             (void)result;
         },
@@ -155,7 +155,7 @@ void benchmark_lcm()
     benchmark(
         "lcm(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = nstd::lcm(48ULL, 18ULL);
+            volatile uint64_t result = std::lcm(48ULL, 18ULL);
             (void)result;
         },
         1000000);
@@ -335,17 +335,17 @@ void benchmark_min_max()
 
     // Benchmark uint64_t (baseline)
     benchmark(
-        "nstd::min(uint64_t, uint64_t)",
+        "std::min(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = nstd::min(123456789ULL, 987654321ULL);
+            volatile uint64_t result = std::min(123456789ULL, 987654321ULL);
             (void)result;
         },
         10000000);
 
     benchmark(
-        "nstd::max(uint64_t, uint64_t)",
+        "std::max(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = nstd::max(123456789ULL, 987654321ULL);
+            volatile uint64_t result = std::max(123456789ULL, 987654321ULL);
             (void)result;
         },
         10000000);

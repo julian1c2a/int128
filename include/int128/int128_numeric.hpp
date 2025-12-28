@@ -67,7 +67,7 @@ constexpr int128_t midpoint(int128_t a, int128_t b) noexcept
 }
 
 /**
- * @brief Restringe un valor a un rango específico, 
+ * @brief Restringe un valor a un rango específico,
  *        saturando el valor fuera del rango
  *
  * @param v Valor a restringir
@@ -321,11 +321,13 @@ constexpr int128_t lcm(int128_t a, int128_t b)
  */
 constexpr int sign(int128_t x) noexcept
 {
-    if (x < int128_t(0))
+    if (x < int128_t(0)) {
         return -1;
-    if (x > int128_t(0))
+    } else if (x > int128_t(0)) {
         return 1;
-    return 0;
+    } else {
+        return 0;
+    }
 }
 
 } // namespace nstd

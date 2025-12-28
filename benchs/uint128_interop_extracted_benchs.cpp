@@ -414,9 +414,9 @@ void benchmark_math_functions()
     uint128_t uint_a(12345678901234567890ULL);
     uint128_t uint_b(98765432109876543210ULL);
 
-    int128_t int_a(12345678901234567890LL);
-    int128_t int_b(98765432109876543210LL);
-    int128_t int_neg(-12345678901234567890LL);
+    int128_t int_a(1234567890123456789LL); // Valor ajustado para caber en int64_t
+    int128_t int_b(8765432109876543210LL); // Valor ajustado para caber en int64_t (< 9.2e18)
+    int128_t int_neg(-1234567890123456789LL);
 
     // GCD
     auto time_uint_gcd = measure_time("uint128_t gcd", [&]() {

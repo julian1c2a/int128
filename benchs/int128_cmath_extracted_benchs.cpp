@@ -146,7 +146,7 @@ void benchmark_gcd()
     // Baseline: int64_t for comparison
     int64_t sink64 = 0;
     results.push_back(benchmark("gcd(12, 18) - int64_t baseline", "GCD",
-                                [&sink64]() { sink64 = nstd::gcd(int64_t(12), int64_t(18)); }));
+                                [&sink64]() { sink64 = std::gcd(int64_t(12), int64_t(18)); }));
 }
 
 // ============================================================================
@@ -172,7 +172,7 @@ void benchmark_lcm()
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("lcm(12, 18) - int64_t baseline", "LCM",
-                                [&sink64]() { sink64 = nstd::lcm(int64_t(12), int64_t(18)); }));
+                                [&sink64]() { sink64 = std::lcm(int64_t(12), int64_t(18)); }));
 }
 
 // ============================================================================
@@ -198,7 +198,7 @@ void benchmark_abs()
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("abs(-42) - int64_t baseline", "ABS",
-                                [&sink64]() { sink64 = nstd::abs(int64_t(-42)); }));
+                                [&sink64]() { sink64 = std::abs(int64_t(-42)); }));
 }
 
 // ============================================================================
@@ -263,7 +263,7 @@ void benchmark_sqrt()
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("sqrt(100) - int64_t baseline", "SQRT",
-                                [&sink64]() { sink64 = nstd::sqrt(int64_t(100)); }));
+                                [&sink64]() { sink64 = static_cast<int64_t>(std::sqrt(100)); }));
 }
 
 // ============================================================================
@@ -273,21 +273,22 @@ void benchmark_sign()
 {
     // Positive
     results.push_back(
-        benchmark("sign(42) - positive", "SIGN", []() { sink = std::sign(int128_t(42)); }));
+        benchmark("sign(42) - positive", "SIGN", []() { sink = nstd::sign(int128_t(42)); }));
 
     // Negative
     results.push_back(
-        benchmark("sign(-42) - negative", "SIGN", []() { sink = std::sign(int128_t(-42)); }));
+        benchmark("sign(-42) - negative", "SIGN", []() { sink = nstd::sign(int128_t(-42)); }));
 
     // Zero
-    results.push_back(benchmark("sign(0) - zero", "SIGN", []() { sink = std::sign(int128_t(0)); }));
+    results.push_back(
+        benchmark("sign(0) - zero", "SIGN", []() { sink = nstd::sign(int128_t(0)); }));
 
     // Large values
     results.push_back(benchmark("sign(1000000000) - large positive", "SIGN",
-                                []() { sink = std::sign(int128_t(1000000000LL)); }));
+                                []() { sink = nstd::sign(int128_t(1000000000LL)); }));
 
     results.push_back(benchmark("sign(-1000000000) - large negative", "SIGN",
-                                []() { sink = std::sign(int128_t(-1000000000LL)); }));
+                                []() { sink = nstd::sign(int128_t(-1000000000LL)); }));
 }
 
 // ============================================================================
@@ -322,7 +323,7 @@ void benchmark_min_max()
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("min(3, 5) - int64_t baseline", "MIN/MAX",
-                                [&sink64]() { sink64 = nstd::min(int64_t(3), int64_t(5)); }));
+                                [&sink64]() { sink64 = std::min(int64_t(3), int64_t(5)); }));
 }
 
 // ============================================================================
@@ -391,7 +392,7 @@ void benchmark_midpoint()
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("midpoint(0, 10) - int64_t baseline", "MIDPOINT",
-                                [&sink64]() { sink64 = nstd::midpoint(int64_t(0), int64_t(10)); }));
+                                [&sink64]() { sink64 = std::midpoint(int64_t(0), int64_t(10)); }));
 }
 
 // ============================================================================
@@ -414,7 +415,7 @@ void benchmark_combined()
     // Sign-aware comparison
     results.push_back(benchmark("sign(a) * abs(a) - reconstruction", "COMBINED", []() {
         int128_t a(-42);
-        sink = int128_t(std::sign(a)) * nstd::abs(a);
+        sink = int128_t(nstd::sign(a)) * nstd::abs(a);
     }));
 
     // Clamped midpoint
