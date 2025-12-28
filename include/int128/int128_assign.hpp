@@ -33,6 +33,9 @@
 #include <string>
 #include <type_traits>
 
+namespace nstd
+{
+
 // =============================================================================
 // FUNCIONES DE ASIGNACIÓN PARA UINT128_T (REEMPLAZAN CONSTRUCTORES/ASIGNACIONES)
 // =============================================================================
@@ -187,5 +190,7 @@ inline void assign_from_parts(int128_t& target, uint64_t high, uint64_t low) noe
 {
     assign_int128(target, high, low);
 }
+
+} // namespace nstd
 
 #endif // INT128_ASSIGN_HPP

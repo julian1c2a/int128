@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <type_traits>
 
+namespace nstd
+{
+
 // =============================================================================
 // Safe conversion functions for int128_t
 // =============================================================================
@@ -498,3 +501,5 @@ constexpr int128_t saturating_abs(const int128_t& value) noexcept
 }
 
 } // namespace int128_safe
+
+} // namespace nstd

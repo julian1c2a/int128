@@ -36,6 +36,9 @@
 #include <numeric>
 #include <type_traits>
 
+namespace nstd
+{
+
 /**
  * @brief Algoritmos optimizados y especializados para int128_t
  *
@@ -577,5 +580,7 @@ int128_stats calculate_stats(InputIt first, InputIt last)
 }
 
 } // namespace int128_algorithm
+
+} // namespace nstd
 
 #endif // INT128_ALGORITHM_HPP

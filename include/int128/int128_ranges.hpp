@@ -31,6 +31,9 @@
 #include "int128_t.hpp"
 #include <numeric>
 
+namespace nstd
+{
+
 /**
  * @brief Especializaciones de funciones de rango de std para int128_t
  *
@@ -165,5 +168,7 @@ template <class InputIt> range_stats<InputIt> calculate_stats(InputIt first, Inp
 }
 
 } // namespace int128_ranges
+
+} // namespace nstd
 
 #endif // INT128_RANGES_HPP

@@ -33,6 +33,9 @@
 #include <sstream>
 #include <string>
 
+namespace nstd
+{
+
 /**
  * @brief Funciones de formateo avanzado para int128_t
  *
@@ -253,4 +256,5 @@ inline std::string format_int128_for_stream(const nstd::int128_t& value, const s
     return int128_format::format_like_iostream(value, os.flags(), os.width(), os.fill());
 }
 
+} // namespace nstd
 #endif // INT128_FORMAT_HPP

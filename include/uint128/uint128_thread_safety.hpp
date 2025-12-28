@@ -30,6 +30,9 @@
 #include <mutex>
 #include <shared_mutex>
 
+namespace nstd
+{
+
 namespace uint128_threadsafe
 {
 
@@ -695,4 +698,4 @@ class ThreadSafeUint128SpinLock
  *   * No synchronization overhead!
  */
 
-#endif // UINT128_THREAD_SAFETY_HPP
+} // namespace nstd

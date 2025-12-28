@@ -31,6 +31,9 @@
 #include <concepts>
 #include <type_traits>
 
+namespace nstd
+{
+
 /**
  * @brief Conceptos personalizados para uint128_t
  *
@@ -243,4 +246,4 @@ static_assert(std::assignable_from<uint128_t&, const uint128_t&>,
 
 } // namespace uint128_concept_checks
 
-#endif // UINT128_CONCEPTS_HPP
+} // namespace nstd

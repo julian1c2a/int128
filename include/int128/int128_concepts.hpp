@@ -31,6 +31,9 @@
 #include <concepts>
 #include <type_traits>
 
+namespace nstd
+{
+
 /**
  * @brief Conceptos personalizados para int128_t
  *
@@ -294,4 +297,4 @@ static_assert(int128_t(-1) < int128_t(0), "int128_t debe manejar valores negativ
 static_assert(int128_t(1) > int128_t(0), "int128_t debe manejar valores positivos");
 } // namespace int128_concept_checks
 
-#endif // INT128_CONCEPTS_HPP
+} // namespace nstd

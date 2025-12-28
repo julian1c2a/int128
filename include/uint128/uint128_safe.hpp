@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <type_traits>
 
+namespace nstd
+{
+
 // =============================================================================
 // Safe conversion functions for uint128_t
 // =============================================================================
@@ -377,3 +380,5 @@ constexpr uint128_t saturating_mul(const uint128_t& a, const uint128_t& b) noexc
 }
 
 } // namespace uint128_safe
+
+} // namespace nstd

@@ -33,6 +33,9 @@
 #include <mutex>
 #include <shared_mutex>
 
+namespace nstd
+{
+
 namespace int128_threadsafe
 {
 
@@ -836,5 +839,7 @@ class ThreadSafeInt128SpinLock
  *   * Additional methods: negate(), is_negative(), get_abs()
  *   * Sign handling is automatic and correct
  */
+
+} // namespace nstd
 
 #endif // INT128_THREAD_SAFETY_HPP
