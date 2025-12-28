@@ -215,7 +215,7 @@ using int128_t = nstd::int128_t;
  */
 inline std::string format_for_stream(const int128_t& value, const std::ostream& os)
 {
-    return int128_format::format_like_iostream(value, os.flags(), os.width(), os.fill());
+    return nstd::int128_format::format_like_iostream(value, os.flags(), os.width(), os.fill());
 }
 
 /**
