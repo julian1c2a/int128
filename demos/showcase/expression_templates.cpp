@@ -38,6 +38,8 @@
 #include <type_traits>
 #include <uint128/uint128_iostreams.hpp> // operator<< para cout
 
+using namespace nstd;
+
 using namespace std;
 using namespace std::chrono;
 
@@ -609,3 +611,4 @@ int main()
 
     return 0;
 }
+

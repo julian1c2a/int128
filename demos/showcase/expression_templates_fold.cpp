@@ -30,6 +30,8 @@
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
 
+using namespace nstd;
+
 using namespace std;
 using namespace std::chrono;
 
@@ -468,3 +470,4 @@ int main()
 
     return 0;
 }
+

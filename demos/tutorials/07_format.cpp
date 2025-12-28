@@ -13,6 +13,8 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace nstd;
+
 // Usar los literales definidos por el usuario
 using namespace uint128_literals;
 using namespace int128_literals;
@@ -76,3 +78,4 @@ int main()
 
     return 0;
 }
+

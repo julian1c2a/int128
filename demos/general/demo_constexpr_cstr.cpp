@@ -2,6 +2,8 @@
 #include <int128.hpp>
 #include <iostream>
 
+using namespace nstd;
+
 // Ejemplo de uso en tiempo de compilación
 namespace compile_time_constants
 {

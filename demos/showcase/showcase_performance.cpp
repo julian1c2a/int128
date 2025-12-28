@@ -23,6 +23,8 @@
 #include <uint128/uint128_iostreams.hpp>
 #include <vector>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 using namespace std::chrono;
 
@@ -365,3 +367,4 @@ int main()
 
     return 0;
 }
+

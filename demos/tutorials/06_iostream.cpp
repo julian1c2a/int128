@@ -17,6 +17,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace nstd;
+
 int main()
 {
     std::cout << "========================================\n";
@@ -140,3 +142,4 @@ int main()
 
     return 0;
 }
+

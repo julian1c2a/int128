@@ -13,6 +13,8 @@
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 int main()
@@ -84,3 +86,4 @@ int main()
 
     return 0;
 }
+

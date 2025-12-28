@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace nstd;
+
 int main()
 {
     // Prueba: Crear un entero de 128 bits
@@ -18,3 +20,4 @@ int main()
 
     return 0;
 }
+

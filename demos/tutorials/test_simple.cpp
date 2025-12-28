@@ -7,6 +7,8 @@
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
 
+using namespace nstd;
+
 int main()
 {
     std::cout << "Test de compilación uint128_t/int128_t\n";
@@ -36,3 +38,4 @@ int main()
 
     return 0;
 }
+

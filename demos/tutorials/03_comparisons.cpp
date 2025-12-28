@@ -18,6 +18,8 @@
 #include <uint128/uint128_iostreams.hpp>
 #include <vector>
 
+using namespace nstd;
+
 int main()
 {
     std::cout << "========================================\n";
@@ -237,3 +239,4 @@ int main()
 
     return 0;
 }
+

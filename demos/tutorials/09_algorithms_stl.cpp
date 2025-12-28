@@ -16,6 +16,8 @@
 #include <numeric>
 #include <vector>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 int main()
@@ -133,3 +135,4 @@ int main()
 
     return 0;
 }
+

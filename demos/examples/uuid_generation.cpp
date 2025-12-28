@@ -23,6 +23,8 @@
 #include <uint128/uint128_t.hpp>
 #include <vector>
 
+using namespace nstd;
+
 class UUID
 {
   private:
@@ -305,3 +307,4 @@ int main()
 
     return 0;
 }
+

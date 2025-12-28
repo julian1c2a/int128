@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+using namespace nstd;
+
 using namespace uint128_literals; // Importar literales UDL
 
 void demo_crypto_like_operations()

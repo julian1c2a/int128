@@ -17,6 +17,8 @@
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
 
+using namespace nstd;
+
 int main()
 {
     std::cout << "========================================\n";
@@ -252,3 +254,4 @@ Usa int128_t si necesitas números negativos.
 
 Próximo tutorial: 02_bitwise_operations.cpp
 */
+

@@ -21,6 +21,8 @@
 #include <uint128/uint128_cmath.hpp>
 #include <uint128/uint128_iostreams.hpp>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 // Colores ANSI
@@ -329,3 +331,4 @@ int main()
 
     return 0;
 }
+

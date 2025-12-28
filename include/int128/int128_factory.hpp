@@ -33,6 +33,9 @@
 #include <string>
 #include <type_traits>
 
+namespace nstd
+{
+
 // =============================================================================
 // FUNCIONES DE FÁBRICA PARA UINT128_T
 // =============================================================================
@@ -299,5 +302,7 @@ constexpr auto int128(Args&&... args) noexcept -> decltype(make_int128(std::forw
 {
     return make_int128(std::forward<Args>(args)...);
 }
+
+} // namespace nstd
 
 #endif // INT128_FACTORY_HPP

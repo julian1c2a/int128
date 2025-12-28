@@ -20,6 +20,8 @@
 #include <uint128/uint128_t.hpp>
 #include <vector>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 // Test de primalidad simple (para p pequeño)
@@ -272,3 +274,4 @@ int main()
 
     return 0;
 }
+

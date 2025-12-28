@@ -19,6 +19,8 @@
 #include <limits>
 #include <uint128/uint128_iostreams.hpp>
 
+using namespace nstd;
+
 int main()
 {
     std::cout << "========================================\n";
@@ -256,3 +258,4 @@ int main()
 
     return 0;
 }
+

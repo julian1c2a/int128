@@ -3,6 +3,8 @@
 #include <iostream>
 #include <uint128/uint128_bits.hpp>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 int main()

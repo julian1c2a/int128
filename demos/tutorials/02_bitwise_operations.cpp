@@ -17,6 +17,8 @@
 #include <iomanip>
 #include <iostream>
 
+using namespace nstd;
+
 // Helper para imprimir en binario (últimos 16 bits)
 void print_binary_low16(const uint128_t& n, const std::string& label)
 {
@@ -227,3 +229,4 @@ int main()
 
     return 0;
 }
+

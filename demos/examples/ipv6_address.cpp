@@ -23,6 +23,8 @@
 #include <uint128/uint128_t.hpp>
 #include <vector>
 
+using namespace nstd;
+
 class IPv6Address
 {
   private:
@@ -324,3 +326,4 @@ int main()
 
     return 0;
 }
+

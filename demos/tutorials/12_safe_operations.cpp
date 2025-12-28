@@ -15,6 +15,8 @@
 #include <limits>
 #include <optional>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 int main()
@@ -178,3 +180,4 @@ int main()
 
     return 0;
 }
+

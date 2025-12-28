@@ -21,6 +21,8 @@
 #include <uint128/uint128_iostreams.hpp>
 #include <uint128/uint128_t.hpp>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 // Cálculos matemáticos
@@ -202,14 +204,14 @@ Ingrese números en decimal (ej: 12345) o hex (ej: 0xABCD)
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
-                    uint128_t result = std::gcd(a, b);
+                    uint128_t result = nstd::gcd(a, b);
                     print_number("GCD", result);
                 } else if (cmd == "lcm") {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
-                    uint128_t result = std::lcm(a, b);
+                    uint128_t result = nstd::lcm(a, b);
                     print_number("LCM", result);
                 } else if (cmd == "mem") {
                     std::string val_str;
@@ -254,8 +256,8 @@ void demo_examples()
     std::cout << "4. GCD y LCM:\n";
     uint128_t a = 123456789012345_u128;
     uint128_t b = 987654321098765_u128;
-    std::cout << "   GCD(" << a << ", " << b << ") = " << std::gcd(a, b) << "\n";
-    std::cout << "   LCM(" << a << ", " << b << ") = " << std::lcm(a, b) << "\n";
+    std::cout << "   GCD(" << a << ", " << b << ") = " << nstd::gcd(a, b) << "\n";
+    std::cout << "   LCM(" << a << ", " << b << ") = " << nstd::lcm(a, b) << "\n";
 }
 
 int main(int argc, char* argv[])
@@ -270,3 +272,4 @@ int main(int argc, char* argv[])
 
     return 0;
 }
+

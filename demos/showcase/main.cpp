@@ -26,6 +26,8 @@
 #include <uint128/uint128_iostreams.hpp>
 #include <vector>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 using namespace int128_literals;
 
@@ -185,20 +187,20 @@ void demo_math_functions()
 
     auto a = 48_u128;
     auto b = 18_u128;
-    auto gcd_result = std::gcd(a, b);
+    auto gcd_result = nstd::gcd(a, b);
 
     std::cout << "  gcd(" << a << ", " << b << ") = " << gcd_result << "\n";
 
     // GCD de números grandes
     auto big_a = 123456789012345_u128;
     auto big_b = 987654321098765_u128;
-    auto gcd_big = std::gcd(big_a, big_b);
+    auto gcd_big = nstd::gcd(big_a, big_b);
 
     print_result("gcd(números grandes)", gcd_big);
 
     print_section("LCM (Mínimo Común Múltiplo)");
 
-    auto lcm_result = std::lcm(a, b);
+    auto lcm_result = nstd::lcm(a, b);
     std::cout << "  lcm(" << a << ", " << b << ") = " << lcm_result << "\n";
 
     print_section("Raíz cuadrada");
@@ -456,3 +458,4 @@ int main()
 
     return 0;
 }
+

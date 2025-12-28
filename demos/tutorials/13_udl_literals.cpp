@@ -13,6 +13,8 @@
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
 
+using namespace nstd;
+
 // Importar los namespaces de literales
 using namespace uint128_literals;
 using namespace int128_literals;
@@ -158,3 +160,4 @@ int main()
 
     return 0;
 }
+

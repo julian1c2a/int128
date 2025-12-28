@@ -17,6 +17,8 @@
 #include <thread>
 #include <vector>
 
+using namespace nstd;
+
 using namespace int128_threadsafe;
 
 // ========================= Demo 1: ThreadSafeInt128 (Mutex) =========================
@@ -349,3 +351,4 @@ int main()
 
     return 0;
 }
+

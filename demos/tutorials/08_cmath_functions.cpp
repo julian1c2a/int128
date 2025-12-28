@@ -12,6 +12,8 @@
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 using namespace int128_literals;
 
@@ -27,7 +29,7 @@ int main()
     std::cout << "--- 1. Valor absoluto ---\n";
 
     int128_t negative = -12345_i128;
-    auto positive = std::abs(negative);
+    auto positive = nstd::abs(negative);
 
     std::cout << "abs(" << negative << ") = " << positive << "\n\n";
 
@@ -38,7 +40,7 @@ int main()
 
     auto a = 48_u128;
     auto b = 18_u128;
-    auto result_gcd = std::gcd(a, b);
+    auto result_gcd = nstd::gcd(a, b);
 
     std::cout << "gcd(" << a << ", " << b << ") = " << result_gcd << "\n\n";
 
@@ -47,7 +49,7 @@ int main()
     // ============================================================
     std::cout << "--- 3. LCM (Mínimo Común Múltiplo) ---\n";
 
-    auto result_lcm = std::lcm(a, b);
+    auto result_lcm = nstd::lcm(a, b);
 
     std::cout << "lcm(" << a << ", " << b << ") = " << result_lcm << "\n\n";
 
@@ -97,3 +99,4 @@ int main()
 
     return 0;
 }
+

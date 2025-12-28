@@ -2,6 +2,8 @@
 #include <iostream>
 #include <uint128/uint128_cmath.hpp>
 
+using namespace nstd;
+
 using namespace uint128_literals;
 
 void demo_basic_math()
@@ -11,8 +13,8 @@ void demo_basic_math()
     // Demostrar GCD y LCM
     uint128_t a = 48_u128;
     uint128_t b = 18_u128;
-    auto gcd_result = std::gcd(a, b);
-    auto lcm_result = std::lcm(a, b);
+    auto gcd_result = nstd::gcd(a, b);
+    auto lcm_result = nstd::lcm(a, b);
 
     std::cout << "GCD(48, 18) = " << gcd_result.to_string() << std::endl;
     std::cout << "LCM(48, 18) = " << lcm_result.to_string() << std::endl;
@@ -20,17 +22,17 @@ void demo_basic_math()
               << ", a × b = " << (a * b).to_string() << std::endl;
 
     // Potenciación
-    auto power_result = std::pow(2_u128, 32_u128);
+    auto power_result = nstd::pow(2_u128, 32_u128);
     std::cout << "2^32 = " << power_result.to_string() << std::endl;
 
-    auto power_large = std::pow(3_u128, 50_u128);
+    auto power_large = nstd::pow(3_u128, 50_u128);
     std::cout << "3^50 = " << power_large.to_string() << std::endl;
 
     // Raíz cuadrada
-    auto sqrt_result = std::sqrt(1000000_u128);
+    auto sqrt_result = nstd::sqrt(1000000_u128);
     std::cout << "√1000000 = " << sqrt_result.to_string() << std::endl;
 
-    auto sqrt_large = std::sqrt(power_result);
+    auto sqrt_large = nstd::sqrt(power_result);
     std::cout << "√(2^32) = √" << power_result.to_string() << " = " << sqrt_large.to_string()
               << std::endl;
 }
@@ -43,7 +45,7 @@ void demo_cryptographic_functions()
         << std::endl;
 
     // Números primos grandes
-    auto mersenne_31 = std::pow(2_u128, 31_u128) - 1_u128; // 2^31 - 1
+    auto mersenne_31 = nstd::pow(2_u128, 31_u128) - 1_u128; // 2^31 - 1
     std::cout << "2^31 - 1 = " << mersenne_31.to_string() << std::endl;
     // std::cout << " es primo: " << (std::is_prime(mersenne_31) ? "Sí" : "No") << std::endl;
 
@@ -113,8 +115,8 @@ void demo_multiple_args()
 
     // Demostrar con números más grandes
     // auto large_gcd =
-    //     uint128_math::gcd_multiple(std::pow(2_u128, 20_u128), std::pow(2_u128, 15_u128) * 3_u128,
-    //                                std::pow(2_u128, 12_u128) * 5_u128);
+    //     uint128_math::gcd_multiple(nstd::pow(2_u128, 20_u128), nstd::pow(2_u128, 15_u128) * 3_u128,
+    //                                nstd::pow(2_u128, 12_u128) * 5_u128);
     // std::cout << "GCD(2^20, 2^15×3, 2^12×5) = " << large_gcd.to_string() << std::endl;
 }
 
@@ -125,16 +127,16 @@ void demo_mixed_types()
     // Funciones estándar con tipos mixtos
     uint128_t large_num = 123456789012345_u128;
 
-    auto gcd_mixed1 = std::gcd(large_num, 123456);
+    auto gcd_mixed1 = nstd::gcd(large_num, 123456);
     std::cout << "GCD(uint128_t, int): " << gcd_mixed1.to_string() << std::endl;
 
-    auto lcm_mixed = std::lcm(1000000, large_num);
+    auto lcm_mixed = nstd::lcm(1000000, large_num);
     std::cout << "LCM(int, uint128_t): " << lcm_mixed.to_string() << std::endl;
 
-    auto pow_mixed1 = std::pow(large_num, 3);
+    auto pow_mixed1 = nstd::pow(large_num, 3);
     std::cout << "POW(uint128_t, int): " << pow_mixed1.to_string() << std::endl;
 
-    auto pow_mixed2 = std::pow(987, large_num % 10_u128);
+    auto pow_mixed2 = nstd::pow(987, large_num % 10_u128);
     std::cout << "POW(int, uint128_t): " << pow_mixed2.to_string() << std::endl;
 
     std::cout << "\n✅ Todas las operaciones funcionan perfectamente con tipos mixtos!"
@@ -153,22 +155,22 @@ void demo_performance_showcase()
     std::cout << "Número 1: " << large1.to_string() << std::endl;
     std::cout << "Número 2: " << large2.to_string() << std::endl;
 
-    auto gcd_large = std::gcd(large1, large2);
+    auto gcd_large = nstd::gcd(large1, large2);
     std::cout << "GCD: " << gcd_large.to_string() << std::endl;
 
-    auto lcm_large = std::lcm(large1, large2);
+    auto lcm_large = nstd::lcm(large1, large2);
     std::cout << "LCM: " << lcm_large.to_string() << std::endl;
 
-    auto sqrt_large = std::sqrt(large1);
+    auto sqrt_large = nstd::sqrt(large1);
     std::cout << "√(número1): " << sqrt_large.to_string() << std::endl;
 
     // Exponenciación muy grande
-    auto very_large_power = std::pow(2_u128, 100_u128);
+    auto very_large_power = nstd::pow(2_u128, 100_u128);
     std::cout << "\n2^100 = " << very_large_power.to_string() << std::endl;
     std::cout << "Este número tiene " << very_large_power.to_string().length() << " dígitos!"
               << std::endl;
 
-    auto sqrt_power = std::sqrt(very_large_power);
+    auto sqrt_power = nstd::sqrt(very_large_power);
     std::cout << "√(2^100) = √" << very_large_power.to_string() << " = " << sqrt_power.to_string()
               << std::endl;
 }

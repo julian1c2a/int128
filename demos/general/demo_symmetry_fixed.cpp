@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+using namespace nstd;
+
 void demo_arithmetic_symmetry()
 {
     std::cout << "=== DEMOSTRACIÓN: Simetría Aritmética ===" << std::endl;

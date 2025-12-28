@@ -10,6 +10,8 @@
 #include <uint128/uint128_thread_safety.hpp>
 #include <vector>
 
+using namespace nstd;
+
 using namespace uint128_threadsafe;
 
 // ========================= Example 1: Global Counter =========================
@@ -251,3 +253,4 @@ int main()
 
     return 0;
 }
+
