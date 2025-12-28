@@ -216,6 +216,7 @@ inline int128_t bit_ceil(const int128_t& value) noexcept
 namespace int128_bits
 {
 
+using uint128_t = nstd::uint128_t;
 using int128_t = nstd::int128_t;
 
 /**
@@ -421,7 +422,7 @@ constexpr int find_first_set(const int128_t& value) noexcept
         return -1;
     }
 
-    return std::countr_zero(value);
+    return nstd::countr_zero(value);
 }
 
 /**
@@ -439,7 +440,7 @@ constexpr int find_last_set(const int128_t& value) noexcept
         return 127;
     }
 
-    return 127 - std::countl_zero(value);
+    return 127 - nstd::countl_zero(value);
 }
 
 } // namespace int128_bits

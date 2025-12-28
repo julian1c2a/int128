@@ -67,7 +67,8 @@ constexpr int128_t midpoint(int128_t a, int128_t b) noexcept
 }
 
 /**
- * @brief Restringe un valor a un rango específico
+ * @brief Restringe un valor a un rango específico, 
+ *        saturando el valor fuera del rango
  *
  * @param v Valor a restringir
  * @param lo Valor mínimo del rango
@@ -308,6 +309,23 @@ constexpr int128_t lcm(int128_t a, int128_t b)
     // Calculamos de forma que evite overflow
     int128_t g = gcd(a, b);
     return (a / g) * b;
+}
+
+/**
+ * @brief Función sign de C++23 - devuelve el signo de un número
+ *
+ * Esta es una extensión compatible con std::sign de C++23.
+ *
+ * @param x Valor a examinar
+ * @return -1 si x < 0, 0 si x == 0, +1 si x > 0
+ */
+constexpr int sign(int128_t x) noexcept
+{
+    if (x < int128_t(0))
+        return -1;
+    if (x > int128_t(0))
+        return 1;
+    return 0;
 }
 
 } // namespace nstd

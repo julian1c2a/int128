@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 
+using namespace nstd;
 using namespace std::chrono;
 
 // Tipos de Boost.Multiprecision (128-bit fixed)
@@ -499,7 +500,7 @@ void benchmark_math_functions()
 
     // GCD
     auto time_our_gcd = measure_time("uint128_t gcd", [&]() {
-        auto result = std::gcd(our_a, our_b);
+        auto result = nstd::gcd(our_a, our_b);
         (void)result;
     });
 
@@ -510,7 +511,7 @@ void benchmark_math_functions()
 
     // LCM
     auto time_our_lcm = measure_time("uint128_t lcm", [&]() {
-        auto result = std::lcm(our_a, our_b);
+        auto result = nstd::lcm(our_a, our_b);
         (void)result;
     });
 
@@ -521,7 +522,7 @@ void benchmark_math_functions()
 
     // Pow
     auto time_our_pow = measure_time("uint128_t pow", [&]() {
-        auto result = std::pow(uint128_t(2), uint128_t(10));
+        auto result = nstd::pow(uint128_t(2), uint128_t(10));
         (void)result;
     });
 
@@ -532,7 +533,7 @@ void benchmark_math_functions()
 
     // Sqrt
     auto time_our_sqrt = measure_time("uint128_t sqrt", [&]() {
-        auto result = std::sqrt(uint128_t(12345678901234567890ULL));
+        auto result = nstd::sqrt(uint128_t(12345678901234567890ULL));
         (void)result;
     });
 

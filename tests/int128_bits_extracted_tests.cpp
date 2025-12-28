@@ -37,19 +37,19 @@ using namespace int128_bits;
 bool test_popcount()
 {
     // Test con 0
-    ASSERT_TEST(std::popcount(int128_t(0)) == 0, "popcount de 0 debe ser 0");
+    ASSERT_TEST(nstd::popcount(int128_t(0)) == 0, "popcount de 0 debe ser 0");
 
     // Test con valores positivos pequenos
-    ASSERT_TEST(std::popcount(int128_t(1)) == 1, "popcount de 1 debe ser 1");
-    ASSERT_TEST(std::popcount(int128_t(3)) == 2, "popcount de 3 (0b11) debe ser 2");
-    ASSERT_TEST(std::popcount(int128_t(7)) == 3, "popcount de 7 (0b111) debe ser 3");
+    ASSERT_TEST(nstd::popcount(int128_t(1)) == 1, "popcount de 1 debe ser 1");
+    ASSERT_TEST(nstd::popcount(int128_t(3)) == 2, "popcount de 3 (0b11) debe ser 2");
+    ASSERT_TEST(nstd::popcount(int128_t(7)) == 3, "popcount de 7 (0b111) debe ser 3");
 
     // Test con -1 (todos los bits en 1)
-    ASSERT_TEST(std::popcount(int128_t(-1)) == 128, "popcount de -1 debe ser 128");
+    ASSERT_TEST(nstd::popcount(int128_t(-1)) == 128, "popcount de -1 debe ser 128");
 
     // Test con valores negativos
     int128_t neg_value = int128_t(-2); // Complemento a 2 de 2
-    int pop = std::popcount(neg_value);
+    int pop = nstd::popcount(neg_value);
     ASSERT_TEST(pop == 127, "popcount de -2 debe ser 127");
 
     TEST_PASS("test_popcount");
@@ -59,19 +59,19 @@ bool test_popcount()
 bool test_countl_zero()
 {
     // Test con 0
-    ASSERT_TEST(std::countl_zero(int128_t(0)) == 128, "countl_zero de 0 debe ser 128");
+    ASSERT_TEST(nstd::countl_zero(int128_t(0)) == 128, "countl_zero de 0 debe ser 128");
 
     // Test con valores positivos pequenos
-    ASSERT_TEST(std::countl_zero(int128_t(1)) == 127, "countl_zero de 1 debe ser 127");
-    ASSERT_TEST(std::countl_zero(int128_t(2)) == 126, "countl_zero de 2 debe ser 126");
+    ASSERT_TEST(nstd::countl_zero(int128_t(1)) == 127, "countl_zero de 1 debe ser 127");
+    ASSERT_TEST(nstd::countl_zero(int128_t(2)) == 126, "countl_zero de 2 debe ser 126");
 
     // Test con valores negativos (bit de signo = 1)
-    ASSERT_TEST(std::countl_zero(int128_t(-1)) == 0, "countl_zero de -1 debe ser 0");
-    ASSERT_TEST(std::countl_zero(int128_t(-100)) == 0, "countl_zero de -100 debe ser 0");
+    ASSERT_TEST(nstd::countl_zero(int128_t(-1)) == 0, "countl_zero de -1 debe ser 0");
+    ASSERT_TEST(nstd::countl_zero(int128_t(-100)) == 0, "countl_zero de -100 debe ser 0");
 
     // Test con valor positivo grande
     int128_t large_positive = int128_t(1) << 126;
-    ASSERT_TEST(std::countl_zero(large_positive) == 1, "countl_zero de 2^126 debe ser 1");
+    ASSERT_TEST(nstd::countl_zero(large_positive) == 1, "countl_zero de 2^126 debe ser 1");
 
     TEST_PASS("test_countl_zero");
     return true;
@@ -80,17 +80,17 @@ bool test_countl_zero()
 bool test_countr_zero()
 {
     // Test con 0
-    ASSERT_TEST(std::countr_zero(int128_t(0)) == 128, "countr_zero de 0 debe ser 128");
+    ASSERT_TEST(nstd::countr_zero(int128_t(0)) == 128, "countr_zero de 0 debe ser 128");
 
     // Test con valores positivos
-    ASSERT_TEST(std::countr_zero(int128_t(1)) == 0, "countr_zero de 1 debe ser 0");
-    ASSERT_TEST(std::countr_zero(int128_t(2)) == 1, "countr_zero de 2 debe ser 1");
-    ASSERT_TEST(std::countr_zero(int128_t(4)) == 2, "countr_zero de 4 debe ser 2");
-    ASSERT_TEST(std::countr_zero(int128_t(8)) == 3, "countr_zero de 8 debe ser 3");
+    ASSERT_TEST(nstd::countr_zero(int128_t(1)) == 0, "countr_zero de 1 debe ser 0");
+    ASSERT_TEST(nstd::countr_zero(int128_t(2)) == 1, "countr_zero de 2 debe ser 1");
+    ASSERT_TEST(nstd::countr_zero(int128_t(4)) == 2, "countr_zero de 4 debe ser 2");
+    ASSERT_TEST(nstd::countr_zero(int128_t(8)) == 3, "countr_zero de 8 debe ser 3");
 
     // Test con valores negativos pares
-    ASSERT_TEST(std::countr_zero(int128_t(-2)) == 1, "countr_zero de -2 debe ser 1");
-    ASSERT_TEST(std::countr_zero(int128_t(-4)) == 2, "countr_zero de -4 debe ser 2");
+    ASSERT_TEST(nstd::countr_zero(int128_t(-2)) == 1, "countr_zero de -2 debe ser 1");
+    ASSERT_TEST(nstd::countr_zero(int128_t(-4)) == 2, "countr_zero de -4 debe ser 2");
 
     TEST_PASS("test_countr_zero");
     return true;
@@ -99,17 +99,17 @@ bool test_countr_zero()
 bool test_countl_one()
 {
     // Test con 0
-    ASSERT_TEST(std::countl_one(int128_t(0)) == 0, "countl_one de 0 debe ser 0");
+    ASSERT_TEST(nstd::countl_one(int128_t(0)) == 0, "countl_one de 0 debe ser 0");
 
     // Test con valores positivos
-    ASSERT_TEST(std::countl_one(int128_t(1)) == 0, "countl_one de 1 debe ser 0");
+    ASSERT_TEST(nstd::countl_one(int128_t(1)) == 0, "countl_one de 1 debe ser 0");
 
     // Test con -1 (todos unos)
-    ASSERT_TEST(std::countl_one(int128_t(-1)) == 128, "countl_one de -1 debe ser 128");
+    ASSERT_TEST(nstd::countl_one(int128_t(-1)) == 128, "countl_one de -1 debe ser 128");
 
     // Test con valores negativos pequenos
     // -2 en complemento a 2: 1111...1110
-    ASSERT_TEST(std::countl_one(int128_t(-2)) == 127, "countl_one de -2 debe ser 127");
+    ASSERT_TEST(nstd::countl_one(int128_t(-2)) == 127, "countl_one de -2 debe ser 127");
 
     TEST_PASS("test_countl_one");
     return true;
@@ -118,15 +118,15 @@ bool test_countl_one()
 bool test_countr_one()
 {
     // Test con 0
-    ASSERT_TEST(std::countr_one(int128_t(0)) == 0, "countr_one de 0 debe ser 0");
+    ASSERT_TEST(nstd::countr_one(int128_t(0)) == 0, "countr_one de 0 debe ser 0");
 
     // Test con valores positivos
-    ASSERT_TEST(std::countr_one(int128_t(1)) == 1, "countr_one de 1 debe ser 1");
-    ASSERT_TEST(std::countr_one(int128_t(3)) == 2, "countr_one de 3 debe ser 2");
-    ASSERT_TEST(std::countr_one(int128_t(7)) == 3, "countr_one de 7 debe ser 3");
+    ASSERT_TEST(nstd::countr_one(int128_t(1)) == 1, "countr_one de 1 debe ser 1");
+    ASSERT_TEST(nstd::countr_one(int128_t(3)) == 2, "countr_one de 3 debe ser 2");
+    ASSERT_TEST(nstd::countr_one(int128_t(7)) == 3, "countr_one de 7 debe ser 3");
 
     // Test con -1 (todos unos)
-    ASSERT_TEST(std::countr_one(int128_t(-1)) == 128, "countr_one de -1 debe ser 128");
+    ASSERT_TEST(nstd::countr_one(int128_t(-1)) == 128, "countr_one de -1 debe ser 128");
 
     TEST_PASS("test_countr_one");
     return true;
@@ -135,17 +135,17 @@ bool test_countr_one()
 bool test_bit_width()
 {
     // Test con 0
-    ASSERT_TEST(std::bit_width(int128_t(0)) == 0, "bit_width de 0 debe ser 0");
+    ASSERT_TEST(nstd::bit_width(int128_t(0)) == 0, "bit_width de 0 debe ser 0");
 
     // Test con valores positivos
-    ASSERT_TEST(std::bit_width(int128_t(1)) == 1, "bit_width de 1 debe ser 1");
-    ASSERT_TEST(std::bit_width(int128_t(2)) == 2, "bit_width de 2 debe ser 2");
-    ASSERT_TEST(std::bit_width(int128_t(7)) == 3, "bit_width de 7 debe ser 3");
-    ASSERT_TEST(std::bit_width(int128_t(8)) == 4, "bit_width de 8 debe ser 4");
+    ASSERT_TEST(nstd::bit_width(int128_t(1)) == 1, "bit_width de 1 debe ser 1");
+    ASSERT_TEST(nstd::bit_width(int128_t(2)) == 2, "bit_width de 2 debe ser 2");
+    ASSERT_TEST(nstd::bit_width(int128_t(7)) == 3, "bit_width de 7 debe ser 3");
+    ASSERT_TEST(nstd::bit_width(int128_t(8)) == 4, "bit_width de 8 debe ser 4");
 
     // Test con valores negativos (usan todos los bits)
-    ASSERT_TEST(std::bit_width(int128_t(-1)) == 128, "bit_width de -1 debe ser 128");
-    ASSERT_TEST(std::bit_width(int128_t(-100)) == 128, "bit_width de -100 debe ser 128");
+    ASSERT_TEST(nstd::bit_width(int128_t(-1)) == 128, "bit_width de -1 debe ser 128");
+    ASSERT_TEST(nstd::bit_width(int128_t(-100)) == 128, "bit_width de -100 debe ser 128");
 
     TEST_PASS("test_bit_width");
     return true;
@@ -154,21 +154,21 @@ bool test_bit_width()
 bool test_has_single_bit()
 {
     // Test con 0
-    ASSERT_TEST(!std::has_single_bit(int128_t(0)), "has_single_bit de 0 debe ser false");
+    ASSERT_TEST(!nstd::has_single_bit(int128_t(0)), "has_single_bit de 0 debe ser false");
 
     // Test con potencias de 2 positivas
-    ASSERT_TEST(std::has_single_bit(int128_t(1)), "has_single_bit de 1 debe ser true");
-    ASSERT_TEST(std::has_single_bit(int128_t(2)), "has_single_bit de 2 debe ser true");
-    ASSERT_TEST(std::has_single_bit(int128_t(4)), "has_single_bit de 4 debe ser true");
-    ASSERT_TEST(std::has_single_bit(int128_t(8)), "has_single_bit de 8 debe ser true");
+    ASSERT_TEST(nstd::has_single_bit(int128_t(1)), "has_single_bit de 1 debe ser true");
+    ASSERT_TEST(nstd::has_single_bit(int128_t(2)), "has_single_bit de 2 debe ser true");
+    ASSERT_TEST(nstd::has_single_bit(int128_t(4)), "has_single_bit de 4 debe ser true");
+    ASSERT_TEST(nstd::has_single_bit(int128_t(8)), "has_single_bit de 8 debe ser true");
 
     // Test con no potencias de 2
-    ASSERT_TEST(!std::has_single_bit(int128_t(3)), "has_single_bit de 3 debe ser false");
-    ASSERT_TEST(!std::has_single_bit(int128_t(5)), "has_single_bit de 5 debe ser false");
+    ASSERT_TEST(!nstd::has_single_bit(int128_t(3)), "has_single_bit de 3 debe ser false");
+    ASSERT_TEST(!nstd::has_single_bit(int128_t(5)), "has_single_bit de 5 debe ser false");
 
     // Test con valores negativos (no son potencias de 2)
-    ASSERT_TEST(!std::has_single_bit(int128_t(-1)), "has_single_bit de -1 debe ser false");
-    ASSERT_TEST(!std::has_single_bit(int128_t(-2)), "has_single_bit de -2 debe ser false");
+    ASSERT_TEST(!nstd::has_single_bit(int128_t(-1)), "has_single_bit de -1 debe ser false");
+    ASSERT_TEST(!nstd::has_single_bit(int128_t(-2)), "has_single_bit de -2 debe ser false");
 
     TEST_PASS("test_has_single_bit");
     return true;
@@ -177,21 +177,21 @@ bool test_has_single_bit()
 bool test_bit_floor()
 {
     // Test con 0
-    ASSERT_TEST(std::bit_floor(int128_t(0)) == int128_t(0), "bit_floor de 0 debe ser 0");
+    ASSERT_TEST(nstd::bit_floor(int128_t(0)) == int128_t(0), "bit_floor de 0 debe ser 0");
 
     // Test con potencias de 2
-    ASSERT_TEST(std::bit_floor(int128_t(1)) == int128_t(1), "bit_floor de 1 debe ser 1");
-    ASSERT_TEST(std::bit_floor(int128_t(2)) == int128_t(2), "bit_floor de 2 debe ser 2");
-    ASSERT_TEST(std::bit_floor(int128_t(4)) == int128_t(4), "bit_floor de 4 debe ser 4");
+    ASSERT_TEST(nstd::bit_floor(int128_t(1)) == int128_t(1), "bit_floor de 1 debe ser 1");
+    ASSERT_TEST(nstd::bit_floor(int128_t(2)) == int128_t(2), "bit_floor de 2 debe ser 2");
+    ASSERT_TEST(nstd::bit_floor(int128_t(4)) == int128_t(4), "bit_floor de 4 debe ser 4");
 
     // Test con no potencias de 2
-    ASSERT_TEST(std::bit_floor(int128_t(3)) == int128_t(2), "bit_floor de 3 debe ser 2");
-    ASSERT_TEST(std::bit_floor(int128_t(5)) == int128_t(4), "bit_floor de 5 debe ser 4");
-    ASSERT_TEST(std::bit_floor(int128_t(7)) == int128_t(4), "bit_floor de 7 debe ser 4");
+    ASSERT_TEST(nstd::bit_floor(int128_t(3)) == int128_t(2), "bit_floor de 3 debe ser 2");
+    ASSERT_TEST(nstd::bit_floor(int128_t(5)) == int128_t(4), "bit_floor de 5 debe ser 4");
+    ASSERT_TEST(nstd::bit_floor(int128_t(7)) == int128_t(4), "bit_floor de 7 debe ser 4");
 
     // Test con valores negativos (no definido)
-    ASSERT_TEST(std::bit_floor(int128_t(-1)) == int128_t(0), "bit_floor de -1 debe ser 0");
-    ASSERT_TEST(std::bit_floor(int128_t(-100)) == int128_t(0), "bit_floor de -100 debe ser 0");
+    ASSERT_TEST(nstd::bit_floor(int128_t(-1)) == int128_t(0), "bit_floor de -1 debe ser 0");
+    ASSERT_TEST(nstd::bit_floor(int128_t(-100)) == int128_t(0), "bit_floor de -100 debe ser 0");
 
     TEST_PASS("test_bit_floor");
     return true;
@@ -200,20 +200,20 @@ bool test_bit_floor()
 bool test_bit_ceil()
 {
     // Test con 0 y 1
-    ASSERT_TEST(std::bit_ceil(int128_t(0)) == int128_t(1), "bit_ceil de 0 debe ser 1");
-    ASSERT_TEST(std::bit_ceil(int128_t(1)) == int128_t(1), "bit_ceil de 1 debe ser 1");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(0)) == int128_t(1), "bit_ceil de 0 debe ser 1");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(1)) == int128_t(1), "bit_ceil de 1 debe ser 1");
 
     // Test con potencias de 2
-    ASSERT_TEST(std::bit_ceil(int128_t(2)) == int128_t(2), "bit_ceil de 2 debe ser 2");
-    ASSERT_TEST(std::bit_ceil(int128_t(4)) == int128_t(4), "bit_ceil de 4 debe ser 4");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(2)) == int128_t(2), "bit_ceil de 2 debe ser 2");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(4)) == int128_t(4), "bit_ceil de 4 debe ser 4");
 
     // Test con no potencias de 2
-    ASSERT_TEST(std::bit_ceil(int128_t(3)) == int128_t(4), "bit_ceil de 3 debe ser 4");
-    ASSERT_TEST(std::bit_ceil(int128_t(5)) == int128_t(8), "bit_ceil de 5 debe ser 8");
-    ASSERT_TEST(std::bit_ceil(int128_t(9)) == int128_t(16), "bit_ceil de 9 debe ser 16");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(3)) == int128_t(4), "bit_ceil de 3 debe ser 4");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(5)) == int128_t(8), "bit_ceil de 5 debe ser 8");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(9)) == int128_t(16), "bit_ceil de 9 debe ser 16");
 
     // Test con valores negativos (no definido)
-    ASSERT_TEST(std::bit_ceil(int128_t(-1)) == int128_t(0), "bit_ceil de -1 debe ser 0");
+    ASSERT_TEST(nstd::bit_ceil(int128_t(-1)) == int128_t(0), "bit_ceil de -1 debe ser 0");
 
     TEST_PASS("test_bit_ceil");
     return true;

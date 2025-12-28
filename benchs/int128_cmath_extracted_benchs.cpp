@@ -10,6 +10,8 @@
 #include <numeric>
 #include <vector>
 
+using namespace nstd;
+
 // CPU cycle counter (rdtsc)
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
 #include <intrin.h>
@@ -120,31 +122,31 @@ void benchmark_gcd()
 {
     // Small positive values
     results.push_back(benchmark("gcd(12, 18) - small positive", "GCD",
-                                []() { sink = std::gcd(int128_t(12), int128_t(18)); }));
+                                []() { sink = nstd::gcd(int128_t(12), int128_t(18)); }));
 
     // Large positive values
     results.push_back(benchmark("gcd(1000000000, 500000000) - large positive", "GCD", []() {
-        sink = std::gcd(int128_t(1000000000LL), int128_t(500000000LL));
+        sink = nstd::gcd(int128_t(1000000000LL), int128_t(500000000LL));
     }));
 
     // Negative inputs (various combinations)
     results.push_back(benchmark("gcd(-48, 18) - negative first", "GCD",
-                                []() { sink = std::gcd(int128_t(-48), int128_t(18)); }));
+                                []() { sink = nstd::gcd(int128_t(-48), int128_t(18)); }));
 
     results.push_back(benchmark("gcd(48, -18) - negative second", "GCD",
-                                []() { sink = std::gcd(int128_t(48), int128_t(-18)); }));
+                                []() { sink = nstd::gcd(int128_t(48), int128_t(-18)); }));
 
     results.push_back(benchmark("gcd(-48, -18) - both negative", "GCD",
-                                []() { sink = std::gcd(int128_t(-48), int128_t(-18)); }));
+                                []() { sink = nstd::gcd(int128_t(-48), int128_t(-18)); }));
 
     // Co-primes (worst case for GCD)
     results.push_back(benchmark("gcd(999983, 1000003) - co-primes", "GCD",
-                                []() { sink = std::gcd(int128_t(999983), int128_t(1000003)); }));
+                                []() { sink = nstd::gcd(int128_t(999983), int128_t(1000003)); }));
 
     // Baseline: int64_t for comparison
     int64_t sink64 = 0;
     results.push_back(benchmark("gcd(12, 18) - int64_t baseline", "GCD",
-                                [&sink64]() { sink64 = std::gcd(int64_t(12), int64_t(18)); }));
+                                [&sink64]() { sink64 = nstd::gcd(int64_t(12), int64_t(18)); }));
 }
 
 // ============================================================================
@@ -154,23 +156,23 @@ void benchmark_lcm()
 {
     // Small values
     results.push_back(benchmark("lcm(12, 18) - small positive", "LCM",
-                                []() { sink = std::lcm(int128_t(12), int128_t(18)); }));
+                                []() { sink = nstd::lcm(int128_t(12), int128_t(18)); }));
 
     // Large values
     results.push_back(benchmark("lcm(1000, 2000) - medium", "LCM",
-                                []() { sink = std::lcm(int128_t(1000), int128_t(2000)); }));
+                                []() { sink = nstd::lcm(int128_t(1000), int128_t(2000)); }));
 
     // Negative inputs
     results.push_back(benchmark("lcm(-12, 18) - negative first", "LCM",
-                                []() { sink = std::lcm(int128_t(-12), int128_t(18)); }));
+                                []() { sink = nstd::lcm(int128_t(-12), int128_t(18)); }));
 
     results.push_back(benchmark("lcm(-12, -18) - both negative", "LCM",
-                                []() { sink = std::lcm(int128_t(-12), int128_t(-18)); }));
+                                []() { sink = nstd::lcm(int128_t(-12), int128_t(-18)); }));
 
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("lcm(12, 18) - int64_t baseline", "LCM",
-                                [&sink64]() { sink64 = std::lcm(int64_t(12), int64_t(18)); }));
+                                [&sink64]() { sink64 = nstd::lcm(int64_t(12), int64_t(18)); }));
 }
 
 // ============================================================================
@@ -180,23 +182,23 @@ void benchmark_abs()
 {
     // Positive value (no-op)
     results.push_back(
-        benchmark("abs(42) - positive", "ABS", []() { sink = std::abs(int128_t(42)); }));
+        benchmark("abs(42) - positive", "ABS", []() { sink = nstd::abs(int128_t(42)); }));
 
     // Negative value (requires negation)
     results.push_back(
-        benchmark("abs(-42) - negative", "ABS", []() { sink = std::abs(int128_t(-42)); }));
+        benchmark("abs(-42) - negative", "ABS", []() { sink = nstd::abs(int128_t(-42)); }));
 
     // Large negative
     results.push_back(benchmark("abs(-1000000000) - large negative", "ABS",
-                                []() { sink = std::abs(int128_t(-1000000000LL)); }));
+                                []() { sink = nstd::abs(int128_t(-1000000000LL)); }));
 
     // Zero
-    results.push_back(benchmark("abs(0) - zero", "ABS", []() { sink = std::abs(int128_t(0)); }));
+    results.push_back(benchmark("abs(0) - zero", "ABS", []() { sink = nstd::abs(int128_t(0)); }));
 
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("abs(-42) - int64_t baseline", "ABS",
-                                [&sink64]() { sink64 = std::abs(int64_t(-42)); }));
+                                [&sink64]() { sink64 = nstd::abs(int64_t(-42)); }));
 }
 
 // ============================================================================
@@ -206,28 +208,28 @@ void benchmark_pow()
 {
     // Small exponents
     results.push_back(benchmark("pow(2, 3) - small positive base", "POW",
-                                []() { sink = std::pow(int128_t(2), int128_t(3)); }));
+                                []() { sink = nstd::pow(int128_t(2), int128_t(3)); }));
 
     results.push_back(benchmark("pow(2, 10) - medium exponent", "POW",
-                                []() { sink = std::pow(int128_t(2), int128_t(10)); }));
+                                []() { sink = nstd::pow(int128_t(2), int128_t(10)); }));
 
     // Negative base (odd exponent)
     results.push_back(benchmark("pow(-2, 3) - negative base, odd exp", "POW",
-                                []() { sink = std::pow(int128_t(-2), int128_t(3)); }));
+                                []() { sink = nstd::pow(int128_t(-2), int128_t(3)); }));
 
     // Negative base (even exponent)
     results.push_back(benchmark("pow(-2, 4) - negative base, even exp", "POW",
-                                []() { sink = std::pow(int128_t(-2), int128_t(4)); }));
+                                []() { sink = nstd::pow(int128_t(-2), int128_t(4)); }));
 
     // Fast paths
     results.push_back(benchmark("pow(n, 0) - exponent zero", "POW",
-                                []() { sink = std::pow(int128_t(123), int128_t(0)); }));
+                                []() { sink = nstd::pow(int128_t(123), int128_t(0)); }));
 
     results.push_back(benchmark("pow(n, 1) - exponent one", "POW",
-                                []() { sink = std::pow(int128_t(123), int128_t(1)); }));
+                                []() { sink = nstd::pow(int128_t(123), int128_t(1)); }));
 
     results.push_back(benchmark("pow(1, 100) - base one", "POW",
-                                []() { sink = std::pow(int128_t(1), int128_t(100)); }));
+                                []() { sink = nstd::pow(int128_t(1), int128_t(100)); }));
 }
 
 // ============================================================================
@@ -237,30 +239,31 @@ void benchmark_sqrt()
 {
     // Perfect squares
     results.push_back(
-        benchmark("sqrt(4) - small perfect", "SQRT", []() { sink = std::sqrt(int128_t(4)); }));
+        benchmark("sqrt(4) - small perfect", "SQRT", []() { sink = nstd::sqrt(int128_t(4)); }));
 
-    results.push_back(
-        benchmark("sqrt(100) - medium perfect", "SQRT", []() { sink = std::sqrt(int128_t(100)); }));
+    results.push_back(benchmark("sqrt(100) - medium perfect", "SQRT",
+                                []() { sink = nstd::sqrt(int128_t(100)); }));
 
     results.push_back(benchmark("sqrt(10000) - large perfect", "SQRT",
-                                []() { sink = std::sqrt(int128_t(10000)); }));
+                                []() { sink = nstd::sqrt(int128_t(10000)); }));
 
     // Non-perfect squares
     results.push_back(
-        benchmark("sqrt(99) - non-perfect", "SQRT", []() { sink = std::sqrt(int128_t(99)); }));
+        benchmark("sqrt(99) - non-perfect", "SQRT", []() { sink = nstd::sqrt(int128_t(99)); }));
 
     results.push_back(benchmark("sqrt(1000000) - large non-perfect", "SQRT",
-                                []() { sink = std::sqrt(int128_t(1000000)); }));
+                                []() { sink = nstd::sqrt(int128_t(1000000)); }));
 
     // Edge cases
-    results.push_back(benchmark("sqrt(0) - zero", "SQRT", []() { sink = std::sqrt(int128_t(0)); }));
+    results.push_back(
+        benchmark("sqrt(0) - zero", "SQRT", []() { sink = nstd::sqrt(int128_t(0)); }));
 
-    results.push_back(benchmark("sqrt(1) - one", "SQRT", []() { sink = std::sqrt(int128_t(1)); }));
+    results.push_back(benchmark("sqrt(1) - one", "SQRT", []() { sink = nstd::sqrt(int128_t(1)); }));
 
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("sqrt(100) - int64_t baseline", "SQRT",
-                                [&sink64]() { sink64 = std::sqrt(int64_t(100)); }));
+                                [&sink64]() { sink64 = nstd::sqrt(int64_t(100)); }));
 }
 
 // ============================================================================
@@ -294,32 +297,32 @@ void benchmark_min_max()
 {
     // Positive values
     results.push_back(benchmark("min(3, 5) - small positive", "MIN/MAX",
-                                []() { sink = std::min(int128_t(3), int128_t(5)); }));
+                                []() { sink = nstd::min(int128_t(3), int128_t(5)); }));
 
     results.push_back(benchmark("max(3, 5) - small positive", "MIN/MAX",
-                                []() { sink = std::max(int128_t(3), int128_t(5)); }));
+                                []() { sink = nstd::max(int128_t(3), int128_t(5)); }));
 
     // Negative values
     results.push_back(benchmark("min(-3, 5) - mixed signs", "MIN/MAX",
-                                []() { sink = std::min(int128_t(-3), int128_t(5)); }));
+                                []() { sink = nstd::min(int128_t(-3), int128_t(5)); }));
 
     results.push_back(benchmark("max(-3, 5) - mixed signs", "MIN/MAX",
-                                []() { sink = std::max(int128_t(-3), int128_t(5)); }));
+                                []() { sink = nstd::max(int128_t(-3), int128_t(5)); }));
 
     results.push_back(benchmark("min(-5, -3) - both negative", "MIN/MAX",
-                                []() { sink = std::min(int128_t(-5), int128_t(-3)); }));
+                                []() { sink = nstd::min(int128_t(-5), int128_t(-3)); }));
 
     results.push_back(benchmark("max(-5, -3) - both negative", "MIN/MAX",
-                                []() { sink = std::max(int128_t(-5), int128_t(-3)); }));
+                                []() { sink = nstd::max(int128_t(-5), int128_t(-3)); }));
 
     // Equal values
     results.push_back(benchmark("min(5, 5) - equal", "MIN/MAX",
-                                []() { sink = std::min(int128_t(5), int128_t(5)); }));
+                                []() { sink = nstd::min(int128_t(5), int128_t(5)); }));
 
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("min(3, 5) - int64_t baseline", "MIN/MAX",
-                                [&sink64]() { sink64 = std::min(int64_t(3), int64_t(5)); }));
+                                [&sink64]() { sink64 = nstd::min(int64_t(3), int64_t(5)); }));
 }
 
 // ============================================================================
@@ -364,31 +367,31 @@ void benchmark_midpoint()
 {
     // Positive values
     results.push_back(benchmark("midpoint(0, 10) - small positive", "MIDPOINT",
-                                []() { sink = std::midpoint(int128_t(0), int128_t(10)); }));
+                                []() { sink = nstd::midpoint(int128_t(0), int128_t(10)); }));
 
     results.push_back(benchmark("midpoint(100, 200) - medium positive", "MIDPOINT",
-                                []() { sink = std::midpoint(int128_t(100), int128_t(200)); }));
+                                []() { sink = nstd::midpoint(int128_t(100), int128_t(200)); }));
 
     // Negative values
     results.push_back(benchmark("midpoint(-10, 10) - across zero", "MIDPOINT",
-                                []() { sink = std::midpoint(int128_t(-10), int128_t(10)); }));
+                                []() { sink = nstd::midpoint(int128_t(-10), int128_t(10)); }));
 
     results.push_back(benchmark("midpoint(-20, -10) - both negative", "MIDPOINT",
-                                []() { sink = std::midpoint(int128_t(-20), int128_t(-10)); }));
+                                []() { sink = nstd::midpoint(int128_t(-20), int128_t(-10)); }));
 
     // Large values (overflow test)
     results.push_back(benchmark("midpoint(1e9, 2e9) - large values", "MIDPOINT", []() {
-        sink = std::midpoint(int128_t(1000000000LL), int128_t(2000000000LL));
+        sink = nstd::midpoint(int128_t(1000000000LL), int128_t(2000000000LL));
     }));
 
     // Same values
     results.push_back(benchmark("midpoint(5, 5) - equal values", "MIDPOINT",
-                                []() { sink = std::midpoint(int128_t(5), int128_t(5)); }));
+                                []() { sink = nstd::midpoint(int128_t(5), int128_t(5)); }));
 
     // Baseline: int64_t
     int64_t sink64 = 0;
     results.push_back(benchmark("midpoint(0, 10) - int64_t baseline", "MIDPOINT",
-                                [&sink64]() { sink64 = std::midpoint(int64_t(0), int64_t(10)); }));
+                                [&sink64]() { sink64 = nstd::midpoint(int64_t(0), int64_t(10)); }));
 }
 
 // ============================================================================
@@ -399,25 +402,25 @@ void benchmark_combined()
     // Typical workflow: gcd + lcm
     results.push_back(benchmark("gcd + lcm combined", "COMBINED", []() {
         int128_t a(48), b(18);
-        sink = std::gcd(a, b) + std::lcm(a, b);
+        sink = nstd::gcd(a, b) + nstd::lcm(a, b);
     }));
 
     // Absolute difference
     results.push_back(benchmark("abs(a - b) - absolute difference", "COMBINED", []() {
         int128_t a(100), b(42);
-        sink = std::abs(a - b);
+        sink = nstd::abs(a - b);
     }));
 
     // Sign-aware comparison
     results.push_back(benchmark("sign(a) * abs(a) - reconstruction", "COMBINED", []() {
         int128_t a(-42);
-        sink = int128_t(std::sign(a)) * std::abs(a);
+        sink = int128_t(std::sign(a)) * nstd::abs(a);
     }));
 
     // Clamped midpoint
     results.push_back(benchmark("clamp(midpoint(a,b), lo, hi)", "COMBINED", []() {
         int128_t a(0), b(100);
-        sink = std::clamp(std::midpoint(a, b), int128_t(10), int128_t(90));
+        sink = std::clamp(nstd::midpoint(a, b), int128_t(10), int128_t(90));
     }));
 }
 

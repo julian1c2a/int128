@@ -329,7 +329,7 @@ uint128_t gcd_range(InputIt first, InputIt last)
 
     uint128_t result = *first++;
     while (first != last) {
-        result = std::gcd(result, *first++);
+        result = nstd::gcd(result, *first++);
         if (result == uint128_t(1))
             break; // Optimizacion: si GCD es 1, no puede mejorar
     }
@@ -361,7 +361,7 @@ uint128_t lcm_range(InputIt first, InputIt last)
 
     uint128_t result = *first++;
     while (first != last && result != uint128_t(0)) {
-        result = std::lcm(result, *first++);
+        result = nstd::lcm(result, *first++);
     }
     return result;
 }

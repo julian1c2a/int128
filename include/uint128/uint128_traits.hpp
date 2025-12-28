@@ -27,163 +27,129 @@
 #ifndef UINT128_TRAITS_HPP
 #define UINT128_TRAITS_HPP
 
-// ⚠️ IMPORTANT: Trait specializations are defined in uint128_traits_specializations.hpp
-// That header MUST be included before uint128_t.hpp to ensure traits are available
-// when <type_traits> is first included.
-#include "uint128_traits_specializations.hpp"
-
 #include "uint128_t.hpp"
 #include <functional>
 #include <type_traits>
 
-namespace std
+namespace nstd
 {
 
 // ===============================================================================
-// TYPE TRAITS FUNDAMENTALES
-// ===============================================================================
-// NOTE: The fundamental trait specializations (is_integral, is_arithmetic, etc.)
-// are now defined in uint128_traits_specializations.hpp
-// This header contains additional specializations that don't require forward declaration.
-
-#if !UINT128_USING_LIBCPP
-
-/**
- * @brief nstd::uint128_t es un tipo trivial
- *
- * Combina todas las propiedades triviales: constructible, copiable,
- * asignable y destructible trivialmente.
- */
-template <> struct is_trivial<nstd::uint128_t> : false_type {
-};
-
-/**
- * @brief nstd::uint128_t es un tipo POD (Plain Old Data)
- *
- * Combina ser trivial y tener layout estándar.
- */
-template <> struct is_pod<nstd::uint128_t> : true_type {
-};
-
-#endif // !UINT128_USING_LIBCPP
-
-// ===============================================================================
-// TRANSFORMACIÓN DE TIPOS
+// DECLARACIONES BASE DE TEMPLATES (equivalentes a std)
 // ===============================================================================
 
-#if !UINT128_USING_LIBCPP
-
-/**
- * @brief Especialización para make_unsigned
- *
- * Para uint128_t, make_unsigned devuelve el mismo tipo ya que
- * uint128_t ya es sin signo.
- */
-template <> struct make_unsigned<nstd::uint128_t> {
-    using type = nstd::uint128_t;
-};
-
-/**
- * @brief Especialización para make_signed
- *
- * NOTA: Esta especialización está definida en uint128_traits_specializations.hpp
- * que se incluye desde uint128_t.hpp. No la definimos aquí para evitar conflictos.
- */
-
-#endif // !UINT128_USING_LIBCPP
+template <typename T> struct is_integral;
+template <typename T> struct is_arithmetic;
+template <typename T> struct is_unsigned;
+template <typename T> struct is_signed;
+template <typename T1, typename T2> struct common_type;
+template <typename T> struct hash;
+template <typename T> struct make_signed;
+template <typename T> struct make_unsigned;
 
 // ===============================================================================
-// TIPOS COMUNES (COMMON TYPES)
+// TYPE TRAITS - ESPECIALIZACIONES PARA UINT128_T/INT128_T
 // ===============================================================================
+// NOTA: Estas son especializaciones en nstd que siguen el mismo patrón que std.
+// Cuando C++ adopte oficialmente int128_t/uint128_t, estas especializaciones
+// podrán moverse directamente a namespace std.
 
-/**
- * @brief Especializaciones para common_type con tipos integrales estándar
- *
- * Estas especializaciones permiten que uint128_t se use correctamente
- * en templates que dependen de std::common_type.
- */
-
-template <> struct common_type<nstd::uint128_t, uint64_t> {
-    using type = nstd::uint128_t;
+template <> struct is_integral<uint128_t> : std::true_type {
+};
+template <> struct is_integral<int128_t> : std::true_type {
 };
 
-template <> struct common_type<uint64_t, nstd::uint128_t> {
-    using type = nstd::uint128_t;
+template <> struct is_arithmetic<uint128_t> : std::true_type {
+};
+template <> struct is_arithmetic<int128_t> : std::true_type {
 };
 
-template <> struct common_type<nstd::uint128_t, uint32_t> {
-    using type = nstd::uint128_t;
+template <> struct is_unsigned<uint128_t> : std::true_type {
+};
+template <> struct is_unsigned<int128_t> : std::false_type {
 };
 
-template <> struct common_type<uint32_t, nstd::uint128_t> {
-    using type = nstd::uint128_t;
+template <> struct is_signed<uint128_t> : std::false_type {
 };
-
-template <> struct common_type<nstd::uint128_t, uint16_t> {
-    using type = nstd::uint128_t;
+template <> struct is_signed<int128_t> : std::true_type {
 };
-
-template <> struct common_type<uint16_t, nstd::uint128_t> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<nstd::uint128_t, uint8_t> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<uint8_t, nstd::uint128_t> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<nstd::uint128_t, int> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<int, nstd::uint128_t> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<nstd::uint128_t, long> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<long, nstd::uint128_t> {
-    using type = nstd::uint128_t;
-};
-
-template <> struct common_type<nstd::uint128_t, nstd::uint128_t> {
-    using type = nstd::uint128_t;
-};
-
-// NOTA: Las especializaciones common_type entre uint128_t e int128_t
-// están definidas en int128_traits.hpp para evitar problemas de orden de inclusión
 
 // ===============================================================================
-// SOPORTE PARA HASH
+// COMMON TYPE - ESPECIALIZACIONES
+// ===============================================================================
+
+// uint128_t con tipos estándar
+template <> struct common_type<uint128_t, uint64_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint64_t, uint128_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint128_t, uint32_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint32_t, uint128_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint128_t, uint16_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint16_t, uint128_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint128_t, uint8_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint8_t, uint128_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint128_t, int> {
+    using type = uint128_t;
+};
+template <> struct common_type<int, uint128_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint128_t, long> {
+    using type = uint128_t;
+};
+template <> struct common_type<long, uint128_t> {
+    using type = uint128_t;
+};
+template <> struct common_type<uint128_t, uint128_t> {
+    using type = uint128_t;
+};
+
+// ===============================================================================
+// HASH - ESPECIALIZACIÓN
 // ===============================================================================
 
 /**
- * @brief Especialización de std::hash para uint128_t
- *
- * Proporciona una función hash que combina los valores high y low
- * del uint128_t para su uso en containers no ordenados como
- * std::unordered_set y std::unordered_map.
+ * @brief Especialización de nstd::hash para uint128_t
  */
-template <> struct hash<nstd::uint128_t> {
-    /**
-     * @brief Calcula el valor hash de un uint128_t
-     * @param value Valor a hashear
-     * @return Valor hash resultante
-     *
-     * La implementación combina los hashes de las partes high y low
-     * usando XOR y desplazamiento para reducir colisiones.
-     */
-    size_t operator()(const nstd::uint128_t& value) const noexcept
+template <> struct hash<uint128_t> {
+    size_t operator()(const uint128_t& value) const noexcept
     {
-        hash<uint64_t> hasher;
+        std::hash<uint64_t> hasher;
         return hasher(value.high()) ^ (hasher(value.low()) << 1);
     }
 };
 
-} // namespace std
+// ===============================================================================
+// MAKE_SIGNED / MAKE_UNSIGNED - ESPECIALIZACIONES
+// ===============================================================================
+
+template <> struct make_signed<uint128_t> {
+    using type = int128_t;
+};
+
+template <> struct make_unsigned<uint128_t> {
+    using type = uint128_t;
+};
+
+// Helpers equivalentes a std::make_signed_t y std::make_unsigned_t
+template <typename T> using make_signed_t = typename make_signed<T>::type;
+
+template <typename T> using make_unsigned_t = typename make_unsigned<T>::type;
+
+} // namespace nstd
 #endif // UINT128_TRAITS_HPP

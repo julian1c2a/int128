@@ -25,7 +25,6 @@
 
 using namespace nstd;
 
-
 // Colores para output
 #define GREEN "\033[32m"
 #define RED "\033[31m"
@@ -250,10 +249,10 @@ void test_mixed_comparisons()
 
 void test_common_type()
 {
-    TEST("std::common_type entre uint128_t e int128_t");
+    TEST("nstd::common_type entre uint128_t e int128_t");
 
     // Verificar que common_type está definido
-    using CommonType = std::common_type_t<uint128_t, int128_t>;
+    using CommonType = typename nstd::common_type<uint128_t, int128_t>::type;
 
     // common_type debería ser int128_t (tipo con signo domina)
     // O podría ser uint128_t dependiendo de la implementación
@@ -435,14 +434,14 @@ void test_math_functions_mixed()
     int128_t i2(48);
 
     // GCD con conversión - usando funciones personalizadas
-    auto gcd1 = std::gcd(static_cast<int128_t>(u1), i2);
-    auto gcd2 = std::gcd(i1, i2);
+    auto gcd1 = nstd::gcd(static_cast<int128_t>(u1), i2);
+    auto gcd2 = nstd::gcd(i1, i2);
     ASSERT(gcd1 == gcd2);
     ASSERT(gcd1 == int128_t(12));
 
     // LCM con conversión - usando funciones personalizadas
-    auto lcm1 = std::lcm(static_cast<int128_t>(u1), i2);
-    auto lcm2 = std::lcm(i1, i2);
+    auto lcm1 = nstd::lcm(static_cast<int128_t>(u1), i2);
+    auto lcm2 = nstd::lcm(i1, i2);
     ASSERT(lcm1 == lcm2);
     ASSERT(lcm1 == int128_t(240));
 
@@ -462,11 +461,11 @@ void test_type_traits_conversions()
     // Solo GCC/Clang los reconocen como tipos integrales
 
     // make_unsigned<int128_t> debe dar uint128_t
-    using UnsignedVersion = std::make_unsigned_t<int128_t>;
+    using UnsignedVersion = nstd::make_unsigned_t<int128_t>;
     static_assert(std::is_same_v<UnsignedVersion, uint128_t>, "make_unsigned debe dar uint128_t");
 
     // make_signed<uint128_t> debe dar int128_t
-    using SignedVersion = std::make_signed_t<uint128_t>;
+    using SignedVersion = nstd::make_signed_t<uint128_t>;
     static_assert(std::is_same_v<SignedVersion, int128_t>, "make_signed debe dar int128_t");
 
     // Conversión práctica

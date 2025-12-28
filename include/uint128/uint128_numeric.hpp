@@ -335,77 +335,18 @@ constexpr uint128_t abs_diff(uint128_t a, uint128_t b) noexcept
     return (a >= b) ? (a - b) : (b - a);
 }
 
-// ===============================================================================
-// FUNCIONES DE CONVENIENCIA NO-STD
-// ===============================================================================
-
-namespace uint128_numeric
-{
-
-using uint128_t = nstd::uint128_t;
-using int128_t = nstd::int128_t;
-
 /**
- * @brief Calcula x^n de manera eficiente
+ * @brief Función sign de C++23 - devuelve el signo de un número
  *
- * @param base Base
- * @param exponent Exponente
- * @return base^exponent
- */
-constexpr uint128_t power(uint128_t base, uint128_t exponent) noexcept
-{
-    uint128_t result(1);
-    while (exponent > uint128_t(0)) {
-        if (std::is_odd(exponent)) {
-            result *= base;
-        }
-        base *= base;
-        exponent >>= 1;
-    }
-    return result;
-}
-
-/**
- * @brief Calcula la raíz cuadrada entera (piso)
+ * Para tipos unsigned, devuelve 0 si el valor es 0, 1 en caso contrario.
+ * Esta es una extensión compatible con std::sign de C++23.
  *
- * @param x Valor
- * @return floor(sqrt(x))
+ * @param x Valor a examinar
+ * @return 0 si x == 0, 1 si x > 0
  */
-uint128_t isqrt(uint128_t x) noexcept
+constexpr int sign(uint128_t x) noexcept
 {
-    if (x == uint128_t(0))
-        return uint128_t(0);
-    if (x == uint128_t(1))
-        return uint128_t(1);
-
-    // Usar método de Newton con estimación inicial optimizada
-    uint128_t estimate = uint128_t(1) << ((std::bit_width(x) + 1) / 2);
-
-    for (;;) {
-        uint128_t new_estimate = (estimate + x / estimate) / uint128_t(2);
-        if (new_estimate >= estimate) {
-            return estimate;
-        }
-        estimate = new_estimate;
-    }
-}
-
-/**
- * @brief Factorial de un número (cuidado con overflow)
- *
- * @param n Número
- * @return n! (0 si hay overflow)
- */
-uint128_t factorial(unsigned int n) noexcept
-{
-    if (n > 34)
-        return uint128_t(0); // Overflow para n > 34
-
-    uint128_t result(1);
-    for (unsigned int i = 2; i <= n; ++i) {
-        result *= uint128_t(i);
-    }
-    return result;
+    return (x == uint128_t(0)) ? 0 : 1;
 }
 
 // ===============================================================================
@@ -419,7 +360,7 @@ uint128_t factorial(unsigned int n) noexcept
  * @param b Segundo número
  * @return GCD(a, b)
  */
-uint128_t gcd(uint128_t a, uint128_t b) noexcept
+constexpr uint128_t gcd(uint128_t a, uint128_t b) noexcept
 {
     if (a == 0)
         return b;
@@ -442,7 +383,7 @@ uint128_t gcd(uint128_t a, uint128_t b) noexcept
  * @param b Segundo número
  * @return LCM(a, b) = (a * b) / GCD(a, b)
  */
-uint128_t lcm(uint128_t a, uint128_t b) noexcept
+constexpr uint128_t lcm(uint128_t a, uint128_t b) noexcept
 {
     if (a == 0 || b == 0)
         return uint128_t(0);
@@ -453,7 +394,88 @@ uint128_t lcm(uint128_t a, uint128_t b) noexcept
     return (a / g) * b;
 }
 
-} // namespace uint128_numeric
+// ===============================================================================
+
+constexpr uint128_t power(uint128_t base, uint128_t exponent) noexcept
+{
+    uint128_t result(1);
+    while (exponent > uint128_t(0)) {
+        if (nstd::is_odd(exponent)) {
+            result *= base;
+        }
+        base *= base;
+        exponent >>= 1;
+    }
+    return result;
+}
+
+/**
+ * @brief Alias de power para compatibilidad con std::pow
+ *
+ * @param base Base
+ * @param exponent Exponente
+ * @return base^exponent
+ */
+constexpr uint128_t pow(uint128_t base, uint128_t exponent) noexcept
+{
+    return power(base, exponent);
+}
+
+/**
+ * @brief Calcula la raíz cuadrada entera (piso)
+ *
+ * @param x Valor
+ * @return floor(sqrt(x))
+ */
+uint128_t isqrt(uint128_t x) noexcept
+{
+    if (x == uint128_t(0))
+        return uint128_t(0);
+    if (x == uint128_t(1))
+        return uint128_t(1);
+
+    // Usar método de Newton con estimación inicial optimizada
+    uint128_t estimate = uint128_t(1) << ((nstd::bit_width(x) + 1) / 2);
+
+    for (;;) {
+        uint128_t new_estimate = (estimate + x / estimate) / uint128_t(2);
+        if (new_estimate >= estimate) {
+            return estimate;
+        }
+        estimate = new_estimate;
+    }
+}
+
+/**
+ * @brief Alias de isqrt para compatibilidad con std::sqrt
+ *
+ * Calcula la raíz cuadrada entera (piso).
+ *
+ * @param x Valor
+ * @return floor(sqrt(x))
+ */
+inline uint128_t sqrt(uint128_t x) noexcept
+{
+    return isqrt(x);
+}
+
+/**
+ * @brief Factorial de un número (cuidado con overflow)
+ *
+ * @param n Número
+ * @return n! (0 si hay overflow)
+ */
+uint128_t factorial(unsigned int n) noexcept
+{
+    if (n > 34)
+        return uint128_t(0); // Overflow para n > 34
+
+    uint128_t result(1);
+    for (unsigned int i = 2; i <= n; ++i) {
+        result *= uint128_t(i);
+    }
+    return result;
+}
 
 } // namespace nstd
 #endif // UINT128_NUMERIC_HPP

@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 
+using namespace nstd;
 using namespace std::chrono;
 
 constexpr int ITERATIONS = 100000;
@@ -419,51 +420,51 @@ void benchmark_math_functions()
 
     // GCD
     auto time_uint_gcd = measure_time("uint128_t gcd", [&]() {
-        auto result = std::gcd(uint_a, uint_b);
+        auto result = nstd::gcd(uint_a, uint_b);
         (void)result;
     });
 
     auto time_int_gcd = measure_time("int128_t gcd", [&]() {
-        auto result = std::gcd(int_a, int_b);
+        auto result = nstd::gcd(int_a, int_b);
         (void)result;
     });
 
     // LCM
     auto time_uint_lcm = measure_time("uint128_t lcm", [&]() {
-        auto result = std::lcm(uint_a, uint_b);
+        auto result = nstd::lcm(uint_a, uint_b);
         (void)result;
     });
 
     auto time_int_lcm = measure_time("int128_t lcm", [&]() {
-        auto result = std::lcm(int_a, int_b);
+        auto result = nstd::lcm(int_a, int_b);
         (void)result;
     });
 
     // Pow
     auto time_uint_pow = measure_time("uint128_t pow", [&]() {
-        auto result = std::pow(uint128_t(2), uint128_t(10));
+        auto result = nstd::pow(uint128_t(2), uint128_t(10));
         (void)result;
     });
 
     auto time_int_pow = measure_time("int128_t pow", [&]() {
-        auto result = std::pow(int128_t(2), int128_t(10));
+        auto result = nstd::pow(int128_t(2), int128_t(10));
         (void)result;
     });
 
     // Sqrt
     auto time_uint_sqrt = measure_time("uint128_t sqrt", [&]() {
-        auto result = std::sqrt(uint_a);
+        auto result = nstd::sqrt(uint_a);
         (void)result;
     });
 
     auto time_int_sqrt = measure_time("int128_t sqrt", [&]() {
-        auto result = std::sqrt(int_a);
+        auto result = nstd::sqrt(int_a);
         (void)result;
     });
 
     // Abs (int128_t específico)
     auto time_int_abs = measure_time("int128_t abs", [&]() {
-        auto result = std::abs(int_neg);
+        auto result = nstd::abs(int_neg);
         (void)result;
     });
 

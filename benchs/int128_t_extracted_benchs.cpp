@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 
+using namespace nstd;
 // CPU cycles measurement
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 #ifdef _MSC_VER

@@ -30,16 +30,23 @@
 #include "int128_t.hpp"
 #include <limits>
 
-namespace std
+namespace nstd
 {
 
+// Declaración base del template numeric_limits (equivalente a std::numeric_limits)
+template <typename T> class numeric_limits;
+
 /**
- * @brief Especialización de std::numeric_limits para int128_t
+ * @brief Especialización de nstd::numeric_limits para int128_t
  *
  * Proporciona información sobre las propiedades numéricas del tipo int128_t,
  * incluyendo rangos de valores, precisión y características especiales.
+ *
+ * NOTA: Esta especialización sigue el mismo patrón que std::numeric_limits.
+ * Cuando C++ adopte oficialmente int128_t, esta especialización podrá
+ * moverse directamente a namespace std.
  */
-template <> class numeric_limits<nstd::int128_t>
+template <> class numeric_limits<int128_t>
 {
   public:
     static constexpr bool is_specialized = true;
@@ -66,8 +73,8 @@ template <> class numeric_limits<nstd::int128_t>
     static constexpr int max_exponent = 0;   // No aplicable para enteros
     static constexpr int max_exponent10 = 0; // No aplicable para enteros
 
-    static constexpr float_denorm_style has_denorm = denorm_absent;
-    static constexpr float_round_style round_style = round_toward_zero;
+    static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
+    static constexpr std::float_round_style round_style = std::round_toward_zero;
 
     // ===== MÉTODOS DE VALORES ESPECIALES =====
 
@@ -75,16 +82,16 @@ template <> class numeric_limits<nstd::int128_t>
      * @brief Valor mínimo representable (valor más negativo)
      * @return -2^127
      */
-    static constexpr nstd::int128_t min() noexcept
+    static constexpr int128_t min() noexcept
     {
-        return nstd::int128_t(0x8000000000000000ULL, 0x0000000000000000ULL); // -2^127
+        return int128_t(0x8000000000000000ULL, 0x0000000000000000ULL); // -2^127
     }
 
     /**
      * @brief Valor más bajo representable (igual a min para enteros con signo)
      * @return -2^127
      */
-    static constexpr nstd::int128_t lowest() noexcept
+    static constexpr int128_t lowest() noexcept
     {
         return min();
     }
@@ -93,65 +100,65 @@ template <> class numeric_limits<nstd::int128_t>
      * @brief Valor máximo representable
      * @return 2^127 - 1
      */
-    static constexpr nstd::int128_t max() noexcept
+    static constexpr int128_t max() noexcept
     {
-        return nstd::int128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL); // 2^127 - 1
+        return int128_t(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL); // 2^127 - 1
     }
 
     /**
      * @brief Error de precisión de máquina (no aplicable para enteros)
-     * @return nstd::int128_t(0)
+     * @return int128_t(0)
      */
-    static constexpr nstd::int128_t epsilon() noexcept
+    static constexpr int128_t epsilon() noexcept
     {
-        return nstd::int128_t(0, 0);
+        return int128_t(0, 0);
     }
 
     /**
      * @brief Error de redondeo (no aplicable para enteros)
-     * @return nstd::int128_t(0)
+     * @return int128_t(0)
      */
-    static constexpr nstd::int128_t round_error() noexcept
+    static constexpr int128_t round_error() noexcept
     {
-        return nstd::int128_t(0, 0);
+        return int128_t(0, 0);
     }
 
     /**
      * @brief Representación de infinito (no aplicable para enteros)
-     * @return nstd::int128_t(0)
+     * @return int128_t(0)
      */
-    static constexpr nstd::int128_t infinity() noexcept
+    static constexpr int128_t infinity() noexcept
     {
-        return nstd::int128_t(0, 0);
+        return int128_t(0, 0);
     }
 
     /**
      * @brief Representación de NaN silencioso (no aplicable para enteros)
-     * @return nstd::int128_t(0)
+     * @return int128_t(0)
      */
-    static constexpr nstd::int128_t quiet_NaN() noexcept
+    static constexpr int128_t quiet_NaN() noexcept
     {
-        return nstd::int128_t(0, 0);
+        return int128_t(0, 0);
     }
 
     /**
      * @brief Representación de NaN señalizante (no aplicable para enteros)
-     * @return nstd::int128_t(0)
+     * @return int128_t(0)
      */
-    static constexpr nstd::int128_t signaling_NaN() noexcept
+    static constexpr int128_t signaling_NaN() noexcept
     {
-        return nstd::int128_t(0, 0);
+        return int128_t(0, 0);
     }
 
     /**
      * @brief Valor desnormalizado mínimo (igual a min para enteros)
      * @return -2^127
      */
-    static constexpr nstd::int128_t denorm_min() noexcept
+    static constexpr int128_t denorm_min() noexcept
     {
         return min();
     }
 };
 
-} // namespace std
+} // namespace nstd
 #endif // INT128_LIMITS_HPP

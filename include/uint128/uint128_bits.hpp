@@ -381,7 +381,7 @@ constexpr int find_first_set(const uint128_t& value) noexcept
     if (value == uint128_t(0)) {
         return 0;
     }
-    return std::countr_zero(value) + 1;
+    return nstd::countr_zero(value) + 1;
 }
 
 /**
@@ -392,7 +392,7 @@ constexpr int find_last_set(const uint128_t& value) noexcept
     if (value == uint128_t(0)) {
         return 0;
     }
-    return std::bit_width(value);
+    return nstd::bit_width(value);
 }
 
 } // namespace uint128_bits

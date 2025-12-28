@@ -76,7 +76,7 @@ void benchmark_popcount()
     int128_t value = random_int128();
 
     BENCHMARK("popcount", ITERATIONS, {
-        volatile int result = std::popcount(value);
+        volatile int result = nstd::popcount(value);
         (void)result;
     });
 }
@@ -89,7 +89,7 @@ void benchmark_countl_zero()
     int128_t value = random_int128();
 
     BENCHMARK("countl_zero", ITERATIONS, {
-        volatile int result = std::countl_zero(value);
+        volatile int result = nstd::countl_zero(value);
         (void)result;
     });
 }
@@ -102,7 +102,7 @@ void benchmark_countr_zero()
     int128_t value = random_int128();
 
     BENCHMARK("countr_zero", ITERATIONS, {
-        volatile int result = std::countr_zero(value);
+        volatile int result = nstd::countr_zero(value);
         (void)result;
     });
 }
@@ -115,7 +115,7 @@ void benchmark_countl_one()
     int128_t value = random_int128();
 
     BENCHMARK("countl_one", ITERATIONS, {
-        volatile int result = std::countl_one(value);
+        volatile int result = nstd::countl_one(value);
         (void)result;
     });
 }
@@ -128,7 +128,7 @@ void benchmark_countr_one()
     int128_t value = random_int128();
 
     BENCHMARK("countr_one", ITERATIONS, {
-        volatile int result = std::countr_one(value);
+        volatile int result = nstd::countr_one(value);
         (void)result;
     });
 }
@@ -141,7 +141,7 @@ void benchmark_bit_width()
     int128_t value = random_int128();
 
     BENCHMARK("bit_width", ITERATIONS, {
-        volatile int result = std::bit_width(value);
+        volatile int result = nstd::bit_width(value);
         (void)result;
     });
 }
@@ -154,7 +154,7 @@ void benchmark_has_single_bit()
     int128_t value = random_int128();
 
     BENCHMARK("has_single_bit", ITERATIONS, {
-        volatile bool result = std::has_single_bit(value);
+        volatile bool result = nstd::has_single_bit(value);
         (void)result;
     });
 }
@@ -167,7 +167,7 @@ void benchmark_bit_floor()
     int128_t value = random_int128();
 
     BENCHMARK("bit_floor", ITERATIONS, {
-        volatile int128_t result = std::bit_floor(value);
+        volatile int128_t result = nstd::bit_floor(value);
         (void)result;
     });
 }
@@ -180,7 +180,7 @@ void benchmark_bit_ceil()
     int128_t value = random_int128();
 
     BENCHMARK("bit_ceil", ITERATIONS, {
-        volatile int128_t result = std::bit_ceil(value);
+        volatile int128_t result = nstd::bit_ceil(value);
         (void)result;
     });
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 
+using namespace nstd;
 using namespace std::chrono;
 
 void benchmark_output_decimal()

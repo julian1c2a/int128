@@ -16,6 +16,7 @@
 #include <random>
 #include <vector>
 
+using namespace nstd;
 // ========================= RDTSC for CPU Cycles =========================
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
@@ -75,7 +76,7 @@ BenchmarkResult bench_midpoint()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::midpoint(values_a[i], values_b[i]);
+        results[i] = nstd::midpoint(values_a[i], values_b[i]);
     }
 
     // Benchmark
@@ -83,7 +84,7 @@ BenchmarkResult bench_midpoint()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::midpoint(values_a[i], values_b[i]);
+        results[i] = nstd::midpoint(values_a[i], values_b[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -156,7 +157,7 @@ BenchmarkResult bench_abs()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::abs(values[i]);
+        results[i] = nstd::abs(values[i]);
     }
 
     // Benchmark
@@ -164,7 +165,7 @@ BenchmarkResult bench_abs()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::abs(values[i]);
+        results[i] = nstd::abs(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -195,7 +196,7 @@ BenchmarkResult bench_popcount()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::popcount(values[i]);
+        results[i] = nstd::popcount(values[i]);
     }
 
     // Benchmark
@@ -203,7 +204,7 @@ BenchmarkResult bench_popcount()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::popcount(values[i]);
+        results[i] = nstd::popcount(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -235,7 +236,7 @@ BenchmarkResult bench_countl_zero()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::countl_zero(values[i]);
+        results[i] = nstd::countl_zero(values[i]);
     }
 
     // Benchmark
@@ -243,7 +244,7 @@ BenchmarkResult bench_countl_zero()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::countl_zero(values[i]);
+        results[i] = nstd::countl_zero(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -275,7 +276,7 @@ BenchmarkResult bench_countr_zero()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::countr_zero(values[i]);
+        results[i] = nstd::countr_zero(values[i]);
     }
 
     // Benchmark
@@ -283,7 +284,7 @@ BenchmarkResult bench_countr_zero()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::countr_zero(values[i]);
+        results[i] = nstd::countr_zero(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -315,7 +316,7 @@ BenchmarkResult bench_bit_width()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::bit_width(values[i]);
+        results[i] = nstd::bit_width(values[i]);
     }
 
     // Benchmark
@@ -323,7 +324,7 @@ BenchmarkResult bench_bit_width()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::bit_width(values[i]);
+        results[i] = nstd::bit_width(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -359,7 +360,7 @@ BenchmarkResult bench_has_single_bit()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::has_single_bit(values[i]);
+        results[i] = nstd::has_single_bit(values[i]);
     }
 
     // Benchmark
@@ -367,7 +368,7 @@ BenchmarkResult bench_has_single_bit()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::has_single_bit(values[i]);
+        results[i] = nstd::has_single_bit(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -399,7 +400,7 @@ BenchmarkResult bench_bit_ceil()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::bit_ceil(values[i]);
+        results[i] = nstd::bit_ceil(values[i]);
     }
 
     // Benchmark
@@ -407,7 +408,7 @@ BenchmarkResult bench_bit_ceil()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::bit_ceil(values[i]);
+        results[i] = nstd::bit_ceil(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();
@@ -439,7 +440,7 @@ BenchmarkResult bench_bit_floor()
 
     // Warmup
     for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::bit_floor(values[i]);
+        results[i] = nstd::bit_floor(values[i]);
     }
 
     // Benchmark
@@ -447,7 +448,7 @@ BenchmarkResult bench_bit_floor()
     uint64_t cycles_start = rdtsc();
 
     for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::bit_floor(values[i]);
+        results[i] = nstd::bit_floor(values[i]);
     }
 
     uint64_t cycles_end = rdtsc();

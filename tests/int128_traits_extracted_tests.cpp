@@ -19,7 +19,6 @@
 
 using namespace nstd;
 
-
 // Los traits se definen en int128_traits.hpp
 // La macro INT128_USING_LIBCPP indica si las especializaciones están disponibles
 // (0 = disponibles en GCC/MSVC con libstdc++/MS STL, 1 = NO disponibles en libc++)
@@ -303,9 +302,9 @@ bool test_common_type_int()
 // =============================================================================
 bool test_hash()
 {
-    std::cout << "\n=== TEST: std::hash<int128_t> ===\n";
+    std::cout << "\n=== TEST: nstd::hash<int128_t> ===\n";
 
-    std::hash<int128_t> hasher;
+    nstd::hash<int128_t> hasher;
 
     // Probar valores diferentes
     int128_t val1(0, 42);
@@ -328,7 +327,7 @@ bool test_hash()
     assert(hash1 != hash3 && "Valores diferentes deben tener hashes diferentes");
 
     // Probar en un unordered_map
-    std::unordered_map<int128_t, int> map;
+    std::unordered_map<int128_t, int, nstd::hash<int128_t>> map;
     map[val1] = 100;
     map[val2] = 200;
     map[val3] = 300;
@@ -398,7 +397,7 @@ int main()
         if (func())                                                                                \
             passed++;                                                                              \
     } catch (const std::exception& e) {                                                            \
-        std::cout << "  [FAIL] EXCEPTION: " << e.what() << "\n";                                       \
+        std::cout << "  [FAIL] EXCEPTION: " << e.what() << "\n";                                   \
     }
 
     // Tests de type traits fundamentales

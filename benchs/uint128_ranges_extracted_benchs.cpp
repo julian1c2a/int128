@@ -4,6 +4,7 @@
 #include <numeric> // para std::partial_sum, std::adjacent_difference
 #include <vector>
 
+using namespace nstd;
 using namespace std::chrono;
 
 constexpr int SIZE = 10000;

@@ -17,6 +17,7 @@
 #include <type_traits>
 #include <vector>
 
+using namespace nstd;
 // Detectar si las especializaciones de traits están disponibles
 #if defined(_LIBCPP_VERSION)
 #define UINT128_TRAITS_NOT_AVAILABLE 1
@@ -175,7 +176,7 @@ void benchmark_hash_operations()
 {
     std::cout << "\nBenchmarking Hash Operations...\n";
 
-    std::hash<uint128_t> hasher;
+    nstd::hash<uint128_t> hasher;
     uint128_t val(0x123456789ABCDEF0ULL, 0xFEDCBA9876543210ULL);
 
     benchmark("hash<uint128_t>", [&]() { [[maybe_unused]] auto h = hasher(val); });

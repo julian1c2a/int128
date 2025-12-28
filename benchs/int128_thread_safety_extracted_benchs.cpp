@@ -24,6 +24,7 @@
 #include <thread>
 #include <vector>
 
+using namespace nstd;
 #ifdef _MSC_VER
 #include <intrin.h>
 #pragma intrinsic(__rdtsc)

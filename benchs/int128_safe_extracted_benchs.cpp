@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 
+using namespace nstd;
 using namespace std::chrono;
 
 constexpr int ITERATIONS = 100000;

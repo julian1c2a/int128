@@ -248,7 +248,7 @@ inline std::string dec_signed(const int128_t& value, int width = 0, char fill = 
 /**
  * @brief Función helper que aplica formateo usando el estado actual del stream
  */
-inline std::string format_int128_for_stream(const int128_t& value, const std::ostream& os)
+inline std::string format_int128_for_stream(const nstd::int128_t& value, const std::ostream& os)
 {
     return int128_format::format_like_iostream(value, os.flags(), os.width(), os.fill());
 }

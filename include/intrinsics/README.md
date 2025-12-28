@@ -382,6 +382,6 @@ int leading_zeros = intrinsics::clz64(x);
 
 ---
 
-**Autor**: Julian Catumba  
+**Autor**: Julián Calderón Almendros
 **Fecha**: Diciembre 2024  
 **Versión**: 2.0 (Reestructuración completa)

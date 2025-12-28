@@ -8,7 +8,7 @@
  * - std::pow (Power function - Fast exponentiation)
  * - std::sqrt (Square root - Newton's method)
  * - std::min / std::max
- * - std::bezout_coeffs (Bézout coefficients)
+ * - nstd::bezout_coeffs (Bézout coefficients)
  *
  * Compares performance with built-in types and measures CPU cycles
  */
@@ -21,6 +21,7 @@
 #include <random>
 #include <vector>
 
+using namespace nstd;
 // ========================= RDTSC for CPU Cycles =========================
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
@@ -98,7 +99,7 @@ void benchmark_gcd()
     benchmark(
         "gcd(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = std::gcd(test_pairs[rng() % test_pairs.size()].first,
+            volatile uint64_t result = nstd::gcd(test_pairs[rng() % test_pairs.size()].first,
                                                 test_pairs[rng() % test_pairs.size()].second);
             (void)result;
         },
@@ -120,7 +121,7 @@ void benchmark_gcd()
     benchmark(
         "gcd(uint128_t, uint128_t) - large",
         [&]() {
-            volatile auto result = std::gcd(large1, large2);
+            volatile auto result = nstd::gcd(large1, large2);
             (void)result;
         },
         100000);
@@ -154,7 +155,7 @@ void benchmark_lcm()
     benchmark(
         "lcm(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = std::lcm(48ULL, 18ULL);
+            volatile uint64_t result = nstd::lcm(48ULL, 18ULL);
             (void)result;
         },
         1000000);
@@ -277,7 +278,7 @@ void benchmark_sqrt()
     benchmark(
         "sqrt(uint128_t) - small",
         [&]() {
-            volatile auto result = sqrt(uint128_t(144)); // ADL encuentra std::sqrt(uint128_t)
+            volatile auto result = sqrt(uint128_t(144)); // ADL encuentra nstd::sqrt(uint128_t)
             (void)result;
         },
         1000000);
@@ -334,17 +335,17 @@ void benchmark_min_max()
 
     // Benchmark uint64_t (baseline)
     benchmark(
-        "std::min(uint64_t, uint64_t)",
+        "nstd::min(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = std::min(123456789ULL, 987654321ULL);
+            volatile uint64_t result = nstd::min(123456789ULL, 987654321ULL);
             (void)result;
         },
         10000000);
 
     benchmark(
-        "std::max(uint64_t, uint64_t)",
+        "nstd::max(uint64_t, uint64_t)",
         [&]() {
-            volatile uint64_t result = std::max(123456789ULL, 987654321ULL);
+            volatile uint64_t result = nstd::max(123456789ULL, 987654321ULL);
             (void)result;
         },
         10000000);
@@ -388,8 +389,8 @@ void benchmark_min_max()
 
 void benchmark_bezout()
 {
-    using std::bezout_coeffs; // Permite ADL para encontrar la sobrecarga de uint128_t
-    std::cout << "\n=== std::bezout_coeffs Benchmarks ===" << std::endl;
+    using nstd::bezout_coeffs; // Permite ADL para encontrar la sobrecarga de uint128_t
+    std::cout << "\n=== nstd::bezout_coeffs Benchmarks ===" << std::endl;
 
     benchmark(
         "bezout_coeffs(small, small)",
@@ -443,8 +444,8 @@ void benchmark_combined()
         [&]() {
             uint128_t a(123456);
             uint128_t b(789012);
-            volatile auto g = std::gcd(a, b);
-            volatile auto l = std::lcm(a, b);
+            volatile auto g = nstd::gcd(a, b);
+            volatile auto l = nstd::lcm(a, b);
             (void)g;
             (void)l;
         },
@@ -455,7 +456,7 @@ void benchmark_combined()
         "pow + sqrt sequence",
         [&]() {
             uint128_t base(10);
-            auto powered = std::pow(base, uint128_t(6));
+            auto powered = nstd::pow(base, uint128_t(6));
             auto rooted = sqrt(powered);
             volatile uint128_t dummy = rooted; // Prevenir optimización completa
             (void)dummy;
@@ -467,8 +468,8 @@ void benchmark_combined()
         "min/max chain (4 values)",
         [&]() {
             uint128_t a(100), b(200), c(150), d(175);
-            volatile auto min_val = std::min(std::min(a, b), std::min(c, d));
-            volatile auto max_val = std::max(std::max(a, b), std::max(c, d));
+            volatile auto min_val = nstd::min(nstd::min(a, b), nstd::min(c, d));
+            volatile auto max_val = nstd::max(nstd::max(a, b), nstd::max(c, d));
             (void)min_val;
             (void)max_val;
         },

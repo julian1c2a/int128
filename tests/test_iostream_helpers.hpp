@@ -9,6 +9,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace nstd;
+
 // Incluir int128_t si existe (puede no estar disponible en todos los tests)
 #if __has_include("int128/int128_t.hpp")
 #include "int128/int128_t.hpp"

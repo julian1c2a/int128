@@ -44,7 +44,7 @@ inline constexpr uint64_t bswap64(uint64_t x) noexcept
     // Intel icpx soporta __builtin_bswap64
     return __builtin_bswap64(x);
 #elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
-// GCC/Clang: __builtin_bswap64
+    // GCC/Clang: __builtin_bswap64
 #if INTRINSICS_ARCH_ARM64 || INTRINSICS_ARCH_ARM32
     // ARM: REV instruction para byte reverse
     return __builtin_bswap64(x);

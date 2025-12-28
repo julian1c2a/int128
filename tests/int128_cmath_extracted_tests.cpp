@@ -11,7 +11,6 @@
 
 using namespace nstd;
 
-
 // Test counter
 static int total_tests = 0;
 static int passed_tests = 0;
@@ -23,10 +22,10 @@ static int failed_tests = 0;
         total_tests++;                                                                             \
         if (condition) {                                                                           \
             passed_tests++;                                                                        \
-            std::cout << "  [OK] " << message << std::endl;                                           \
+            std::cout << "  [OK] " << message << std::endl;                                        \
         } else {                                                                                   \
             failed_tests++;                                                                        \
-            std::cout << "  [ERROR] FAILED: " << message << std::endl;                                   \
+            std::cout << "  [ERROR] FAILED: " << message << std::endl;                             \
         }                                                                                          \
     } while (0)
 
@@ -335,50 +334,50 @@ void test_constexpr()
     // Compile-time evaluation (GCC/Clang)
     // Note: abs, pow, sqrt use intrinsics not constexpr, only constexpr functions work
 
-    constexpr int128_t sign_result = std::sign(int128_t(-5));
+    constexpr int128_t sign_result = nstd::sign(int128_t(-5));
     TEST_ASSERT(sign_result == int128_t(-1), "constexpr sign(-5) == -1");
 
-    constexpr int128_t min_result = std::min(int128_t(3), int128_t(5));
+    constexpr int128_t min_result = nstd::min(int128_t(3), int128_t(5));
     TEST_ASSERT(min_result == int128_t(3), "constexpr min(3, 5) == 3");
 
-    constexpr int128_t max_result = std::max(int128_t(3), int128_t(5));
+    constexpr int128_t max_result = nstd::max(int128_t(3), int128_t(5));
     TEST_ASSERT(max_result == int128_t(5), "constexpr max(3, 5) == 5");
 
-    constexpr int128_t clamp_result = std::clamp(int128_t(15), int128_t(0), int128_t(10));
+    constexpr int128_t clamp_result = nstd::clamp(int128_t(15), int128_t(0), int128_t(10));
     TEST_ASSERT(clamp_result == int128_t(10), "constexpr clamp(15, 0, 10) == 10");
 
     // Runtime for functions with intrinsics
-    int128_t abs_result = std::abs(int128_t(-42));
+    int128_t abs_result = nstd::abs(int128_t(-42));
     TEST_ASSERT(abs_result == int128_t(42), "runtime abs(-42) == 42");
 
-    int128_t pow_result = std::pow(int128_t(2), int128_t(3));
+    int128_t pow_result = nstd::pow(int128_t(2), int128_t(3));
     TEST_ASSERT(pow_result == int128_t(8), "runtime pow(2, 3) == 8");
 
-    int128_t sqrt_result = std::sqrt(int128_t(16));
+    int128_t sqrt_result = nstd::sqrt(int128_t(16));
     TEST_ASSERT(sqrt_result == int128_t(4), "runtime sqrt(16) == 4");
 
-    int128_t midpoint_result = std::midpoint(int128_t(0), int128_t(10));
+    int128_t midpoint_result = nstd::midpoint(int128_t(0), int128_t(10));
     TEST_ASSERT(midpoint_result == int128_t(5), "runtime midpoint(0, 10) == 5");
 #else
     // Runtime evaluation (MSVC/Intel)
     std::cout << "Note: Constexpr tests skipped (MSVC/Intel intrinsics not constexpr)" << std::endl;
 
-    int128_t abs_result = std::abs(int128_t(-42));
+    int128_t abs_result = nstd::abs(int128_t(-42));
     TEST_ASSERT(abs_result == int128_t(42), "runtime abs(-42) == 42");
 
-    int128_t pow_result = std::pow(int128_t(2), int128_t(3));
+    int128_t pow_result = nstd::pow(int128_t(2), int128_t(3));
     TEST_ASSERT(pow_result == int128_t(8), "runtime pow(2, 3) == 8");
 
-    int128_t sqrt_result = std::sqrt(int128_t(16));
+    int128_t sqrt_result = nstd::sqrt(int128_t(16));
     TEST_ASSERT(sqrt_result == int128_t(4), "runtime sqrt(16) == 4");
 
-    int128_t sign_result = std::sign(int128_t(-5));
+    int128_t sign_result = nstd::sign(int128_t(-5));
     TEST_ASSERT(sign_result == int128_t(-1), "runtime sign(-5) == -1");
 
-    int128_t min_result = std::min(int128_t(3), int128_t(5));
+    int128_t min_result = nstd::min(int128_t(3), int128_t(5));
     TEST_ASSERT(min_result == int128_t(3), "runtime min(3, 5) == 3");
 
-    int128_t max_result = std::max(int128_t(3), int128_t(5));
+    int128_t max_result = nstd::max(int128_t(3), int128_t(5));
     TEST_ASSERT(max_result == int128_t(5), "runtime max(3, 5) == 5");
 #endif
 }
