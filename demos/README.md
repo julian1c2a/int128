@@ -18,6 +18,7 @@ demos/
 ## 🎯 Guía por Categoría
 
 ### 🔧 General - Demos Ad-hoc
+
 **Ubicación**: [`general/`](general/)
 
 Demostraciones experimentales, prototipo y características específicas que no encajan en otras categorías.
@@ -32,6 +33,7 @@ Demostraciones experimentales, prototipo y características específicas que no 
 [Ver detalles →](general/README.md)
 
 ### 🎓 Tutorials - Para Aprender
+
 **Ubicación**: [`tutorials/`](tutorials/)
 
 13 tutoriales progresivos que te enseñan desde lo básico hasta características avanzadas:
@@ -51,6 +53,7 @@ Demostraciones experimentales, prototipo y características específicas que no 
 13. User-defined literals
 
 **Ideal para:**
+
 - 🆕 Principiantes que aprenden la biblioteca
 - 📚 Referencia rápida de características
 - 🎓 Enseñanza y educación
@@ -58,6 +61,7 @@ Demostraciones experimentales, prototipo y características específicas que no 
 [Ver índice completo →](tutorials/README.md)
 
 ### 💼 Examples - Casos de Uso Reales
+
 **Ubicación**: [`examples/`](examples/)
 
 Aplicaciones prácticas que resuelven problemas del mundo real:
@@ -70,6 +74,7 @@ Aplicaciones prácticas que resuelven problemas del mundo real:
 - **Demos de thread safety**
 
 **Ideal para:**
+
 - 💡 Inspiración para tus propios proyectos
 - 🔨 Código base para aplicaciones reales
 - 🎯 Ver best practices en contexto
@@ -77,6 +82,7 @@ Aplicaciones prácticas que resuelven problemas del mundo real:
 [Ver catálogo →](examples/README.md)
 
 ### 🌟 Showcase - Para Impresionar
+
 **Ubicación**: [`showcase/`](showcase/)
 
 Demos visuales e impresionantes que muestran el poder de la biblioteca:
@@ -87,6 +93,7 @@ Demos visuales e impresionantes que muestran el poder de la biblioteca:
 - **Performance**: Benchmarks uint128 vs uint64 en vivo
 
 **Ideal para:**
+
 - 🎪 Presentaciones y demos
 - 🎨 Mostrar capacidades visuales
 - 🚀 Impresionar con números grandes
@@ -94,16 +101,18 @@ Demos visuales e impresionantes que muestran el poder de la biblioteca:
 [Ver showcase →](showcase/README.md)
 
 ### ⚖️ Comparison - Comparar con Otras Librerías
+
 **Ubicación**: [`comparison/`](comparison/)
 
 Comparaciones lado a lado con otras implementaciones:
 
 - **Boost.Multiprecision** (cpp_int, uint128_t)
-- **Tipos nativos** (__uint128_t, __int128_t)
+- **Tipos nativos** (__uint128_t,__int128_t)
 - **GMP** (GNU Multiple Precision)
 - **Matriz de características** (type traits, concepts, STL)
 
 **Ideal para:**
+
 - 🤔 Decidir qué librería usar
 - 📊 Entender trade-offs
 - ⚡ Comparar rendimiento
@@ -111,6 +120,7 @@ Comparaciones lado a lado con otras implementaciones:
 [Ver comparaciones →](comparison/README.md)
 
 ### 🔬 Performance - Análisis Profundo
+
 **Ubicación**: [`performance/`](performance/)
 
 Deep-dive en rendimiento de operaciones específicas:
@@ -122,6 +132,7 @@ Deep-dive en rendimiento de operaciones específicas:
 - **Branch prediction** (fast paths, mispredictions)
 
 **Ideal para:**
+
 - 🔍 Entender optimizaciones
 - 📈 Análisis de bottlenecks
 - 🎯 Microarquitectura insights
@@ -129,6 +140,7 @@ Deep-dive en rendimiento de operaciones específicas:
 [Ver análisis →](performance/README.md)
 
 ### 🔌 Integration - Ecosistema Externo
+
 **Ubicación**: [`integration/`](integration/)
 
 Integración con bibliotecas y sistemas populares:
@@ -140,6 +152,7 @@ Integración con bibliotecas y sistemas populares:
 - **Crypto**: OpenSSL, libsodium
 
 **Ideal para:**
+
 - 🌐 Aplicaciones del mundo real
 - 🔗 Interoperabilidad
 - 📦 Integrar en tu stack
@@ -165,6 +178,26 @@ bash scripts/build_demo.bash comparison boost_vs_int128 clang release
 bash scripts/build_demo.bash performance division_algorithms intel release
 bash scripts/build_demo.bash integration json_nlohmann gcc debug
 ```
+
+### ⚠️ Compilación Manual - Flags Especiales para Thread Safety
+
+Si compilas manualmente con `g++` o `clang++`, las demos con thread safety **requieren flags adicionales**:
+
+```bash
+# Demos normales (sin threading)
+/ucrt64/bin/g++ -std=c++20 -Iinclude demos/tutorials/01_basic_operations.cpp -o build/demo
+
+# ⚠️ Demos con thread safety REQUIEREN: -pthread -latomic
+/ucrt64/bin/g++ -std=c++20 -Iinclude -pthread demos/examples/demo_int128_thread_safety.cpp -latomic -o build/demo
+/ucrt64/bin/g++ -std=c++20 -Iinclude -pthread demos/examples/example_thread_safety.cpp -latomic -o build/demo
+```
+
+**Demos que requieren `-pthread -latomic`:**
+
+- `demos/examples/demo_int128_thread_safety.cpp`
+- `demos/examples/example_thread_safety.cpp`
+
+**Por qué**: Las operaciones atómicas de 128 bits en x86_64 requieren libatomic y soporte de threading.
 
 ### Ejecutar Demos
 
@@ -222,6 +255,7 @@ Para ver la lista completa de todas las demos disponibles con descripciones deta
 👉 **[Ver DEMOS_CATALOG.md](../DEMOS_CATALOG.md)**
 
 Este catálogo se genera automáticamente con:
+
 ```bash
 bash scripts/catalog_demos.bash
 # o
@@ -247,16 +281,19 @@ make catalog_demos
 ## 🔍 Recomendaciones por Nivel
 
 ### 🆕 Principiante
+
 1. Empieza con [tutorials/](tutorials/) en orden secuencial (01 → 13)
 2. Experimenta modificando las [examples/](examples/) simples
 3. Ejecuta el [showcase/main.cpp](showcase/main.cpp) para ver posibilidades
 
 ### 🔧 Usuario Intermedio
+
 1. Estudia [examples/](examples/) de casos de uso avanzados
 2. Lee [comparison/](comparison/) para entender trade-offs
 3. Analiza [performance/](performance/) para optimización
 
 ### 🚀 Usuario Avanzado
+
 1. Explora [integration/](integration/) para conectar con tu stack
 2. Contribuye nuevas demos a las categorías
 3. Extiende [general/](general/) con tus propios experimentos
@@ -275,6 +312,7 @@ make catalog_demos
 6. **Haz un PR** con tu contribución
 
 **Naming conventions:**
+
 - Tutorials: `XX_descriptive_name.cpp` (XX = número secuencial)
 - Otros: `descriptive_name.cpp` (snake_case)
 
@@ -301,6 +339,7 @@ demos/
 ```
 
 **Variables del sistema:**
+
 - `[category]` = general | tutorials | examples | showcase | comparison | performance | integration
 - `[demo_name]` = nombre del archivo sin `.cpp`
 - `[compiler]` = gcc | clang | intel | msvc | all

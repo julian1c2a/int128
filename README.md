@@ -137,6 +137,45 @@ int128/
 ./msys_build.sh user_literals_test release
 ```
 
+### 📦 Compilación Directa (Tests, Benchmarks, Demos)
+
+#### Tests (27 archivos)
+
+```bash
+# Compilar cualquier test
+/ucrt64/bin/g++ -std=c++20 -Iinclude tests/nombre_test.cpp -o build/test
+
+# Ejemplos:
+/ucrt64/bin/g++ -std=c++20 -Iinclude tests/uint128_extracted_tests.cpp -o build/uint128_test
+/ucrt64/bin/g++ -std=c++20 -Iinclude tests/final_traits_test.cpp -o build/traits_test
+```
+
+#### Benchmarks (29 archivos)
+
+```bash
+# Compilar benchmarks estándar
+/ucrt64/bin/g++ -std=c++20 -Iinclude benchs/nombre_bench.cpp -o build/bench
+
+# Benchmarks con thread safety REQUIEREN flags adicionales
+/ucrt64/bin/g++ -std=c++20 -Iinclude -pthread benchs/uint128_thread_safety_benchs.cpp -latomic -o build/bench
+```
+
+#### Demos (40 archivos)
+
+```bash
+# Compilar demos normales
+/ucrt64/bin/g++ -std=c++20 -Iinclude demos/tutorials/01_basic_operations.cpp -o build/demo
+
+# ⚠️ IMPORTANTE: Demos con thread safety REQUIEREN flags adicionales
+/ucrt64/bin/g++ -std=c++20 -Iinclude -pthread demos/examples/demo_int128_thread_safety.cpp -latomic -o build/demo
+
+# Demos que requieren -pthread -latomic:
+# - demos/examples/demo_int128_thread_safety.cpp
+# - demos/examples/example_thread_safety.cpp
+```
+
+**Nota**: Los flags `-pthread` y `-latomic` son necesarios para operaciones atómicas de 128 bits en x86_64.
+
 ### Estructura de Compilación (uint128_t y int128_t)
 
 - [x] Constructores (default, copia, move, desde integrales)

@@ -188,7 +188,7 @@ void demo_sequences()
                 static_cast<double>(fib[i + 1].low()) / static_cast<double>(fib[i].low());
             std::cout << "  F_" << std::setw(2) << (i + 1) << "/F_" << i << " ≈ " << BLUE
                       << std::setprecision(10) << ratio << RESET;
-            std::cout << "  (diferencia: " << nstd::abs(ratio - phi) << ")\n";
+            std::cout << "  (diferencia: " << std::abs(ratio - phi) << ")\n";
         }
     }
 }
@@ -286,7 +286,7 @@ void demo_approximations()
 
     std::cout << "  ≈ " << BLUE << std::setprecision(15) << e_approx << RESET << "\n";
     std::cout << "  e real: " << e_real << "\n";
-    std::cout << "  Error: " << std::scientific << nstd::abs(e_approx - e_real) << std::defaultfloat
+    std::cout << "  Error: " << std::scientific << std::abs(e_approx - e_real) << std::defaultfloat
               << "\n";
 }
 
