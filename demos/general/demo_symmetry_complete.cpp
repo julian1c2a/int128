@@ -20,8 +20,8 @@ void demo_arithmetic_symmetry()
 
     // Multiplicación simétrica
     uint128_t small(123);
-    uint128_t mul1 = small * 456ul;
-    uint128_t mul2 = 456ul * small;
+    uint128_t mul1 = small * uint64_t(456);
+    uint128_t mul2 = uint64_t(456) * small;
     std::cout << "Multiplicación simétrica: " << (mul1 == mul2 ? "✓" : "✗") << std::endl;
     std::cout << "  " << small.to_string() << " * 456 = " << mul1.to_string() << std::endl;
 }
@@ -33,12 +33,12 @@ void demo_comparison_symmetry()
     uint128_t value(0, 12345);
 
     // Test con diferentes tipos
-    bool test1 = (value == 12345);   // uint128_t == int
-    bool test2 = (12345 == value);   // int == uint128_t (friend)
-    bool test3 = (value == 12345u);  // uint128_t == uint32_t
-    bool test4 = (12345u == value);  // uint32_t == uint128_t (friend)
-    bool test5 = (value == 12345ul); // uint128_t == uint64_t
-    bool test6 = (12345ul == value); // uint64_t == uint128_t (friend)
+    bool test1 = (value == 12345);           // uint128_t == int
+    bool test2 = (12345 == value);           // int == uint128_t (friend)
+    bool test3 = (value == 12345u);          // uint128_t == uint32_t
+    bool test4 = (12345u == value);          // uint32_t == uint128_t (friend)
+    bool test5 = (value == uint64_t(12345)); // uint128_t == uint64_t
+    bool test6 = (uint64_t(12345) == value); // uint64_t == uint128_t (friend)
 
     std::cout << "Igualdad con int: " << (test1 && test2 ? "✓" : "✗") << std::endl;
     std::cout << "Igualdad con uint32_t: " << (test3 && test4 ? "✓" : "✗") << std::endl;

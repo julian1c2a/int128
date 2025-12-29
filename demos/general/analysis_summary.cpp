@@ -1,8 +1,6 @@
 #include <iomanip>
 #include <iostream>
 
-using namespace nstd;
-
 int main()
 {
     std::cout << "=== RESUMEN COMPLETO: EMULACIÓN DE __umulh ===" << std::endl;

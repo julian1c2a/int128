@@ -177,15 +177,15 @@ void demo_sequences()
               << YELLOW << ">>> Relación de Fibonacci con la razón áurea" << RESET << "\n\n";
 
     // φ = (1 + √5) / 2 ≈ 1.618033988749...
-    double phi = (1.0 + nstd::sqrt(5.0)) / 2.0;
+    double phi = (1.0 + std::sqrt(5.0)) / 2.0;
 
     std::cout << "  φ (phi) ≈ " << BLUE << std::setprecision(15) << phi << RESET << "\n\n";
     std::cout << "  Límite de F_(n+1)/F_n cuando n→∞ es φ:\n\n";
 
     for (size_t i = 10; i < 20; ++i) {
         if (fib[i] > 0) {
-            double ratio = static_cast<double>(fib[i + 1].low()) /
-                           static_cast<double>(fib[i].low());
+            double ratio =
+                static_cast<double>(fib[i + 1].low()) / static_cast<double>(fib[i].low());
             std::cout << "  F_" << std::setw(2) << (i + 1) << "/F_" << i << " ≈ " << BLUE
                       << std::setprecision(10) << ratio << RESET;
             std::cout << "  (diferencia: " << nstd::abs(ratio - phi) << ")\n";
@@ -256,9 +256,8 @@ void demo_approximations()
     double pi = 3.141592653589793238;
 
     for (const auto& frac : pi_approx) {
-        double approx =
-            static_cast<double>(frac.num.low()) / static_cast<double>(frac.den.low());
-        double error = nstd::abs(approx - pi);
+        double approx = static_cast<double>(frac.num.low()) / static_cast<double>(frac.den.low());
+        double error = std::abs(approx - pi);
 
         std::cout << "  " << frac.name << ": " << GREEN << frac.num << "/" << frac.den << RESET;
         std::cout << " ≈ " << BLUE << std::setprecision(12) << approx << RESET;
@@ -282,8 +281,7 @@ void demo_approximations()
     std::cout << "  Suma de primeros 20 términos:\n";
     std::cout << "  " << GREEN << numerator << " / " << denominator << RESET << "\n";
 
-    double e_approx =
-        static_cast<double>(numerator.low()) / static_cast<double>(denominator.low());
+    double e_approx = static_cast<double>(numerator.low()) / static_cast<double>(denominator.low());
     double e_real = 2.718281828459045235;
 
     std::cout << "  ≈ " << BLUE << std::setprecision(15) << e_approx << RESET << "\n";
@@ -344,4 +342,3 @@ int main()
 
     return 0;
 }
-

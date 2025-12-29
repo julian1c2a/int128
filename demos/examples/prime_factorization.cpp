@@ -38,7 +38,7 @@ bool is_prime_simple(const uint128_t& n)
     double n_approx =
         static_cast<double>(n.high()) * 18446744073709551616.0 + static_cast<double>(n.low());
     uint64_t limit =
-        std::min(static_cast<uint64_t>(1000000), static_cast<uint64_t>(nstd::sqrt(n_approx)));
+        std::min(static_cast<uint64_t>(1000000), static_cast<uint64_t>(std::sqrt(n_approx)));
 
     for (uint64_t i = 5; i <= limit; i += 6) {
         if (n % i == 0 || n % (i + 2) == 0) {
@@ -284,4 +284,3 @@ int main()
 
     return 0;
 }
-

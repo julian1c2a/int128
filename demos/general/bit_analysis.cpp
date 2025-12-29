@@ -10,7 +10,7 @@ using namespace uint128_literals;
 int main()
 {
     uint128_t max_val = ~uint128_t(0);
-    auto bitset_max = std::to_bitset(max_val);
+    auto bitset_max = nstd::to_bitset(max_val);
 
     std::cout << "Detailed bit analysis:" << std::endl;
     std::cout << "High part: 0x" << std::hex << max_val.high() << std::endl;
@@ -41,7 +41,7 @@ int main()
     std::cout << "Actual low:    0x" << std::hex << max_val.low() << std::endl;
 
     // Verify the conversion back
-    auto back_converted = std::from_bitset(bitset_max);
+    auto back_converted = nstd::from_bitset(bitset_max);
     std::cout << "\nRound trip test:" << std::endl;
     std::cout << "Original: " << max_val.to_string() << std::endl;
     std::cout << "Back:     " << back_converted.to_string() << std::endl;

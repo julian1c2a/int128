@@ -699,3 +699,5 @@ class ThreadSafeUint128SpinLock
  */
 
 } // namespace nstd
+
+#endif // UINT128_THREAD_SAFETY_HPP
