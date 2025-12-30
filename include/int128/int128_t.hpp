@@ -27,9 +27,11 @@
 #ifndef INT128_T_HPP
 #define INT128_T_HPP
 
+#include "../intrinsics/arithmetic_operations.hpp"
 #include "../uint128/uint128_t.hpp"
 #include <array>
 #include <bitset>
+#include <compare>
 #include <cstdint>
 #include <istream>
 #include <limits>
@@ -154,6 +156,22 @@ class int128_t
         return data[0] == 0 && data[1] == 0;
     }
 
+    /**
+     * @brief Verifica si el valor absoluto es una potencia de 2
+     * @return `true` si |n| > 0 y |n| tiene un solo bit establecido a 1
+     * @note Devuelve true tanto para 8 como para -8 (|±2^3| = 2^3)
+     */
+    constexpr bool is_abs_power_of_2() const noexcept
+    {
+        if (is_zero()) {
+            return false;
+        }
+        // Trabajar con el valor absoluto
+        int128_t abs_val = is_negative() ? -*this : *this;
+        // Usar el truco: n & (n-1) == 0 para potencias de 2
+        return (abs_val & (abs_val - 1)) == 0;
+    }
+
     // ===============================================================================
     // CONVERSIONES
     // ===============================================================================
@@ -167,10 +185,30 @@ class int128_t
     }
 
     /**
-     * @brief Valor absoluto
+     * @brief Valor absoluto del número con signo
+     *
+     * @return El valor absoluto del número
+     *
+     * @note Caso especial INT128_MIN (0x80000000000000000000000000000000):
+     *       abs(INT128_MIN) produce undefined behavior según el estándar C++,
+     *       ya que -INT128_MIN desborda y vuelve a INT128_MIN en complemento a 2.
+     *
+     *       Comportamiento: abs(-2^127) = -2^127 (wrapping overflow)
+     *       Matemáticamente incorrecto pero consistente con std::abs(INT_MIN).
+     *
+     *       Para detectar este caso:
+     *       - INT128_MIN es el único negativo que cumple: n == -n
+     *       - También: n == min() o n.is_negative() && -n < 0
+     *
+     * @example
+     *   abs(int128_t(-42))   → int128_t(42)
+     *   abs(int128_t(42))    → int128_t(42)
+     *   abs(int128_t::min()) → int128_t::min()  // overflow wrapping
      */
     constexpr int128_t abs() const noexcept
     {
+        // Nota: Para INT128_MIN, -(*this) produce overflow y devuelve INT128_MIN
+        // Este es el comportamiento estándar de C++ (undefined behavior técnicamente)
         if (is_negative()) {
             return -*this;
         }
@@ -191,11 +229,11 @@ class int128_t
             if (is_negative()) {
                 // Para negativos: -( abs(high) * 2^64 + abs(low) )
                 int128_t abs_val = abs();
-                return -static_cast<T>(static_cast<T>(abs_val.high()) * 18446744073709551616.0 +
+                return -static_cast<T>(static_cast<T>(abs_val.high()) * 18446744073709551616.0L +
                                        static_cast<T>(abs_val.low()));
             } else {
                 // Para positivos: high * 2^64 + low
-                return static_cast<T>(data[1]) * 18446744073709551616.0 + static_cast<T>(data[0]);
+                return static_cast<T>(data[1]) * 18446744073709551616.0L + static_cast<T>(data[0]);
             }
         }
 
@@ -263,9 +301,12 @@ class int128_t
      */
     int128_t& operator++() noexcept
     {
-        if (++data[0] == 0) { // overflow en low
-            ++data[1];
-        }
+        uint64_t temp = 0;
+        unsigned char carry = intrinsics::add_u64(data[0], 1ull, &temp);
+        data[0] = temp;
+        // Propagar carry sin branch condicional
+        intrinsics::addcarry_u64(carry, data[1], 0ull, &temp);
+        data[1] = temp;
         return *this;
     }
 
@@ -284,9 +325,12 @@ class int128_t
      */
     int128_t& operator--() noexcept
     {
-        if (data[0]-- == 0) { // borrow
-            --data[1];
-        }
+        uint64_t temp = 0;
+        unsigned char borrow = intrinsics::sub_u64(data[0], 1ull, &temp);
+        data[0] = temp;
+        // Propagar borrow sin branch condicional
+        intrinsics::subborrow_u64(borrow, data[1], 0ull, &temp);
+        data[1] = temp;
         return *this;
     }
 
@@ -404,29 +448,137 @@ class int128_t
         return int128_t(result);
     }
 
+    /**
+     * @brief División y módulo combinados (divrem)
+     *
+     * Calcula simultáneamente cociente y resto de la división,
+     * más eficiente que calcular / y % por separado.
+     *
+     * @param divisor El divisor
+     * @return std::optional con par {cociente, resto}, o std::nullopt si divisor == 0
+     *
+     * @note Semántica de signos según C++:
+     *       - Signo del cociente: negativo si los signos difieren
+     *       - Signo del resto: sigue al dividendo
+     *       - Invariante: dividendo = cociente * divisor + resto
+     *
+     * @example
+     *   divrem(int128_t(17), int128_t(5))   → {3, 2}
+     *   divrem(int128_t(-17), int128_t(5))  → {-3, -2}
+     *   divrem(int128_t(17), int128_t(-5))  → {-3, 2}
+     *   divrem(int128_t(-17), int128_t(-5)) → {3, -2}
+     */
+    constexpr std::optional<std::pair<int128_t, int128_t>>
+    divrem(const int128_t& divisor) const noexcept
+    {
+        // División por cero
+        if (divisor.is_zero()) {
+            return std::nullopt;
+        }
+
+        // Calcular signos del resultado
+        bool quot_negative = is_negative() != divisor.is_negative();
+        bool rem_negative = is_negative();
+
+        // Trabajar con valores absolutos como uint128_t
+        uint128_t abs_dividend = is_negative() ? (-*this).to_uint128() : to_uint128();
+        uint128_t abs_divisor =
+            divisor.is_negative() ? (-divisor).to_uint128() : divisor.to_uint128();
+
+        auto result = abs_dividend.divrem(abs_divisor);
+
+        if (!result) {
+            return std::nullopt;
+        }
+
+        // Convertir resultados a int128_t
+        int128_t quot = int128_t(result->first);
+        int128_t rem = int128_t(result->second);
+
+        // Aplicar signos
+        if (quot_negative && quot != int128_t(0)) {
+            quot = -quot;
+        }
+        if (rem_negative && rem != int128_t(0)) {
+            rem = -rem;
+        }
+
+        return std::make_pair(quot, rem);
+    }
+
+    /**
+     * @brief Sobrecarga de divrem para divisores integrales
+     */
+    template <typename T, typename = std::enable_if_t<std::is_integral_v<T> && sizeof(T) <= 8>>
+    constexpr std::optional<std::pair<int128_t, int128_t>> divrem(T divisor) const noexcept
+    {
+        return divrem(int128_t(divisor));
+    }
+
     // ===============================================================================
     // OPERADORES DE ASIGNACIÓN
     // ===============================================================================
 
     int128_t& operator+=(const int128_t& other) noexcept
     {
-        return *this = *this + other;
+        uint64_t temp = 0;
+        unsigned char carry = intrinsics::add_u64(data[0], other.data[0], &temp);
+        data[0] = temp;
+        intrinsics::addcarry_u64(carry, data[1], other.data[1], &temp);
+        data[1] = temp;
+        return *this;
     }
+
     int128_t& operator-=(const int128_t& other) noexcept
     {
-        return *this = *this - other;
+        uint64_t temp = 0;
+        unsigned char borrow = intrinsics::sub_u64(data[0], other.data[0], &temp);
+        data[0] = temp;
+        intrinsics::subborrow_u64(borrow, data[1], other.data[1], &temp);
+        data[1] = temp;
+        return *this;
     }
+
     int128_t& operator*=(const int128_t& other) noexcept
     {
-        return *this = *this * other;
+        // Multiplicación en complemento a 2 funciona igual que sin signo
+        // para los 128 bits inferiores del resultado
+        intrinsics::mul128(data[0], data[1], other.data[0], other.data[1], &data[0], &data[1]);
+        return *this;
     }
+
+    /**
+     * @brief Operador de división y asignación (a /= b)
+     * @param other El divisor
+     * @return Referencia a *this con el cociente de la división
+     *
+     * @warning Si `other` es cero, el comportamiento es indefinido (undefined behavior)
+     *          como en tipos integrales estándar de C++. No se lanza excepción.
+     */
     int128_t& operator/=(const int128_t& other)
     {
-        return *this = *this / other;
+        // Comportamiento como tipos built-in: división por cero es UB
+        // No se lanza excepción, comportamiento indefinido
+        auto result = divrem(other);
+        // Si divrem devuelve nullopt (divisor==0), es UB acceder a result
+        return *this = result->first;
     }
+
+    /**
+     * @brief Operador de módulo y asignación (a %= b)
+     * @param other El divisor
+     * @return Referencia a *this con el resto de la división
+     *
+     * @warning Si `other` es cero, el comportamiento es indefinido (undefined behavior)
+     *          como en tipos integrales estándar de C++. No se lanza excepción.
+     */
     int128_t& operator%=(const int128_t& other)
     {
-        return *this = *this % other;
+        // Comportamiento como tipos built-in: módulo por cero es UB
+        // No se lanza excepción, comportamiento indefinido
+        auto result = divrem(other);
+        // Si divrem devuelve nullopt (divisor==0), es UB acceder a result
+        return *this = result->second;
     }
 
     // ===============================================================================
@@ -487,6 +639,30 @@ class int128_t
     constexpr bool operator>=(const int128_t& other) const noexcept
     {
         return !(*this < other);
+    }
+
+    /**
+     * @brief Operador de comparación de tres vías (spaceship operator, C++20)
+     * @param other El otro valor a comparar
+     * @return std::strong_ordering indicando la relación de orden
+     * @note Requerido por el estándar C++20 en ciertos contextos aunque
+     *       los operadores <, >, <=, >=, ==, != ya estén definidos.
+     */
+    constexpr std::strong_ordering operator<=>(const int128_t& other) const noexcept
+    {
+        bool this_neg = is_negative();
+        bool other_neg = other.is_negative();
+
+        // Diferentes signos: negativo < positivo
+        if (this_neg != other_neg) {
+            return this_neg ? std::strong_ordering::less : std::strong_ordering::greater;
+        }
+
+        // Mismo signo: comparar como uint64_t
+        if (data[1] != other.data[1]) {
+            return data[1] <=> other.data[1];
+        }
+        return data[0] <=> other.data[0];
     }
 
     // ===============================================================================

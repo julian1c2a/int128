@@ -15,7 +15,6 @@
 
 using namespace nstd;
 
-
 // Helper for random generation
 std::mt19937_64 rng(std::random_device{}());
 
@@ -2460,9 +2459,9 @@ void test_fullmult_times_uint64()
 void test_knuth_D_divrem()
 {
     // Basic test
-    [[maybe_unused]] uint128_t a(0, 100);
-    [[maybe_unused]] uint128_t b(0, 3);
-    [[maybe_unused]] auto res = a.knuth_D_divrem(b);
+    uint128_t a(0, 100);
+    uint128_t b(0, 3);
+    auto res = a.knuth_D_divrem(b);
     assert(res.has_value());
     assert(res->first == uint128_t(0, 33));
     assert(res->second == uint128_t(0, 1));
@@ -2470,12 +2469,68 @@ void test_knuth_D_divrem()
     // Test optimization paths (e.g. power of 2)
     uint128_t c(0, 100);
     uint128_t d(0, 4);
-    [[maybe_unused]] auto res2 = c.knuth_D_divrem(d);
+    auto res2 = c.knuth_D_divrem(d);
     assert(res2.has_value());
     assert(res2->first == uint128_t(0, 25));
     assert(res2->second == uint128_t(0, 0));
 
-    std::cout << "test_knuth_D_divrem passed" << std::endl;
+    // Test division by zero
+    auto res_zero = a.knuth_D_divrem(uint128_t(0, 0));
+    assert(!res_zero.has_value());
+
+    // Test large numbers (128-bit dividend, 128-bit divisor)
+    uint128_t large_dividend(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
+    uint128_t large_divisor(0x1234567890ABCDEFULL, 0xFEDCBA0987654321ULL);
+    auto res_large = large_dividend.knuth_D_divrem(large_divisor);
+    assert(res_large.has_value());
+
+    // Verify result with divrem (they should match)
+    auto res_divrem = large_dividend.divrem(large_divisor);
+    assert(res_large->first == res_divrem.first);
+    assert(res_large->second == res_divrem.second);
+
+    // Test where dividend < divisor (quotient = 0, remainder = dividend)
+    uint128_t small(0, 50);
+    uint128_t big(0, 100);
+    auto res3 = small.knuth_D_divrem(big);
+    assert(res3.has_value());
+    assert(res3->first == uint128_t(0, 0));
+    assert(res3->second == uint128_t(0, 50));
+
+    // Test 128-bit dividend with 64-bit divisor (optimization path)
+    uint128_t val_128(0x123456789ABCDEFULL, 0xFEDCBA9876543210ULL);
+    uint128_t div_64(0, 0x1000000000ULL);
+    auto res4 = val_128.knuth_D_divrem(div_64);
+    assert(res4.has_value());
+
+    // Verify with divrem
+    auto res4_divrem = val_128.divrem(div_64);
+    assert(res4->first == res4_divrem.first);
+    assert(res4->second == res4_divrem.second);
+
+    // Random testing: 100 random cases
+    for (int i = 0; i < 100; ++i) {
+        uint64_t dividend_hi = rng();
+        uint64_t dividend_lo = rng();
+        uint64_t divisor_hi = (rng() % 2 == 0) ? 0 : rng(); // Mix of 64-bit and 128-bit divisors
+        uint64_t divisor_lo = rng() | 1;                    // Ensure non-zero
+
+        uint128_t dividend(dividend_hi, dividend_lo);
+        uint128_t divisor(divisor_hi, divisor_lo);
+
+        auto knuth_result = dividend.knuth_D_divrem(divisor);
+        auto divrem_result = dividend.divrem(divisor);
+
+        assert(knuth_result.has_value());
+        assert(knuth_result->first == divrem_result.first);
+        assert(knuth_result->second == divrem_result.second);
+
+        // Verify: dividend == quotient * divisor + remainder
+        uint128_t verify = knuth_result->first * divisor + knuth_result->second;
+        assert(verify == dividend);
+    }
+
+    std::cout << "test_knuth_D_divrem passed (including 100 random cases)" << std::endl;
 }
 
 void test_knuth_D_divrem_integral()

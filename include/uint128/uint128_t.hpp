@@ -8,6 +8,7 @@
 #include <array>
 #include <bitset>
 #include <climits>
+#include <compare>
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
@@ -30,6 +31,13 @@
 #endif
 #endif
 
+// Include intrinsics multiplataforma
+#include "../intrinsics/arithmetic_operations.hpp"
+#include "../intrinsics/bit_operations.hpp"
+
+// Include type traits personalizados
+#include "../type_traits.hpp"
+
 // Include helpers de módulo optimizados
 #include "specializations/uint128_mod_helpers.hpp"
 
@@ -38,6 +46,19 @@ namespace nstd
 
 // Forward declaration para int128_t (necesario para constructor)
 class int128_t;
+
+/**
+ * @brief Códigos de error para operaciones de parsing de strings
+ */
+enum class parse_error : uint8_t {
+    success = 0,       ///< Parsing exitoso
+    null_pointer,      ///< Puntero null proporcionado
+    empty_string,      ///< String vacío
+    invalid_base,      ///< Base fuera de rango [2, 36]
+    invalid_character, ///< Carácter inválido para la base especificada
+    overflow,          ///< El resultado excede el rango de uint128_t
+    unknown_error      ///< Error desconocido
+};
 
 class uint128_t
 {
@@ -68,6 +89,26 @@ class uint128_t
      * @endcode
      */
     static constexpr int UINT128_BITS = 2 * sizeof(uint64_t) * CHAR_BIT; // 128
+
+    /**
+     * @brief Retorna el valor mínimo representable (0)
+     * @return uint128_t(0, 0)
+     * @property Es static, constexpr y noexcept
+     */
+    static constexpr uint128_t min() noexcept
+    {
+        return uint128_t(0, 0);
+    }
+
+    /**
+     * @brief Retorna el valor máximo representable (2^128 - 1)
+     * @return uint128_t(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF)
+     * @property Es static, constexpr y noexcept
+     */
+    static constexpr uint128_t max() noexcept
+    {
+        return uint128_t(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
+    }
 
     /**
      * @brief Accede a los 64 bits superiores (high part) del número de 128 bits.
@@ -343,7 +384,8 @@ class uint128_t
         if constexpr (std::is_floating_point<TYPE>::value) {
             // Conversión a tipos de punto flotante
             // high * 2^64 + low
-            return static_cast<TYPE>(data[1]) * 18446744073709551616.0 + static_cast<TYPE>(data[0]);
+            return static_cast<TYPE>(data[1]) * 18446744073709551616.0L +
+                   static_cast<TYPE>(data[0]);
         } else {
             // Conversión a tipos integrales (comportamiento original)
             return static_cast<TYPE>(data[0]);
@@ -404,25 +446,12 @@ class uint128_t
      */
     constexpr uint128_t& operator++() noexcept
     {
-#ifdef _MSC_VER
-        if (std::is_constant_evaluated()) {
-            if (++data[0] == 0) {
-                ++data[1];
-            }
-        } else {
-            uint64_t new_low;
-            unsigned char carry = _addcarry_u64(0, data[0], 1ull, &new_low);
-            data[0] = new_low;
-            if (carry) {
-                data[1] += 1ull;
-            }
-        }
-#else
-        // GCC/Clang y otros: usar el método confiable sin intrínsecos
-        if (++data[0] == 0) {
-            ++data[1];
-        }
-#endif
+        uint64_t temp = 0;
+        unsigned char carry = intrinsics::add_u64(data[0], 1ull, &temp);
+        data[0] = temp;
+        // Propagar carry sin branch condicional
+        intrinsics::addcarry_u64(carry, data[1], 0ull, &temp);
+        data[1] = temp;
         return *this;
     }
 
@@ -462,25 +491,12 @@ class uint128_t
      */
     constexpr uint128_t& operator--() noexcept
     {
-#ifdef _MSC_VER
-        if (std::is_constant_evaluated()) {
-            if (data[0]-- == 0) {
-                --data[1];
-            }
-        } else {
-            uint64_t new_low;
-            const unsigned char borrow = _subborrow_u64(0, data[0], 1ull, &new_low);
-            data[0] = new_low;
-            if (borrow) {
-                data[1] -= 1ull;
-            }
-        }
-#else
-        // GCC/Clang y otros: usar el método confiable sin intrínsecos
-        if (data[0]-- == 0) {
-            --data[1];
-        }
-#endif
+        uint64_t temp = 0;
+        unsigned char borrow = intrinsics::sub_u64(data[0], 1ull, &temp);
+        data[0] = temp;
+        // Propagar borrow sin branch condicional
+        intrinsics::subborrow_u64(borrow, data[1], 0ull, &temp);
+        data[1] = temp;
         return *this;
     }
 
@@ -523,67 +539,11 @@ class uint128_t
      */
     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
     {
-#ifdef _MSC_VER
-        if (std::is_constant_evaluated()) {
-            const uint64_t old_low = data[0];
-            data[0] += other.data[0];
-            data[1] += other.data[1];
-            if (data[0] < old_low) {
-                ++data[1];
-            }
-        } else {
-#pragma warning(push)
-#pragma warning(disable : 4701)
-            [[maybe_unused]] uint64_t new_low; // NOLINT(cppcoreguidelines-init-variables)
-#pragma warning(pop)
-            const unsigned char carry = _addcarry_u64(0, data[0], other.data[0], &new_low);
-            data[0] = new_low;
-            _addcarry_u64(carry, data[1], other.data[1], &data[1]);
-        }
-#elif defined(__GNUC__) || defined(__clang__)
-        // GCC/Clang: usar builtin cuando sea posible
-#if defined(__has_builtin)
-#if __has_builtin(__builtin_addcll) && defined(__x86_64__)
-        if (std::is_constant_evaluated()) {
-            // En contexto constexpr, usar método tradicional
-            const uint64_t old_low = data[0];
-            data[0] += other.data[0];
-            data[1] += other.data[1];
-            if (data[0] < old_low) {
-                ++data[1];
-            }
-        } else {
-            unsigned long long carry = 0;
-            data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
-            data[1] = __builtin_addcll(data[1], other.data[1], carry, &carry);
-        }
-#else
-        // Fallback: método tradicional confiable
-        const uint64_t old_low = data[0];
-        data[0] += other.data[0];
-        data[1] += other.data[1];
-        if (data[0] < old_low) {
-            ++data[1];
-        }
-#endif
-#else
-        // Fallback: método tradicional confiable
-        const uint64_t old_low = data[0];
-        data[0] += other.data[0];
-        data[1] += other.data[1];
-        if (data[0] < old_low) {
-            ++data[1];
-        }
-#endif
-#else
-        // Fallback genérico
-        const uint64_t old_low = data[0];
-        data[0] += other.data[0];
-        data[1] += other.data[1];
-        if (data[0] < old_low) {
-            ++data[1];
-        }
-#endif
+        uint64_t temp = 0;
+        unsigned char carry = intrinsics::add_u64(data[0], other.data[0], &temp);
+        data[0] = temp;
+        intrinsics::addcarry_u64(carry, data[1], other.data[1], &temp);
+        data[1] = temp;
         return *this;
     }
 
@@ -602,67 +562,11 @@ class uint128_t
      */
     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
     {
-#ifdef _MSC_VER
-        if (std::is_constant_evaluated()) {
-            const uint64_t old_low = data[0];
-            data[0] -= other.data[0];
-            data[1] -= other.data[1];
-            if (data[0] > old_low) {
-                --data[1];
-            }
-        } else {
-#pragma warning(push)
-#pragma warning(disable : 4701)
-            [[maybe_unused]] uint64_t new_low; // NOLINT(cppcoreguidelines-init-variables)
-#pragma warning(pop)
-            const unsigned char borrow = _subborrow_u64(0, data[0], other.data[0], &new_low);
-            data[0] = new_low;
-            _subborrow_u64(borrow, data[1], other.data[1], &data[1]);
-        }
-#elif defined(__GNUC__) || defined(__clang__)
-        // GCC/Clang: usar builtin cuando sea posible
-#if defined(__has_builtin)
-#if __has_builtin(__builtin_subcll) && defined(__x86_64__)
-        if (std::is_constant_evaluated()) {
-            // En contexto constexpr, usar método tradicional
-            const uint64_t old_low = data[0];
-            data[0] -= other.data[0];
-            data[1] -= other.data[1];
-            if (data[0] > old_low) {
-                --data[1];
-            }
-        } else {
-            unsigned long long borrow = 0;
-            data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
-            data[1] = __builtin_subcll(data[1], other.data[1], borrow, &borrow);
-        }
-#else
-        // Fallback: método tradicional confiable
-        const uint64_t old_low = data[0];
-        data[0] -= other.data[0];
-        data[1] -= other.data[1];
-        if (data[0] > old_low) {
-            --data[1];
-        }
-#endif
-#else
-        // Fallback: método tradicional confiable
-        const uint64_t old_low = data[0];
-        data[0] -= other.data[0];
-        data[1] -= other.data[1];
-        if (data[0] > old_low) {
-            --data[1];
-        }
-#endif
-#else
-        // Fallback genérico
-        const uint64_t old_low = data[0];
-        data[0] -= other.data[0];
-        data[1] -= other.data[1];
-        if (data[0] > old_low) {
-            --data[1];
-        }
-#endif
+        uint64_t temp = 0;
+        unsigned char borrow = intrinsics::sub_u64(data[0], other.data[0], &temp);
+        data[0] = temp;
+        intrinsics::subborrow_u64(borrow, data[1], other.data[1], &temp);
+        data[1] = temp;
         return *this;
     }
 
@@ -678,17 +582,9 @@ class uint128_t
     constexpr int leading_zeros() const noexcept
     {
         if (data[1] != 0) {
-#ifdef _MSC_VER
-            return static_cast<int>(__lzcnt64(data[1]));
-#else
-            return __builtin_clzll(data[1]);
-#endif
+            return intrinsics::clz64(data[1]);
         } else if (data[0] != 0) {
-#ifdef _MSC_VER
-            return 64 + static_cast<int>(__lzcnt64(data[0]));
-#else
-            return 64 + __builtin_clzll(data[0]);
-#endif
+            return 64 + intrinsics::clz64(data[0]);
         } else {
             return 128;
         }
@@ -705,24 +601,9 @@ class uint128_t
     constexpr int trailing_zeros() const noexcept
     {
         if (data[0] != 0) {
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4701)
-            [[maybe_unused]] unsigned long index; // NOLINT(cppcoreguidelines-init-variables)
-#pragma warning(pop)
-            _BitScanForward64(&index, data[0]);
-            return static_cast<int>(index);
-#else
-            return __builtin_ctzll(data[0]);
-#endif
+            return intrinsics::ctz64(data[0]);
         } else if (data[1] != 0) {
-#ifdef _MSC_VER
-            unsigned long index;
-            _BitScanForward64(&index, data[1]);
-            return 64 + static_cast<int>(index);
-#else
-            return 64 + __builtin_ctzll(data[1]);
-#endif
+            return 64 + intrinsics::ctz64(data[1]);
         } else {
             return 128; // Número es cero
         }
@@ -753,6 +634,24 @@ class uint128_t
     {
         return (*this != uint128_t(0, 0)) &&
                ((*this & (*this - uint128_t(0, 1))) == uint128_t(0, 0));
+    }
+
+    /**
+     * @brief Valor absoluto (función identidad para uint128_t)
+     *
+     * @return Una copia de *this (sin cambios)
+     *
+     * @note Para tipos sin signo, el valor absoluto es el propio valor.
+     *       Esta función se proporciona para compatibilidad de interfaz
+     *       con int128_t y para uso genérico en templates.
+     *
+     * @example
+     *   abs(uint128_t(42)) → uint128_t(42)
+     *   abs(uint128_t(0))  → uint128_t(0)
+     */
+    constexpr uint128_t abs() const noexcept
+    {
+        return *this;
     }
 
     /**
@@ -885,6 +784,22 @@ class uint128_t
         return !(*this < other);
     }
 
+    /**
+     * @brief Operador de comparación de tres vías (spaceship operator, C++20)
+     * @param other El otro valor a comparar
+     * @return std::strong_ordering indicando la relación de orden
+     * @property Es `constexpr` y `noexcept`.
+     * @note Requerido por el estándar C++20 en ciertos contextos aunque
+     *       los operadores <, >, <=, >=, ==, != ya estén definidos.
+     */
+    constexpr std::strong_ordering operator<=>(const uint128_t& other) const noexcept
+    {
+        if (data[1] != other.data[1]) {
+            return data[1] <=> other.data[1];
+        }
+        return data[0] <=> other.data[0];
+    }
+
   private:
     // Normalizar divisor para tener la misma longitud efectiva que el dividendo
     constexpr std::pair<uint128_t, int> normalize_divisor(const uint128_t& dividendo) const noexcept
@@ -999,19 +914,20 @@ class uint128_t
      * @brief Operador de división y asignación (a /= b).
      * @param other El divisor.
      * @post El valor de `*this` se actualiza con el cociente de la división.
-     * @property Si `other` es cero, el resultado asignado es 0. Es `constexpr` y
-     * `noexcept`.
      * @return Una referencia a `*this`.
+     *
+     * @warning Si `other` es cero, el comportamiento es indefinido (undefined behavior)
+     *          como en tipos integrales estándar de C++. No se lanza excepción.
+     *
+     * @property Es `constexpr` y `noexcept`.
      * @test (test_divrem_basic)
      */
     constexpr uint128_t& operator/=(const uint128_t& other) noexcept
     {
+        // Comportamiento como tipos built-in: división por cero es UB
+        // No se verifica, acceso directo causa UB si other == 0
         const auto result = divrem(other);
-        if (result.has_value()) {
-            *this = result.value().first; // quotient
-        } else {
-            *this = uint128_t(0, 0); // División por cero -> 0
-        }
+        *this = result.value().first; // quotient (UB si !result.has_value())
         return *this;
     }
 
@@ -1032,19 +948,20 @@ class uint128_t
      * @brief Operador de módulo y asignación (a %= b).
      * @param other El divisor.
      * @post El valor de `*this` se actualiza con el resto de la división.
-     * @property Si `other` es cero, el resultado asignado es 0. Es `constexpr` y
-     * `noexcept`.
      * @return Una referencia a `*this`.
+     *
+     * @warning Si `other` es cero, el comportamiento es indefinido (undefined behavior)
+     *          como en tipos integrales estándar de C++. No se lanza excepción.
+     *
+     * @property Es `constexpr` y `noexcept`.
      * @test (test_divrem_basic)
      */
     constexpr uint128_t& operator%=(const uint128_t& other) noexcept
     {
+        // Comportamiento como tipos built-in: módulo por cero es UB
+        // No se verifica, acceso directo causa UB si other == 0
         const auto result = divrem(other);
-        if (result.has_value()) {
-            *this = result.value().second; // remainder
-        } else {
-            *this = uint128_t(0, 0); // División por cero -> 0
-        }
+        *this = result.value().second; // remainder (UB si !result.has_value())
         return *this;
     }
 
@@ -1363,6 +1280,27 @@ class uint128_t
     }
 
     /**
+     * @brief Operador unario de negación (-x)
+     * @return Negación aritmética del valor mediante aritmética modular (2^128 - x)
+     *
+     * @note Para tipos unsigned, -x está bien definido en C++ como 2^N - x.
+     *       Esto es consistente con unsigned int, unsigned long, etc.
+     *       Ejemplo: -uint128_t(5) produce 2^128 - 5
+     *
+     * @property Es `constexpr` y `noexcept`.
+     *
+     * @example
+     *   uint128_t x(23);
+     *   uint128_t neg_x = -x;  // 2^128 - 23
+     *   neg_x + x;             // 0 (por aritmética modular)
+     */
+    constexpr uint128_t operator-() const noexcept
+    {
+        // Complemento a dos: ~x + 1
+        return ~(*this) + uint128_t(1);
+    }
+
+    /**
      * @brief Operador de multiplicación y asignación (a *= b).
      * @param other El valor `uint128_t` por el que multiplicar.
      * @post El valor de `*this` se actualiza con los 128 bits inferiores del producto.
@@ -1389,43 +1327,7 @@ class uint128_t
      */
     constexpr uint128_t& operator*=(const uint128_t& other) noexcept
     {
-#if defined(__SIZEOF_INT128__)
-        // Ruta optimizada para compiladores con soporte nativo de 128 bits (GCC/Clang)
-        __uint128_t lhs = (static_cast<__uint128_t>(data[1]) << 64) | data[0];
-        __uint128_t rhs = (static_cast<__uint128_t>(other.data[1]) << 64) | other.data[0];
-        __uint128_t res = lhs * rhs;
-        data[0] = static_cast<uint64_t>(res);
-        data[1] = static_cast<uint64_t>(res >> 64);
-#else
-        // Fallback manual compatible con constexpr (para MSVC y otros)
-        const uint64_t lhs_lo = data[0];
-        const uint64_t lhs_hi = data[1];
-        const uint64_t rhs_lo = other.data[0];
-        const uint64_t rhs_hi = other.data[1];
-
-        // Multiplicación 64x64 -> 128 (parte baja)
-        const uint64_t u1 = lhs_lo & 0xffffffff;
-        const uint64_t v1 = rhs_lo & 0xffffffff;
-        uint64_t t = u1 * v1;
-        const uint64_t w3 = t & 0xffffffff;
-        uint64_t k = t >> 32;
-
-        const uint64_t u0 = lhs_lo >> 32;
-        t = (u0 * v1) + k;
-        k = t & 0xffffffff;
-        const uint64_t w1 = t >> 32;
-
-        const uint64_t v0 = rhs_lo >> 32;
-        t = (u1 * v0) + k;
-        k = t >> 32;
-
-        const uint64_t lo_hi = (u0 * v0) + w1 + k;
-        const uint64_t lo_lo = (t << 32) + w3;
-
-        // Resultado final
-        data[0] = lo_lo;
-        data[1] = (lhs_hi * rhs_lo) + (lhs_lo * rhs_hi) + lo_hi;
-#endif
+        intrinsics::mul128(data[0], data[1], other.data[0], other.data[1], &data[0], &data[1]);
         return *this;
     }
 
@@ -1584,44 +1486,6 @@ class uint128_t
     /// un número de 128 bits por uno de 64 bits, útil para el algoritmo de Knuth
 
   private:
-    // Emulación optimizada de __umulh para GCC/Clang
-    static inline uint64_t umulh_emulation(uint64_t a, uint64_t b) noexcept
-    {
-#if defined(__x86_64__) && defined(__BMI2__)
-        // BMI2: usar _mulx_u64 (equivalente directo a __umulh)
-        unsigned long long high_part;
-        (void)_mulx_u64(a, b, &high_part);
-        return high_part;
-
-#elif defined(__SIZEOF_INT128__)
-        // __uint128_t: más portable y generalmente muy eficiente
-        const __uint128_t result = static_cast<__uint128_t>(a) * b;
-        return static_cast<uint64_t>(result >> 64);
-
-#elif defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
-        // Inline assembly: mapeo directo a mulq (exactamente como __umulh)
-        uint64_t high_part, low_part;
-        __asm__("mulq %3" : "=a"(low_part), "=d"(high_part) : "a"(a), "r"(b) : "cc");
-        return high_part;
-
-#else
-        // Fallback: implementación manual optimizada
-        const uint32_t a_lo = static_cast<uint32_t>(a);
-        const uint32_t a_hi = static_cast<uint32_t>(a >> 32);
-        const uint32_t b_lo = static_cast<uint32_t>(b);
-        const uint32_t b_hi = static_cast<uint32_t>(b >> 32);
-
-        const uint64_t p0 = static_cast<uint64_t>(a_lo) * b_lo;
-        const uint64_t p1 = static_cast<uint64_t>(a_lo) * b_hi;
-        const uint64_t p2 = static_cast<uint64_t>(a_hi) * b_lo;
-        const uint64_t p3 = static_cast<uint64_t>(a_hi) * b_hi;
-
-        const uint64_t middle = p1 + (p0 >> 32) + static_cast<uint32_t>(p2);
-
-        return p3 + (middle >> 32) + (p2 >> 32);
-#endif
-    }
-
     // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
 
     static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
@@ -1759,45 +1623,20 @@ class uint128_t
 
   public:
     /**
-     * @brief Multiplicación completa de `uint128_t` por `uint64_t`, devolviendo la parte
-     * alta del resultado de 192 bits.
-     * @details Esta función calcula los 64 bits superiores (bits 128-191) del producto de
-     * `*this` y `multiplier`. Es una operación clave para algoritmos de división de alta
-     * precisión como el Algoritmo D de Knuth.
-     * @param multiplier El valor de 64 bits por el que se multiplicará.
-     * @pre El multiplicador es un `uint64_t`.
+     * @brief Calcula la parte alta de multiplicar este uint128_t por un uint64_t
+     * @details Retorna los bits 128-191 del resultado completo de 192 bits
+     * de multiplicar este número de 128 bits por un multiplicador de 64 bits.
+     * Usado en el algoritmo de división de Knuth.
+     * @param multiplier El multiplicador de 64 bits.
+     * @pre `multiplier` es un `uint64_t`.
      * @post No modifica el estado de `*this`.
-     * @return Los 64 bits más significativos del resultado de la multiplicación de 192
-     * bits.
+     * @return Un `uint64_t` con los 64 bits superiores del producto de 192 bits.
      * @property Es `noexcept`.
-     * @test (test_fullmult_times_uint64)
+     * @test (test_mulhi64)
      */
-    uint64_t fullmult_times_uint64(uint64_t multiplier) const noexcept
+    uint64_t mulhi64(uint64_t multiplier) const noexcept
     {
-#ifdef _MSC_VER
-        // MSVC: usar __umulh nativo (el más rápido)
-        const uint64_t high_high = __umulh(data[1], multiplier);
-        const uint64_t low_high = __umulh(data[0], multiplier);
-        const uint64_t mid_low = data[1] * multiplier;
-
-        // Sumar la parte media con carry
-        const uint64_t sum = low_high + mid_low;
-        const uint64_t carry = (sum < low_high) ? 1 : 0;
-
-        return high_high + carry;
-
-#else
-        // GCC/Clang: usar nuestra emulación optimizada de __umulh
-        const uint64_t high_high = umulh_emulation(data[1], multiplier);
-        const uint64_t low_high = umulh_emulation(data[0], multiplier);
-        const uint64_t mid_low = data[1] * multiplier;
-
-        // Sumar la parte media con carry (idéntico a MSVC)
-        const uint64_t sum = low_high + mid_low;
-        const uint64_t carry = (sum < low_high) ? 1 : 0;
-
-        return high_high + carry;
-#endif
+        return intrinsics::mul128x64_high(data[0], data[1], multiplier);
     }
 
     /**
@@ -1872,14 +1711,13 @@ class uint128_t
 
         // Si el divisor cabe en 64 bits (data[1] == 0), usamos una ruta rápida.
         if (v_in.data[1] == 0) {
-#if defined(__SIZEOF_INT128__) && !(defined(__INTEL_LLVM_COMPILER) && defined(_MSC_VER))
-            // Intel ICX en Windows usa el linker de MSVC que no proporciona __udivti3/__umodti3
-            const __uint128_t dividend = (static_cast<__uint128_t>(data[1]) << 64) | data[0];
-            const uint64_t divisor = v_in.data[0];
-            const __uint128_t q = dividend / divisor;
-            const __uint128_t r = dividend % divisor;
-            const uint128_t quotient(static_cast<uint64_t>(q >> 64), static_cast<uint64_t>(q));
-            const uint128_t remainder(0, static_cast<uint64_t>(r));
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+            // Disponible en GCC/Clang/Intel icpx en Linux
+            // En Windows (MSVC/Intel ICX) el linker no tiene __udivti3/__umodti3
+            uint64_t r = 0;
+            const uint64_t q_lo = intrinsics::div128_64(data[1], data[0], v_in.data[0], &r);
+            const uint128_t quotient(0, q_lo);
+            const uint128_t remainder(0, r);
             return std::make_pair(quotient, remainder);
 #else
             // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
@@ -1901,72 +1739,18 @@ class uint128_t
             u_extension = data[1] >> (64 - s);
         }
 
-        // D3. Calcular q_hat (Estimación del cociente)
-        // Dividimos los dos dígitos más significativos del dividendo
-#if defined(__SIZEOF_INT128__) && !(defined(__INTEL_LLVM_COMPILER) && defined(_MSC_VER))
-        // Intel ICX en Windows usa el linker de MSVC que no proporciona __udivti3/__umodti3
-        const __uint128_t numerator =
-            (static_cast<__uint128_t>(u_extension) << 64) | u_shifted.data[1];
-        const uint64_t divisor_high = v.data[1];
+        // D3-D8. Algoritmo completo de Knuth: estimar, multiplicar, restar, corregir y
+        // desnormalizar
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+        // Disponible en GCC/Clang/Intel icpx en Linux (todos usan libgcc/compiler-rt con __udivti3)
+        // En Windows, MSVC y Intel ICX/oneAPI usan el linker de MSVC que no tiene
+        // __udivti3/__umodti3
+        uint64_t remainder_hi, remainder_lo;
+        const uint64_t q =
+            intrinsics::knuth_division_step(u_extension, u_shifted.data[1], u_shifted.data[0],
+                                            v.data[1], v.data[0], s, &remainder_hi, &remainder_lo);
 
-        // División nativa de 128/64 para estimar
-        __uint128_t q_hat_wide = numerator / divisor_high;
-        __uint128_t r_hat_wide = numerator % divisor_high;
-
-        uint64_t q_hat = static_cast<uint64_t>(q_hat_wide);
-
-        // Ajuste de q_hat: El bucle interno de Knuth para refinar la estimación
-        while (true) {
-            if (q_hat_wide >= 0xFFFFFFFFFFFFFFFFULL) {
-                q_hat--;
-                r_hat_wide += divisor_high;
-                if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL)
-                    continue;
-            }
-
-            const __uint128_t left = static_cast<__uint128_t>(q_hat) * v.data[0];
-            const __uint128_t right = (r_hat_wide << 64) | u_shifted.data[0];
-
-            if (left > right) {
-                q_hat--;
-                r_hat_wide += divisor_high;
-                if (r_hat_wide > 0xFFFFFFFFFFFFFFFFULL)
-                    break;
-            } else {
-                break;
-            }
-            q_hat_wide = q_hat;
-        }
-
-        // D4. Multiplicar y Restar: u -= q_hat * v
-        const uint128_t p_low = v * uint128_t(0, q_hat);
-        const uint64_t p_ext = v.fullmult_times_uint64(q_hat);
-
-        // Guardamos estado para detectar "borrow" (underflow) en la resta de 128 bits
-        const uint128_t u_shifted_old = u_shifted;
-        uint128_t u_result = u_shifted - p_low;
-
-        // Detectamos si la resta pidió prestado
-        const uint64_t borrow = (u_result > u_shifted_old) ? 1 : 0;
-
-        // Realizamos la resta final en la parte más significativa
-        const int64_t final_balance =
-            static_cast<int64_t>(u_extension) - static_cast<int64_t>(p_ext + borrow);
-
-        // D5. Test de Resto (Corrección de signo)
-        // Si el balance es negativo, q_hat era 1 unidad muy grande.
-        if (final_balance < 0) {
-            // D6. Add Back
-            q_hat--;
-            u_result += v; // Devolvemos una vez el divisor al resto
-        }
-
-        const uint128_t quotient(0, q_hat);
-
-        // D8. Desnormalizar Resto
-        const uint128_t remainder = u_result.shift_right(s);
-
-        return std::make_pair(quotient, remainder);
+        return std::make_pair(uint128_t(0, q), uint128_t(remainder_hi, remainder_lo));
 #else
         // Fallback sin __uint128_t - usar algoritmo básico
         return divrem(v_in);
@@ -2224,25 +2008,31 @@ class uint128_t
         return uint128_t(high, low);
     }
 
+    // === CONVERSIÓN DESDE/HACIA STRINGS ===
+
     /**
-     * @brief Crea un `uint128_t` a partir de una cadena de caracteres (C-string) con
-     * detección automática de base.
-     * @details Detecta los prefijos "0x" (hex), "0b" (binario) y "0" (octal). Si no hay
-     * prefijo, asume base 10.
-     * @param str La cadena de entrada.
-     * @return El `uint128_t` resultante. Devuelve 0 si la cadena es nula o vacía.
-     * @property Es `static` y `constexpr`.
-     * @test (test_from_cstr)
-     * @code{.cpp}
-     * // uint128_t val;
-     * // val.set_low(0x1234);
-     * // assert(val.low() == 0x1234);
-     * @endcode
+     * @brief Parsea una cadena de caracteres a uint128_t con detección de errores
+     * @details Función principal de parsing que detecta automáticamente la base:
+     * - "0x" o "0X" prefijo: base 16 (hexadecimal)
+     * - "0b" o "0B" prefijo: base 2 (binario)
+     * - "0" prefijo con dígitos 0-7: base 8 (octal)
+     * - Sin prefijo: base 10 (decimal)
+     *
+     * @param str Puntero a la cadena de caracteres C-string
+     * @return std::pair<parse_error, uint128_t> con el código de error y el resultado
+     *
+     * @note Si hay error, el uint128_t retornado es cero
+     * @property Es static, constexpr y noexcept
+     * @test (test_parse)
      */
-    static constexpr uint128_t from_cstr(const char* str)
+    static constexpr std::pair<parse_error, uint128_t> parse(const char* str) noexcept
     {
-        if (!str || !*str) {
-            return uint128_t(0, 0);
+        if (!str) {
+            return {parse_error::null_pointer, uint128_t(0, 0)};
+        }
+
+        if (!*str) {
+            return {parse_error::empty_string, uint128_t(0, 0)};
         }
 
         // Detectar base y posición inicial
@@ -2264,14 +2054,113 @@ class uint128_t
                         is_octal = false;
                     }
                 }
-                if (is_octal) {
+                if (is_octal && str[1] >= '0' && str[1] <= '7') {
                     base = 8;
                     start = str + 1;
                 }
             }
         }
 
-        return from_cstr_base(start, base);
+        // Validar que hay contenido después del prefijo
+        if (!*start) {
+            return {parse_error::empty_string, uint128_t(0, 0)};
+        }
+
+        return parse_base(start, base);
+    }
+
+    /**
+     * @brief Parsea una cadena de caracteres a uint128_t en una base específica
+     * @details Realiza el parsing con validación completa de caracteres y detección de overflow
+     *
+     * @param str Puntero a la cadena de caracteres C-string
+     * @param base Base numérica (debe estar entre 2 y 36)
+     * @return std::pair<parse_error, uint128_t> con el código de error y el resultado
+     *
+     * @note Si hay error, el uint128_t retornado es cero
+     * @property Es static, constexpr y noexcept
+     * @test (test_parse_base)
+     */
+    static constexpr std::pair<parse_error, uint128_t> parse_base(const char* str,
+                                                                  int base) noexcept
+    {
+        if (!str) {
+            return {parse_error::null_pointer, uint128_t(0, 0)};
+        }
+
+        if (!*str) {
+            return {parse_error::empty_string, uint128_t(0, 0)};
+        }
+
+        if (base < 2 || base > 36) {
+            return {parse_error::invalid_base, uint128_t(0, 0)};
+        }
+
+        uint128_t result(0, 0);
+        const uint128_t base_val(0, static_cast<uint64_t>(base));
+        const uint128_t max_before_mult = uint128_t::max() / base_val;
+
+        for (const char* p = str; *p; ++p) {
+            int digit_value = -1;
+
+            if (*p >= '0' && *p <= '9') {
+                digit_value = *p - '0';
+            } else if (*p >= 'A' && *p <= 'Z') {
+                digit_value = *p - 'A' + 10;
+            } else if (*p >= 'a' && *p <= 'z') {
+                digit_value = *p - 'a' + 10;
+            }
+
+            if (digit_value == -1 || digit_value >= base) {
+                // Carácter inválido para esta base
+                return {parse_error::invalid_character, uint128_t(0, 0)};
+            }
+
+            // Verificar overflow antes de multiplicar
+            if (result > max_before_mult) {
+                return {parse_error::overflow, uint128_t(0, 0)};
+            }
+
+            const uint128_t old_result = result;
+            result = result * base_val;
+
+            // Verificar overflow en la multiplicación
+            if (result < old_result) {
+                return {parse_error::overflow, uint128_t(0, 0)};
+            }
+
+            // Verificar overflow antes de sumar el dígito
+            const uint128_t digit_val(0, static_cast<uint64_t>(digit_value));
+            if (result > uint128_t::max() - digit_val) {
+                return {parse_error::overflow, uint128_t(0, 0)};
+            }
+
+            result = result + digit_val;
+        }
+
+        return {parse_error::success, result};
+    }
+
+    /**
+     * @brief Crea un `uint128_t` a partir de una cadena de caracteres (C-string) con
+     * detección automática de base.
+     * @details Detecta los prefijos "0x" (hex), "0b" (binario) y "0" (octal). Si no hay
+     * prefijo, asume base 10.
+     * @param str La cadena de entrada.
+     * @return El `uint128_t` resultante. Devuelve 0 si la cadena es nula o vacía.
+     * @property Es `static` y `constexpr`.
+     * @test (test_from_cstr)
+     * @code{.cpp}
+     * // uint128_t val;
+     * // val.set_low(0x1234);
+     * // assert(val.low() == 0x1234);
+     * @endcode
+     */
+    static constexpr uint128_t from_cstr(const char* str)
+    {
+        const auto [error, result] = parse(str);
+        (void)error; // Ignorar el error en esta versión legacy
+        return result;
     }
 
     /**
@@ -2290,32 +2179,8 @@ class uint128_t
      */
     static constexpr uint128_t from_cstr_base(const char* str, int base)
     {
-        if (!str || !*str || base < 2 || base > 36) {
-            return uint128_t(0, 0);
-        }
-
-        uint128_t result(0, 0);
-        const uint128_t base_val(0, static_cast<uint64_t>(base));
-
-        for (const char* p = str; *p; ++p) {
-            int digit_value = -1;
-
-            if (*p >= '0' && *p <= '9') {
-                digit_value = *p - '0';
-            } else if (*p >= 'A' && *p <= 'Z') {
-                digit_value = *p - 'A' + 10;
-            } else if (*p >= 'a' && *p <= 'z') {
-                digit_value = *p - 'a' + 10;
-            }
-
-            if (digit_value == -1 || digit_value >= base) {
-                // Caracteres inválidos terminan el parsing
-                break;
-            }
-
-            result = result * base_val + uint128_t(0, static_cast<uint64_t>(digit_value));
-        }
-
+        const auto [error, result] = parse_base(str, base);
+        (void)error; // Ignorar el error en esta versión legacy
         return result;
     }
 
@@ -2450,9 +2315,10 @@ class uint128_t
     /**
      * @brief Crea un `uint128_t` a partir de una `std::string` con detección automática de
      * base.
-     * @details Delega a `from_string_base` tras analizar los prefijos "0x", "0b" y "0".
+     * @details Usa parse() internamente para detección de base y validación.
+     * Soporta prefijos "0x" (hex), "0b" (binario) y "0" (octal).
      * @param str La `std::string` de entrada.
-     * @return El `uint128_t` resultante.
+     * @return El `uint128_t` resultante. Devuelve 0 si hay error.
      * @property Es `static`.
      * @test (test_from_string)
      * @code{.cpp}
@@ -2463,47 +2329,17 @@ class uint128_t
      */
     static uint128_t from_string(const std::string& str)
     {
-        if (str.empty()) {
-            return uint128_t(0, 0);
-        }
-
-        std::string cleaned = str;
-        int base = 10;
-        size_t start_pos = 0;
-
-        // Detectar prefijo y base
-        if (cleaned.size() > 2) {
-            if (cleaned.substr(0, 2) == "0x" || cleaned.substr(0, 2) == "0X") {
-                base = 16;
-                start_pos = 2;
-            } else if (cleaned.substr(0, 2) == "0b" || cleaned.substr(0, 2) == "0B") {
-                base = 2;
-                start_pos = 2;
-            }
-        }
-        if (cleaned.size() > 1 && cleaned[0] == '0' && base == 10) {
-            // Detectar octal (empieza con 0 pero no es 0x o 0b)
-            bool is_octal = true;
-            for (size_t i = 1; i < cleaned.size(); ++i) {
-                if (cleaned[i] < '0' || cleaned[i] > '7') {
-                    is_octal = false;
-                    break;
-                }
-            }
-            if (is_octal && cleaned.size() > 1) {
-                base = 8;
-                start_pos = 1;
-            }
-        }
-
-        return from_string_base(cleaned.substr(start_pos), base);
+        auto [error, result] = parse(str.c_str());
+        (void)error; // Ignorar el error para compatibilidad
+        return result;
     }
 
     /**
      * @brief Crea un `uint128_t` a partir de una `std::string` en una base específica.
+     * @details Usa parse_base() internamente para validación completa.
      * @param str La `std::string` de entrada.
      * @param base La base numérica (entre 2 y 36).
-     * @return El `uint128_t` resultante. Devuelve 0 si los parámetros son inválidos.
+     * @return El `uint128_t` resultante. Devuelve 0 si hay error.
      * @property Es `static`.
      * @test (test_from_string_base)
      * @code{.cpp}
@@ -2514,33 +2350,8 @@ class uint128_t
      */
     static uint128_t from_string_base(const std::string& str, int base)
     {
-        if (str.empty() || base < 2 || base > 36) {
-            return uint128_t(0, 0);
-        }
-
-        uint128_t result(0, 0);
-        const uint128_t base_val(0, static_cast<uint64_t>(base));
-
-        for (char c : str) {
-            int digit_value = -1;
-
-            if (c >= '0' && c <= '9') {
-                digit_value = c - '0';
-            } else if (c >= 'A' && c <= 'Z') {
-                digit_value = c - 'A' + 10;
-            } else if (c >= 'a' && c <= 'z') {
-                digit_value = c - 'a' + 10;
-            }
-
-            if (digit_value == -1 || digit_value >= base) {
-                // Caracteres inválidos se ignoran
-                continue;
-            }
-
-            result *= base_val;
-            result += uint128_t(0, static_cast<uint64_t>(digit_value));
-        }
-
+        auto [error, result] = parse_base(str.c_str(), base);
+        (void)error; // Ignorar el error para compatibilidad
         return result;
     }
 };
@@ -2562,250 +2373,94 @@ inline constexpr uint128_t& uint128_t::operator=(const char* str) noexcept
 // ========================= OPERADORES FRIEND FUERA DE LA CLASE =========================
 // Para evitar ambigüedad con operadores existentes, se definen fuera de la clase
 
-// Operadores aritméticos simétricos para int
-inline constexpr uint128_t operator+(int lhs, const uint128_t& rhs) noexcept
+// TODO(C++26): Refactorizar con reflection (P2996) cuando esté disponible
+// Con reflection, estos ~100 operadores simétricos se podrían generar automáticamente:
+//
+// consteval void generate_symmetric_operators() {
+//     for (constexpr auto op : operators_of(^uint128_t)) {  // ^ o ^^ según sintaxis final
+//         if (is_binary_operator(op)) {
+//             inject(make_symmetric_for<integral_builtin>(op));
+//         }
+//     }
+// }
+//
+// Esto eliminaría toda esta sección, reemplazándola por 5-10 líneas de código generador.
+
+// Operadores aritméticos simétricos (template unificado para tipos enteros < 128 bits)
+template <integral_builtin T>
+inline constexpr uint128_t operator+(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) + rhs;
 }
-inline constexpr uint128_t operator-(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T>
+inline constexpr uint128_t operator-(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) - rhs;
 }
-inline constexpr uint128_t operator*(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T>
+inline constexpr uint128_t operator*(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) * rhs;
 }
-inline constexpr uint128_t operator/(int lhs, const uint128_t& rhs)
+
+template <integral_builtin T> inline constexpr uint128_t operator/(T lhs, const uint128_t& rhs)
 {
     return uint128_t(lhs) / rhs;
 }
-inline constexpr uint128_t operator%(int lhs, const uint128_t& rhs)
+
+template <integral_builtin T> inline constexpr uint128_t operator%(T lhs, const uint128_t& rhs)
 {
     return uint128_t(lhs) % rhs;
 }
 
-// Operadores aritméticos simétricos para uint32_t
-inline constexpr uint128_t operator+(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) + rhs;
-}
-inline constexpr uint128_t operator-(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) - rhs;
-}
-inline constexpr uint128_t operator*(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) * rhs;
-}
-inline constexpr uint128_t operator/(std::uint32_t lhs, const uint128_t& rhs)
-{
-    return uint128_t(lhs) / rhs;
-}
-inline constexpr uint128_t operator%(std::uint32_t lhs, const uint128_t& rhs)
-{
-    return uint128_t(lhs) % rhs;
-}
-
-// Operadores aritméticos simétricos para int64_t
-inline constexpr uint128_t operator+(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) + rhs;
-}
-inline constexpr uint128_t operator-(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) - rhs;
-}
-inline constexpr uint128_t operator*(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) * rhs;
-}
-inline constexpr uint128_t operator/(std::int64_t lhs, const uint128_t& rhs)
-{
-    return uint128_t(lhs) / rhs;
-}
-inline constexpr uint128_t operator%(std::int64_t lhs, const uint128_t& rhs)
-{
-    return uint128_t(lhs) % rhs;
-}
-
-// Operadores aritméticos simétricos para uint64_t
-inline constexpr uint128_t operator+(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) + rhs;
-}
-inline constexpr uint128_t operator-(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) - rhs;
-}
-inline constexpr uint128_t operator*(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) * rhs;
-}
-inline constexpr uint128_t operator/(std::uint64_t lhs, const uint128_t& rhs)
-{
-    return uint128_t(lhs) / rhs;
-}
-inline constexpr uint128_t operator%(std::uint64_t lhs, const uint128_t& rhs)
-{
-    return uint128_t(lhs) % rhs;
-}
-
-// Operadores de comparación simétricos para int
-inline constexpr bool operator==(int lhs, const uint128_t& rhs) noexcept
+// Operadores de comparación simétricos (template unificado)
+template <integral_builtin T> inline constexpr bool operator==(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) == rhs;
 }
-inline constexpr bool operator!=(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T> inline constexpr bool operator!=(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) != rhs;
 }
-inline constexpr bool operator<(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T> inline constexpr bool operator<(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) < rhs;
 }
-inline constexpr bool operator<=(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T> inline constexpr bool operator<=(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) <= rhs;
 }
-inline constexpr bool operator>(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T> inline constexpr bool operator>(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) > rhs;
 }
-inline constexpr bool operator>=(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T> inline constexpr bool operator>=(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) >= rhs;
 }
 
-// Operadores de comparación simétricos para uint32_t
-inline constexpr bool operator==(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) == rhs;
-}
-inline constexpr bool operator!=(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) != rhs;
-}
-inline constexpr bool operator<(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) < rhs;
-}
-inline constexpr bool operator<=(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) <= rhs;
-}
-inline constexpr bool operator>(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) > rhs;
-}
-inline constexpr bool operator>=(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) >= rhs;
-}
-
-// Operadores de comparación simétricos para int64_t
-inline constexpr bool operator==(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) == rhs;
-}
-inline constexpr bool operator!=(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) != rhs;
-}
-inline constexpr bool operator<(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) < rhs;
-}
-inline constexpr bool operator<=(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) <= rhs;
-}
-inline constexpr bool operator>(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) > rhs;
-}
-inline constexpr bool operator>=(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) >= rhs;
-}
-
-// Operadores de comparación simétricos para uint64_t
-inline constexpr bool operator==(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) == rhs;
-}
-inline constexpr bool operator!=(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) != rhs;
-}
-inline constexpr bool operator<(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) < rhs;
-}
-inline constexpr bool operator<=(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) <= rhs;
-}
-inline constexpr bool operator>(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) > rhs;
-}
-inline constexpr bool operator>=(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) >= rhs;
-}
-
-// Operadores bitwise simétricos para int
-inline constexpr uint128_t operator&(int lhs, const uint128_t& rhs) noexcept
+// Operadores bitwise simétricos (template unificado)
+template <integral_builtin T>
+inline constexpr uint128_t operator&(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) & rhs;
 }
-inline constexpr uint128_t operator|(int lhs, const uint128_t& rhs) noexcept
+
+template <integral_builtin T>
+inline constexpr uint128_t operator|(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) | rhs;
-}
-inline constexpr uint128_t operator^(int lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) ^ rhs;
 }
 
-// Operadores bitwise simétricos para uint32_t
-inline constexpr uint128_t operator&(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) & rhs;
-}
-inline constexpr uint128_t operator|(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) | rhs;
-}
-inline constexpr uint128_t operator^(std::uint32_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) ^ rhs;
-}
-
-// Operadores bitwise simétricos para int64_t
-inline constexpr uint128_t operator&(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) & rhs;
-}
-inline constexpr uint128_t operator|(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) | rhs;
-}
-inline constexpr uint128_t operator^(std::int64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) ^ rhs;
-}
-
-// Operadores bitwise simétricos para uint64_t
-inline constexpr uint128_t operator&(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) & rhs;
-}
-inline constexpr uint128_t operator|(std::uint64_t lhs, const uint128_t& rhs) noexcept
-{
-    return uint128_t(lhs) | rhs;
-}
-inline constexpr uint128_t operator^(std::uint64_t lhs, const uint128_t& rhs) noexcept
+template <integral_builtin T>
+inline constexpr uint128_t operator^(T lhs, const uint128_t& rhs) noexcept
 {
     return uint128_t(lhs) ^ rhs;
 }
@@ -2831,7 +2486,7 @@ inline constexpr uint128_t operator^(std::uint64_t lhs, const uint128_t& rhs) no
 // }
 
 // Constante MAX definida después de la clase
-constexpr uint128_t uint128_t_MAX = uint128_t(UINT64_MAX, UINT64_MAX);
+constexpr uint128_t uint128_t_MAX = uint128_t::max();
 
 // ========================= LITERALES DEFINIDOS POR EL USUARIO =========================
 // Namespace para los literales UDL

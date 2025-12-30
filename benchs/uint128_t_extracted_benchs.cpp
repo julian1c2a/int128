@@ -531,6 +531,223 @@ void benchmark_division()
 #endif
 }
 
+// ========================= DIVISION ALGORITHMS COMPARISON =========================
+
+void benchmark_division_algorithms()
+{
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "Division Algorithms Comparison" << std::endl;
+    std::cout << "Comparing divrem() vs knuth_D_divrem()" << std::endl;
+    std::cout << "========================================\n" << std::endl;
+
+    struct ComparisonResult {
+        std::string test_name;
+        double divrem_time_ns;
+        double knuth_time_ns;
+        double divrem_cycles;
+        double knuth_cycles;
+    };
+    std::vector<ComparisonResult> comparisons;
+
+    // Test Case 1: Small numbers (64-bit dividend, 64-bit divisor)
+    std::cout << "Test 1: Small numbers (64-bit range)..." << std::endl;
+    {
+        uint128_t dividend(0, rng());
+        uint128_t divisor(0, rng() | 1);
+
+        double divrem_time = benchmark_operation(
+            "division_small_divrem", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        double knuth_time = benchmark_operation(
+            "division_small_knuth_D", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.knuth_D_divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        comparisons.push_back({"Small (64-bit)", divrem_time, knuth_time,
+                               all_results[all_results.size() - 2].cycles,
+                               all_results[all_results.size() - 1].cycles});
+    }
+
+    // Test Case 2: Large dividend, small divisor (common case)
+    std::cout << "Test 2: Large dividend, small divisor..." << std::endl;
+    {
+        uint128_t dividend(rng(), rng());
+        uint128_t divisor(0, rng() | 1);
+
+        double divrem_time = benchmark_operation(
+            "division_large_small_divrem", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        double knuth_time = benchmark_operation(
+            "division_large_small_knuth_D", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.knuth_D_divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        comparisons.push_back({"Large/Small", divrem_time, knuth_time,
+                               all_results[all_results.size() - 2].cycles,
+                               all_results[all_results.size() - 1].cycles});
+    }
+
+    // Test Case 3: Both large (128-bit dividend, 128-bit divisor)
+    std::cout << "Test 3: Both large (full 128-bit)..." << std::endl;
+    {
+        uint128_t dividend(rng(), rng());
+        uint128_t divisor(rng() | 1, rng() | 1);
+
+        double divrem_time = benchmark_operation(
+            "division_both_large_divrem", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        double knuth_time = benchmark_operation(
+            "division_both_large_knuth_D", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.knuth_D_divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        comparisons.push_back({"Both Large (128-bit)", divrem_time, knuth_time,
+                               all_results[all_results.size() - 2].cycles,
+                               all_results[all_results.size() - 1].cycles});
+    }
+
+    // Test Case 4: Power of 2 divisor (optimization path)
+    std::cout << "Test 4: Power of 2 divisor (optimization)..." << std::endl;
+    {
+        uint128_t dividend(rng(), rng());
+        uint128_t divisor(0, 1ULL << (rng() % 63)); // Random power of 2
+
+        double divrem_time = benchmark_operation(
+            "division_pow2_divrem", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        double knuth_time = benchmark_operation(
+            "division_pow2_knuth_D", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.knuth_D_divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        comparisons.push_back({"Power of 2", divrem_time, knuth_time,
+                               all_results[all_results.size() - 2].cycles,
+                               all_results[all_results.size() - 1].cycles});
+    }
+
+    // Test Case 5: Worst case - requires normalization and correction
+    std::cout << "Test 5: Worst case (needs normalization)..." << std::endl;
+    {
+        // Create numbers that require full Knuth D processing
+        uint128_t dividend(0x7FFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL);
+        uint128_t divisor(0x4000000000000000ULL, 0x0000000000000001ULL);
+
+        double divrem_time = benchmark_operation(
+            "division_worst_divrem", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        double knuth_time = benchmark_operation(
+            "division_worst_knuth_D", "uint128_t",
+            [&]() {
+                volatile auto result = dividend.knuth_D_divrem(divisor);
+                (void)result;
+            },
+            100000);
+
+        comparisons.push_back({"Worst Case", divrem_time, knuth_time,
+                               all_results[all_results.size() - 2].cycles,
+                               all_results[all_results.size() - 1].cycles});
+    }
+
+    // Test Case 6: Random cases (statistical average)
+    std::cout << "Test 6: Random cases (1000 samples)..." << std::endl;
+    {
+        std::vector<std::pair<uint128_t, uint128_t>> test_cases;
+        test_cases.reserve(1000);
+        for (int i = 0; i < 1000; ++i) {
+            uint64_t div_hi = (rng() % 3 == 0) ? 0 : rng(); // 33% chance of 64-bit divisor
+            test_cases.emplace_back(uint128_t(rng(), rng()), uint128_t(div_hi, rng() | 1));
+        }
+
+        size_t idx = 0;
+        double divrem_time = benchmark_operation(
+            "division_random_divrem", "uint128_t",
+            [&]() {
+                volatile auto result =
+                    test_cases[idx % 1000].first.divrem(test_cases[idx % 1000].second);
+                idx++;
+                (void)result;
+            },
+            100000);
+
+        idx = 0;
+        double knuth_time = benchmark_operation(
+            "division_random_knuth_D", "uint128_t",
+            [&]() {
+                volatile auto result =
+                    test_cases[idx % 1000].first.knuth_D_divrem(test_cases[idx % 1000].second);
+                idx++;
+                (void)result;
+            },
+            100000);
+
+        comparisons.push_back({"Random Mix", divrem_time, knuth_time,
+                               all_results[all_results.size() - 2].cycles,
+                               all_results[all_results.size() - 1].cycles});
+    }
+
+    // Print comparison table
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "DIVISION ALGORITHMS RESULTS" << std::endl;
+    std::cout << "========================================" << std::endl;
+    std::cout << std::left << std::setw(25) << "Test Case" << std::right << std::setw(15)
+              << "divrem (ns)" << std::setw(15) << "knuth_D (ns)" << std::setw(12) << "Ratio"
+              << std::setw(15) << "divrem (cy)" << std::setw(15) << "knuth_D (cy)" << std::setw(12)
+              << "Ratio" << std::endl;
+    std::cout << std::string(108, '-') << std::endl;
+
+    for (const auto& cmp : comparisons) {
+        double time_ratio = cmp.knuth_time_ns / cmp.divrem_time_ns;
+        double cycles_ratio = cmp.knuth_cycles / cmp.divrem_cycles;
+        std::cout << std::left << std::setw(25) << cmp.test_name << std::right << std::fixed
+                  << std::setprecision(2) << std::setw(15) << cmp.divrem_time_ns << std::setw(15)
+                  << cmp.knuth_time_ns << std::setw(12) << time_ratio << "x" << std::setw(14)
+                  << cmp.divrem_cycles << std::setw(15) << cmp.knuth_cycles << std::setw(12)
+                  << cycles_ratio << "x" << std::endl;
+    }
+    std::cout << std::string(108, '-') << std::endl;
+    std::cout << "Note: Ratio > 1.0 means knuth_D is SLOWER than divrem" << std::endl;
+    std::cout << "      Ratio < 1.0 means knuth_D is FASTER than divrem" << std::endl;
+
+    std::cout << "\nDivision algorithms comparison completed.\n" << std::endl;
+}
+
 void benchmark_modulo()
 {
     std::cout << "Benchmarking Modulo..." << std::endl;
@@ -1200,6 +1417,7 @@ int main(int argc, char* argv[])
     benchmark_subtraction();
     benchmark_multiplication();
     benchmark_division();
+    benchmark_division_algorithms(); // NEW: Compare divrem vs knuth_D_divrem
     benchmark_modulo();
     benchmark_bitwise();
     benchmark_shifts();
