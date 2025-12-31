@@ -163,9 +163,8 @@ class uint128_t
      * assert(val.high() == 0xABCD);
      * @endcode
      */
-    template <typename T> constexpr void set_high(T value) noexcept
+    template <integral_builtin T> constexpr void set_high(T value) noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
         data[1] = static_cast<uint64_t>(value);
     }
 
@@ -183,9 +182,8 @@ class uint128_t
      * assert(val.low() == 0x1234);
      * @endcode
      */
-    template <typename T> constexpr void set_low(T value) noexcept
+    template <integral_builtin T> constexpr void set_low(T value) noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
         data[0] = static_cast<uint64_t>(value);
     }
 
@@ -217,11 +215,9 @@ class uint128_t
      * assert(neg.high() == ~0ull);
      * @endcode
      */
-    template <typename T>
+    template <integral_builtin T>
     constexpr uint128_t(T value) noexcept : data{static_cast<uint64_t>(value), 0ull}
     {
-        static_assert(std::is_integral_v<T> && sizeof(T) <= 8,
-                      "T must be an integral type <= 8 bytes");
         if constexpr (std::is_signed_v<T>) {
             if (value < 0) {
                 data[1] = ~0ull; // Extensión de signo correcta para negativos
@@ -243,12 +239,10 @@ class uint128_t
      * assert(val.high() == 0x1 && val.low() == 0x2);
      * @endcode
      */
-    template <typename T1, typename T2>
+    template <integral_builtin T1, integral_builtin T2>
     constexpr uint128_t(T1 high, T2 low) noexcept
         : data{static_cast<uint64_t>(low), static_cast<uint64_t>(high)}
     {
-        static_assert(std::is_integral_v<T1> && std::is_integral_v<T2>,
-                      "T1 and T2 must be integral types");
     }
 
     /**
@@ -301,10 +295,8 @@ class uint128_t
      * // variable con un valor inicial y luego se asigna otro
      * @endcode
      */
-    template <typename T> constexpr uint128_t& operator=(T value) noexcept
+    template <integral_builtin T> constexpr uint128_t& operator=(T value) noexcept
     {
-        static_assert(std::is_integral_v<T> && sizeof(T) <= 8,
-                      "T must be an integral type <= 8 bytes");
         data[0] = static_cast<uint64_t>(value);
         data[1] = 0ull;
         if constexpr (std::is_signed_v<T>) {
@@ -540,7 +532,7 @@ class uint128_t
     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
     {
         uint64_t temp = 0;
-        unsigned char carry = intrinsics::add_u64(data[0], other.data[0], &temp);
+        const unsigned char carry = intrinsics::add_u64(data[0], other.data[0], &temp);
         data[0] = temp;
         intrinsics::addcarry_u64(carry, data[1], other.data[1], &temp);
         data[1] = temp;
@@ -563,11 +555,67 @@ class uint128_t
     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
     {
         uint64_t temp = 0;
-        unsigned char borrow = intrinsics::sub_u64(data[0], other.data[0], &temp);
+        const unsigned char borrow = intrinsics::sub_u64(data[0], other.data[0], &temp);
         data[0] = temp;
         intrinsics::subborrow_u64(borrow, data[1], other.data[1], &temp);
         data[1] = temp;
         return *this;
+    }
+
+    /**
+     * @brief Sobrecarga del operador suma y asignación para tipos integrales builtin.
+     * @tparam T Un tipo de dato integral (e.g., `int`, `uint64_t`).
+     * @param value El valor integral a sumar.
+     * @post El valor de `*this` se actualiza con el resultado de la suma.
+     * @property El desbordamiento (overflow) se maneja de forma silenciosa, como en los
+     * enteros estándar. Es `constexpr` y `noexcept`.
+     * @return Una referencia a `*this`.
+     * @test (test_addition_assignment)
+     */
+    template <integral_builtin T> constexpr uint128_t& operator+=(T value) noexcept
+    {
+        if constexpr (std::is_unsigned_v<T>) {
+            // Para tipos sin signo, simplemente sumamos
+            // (comportamiento idéntico al de uint128_t)
+            *this += uint128_t(static_cast<uint64_t>(value));
+            return *this;
+        } else {
+            // Para tipos con signo, manejamos valores negativos
+            if (value < 0) {
+                *this -= static_cast<uint128_t>(-value);
+            } else {
+                *this += uint128_t(static_cast<uint64_t>(value));
+            }
+            return *this;
+        }
+    }
+
+    /**
+     * @brief Sobrecarga del operador resta y asignación para tipos integrales builtin.
+     * @tparam T Un tipo de dato integral (e.g., `int`, `uint64_t`).
+     * @param value El valor integral a restar.
+     * @post El valor de `*this` se actualiza con el resultado de la resta.
+     * @property El desbordamiento (overflow) se maneja de forma silenciosa, como en los
+     * enteros estándar. Es `constexpr` y `noexcept`.
+     * @return Una referencia a `*this`.
+     * @test (test_subtraction_assignment)
+     */
+    template <integral_builtin T> constexpr uint128_t& operator-=(T value) noexcept
+    {
+        if constexpr (std::is_unsigned_v<T>) {
+            // Para tipos sin signo, simplemente restamos
+            // (comportamiento idéntico al de uint128_t)
+            *this -= uint128_t(static_cast<uint64_t>(value));
+            return *this;
+        } else {
+            // Para tipos con signo, manejamos valores negativos
+            if (value < 0) {
+                *this += static_cast<uint128_t>(-value);
+            } else {
+                *this -= uint128_t(static_cast<uint64_t>(value));
+            }
+            return *this;
+        }
     }
 
     // FUNCIONES AUXILIARES PARA DIVISIÓN
@@ -800,6 +848,32 @@ class uint128_t
         return data[0] <=> other.data[0];
     }
 
+    /**
+     * @brief Sobrecarga del operador de comparación de tres vías
+     * (spaceship operator, C++20) para tipos integrales builtin.
+     * @param other El otro valor a comparar
+     * @return std::strong_ordering indicando la relación de orden
+     * @property Es `constexpr` y `noexcept`.
+     * @note Requerido por el estándar C++20 en ciertos contextos aunque
+     *       los operadores <, >, <=, >=, ==, != ya estén definidos.
+     */
+    template <integral_builtin T> constexpr std::strong_ordering operator<=>(T other) const noexcept
+    {
+        if constexpr (std::is_signed_v<T>) {
+            if (other < 0) {
+                return std::strong_ordering::greater;
+            }
+        }
+
+        // Si data[1] != 0, entonces *this definitivamente > other (que cabe en 64 bits)
+        if (data[1] != 0) {
+            return std::strong_ordering::greater;
+        }
+
+        // Ambos valores caben en 64 bits, comparar directamente
+        return data[0] <=> static_cast<uint64_t>(other);
+    }
+
   private:
     // Normalizar divisor para tener la misma longitud efectiva que el dividendo
     constexpr std::pair<uint128_t, int> normalize_divisor(const uint128_t& dividendo) const noexcept
@@ -895,19 +969,108 @@ class uint128_t
     }
 
     /**
-     * @brief Sobrecarga de `divrem` para divisores de tipo integral.
-     * @tparam T Un tipo de dato integral.
+     * @brief Sobrecarga optimizada de `divrem` para divisores de tipo integral builtin.
+     * @details Optimización para divisor de 64 bits o menos. Usa el algoritmo de
+     * división larga 128/64 bits que es significativamente más rápido que la división
+     * completa 128/128 bits.
+     * @tparam T Un tipo de dato integral builtin (uint8_t, int32_t, uint64_t, etc.).
      * @param divisor El valor integral por el cual dividir.
-     * @pre `T` debe ser un tipo integral. Se verifica en tiempo de compilación.
-     * @return El resultado de llamar a `divrem` con el divisor convertido a `uint128_t`.
+     * @pre `T` debe ser un tipo integral builtin. Se verifica con integral_builtin concept.
+     * @return std::optional<std::pair<uint128_t, uint128_t>> con {cociente, resto}.
+     *         Devuelve std::nullopt si divisor == 0.
      * @property Es `constexpr` y `noexcept`.
      * @test (test_divrem_integral_divisor)
+     *
+     * @note Algoritmo: División larga 128 bits / 64 bits
+     *       1. Convertir divisor a uint64_t (manejar signed negativos si aplica)
+     *       2. Si divisor == 0: retornar nullopt
+     *       3. Si *this < divisor: cociente=0, resto=*this
+     *       4. Si divisor es potencia de 2: usar shift y mask
+     *       5. Algoritmo general 128/64:
+     *          - Dividir data[1] / divisor → cociente_alto, resto_alto
+     *          - Componer (resto_alto << 64) | data[0]
+     *          - Dividir dividendo_compuesto / divisor → cociente_bajo, resto_final
+     *          - Resultado: cociente = (cociente_alto << 64) | cociente_bajo
      */
-    template <typename T>
+    template <integral_builtin T>
     constexpr std::optional<std::pair<uint128_t, uint128_t>> divrem(T divisor) const noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
-        return divrem(uint128_t(divisor));
+        // Manejar tipos con signo
+        uint64_t divisor_u64;
+        if constexpr (std::is_signed_v<T>) {
+            if (divisor < 0) {
+                // División por negativo: convertir a positivo
+                // (manejar signo del resultado lo hace el caller)
+                divisor_u64 = static_cast<uint64_t>(-static_cast<int64_t>(divisor));
+            } else {
+                divisor_u64 = static_cast<uint64_t>(divisor);
+            }
+        } else {
+            divisor_u64 = static_cast<uint64_t>(divisor);
+        }
+
+        // Caso 1: División por cero
+        if (divisor_u64 == 0) {
+            return std::nullopt;
+        }
+
+        // Caso 2: Divisor mayor que dividendo
+        if (data[1] == 0 && data[0] < divisor_u64) {
+            return std::make_pair(uint128_t(0, 0), *this);
+        }
+
+        // Caso 3: División por 1
+        if (divisor_u64 == 1) {
+            return std::make_pair(*this, uint128_t(0, 0));
+        }
+
+        // Caso 4: División por potencia de 2 (optimización)
+        if ((divisor_u64 & (divisor_u64 - 1)) == 0) {
+            // divisor es potencia de 2
+            const int shift = intrinsics::ctz64(divisor_u64);
+            const uint128_t quotient = this->shift_right(shift);
+            const uint128_t remainder = *this & uint128_t(0, divisor_u64 - 1);
+            return std::make_pair(quotient, remainder);
+        }
+
+        // Caso 5: Dividendo cabe en 64 bits (fast path)
+        if (data[1] == 0) {
+            const uint64_t q = data[0] / divisor_u64;
+            const uint64_t r = data[0] % divisor_u64;
+            return std::make_pair(uint128_t(0, q), uint128_t(0, r));
+        }
+
+        // Caso 6: Algoritmo general 128/64 bits
+        // Paso 1: Dividir parte alta
+        uint64_t q_hi = data[1] / divisor_u64;
+        uint64_t r_hi = data[1] % divisor_u64;
+
+        // Paso 2: Componer nuevo dividendo (r_hi << 64) | data[0] y dividir
+        // Usar función encapsulada de arithmetic_operations.hpp
+        uint64_t remainder_final;
+        uint64_t q_lo =
+            intrinsics::div128_64_composed(r_hi, data[0], divisor_u64, &remainder_final);
+
+#if !defined(__SIZEOF_INT128__) || defined(_MSC_VER)
+        // Fallback cuando div128_64_composed retorna 0 (sin __uint128_t)
+        // IMPORTANTE: Llamar explícitamente a divrem(const uint128_t&) para evitar recursión
+        if (q_lo == 0 && remainder_final == 0) {
+            const uint128_t dividend_low(r_hi, data[0]);
+            const uint128_t divisor_128(0, divisor_u64);
+            auto result = dividend_low.divrem(static_cast<const uint128_t&>(divisor_128));
+            if (!result.has_value()) {
+                return std::nullopt; // No debería ocurrir
+            }
+            q_lo = result.value().first.data[0];
+            remainder_final = result.value().second.data[0];
+        }
+#endif
+
+        // Paso 3: Componer resultado final
+        const uint128_t quotient(q_hi, q_lo);
+        const uint128_t remainder(0, remainder_final);
+
+        return std::make_pair(quotient, remainder);
     }
 
     /**
@@ -933,15 +1096,17 @@ class uint128_t
 
     /**
      * @brief Sobrecarga del operador de división y asignación para tipos integrales.
-     * @tparam T Un tipo de dato integral.
+     * @tparam T Un tipo de dato integral builtin.
      * @param other El divisor de tipo integral.
      * @return Una referencia a `*this`.
+     * @note Usa la implementación optimizada divrem(T) para divisores de 64 bits o menos.
      * @test (test_divrem_basic_integral_divisor)
      */
-    template <typename T> constexpr uint128_t& operator/=(T other) noexcept
+    template <integral_builtin T> constexpr uint128_t& operator/=(T other) noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
-        return *this /= uint128_t(other);
+        const auto result = divrem(other);
+        *this = result.value().first; // quotient (UB si divisor == 0)
+        return *this;
     }
 
     /**
@@ -967,15 +1132,17 @@ class uint128_t
 
     /**
      * @brief Sobrecarga del operador de módulo y asignación para tipos integrales.
-     * @tparam T Un tipo de dato integral.
+     * @tparam T Un tipo de dato integral builtin.
      * @param other El divisor de tipo integral.
      * @return Una referencia a `*this`.
+     * @note Usa la implementación optimizada divrem(T) para divisores de 64 bits o menos.
      * @test (test_divrem_basic_integral_divisor)
      */
-    template <typename T> constexpr uint128_t& operator%=(T other) noexcept
+    template <integral_builtin T> constexpr uint128_t& operator%=(T other) noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
-        return *this %= uint128_t(other);
+        const auto result = divrem(other);
+        *this = result.value().second; // remainder (UB si divisor == 0)
+        return *this;
     }
 
     /**
@@ -995,14 +1162,14 @@ class uint128_t
 
     /**
      * @brief Sobrecarga del operador de división para tipos integrales.
-     * @tparam T Tipo integral del divisor.
+     * @tparam T Tipo integral builtin del divisor.
      * @param other El divisor.
      * @return Un nuevo `uint128_t` con el resultado de la división.
+     * @note Usa la implementación optimizada divrem(T) para mayor rendimiento.
      * @test (test_divrem_basic_integral_divisor)
      */
-    template <typename T> constexpr uint128_t operator/(T other) const noexcept
+    template <integral_builtin T> constexpr uint128_t operator/(T other) const noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
         uint128_t result(*this);
         result /= other;
         return result;
@@ -1025,14 +1192,14 @@ class uint128_t
 
     /**
      * @brief Sobrecarga del operador de módulo para tipos integrales.
-     * @tparam T Tipo integral del divisor.
+     * @tparam T Tipo integral builtin del divisor.
      * @param other El divisor.
      * @return Un nuevo `uint128_t` con el resto de la división.
+     * @note Usa la implementación optimizada divrem(T) para mayor rendimiento.
      * @test (test_divrem_basic_integral_divisor)
      */
-    template <typename T> constexpr uint128_t operator%(T other) const noexcept
+    template <integral_builtin T> constexpr uint128_t operator%(T other) const noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
         uint128_t result(*this);
         result %= other;
         return result;

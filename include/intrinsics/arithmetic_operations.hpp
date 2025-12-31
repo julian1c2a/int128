@@ -430,6 +430,66 @@ inline constexpr uint64_t div128_64(uint64_t num_hi, uint64_t num_lo, uint64_t d
 }
 
 /**
+ * @brief Compone un dividendo de 128 bits desde resto alto + dato bajo y divide por 64 bits
+ *
+ * Esta función encapsula el "Paso 2" del algoritmo de división 128/64 bits:
+ * Dados un resto alto (r_hi) de una división previa y la parte baja del dividendo original
+ * (data_low), compone un nuevo dividendo de 128 bits ((r_hi << 64) | data_low) y lo divide por el
+ * divisor.
+ *
+ * Algoritmo:
+ *   1. Componer: dividend_composed = (r_hi << 64) | data_low
+ *   2. Dividir: q_lo = dividend_composed / divisor
+ *   3. Resto: remainder_final = dividend_composed % divisor
+ *
+ * @param r_hi Resto de la división previa (D1 % divisor) - 64 bits
+ * @param data_low Parte baja del dividendo original (D0) - 64 bits
+ * @param divisor Divisor de 64 bits
+ * @param[out] remainder_final Puntero donde almacenar el resto final (obligatorio)
+ * @return Cociente bajo (q_lo) de 64 bits
+ *
+ * @note Con __uint128_t: Usa división nativa optimizada (muy rápido)
+ * @note Sin __uint128_t: Retorna 0 (el caller debe usar fallback iterativo)
+ * @note Esta función es esencial para big_int con arrays de uint64_t mayores
+ *
+ * @example
+ * @code
+ * // Dividir 0x1'0000'0000'0000'0005 / 0x2
+ * uint64_t D1 = 0x1, D0 = 0x5, divisor = 0x2;
+ *
+ * // Paso 1: D1 / divisor
+ * uint64_t r_hi;
+ * uint64_t q_hi = div128_64(0, D1, divisor, &r_hi); // q_hi=0, r_hi=1
+ *
+ * // Paso 2: Componer y dividir
+ * uint64_t remainder_final;
+ * uint64_t q_lo = div128_64_composed(r_hi, D0, divisor, &remainder_final);
+ * // q_lo = 0x8000'0000'0000'0002, remainder_final = 1
+ *
+ * // Resultado: (q_hi << 64) | q_lo = 0x8000'0000'0000'0002, resto = 1
+ * @endcode
+ */
+inline constexpr uint64_t div128_64_composed(uint64_t r_hi, uint64_t data_low, uint64_t divisor,
+                                             uint64_t* remainder_final) noexcept
+{
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+    // Usar división nativa 128/64 con __uint128_t (optimizado)
+    const __uint128_t dividend_composed = (static_cast<__uint128_t>(r_hi) << 64) | data_low;
+    const uint64_t q_lo = static_cast<uint64_t>(dividend_composed / divisor);
+    *remainder_final = static_cast<uint64_t>(dividend_composed % divisor);
+    return q_lo;
+#else
+    // Sin __uint128_t: retornar 0 (el caller debe usar fallback iterativo)
+    // Esto indica al caller que debe usar divrem(uint128_t) como fallback
+    (void)r_hi;
+    (void)data_low;
+    (void)divisor;
+    *remainder_final = 0;
+    return 0;
+#endif
+}
+
+/**
  * @brief Calcula q_hat para el algoritmo de división de Knuth
  *
  * Estima el cociente dividiendo los dos dígitos más significativos del dividendo
