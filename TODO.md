@@ -198,13 +198,18 @@ Estos patrones se aplicarán directamente en `int128_base_t<signedness S>`:
 
 Con estas optimizaciones validadas y documentadas, el código está listo para:
 
+### Próximo Paso
+
+✅ **Fase 0.5 completa**. Con las optimizaciones validadas, refactorización de helpers, y documentación mejorada, el código está **listo para Phase 1.5**.
+
 → **FASE 1.5 - Unificación Template Signed/Unsigned** (ver sección siguiente)
 
 ---
 
-## �🚀 PRÓXIMO PASO: FASE 1.5 - Unificación Template Signed/Unsigned
+## 🚀 PRÓXIMO PASO: FASE 1.5 - Unificación Template Signed/Unsigned
 
-**Estado:** ⏳ **PENDIENTE - EMPEZAR MAÑANA (2 enero 2026)**
+**Estado:** 🟢 **LISTO PARA EMPEZAR (2 enero 2026)**  
+**Pre-requisitos:** ✅ Todos completados
 
 ### Objetivo
 
