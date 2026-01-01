@@ -2,9 +2,9 @@
 
 ---
 
-## � FASE 0.5 - Optimizaciones Pre-Unificación ✅
+## 📁 FASE 0.5 - Optimizaciones Pre-Unificación ✅
 
-**Estado:** ✅ **COMPLETADA (31 dic 2025)**  
+**Estado:** ✅ **COMPLETADA (1 ene 2026)**  
 **Propósito:** Optimizar operadores críticos antes de la unificación Fase 1.5
 
 ### Objetivo
@@ -14,7 +14,37 @@ en el template unificado `int128_base_t<signedness S>`. Esta fase prepara el có
 para la refactorización mayor, asegurando que las optimizaciones se mantengan durante
 la transición.
 
-### Operadores Optimizados
+### ✅ Trabajo Completado
+
+#### A) Optimizaciones (31 dic 2025)
+
+- ✅ **`operator*=(T)`** - Fast path (75% faster) + General case (50% faster)
+- ✅ **`operator*(T)`** - Copy-modify-return pattern corregido
+- ✅ **Patrones validados** - Listos para replicar en template unificado
+
+#### B) Refactorización Intrínsecos (1 ene 2026)
+
+- ✅ **`divrem_64bit_divisor()`** - Helper para división con divisor 64-bit
+  - Encapsula selección: `intrinsics::div128_64` vs `divrem()` genérico
+  - Reduce 14 líneas de código a 1 llamada limpia
+- ✅ **`knuth_D_algorithm()`** - Helper para algoritmo D de Knuth
+  - Encapsula selección: `intrinsics::knuth_division_step` vs `divrem()` genérico
+  - Reduce 14 líneas de código a 1 llamada limpia
+- ✅ **Beneficio**: Mayor legibilidad, lógica de plataforma oculta
+
+#### C) Documentación Intrínsecos (1 ene 2026)
+
+- ✅ **`include/intrinsics/README.md`** expandido: 388 → 553 líneas (+43%)
+- ✅ **Nuevas secciones**:
+  - 🎯 Filosofía de diseño detallada (agnóstico al tipo, universal, fallback, constexpr)
+  - 📚 Documentación completa de cada intrínseco (firma, implementación, ejemplos)
+  - 🎓 Mejores prácticas de uso
+  - 🔗 Casos de uso reales en uint128_t/int128_t
+  - 🚀 Tabla comparativa de rendimiento (intrínsecos vs portable)
+  - 📚 Referencias oficiales (MSVC, GCC, Clang, Intel, ARM, RISC-V)
+  - ✅ Estado de completitud por archivo
+
+### Operadores Optimizados (Detalles Técnicos)
 
 #### 1. `operator*=(T other)` - Multiplicación con asignación
 
@@ -45,11 +75,11 @@ constexpr uint128_t& operator*=(T other) noexcept;
 
 **Comparación de rendimiento:**
 
-| Versión | Multiplicaciones | Mejora |
-|---------|-----------------|--------|
-| Original (128×128 completo) | 4 | Baseline |
-| General case (128×64) | 2 | 50% más rápido |
-| Fast path (data[1]==0) | 1 | 75% más rápido |
+| Versión                     | Multiplicaciones | Mejora         |
+|-----------------------------|------------------|----------------|
+| Original (128×128 completo) | 4                | Baseline       |
+| General case (128×64)       | 2                | 50% más rápido |
+| Fast path (data[1]==0)      | 1                | 75% más rápido |
 
 **Sign extension para tipos signed:**
 
@@ -174,7 +204,7 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 
 ## �🚀 PRÓXIMO PASO: FASE 1.5 - Unificación Template Signed/Unsigned
 
-**Estado:** ⏳ **PENDIENTE - EMPEZAR MAÑANA (31 dic 2025)**
+**Estado:** ⏳ **PENDIENTE - EMPEZAR MAÑANA (2 enero 2026)**
 
 ### Objetivo
 
@@ -216,14 +246,14 @@ bash scripts/run_generic.bash uint128 t gcc release
 
 ### Operaciones que necesitan `if constexpr (is_signed)`
 
-| Operación | Razón |
-|-----------|-------|
-| `operator-()` | Solo para signed |
-| `operator>>=` | Arithmetic shift (signed) vs logical (unsigned) |
-| `abs()` | Solo para signed |
-| Constructor `int64_t` | Sign extension |
-| `from_string("-123")` | Parsing negativos |
-| `operator/`, `%` | División con signos |
+| Operación             | Razón                                           |
+|-----------------------|-------------------------------------------------|
+| `operator-()`         | Solo para signed                                |
+| `operator>>=`         | Arithmetic shift (signed) vs logical (unsigned) |
+| `abs()`               | Solo para signed                                |
+| Constructor `int64_t` | Sign extension                                  |
+| `from_string("-123")` | Parsing negativos                               |
+| `operator/`, `%`      | División con signos                             |
 
 ### Operaciones idénticas (NO necesitan `if constexpr`)
 
