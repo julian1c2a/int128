@@ -1521,47 +1521,47 @@ class uint128_t
 
     /**
      * @brief Operador de multiplicación y asignación optimizado para tipos integrales (a *= b).
-     * 
+     *
      * **ESTRATEGIA DE OPTIMIZACIÓN MULTINIVEL** (Fase 0.5 - Pre-Unificación):
-     * 
+     *
      * Esta implementación usa un sistema de optimización adaptativo de dos niveles
      * basado en el tamaño efectivo del multiplicando (*this):
-     * 
+     *
      * 1. **Fast path** (data[1] == 0): El valor cabe en 64 bits
      *    - Usa una sola multiplicación 64×64 → 128 bits (umul128)
      *    - Rendimiento: 1 multiplicación vs 4 del algoritmo completo
      *    - Caso común: ~70-80% de las operaciones en código típico
-     * 
+     *
      * 2. **General case** (data[1] != 0): Multiplicación 128 × 64 bits
      *    - Usa umul128 para parte baja + multiplicación simple para cross-product
      *    - Rendimiento: 2 multiplicaciones vs 4 del algoritmo completo
      *    - Resultado: low = a.low * b, high = (a.low * b).high + (a.high * b)
-     * 
+     *
      * **COMPARACIÓN DE RENDIMIENTO**:
      * - Versión original: 4 multiplicaciones (128×128 completo con mul128)
      * - Fast path: 1 multiplicación (75% mejora)
      * - General case: 2 multiplicaciones (50% mejora)
-     * 
+     *
      * **MANEJO DE SIGN EXTENSION**:
      * Para tipos signed negativos, se aplica corrección en complemento a 2:
      * - Si (other < 0): high_part -= data[0]
      * - Preserva comportamiento estándar de extensión de signo
      * - Compatible con constructor y operadores de conversión
-     * 
+     *
      * **RELEVANCIA PARA FASE 1.5 (Unificación Template)**:
      * Este patrón de optimización se replicará en int128_base_t<signedness S>:
      * - `if constexpr (std::is_signed_v<T>)` demuestra uso efectivo de branching
      * - Fast path por valor es independiente de signedness
      * - Sign extension se maneja limpiamente sin duplicación de código
-     * 
+     *
      * @tparam T Tipo integral builtin (uint8_t...uint64_t, int8_t...int64_t)
      * @param other Multiplicador de tipo integral
      * @return Referencia a *this con el producto calculado
-     * 
+     *
      * @property constexpr, noexcept, optimizado según tamaño de operandos
      * @see operator*(T) para versión no modificante que delega a este operador
      * @see intrinsics::umul128 para implementación de multiplicación 64×64→128
-     * 
+     *
      * @note El overflow es silencioso (wrap-around) siguiendo semántica de enteros unsigned
      * @note Esta optimización fue validada en benchmarks antes de Fase 1.5
      */
@@ -1615,47 +1615,47 @@ class uint128_t
         result *= other;
         return result;
     }
-    
+
     /**
      * @brief Operador de multiplicación para tipos integrales (versión no modificante).
-     * 
+     *
      * **PATRÓN COPY-MODIFY-RETURN** (Estándar para operadores const):
-     * 
+     *
      * Esta implementación sigue el patrón estándar para operadores binarios const:
      * 1. Crear copia del objeto actual
      * 2. Aplicar operación modificante (operator*=) a la copia
      * 3. Retornar la copia modificada
-     * 
+     *
      * **HERENCIA DE OPTIMIZACIONES**:
      * Delega a operator*=(T) que implementa optimización multinivel:
      * - Fast path para valores pequeños (data[1]==0): 1 multiplicación
      * - General case para valores grandes: 2 multiplicaciones
      * - Sign extension automática para tipos signed negativos
-     * 
+     *
      * **CORRECCIÓN CRÍTICA** (Fase 0.5):
      * Versión anterior: `result *= static_cast<uint64_t>(other);`
      * - Problema: El cast explícito podría bypass template resolution
      * - Consecuencia: Sign extension no se aplicaba correctamente
-     * 
+     *
      * Versión actual: `result *= other;`
      * - Solución: Preserva el tipo template T para correcta resolución
      * - Garantiza: operator*=(T) se llama con tipo original
      * - Resultado: Sign extension funciona como se espera
-     * 
+     *
      * @tparam T Tipo integral builtin (uint8_t...uint64_t, int8_t...int64_t)
      * @param other Multiplicador de tipo integral
      * @return Nuevo uint128_t con el resultado de la multiplicación
-     * 
+     *
      * @property constexpr, noexcept, hereda optimizaciones de operator*=(T)
      * @see operator*=(T) para detalles de estrategia de optimización
-     * 
+     *
      * @note Esta corrección fue identificada y aplicada en Fase 0.5
      * @note El patrón de delegación será usado en template unificado (Fase 1.5)
      */
     template <integral_builtin T> constexpr uint128_t operator*(T other) const noexcept
     {
         uint128_t result(*this);
-        result *= other;  // Preserva tipo T para correcta template resolution
+        result *= other; // Preserva tipo T para correcta template resolution
         return result;
     }
 
@@ -1720,6 +1720,19 @@ class uint128_t
     }
 
     /**
+     * @brief Sobrecarga del operador AND a nivel de bits y asignación (a &= b)
+     * para tipos integrales builtin.
+     * @tparam T Un tipo de dato integral builtin.
+     * @param other El otro operando.
+     * @return Una referencia a `*this`.
+     * @test (test_bitwise_assignment_operators)
+     */
+    template <integral_builtin T> constexpr uint128_t& operator&=(T other) noexcept
+    {
+        return (*this &= static_cast<uint128_t>(other));
+    }
+
+    /**
      * @brief Operador OR a nivel de bits y asignación (a |= b).
      * @param other El otro operando.
      * @return Una referencia a `*this`.
@@ -1730,6 +1743,19 @@ class uint128_t
         data[0] |= other.data[0];
         data[1] |= other.data[1];
         return *this;
+    }
+
+    /**
+     * @brief Sobrecarga del operador OR a nivel de bits y asignación (a |= b)
+     * para tipos integrales builtin.
+     * @tparam T Un tipo de dato integral builtin.
+     * @param other El otro operando.
+     * @return Una referencia a `*this`.
+     * @test (test_bitwise_assignment_operators)
+     */
+    template <integral_builtin T> constexpr uint128_t& operator|=(T other) noexcept
+    {
+        return (*this |= static_cast<uint128_t>(other));
     }
 
     /**
@@ -1746,12 +1772,32 @@ class uint128_t
     }
 
     /**
+     * @brief Sobrecarga del operador XOR a nivel de bits y asignación (a ^= b)
+     * para tipos integrales builtin.
+     * @tparam T Un tipo de dato integral builtin.
+     * @param other El otro operando.
+     * @return Una referencia a `*this`.
+     * @test (test_bitwise_assignment_operators)
+     */
+    template <integral_builtin T> constexpr uint128_t& operator^=(T other) noexcept
+    {
+        return (*this ^= static_cast<uint128_t>(other));
+    }
+
+    /**
      * @brief Operador AND a nivel de bits (a & b).
      * @param other El otro operando.
      * @return Un nuevo `uint128_t` con el resultado de la operación.
      * @test (test_bitwise_operators)
      */
     constexpr uint128_t operator&(const uint128_t& other) const noexcept
+    {
+        uint128_t result(*this);
+        result &= other;
+        return result;
+    }
+
+    template <integral_builtin T> constexpr uint128_t operator&(T other) const noexcept
     {
         uint128_t result(*this);
         result &= other;
@@ -1771,6 +1817,13 @@ class uint128_t
         return result;
     }
 
+    template <integral_builtin T> constexpr uint128_t operator|(T other) const noexcept
+    {
+        uint128_t result(*this);
+        result |= other;
+        return result;
+    }
+
     /**
      * @brief Operador XOR a nivel de bits (a ^ b).
      * @param other El otro operando.
@@ -1778,6 +1831,13 @@ class uint128_t
      * @test (test_bitwise_operators)
      */
     constexpr uint128_t operator^(const uint128_t& other) const noexcept
+    {
+        uint128_t result(*this);
+        result ^= other;
+        return result;
+    }
+
+    template <integral_builtin T> constexpr uint128_t operator^(T other) const noexcept
     {
         uint128_t result(*this);
         result ^= other;
@@ -1799,6 +1859,69 @@ class uint128_t
     /// un número de 128 bits por uno de 64 bits, útil para el algoritmo de Knuth
 
   private:
+    // === FUNCIONES HELPER PARA knuth_D_divrem ===
+
+    /**
+     * @brief Helper para división cuando el divisor cabe en 64 bits.
+     * @details Encapsula la lógica del preprocesador para elegir entre:
+     *   - intrinsics::div128_64 (disponible en GCC/Clang/Intel en Linux con __uint128_t)
+     *   - Fallback a divrem() genérico (MSVC, Intel en Windows, sin __uint128_t)
+     * @param divisor El divisor (garantizado que divisor.data[1] == 0)
+     * @return Par {cociente, resto} de la división
+     * @property Es noexcept.
+     */
+    std::pair<uint128_t, uint128_t> divrem_64bit_divisor(const uint128_t& divisor) const noexcept
+    {
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+        // Disponible en GCC/Clang/Intel icpx en Linux
+        // En Windows (MSVC/Intel ICX) el linker no tiene __udivti3/__umodti3
+        uint64_t r = 0;
+        const uint64_t q_lo = intrinsics::div128_64(data[1], data[0], divisor.data[0], &r);
+        const uint128_t quotient(0, q_lo);
+        const uint128_t remainder(0, r);
+        return std::make_pair(quotient, remainder);
+#else
+        // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
+        return divrem(divisor);
+#endif
+    }
+
+    /**
+     * @brief Helper para el algoritmo D de Knuth completo.
+     * @details Encapsula la lógica del preprocesador para elegir entre:
+     *   - intrinsics::knuth_division_step (disponible con __uint128_t)
+     *   - Fallback a divrem() genérico (sin __uint128_t)
+     * @param u_extension Dígito extra del dividendo (bits que se salieron del shift)
+     * @param u_shifted Dividendo normalizado (desplazado)
+     * @param v Divisor normalizado (desplazado)
+     * @param s Cantidad de desplazamiento aplicado (normalización)
+     * @param original_divisor Divisor original (sin normalizar)
+     * @return Par {cociente, resto} de la división
+     * @property Es noexcept.
+     */
+    std::pair<uint128_t, uint128_t>
+    knuth_D_algorithm(uint64_t u_extension, const uint128_t& u_shifted, const uint128_t& v, int s,
+                      const uint128_t& original_divisor) const noexcept
+    {
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+        // Disponible en GCC/Clang/Intel icpx en Linux (todos usan libgcc/compiler-rt con __udivti3)
+        // En Windows, MSVC y Intel ICX/oneAPI usan el linker de MSVC que no tiene
+        // __udivti3/__umodti3
+        uint64_t remainder_hi, remainder_lo;
+        const uint64_t q =
+            intrinsics::knuth_division_step(u_extension, u_shifted.data[1], u_shifted.data[0],
+                                            v.data[1], v.data[0], s, &remainder_hi, &remainder_lo);
+
+        return std::make_pair(uint128_t(0, q), uint128_t(remainder_hi, remainder_lo));
+#else
+        // Fallback sin __uint128_t - usar algoritmo básico
+        (void)u_extension; // Evitar warning de parámetro no usado
+        (void)u_shifted;
+        (void)v;
+        (void)s;
+        return divrem(original_divisor);
+#endif
+    }
     // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
 
     static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
@@ -1952,6 +2075,13 @@ class uint128_t
         return intrinsics::mul128x64_high(data[0], data[1], multiplier);
     }
 
+    template <integral_builtin T>
+        requires(sizeof(T) <= sizeof(uint64_t))
+    uint64_t mulhi64(T multiplier) const noexcept
+    {
+        return intrinsics::mul128x64_high(data[0], data[1], static_cast<uint64_t>(multiplier));
+    }
+
     /**
      * @brief División avanzada de 128 bits usando el Algoritmo D de Knuth con
      * optimizaciones.
@@ -2024,18 +2154,7 @@ class uint128_t
 
         // Si el divisor cabe en 64 bits (data[1] == 0), usamos una ruta rápida.
         if (v_in.data[1] == 0) {
-#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
-            // Disponible en GCC/Clang/Intel icpx en Linux
-            // En Windows (MSVC/Intel ICX) el linker no tiene __udivti3/__umodti3
-            uint64_t r = 0;
-            const uint64_t q_lo = intrinsics::div128_64(data[1], data[0], v_in.data[0], &r);
-            const uint128_t quotient(0, q_lo);
-            const uint128_t remainder(0, r);
-            return std::make_pair(quotient, remainder);
-#else
-            // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
-            return divrem(v_in);
-#endif
+            return divrem_64bit_divisor(v_in);
         }
 
         // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
@@ -2054,20 +2173,7 @@ class uint128_t
 
         // D3-D8. Algoritmo completo de Knuth: estimar, multiplicar, restar, corregir y
         // desnormalizar
-#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
-        // Disponible en GCC/Clang/Intel icpx en Linux (todos usan libgcc/compiler-rt con __udivti3)
-        // En Windows, MSVC y Intel ICX/oneAPI usan el linker de MSVC que no tiene
-        // __udivti3/__umodti3
-        uint64_t remainder_hi, remainder_lo;
-        const uint64_t q =
-            intrinsics::knuth_division_step(u_extension, u_shifted.data[1], u_shifted.data[0],
-                                            v.data[1], v.data[0], s, &remainder_hi, &remainder_lo);
-
-        return std::make_pair(uint128_t(0, q), uint128_t(remainder_hi, remainder_lo));
-#else
-        // Fallback sin __uint128_t - usar algoritmo básico
-        return divrem(v_in);
-#endif
+        return knuth_D_algorithm(u_extension, u_shifted, v, s, v_in);
     }
 
     /**
@@ -2084,10 +2190,9 @@ class uint128_t
      * // assert(val.low() == 0x1234);
      * @endcode
      */
-    template <typename T>
+    template <integral_builtin T>
     std::optional<std::pair<uint128_t, uint128_t>> knuth_D_divrem(T divisor) const noexcept
     {
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
         return knuth_D_divrem(uint128_t(divisor));
     }
 
