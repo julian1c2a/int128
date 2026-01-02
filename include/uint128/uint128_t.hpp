@@ -373,7 +373,7 @@ class uint128_t
      * @endcode
      */
 
-    // BEGIN BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
+    // BEGIN TODO BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
     template <typename TYPE> struct is_floating_arithmetic_builtin : std::false_type {
     };
 
@@ -401,7 +401,7 @@ class uint128_t
     template <typename TYPE>
     concept arithmetic_builtin = is_arithmetic_builtin_v<TYPE>;
 
-    // END BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
+    // END TODO BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
 
     template <arithmetic_builtin TYPE> explicit constexpr operator TYPE() const noexcept
     {
@@ -415,7 +415,7 @@ class uint128_t
             return static_cast<TYPE>(data[0]);
         }
     }
-// BEGIN ENCAPSULAR EN ARITHMETIC_OPERATIONS
+// BEGIN TODO ENCAPSULAR EN ARITHMETIC_OPERATIONS
 #if defined(__SIZEOF_INT128__)
     /**
      * @brief Conversión al tipo nativo `__uint128_t` del compilador.
@@ -452,7 +452,7 @@ class uint128_t
         return static_cast<__int128_t>((static_cast<__uint128_t>(data[1]) << 64) | data[0]);
     }
 #endif // __SIZEOF_INT128__ // ¿ESTÁ EL #ENDIF EN EL LUGAR CORRECTO?
-       // END ENCAPSULAR EN ARITHMETIC_OPERATIONS
+       // END TODO ENCAPSULAR EN ARITHMETIC_OPERATIONS
     // ARITHMETIC OPERATORS
     /**
      * @brief Operador de pre-incremento (++i).
@@ -701,6 +701,7 @@ class uint128_t
         return 128 - leading_zeros();
     }
 
+    // BEGIN TODO ¿DEBE ESTARE NE STEA RCHIVO O ESTÁ DUPLICADO EN OTRO?
     /**
      * @brief Verifica si el número es una potencia de 2.
      * @return `true` si el número es mayor que 0 y solo tiene un bit establecido a 1.
@@ -715,6 +716,7 @@ class uint128_t
         return (*this != uint128_t(0, 0)) &&
                ((*this & (*this - uint128_t(0, 1))) == uint128_t(0, 0));
     }
+    // END TODO ¿DEBE ESTARE NE STEA RCHIVO O ESTÁ DUPLICADO EN OTRO?
 
     /**
      * @brief Valor absoluto (función identidad para uint128_t)
@@ -1909,7 +1911,7 @@ class uint128_t
     constexpr cstd::pair<uint128_t, uint128_t>
     divrem_64bit_divisor(const uint128_t& divisor) const noexcept
     {
-// BEGIN ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
+// BEGIN TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
 #if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
         // Disponible en GCC/Clang/Intel icpx en Linux
         // En Windows (MSVC/Intel ICX) el linker no tiene __udivti3/__umodti3
@@ -1922,7 +1924,7 @@ class uint128_t
         // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
         return divrem(divisor);
 #endif
-        // END ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
+        // END TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
     }
 
     /**
@@ -1942,7 +1944,7 @@ class uint128_t
     knuth_D_algorithm(uint64_t u_extension, const uint128_t& u_shifted, const uint128_t& v, int s,
                       const uint128_t& original_divisor) const noexcept
     {
-// BEGIN ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
+// BEGIN TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
 #if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
         // Disponible en GCC/Clang/Intel icpx en Linux (todos usan libgcc/compiler-rt con __udivti3)
         // En Windows, MSVC y Intel ICX/oneAPI usan el linker de MSVC que no tiene
@@ -1961,7 +1963,7 @@ class uint128_t
         (void)s;
         return divrem(original_divisor);
 #endif
-        // END ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
+        // END TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
     }
     // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
 
@@ -2062,18 +2064,18 @@ class uint128_t
     {
         auto [q3, r3] = divide_by_3();
         auto [q_temp, temp_r] = q3.divide_by_3();
-        uint128_t final_q = q_temp; // Sin const para make_pair
+        uint128_t final_q = q_temp;
         uint128_t final_r = temp_r * uint128_t(0, 3) + r3;
-        return std::make_pair(final_q, final_r);
+        return {final_q, final_r}; // Construcción directa
     }
 
     constexpr std::pair<uint128_t, uint128_t> divide_by_27() const noexcept
     {
         auto [q9, r9] = divide_by_9();
         auto [q_temp, temp_r] = q9.divide_by_3();
-        uint128_t final_q = q_temp; // Sin const para make_pair
+        uint128_t final_q = q_temp;
         uint128_t final_r = temp_r * uint128_t(0, 9) + r9;
-        return std::make_pair(final_q, final_r);
+        return {final_q, final_r}; // Construcción directa
     }
 
     constexpr std::pair<uint128_t, uint128_t> divide_by_5() const noexcept
@@ -2089,7 +2091,7 @@ class uint128_t
         const auto [q5, r5] = divide_by_5();
         const auto [final_q, temp_r] = q5.divide_by_5();
         const uint128_t final_r = temp_r * uint128_t(0, 5) + r5;
-        return std::make_pair(final_q, final_r);
+        return {final_q, final_r}; // Construcción directa
     }
 
     constexpr std::pair<uint128_t, uint128_t> divide_by_125() const noexcept
@@ -2097,7 +2099,7 @@ class uint128_t
         auto [q25, r25] = divide_by_25();
         const auto [final_q, temp_r] = q25.divide_by_5();
         const uint128_t final_r = temp_r * uint128_t(0, 25) + r25;
-        return std::make_pair(final_q, final_r);
+        return {final_q, final_r}; // Construcción directa
     }
 
   public:
