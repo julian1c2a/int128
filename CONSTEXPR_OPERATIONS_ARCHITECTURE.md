@@ -20,7 +20,7 @@ Esta documentación describe la nueva arquitectura modular para operaciones con 
 
 ---
 
-## 📁 Headers Creados (4/6)
+## 📁 Headers Creados (5/6)
 
 ### 1️⃣ `uint128_power_detection.hpp` ✅
 

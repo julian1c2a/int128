@@ -47,6 +47,7 @@ El proyecto **int128** proporciona una implementación completa y moderna de ent
 ### Headers por Tipo
 
 #### uint128_t (Unsigned)
+
 ```
 include/uint128/
 ├── uint128_t.hpp              # Core: constructores, operadores, conversiones
@@ -66,6 +67,7 @@ include/uint128/
 ```
 
 #### int128_t (Signed)
+
 ```
 include/int128/
 ├── int128_t.hpp               # Core con complemento a 2
@@ -142,6 +144,7 @@ scripts/
 ```
 
 **Estructura de nombres**: `[action]_[type]_[feature]_extracted_[target].bash`
+
 - `action`: build, check, run
 - `type`: uint128, int128
 - `feature`: t, traits, limits, concepts, algorithm, numeric, cmath, bits, iostreams, ranges, safe, format, thread_safety
@@ -160,26 +163,27 @@ scripts/
 
 ### Cobertura de Tests por Feature
 
-| Feature | uint128 Tests | int128 Tests | Estado |
-|---------|--------------|--------------|--------|
-| t | 117 | ~120 | ✅ PASSED |
-| traits | 18 | 19 | ✅ PASSED |
-| limits | 40 | 40 | ✅ PASSED |
-| concepts | ~15 | ~15 | ✅ PASSED |
-| algorithm | ~30 | ~30 | ✅ PASSED |
-| numeric | ~20 | ~20 | ✅ PASSED |
-| cmath | 96 | 141 | ✅ PASSED |
-| bits | ~25 | ~25 | ✅ PASSED |
-| iostreams | 8 | 8 | ✅ PASSED |
-| ranges | 8 | 8 | ✅ PASSED |
-| safe | 8 | 8 | ✅ PASSED |
-| **format** | **9** | **10** | ✅ **PASSED (ÚLTIMA FEATURE)** |
-| thread_safety | 7-8 | 7-8 | ✅ PASSED |
-| **TOTAL** | **~500** | **~550** | **✅ ~1050 TESTS** |
+| Feature       | uint128 Tests | int128 Tests | Estado                         |
+|---------------|---------------|--------------|--------------------------------|
+| t             | 117           | ~120         | ✅ PASSED                      |
+| traits        | 18            | 19           | ✅ PASSED                      |
+| limits        | 40            | 40           | ✅ PASSED                      |
+| concepts      | ~15           | ~15          | ✅ PASSED                      |
+| algorithm     | ~30           | ~30          | ✅ PASSED                      |
+| numeric       | ~20           | ~20          | ✅ PASSED                      |
+| cmath         | 96            | 141          | ✅ PASSED                      |
+| bits          | ~25           | ~25          | ✅ PASSED                      |
+| iostreams     | 8             | 8            | ✅ PASSED                      |
+| ranges        | 8             | 8            | ✅ PASSED                      |
+| safe          | 8             | 8            | ✅ PASSED                      |
+| **format**    | **9**         | **10**       | ✅ **PASSED (ÚLTIMA FEATURE)** |
+| thread_safety | 7-8           | 7-8          | ✅ PASSED                      |
+| **TOTAL**     | **~500**      | **~550**     | **✅ ~1050 TESTS**             |
 
 ### Resultados de Ejecución
 
 **GCC + Clang (4 configuraciones por feature)**:
+
 ```
 ✅ uint128_t: 52/52 PASSED (13 features × 4 configs)
 ✅ int128_t:  52/52 PASSED (13 features × 4 configs)
@@ -281,17 +285,18 @@ auto [gcd, x, y] = std::bezout_coeffs(a, b);  // a*x + b*y = gcd
 
 ### Benchmarks Clave (50k operaciones)
 
-| Operación | uint128 | int128 | Notas |
-|-----------|---------|--------|-------|
-| **Suma** | ~15 µs | ~15 µs | Sin overhead |
-| **Multiplicación** | ~80 µs | ~85 µs | +6% overhead signed |
-| **División** | ~1.2 ms | ~1.3 ms | Knuth Algorithm D |
-| **GCD** | ~600 µs | ~650 µs | Binary GCD |
-| **Sqrt** | ~800 µs | ~850 µs | Newton's method |
-| **Format hex** | ~194 µs | ~208 µs | +7% overhead signed |
-| **Format dec** | ~264 µs | ~259 µs | Similar |
+| Operación          | uint128 | int128  | Notas               |
+|--------------------|---------|---------|---------------------|
+| **Suma**           | ~15 µs  | ~15 µs  | Sin overhead        |
+| **Multiplicación** | ~80 µs  | ~85 µs  | +6% overhead signed |
+| **División**       | ~1.2 ms | ~1.3 ms | Knuth Algorithm D   |
+| **GCD**            | ~600 µs | ~650 µs | Binary GCD          |
+| **Sqrt**           | ~800 µs | ~850 µs | Newton's method     |
+| **Format hex**     | ~194 µs | ~208 µs | +7% overhead signed |
+| **Format dec**     | ~264 µs | ~259 µs | Similar             |
 
 **Conclusiones**:
+
 - ✅ Overhead de signo mínimo (5-7%)
 - ✅ División optimizada con casos especiales (24× para potencias de 2)
 - ✅ Operaciones bit a bit sin overhead
@@ -327,6 +332,7 @@ auto [gcd, x, y] = std::bezout_coeffs(a, b);  // a*x + b*y = gcd
 ## 🎯 Casos de Uso
 
 ### 1. Criptografía
+
 ```cpp
 // Claves de 128 bits
 uint128_t key = uint128_t::from_string("0xDEADBEEFCAFEBABE123456789ABCDEF0");
@@ -336,6 +342,7 @@ auto [gcd, inv, _] = std::bezout_coeffs(a, mod);  // Inverso modular
 ```
 
 ### 2. Identificadores Únicos
+
 ```cpp
 // UUIDs o IDs de 128 bits
 uint128_t uuid = generate_uuid();
@@ -343,6 +350,7 @@ std::unordered_map<uint128_t, User> users;  // std::hash soportado
 ```
 
 ### 3. Cálculos Financieros
+
 ```cpp
 // Precisión de 128 bits para finanzas
 int128_t balance = initial_balance;
@@ -351,6 +359,7 @@ balance -= int128_t(withdrawal);
 ```
 
 ### 4. Contadores de Gran Rango
+
 ```cpp
 // Contadores atómicos thread-safe
 uint128_thread_safety::atomic_uint128_t global_counter(0);
@@ -358,6 +367,7 @@ global_counter.fetch_add(1);
 ```
 
 ### 5. Análisis de Datos
+
 ```cpp
 // Estadísticas con rangos grandes
 std::vector<uint128_t> data = load_data();
@@ -442,12 +452,14 @@ std::cout << "Sum: " << sum << '\n';
 ## 🚀 Estado: PRODUCTION READY
 
 ### uint128_t: ✅ COMPLETO
+
 - Todas las features implementadas
 - Testing exhaustivo completado
 - Documentación completa
 - Listo para producción
 
 ### int128_t: ✅ COMPLETO
+
 - Todas las features replicadas
 - Complemento a 2 funcional
 - Testing exhaustivo completado
