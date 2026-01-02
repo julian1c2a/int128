@@ -211,7 +211,7 @@ static constexpr int num_small_primes = sizeof(small_primes) / sizeof(small_prim
      * @return true si el número es probablemente primo, false si es compuesto                    \
      * @property Es constexpr y noexcept                                                           \
      * @warning NO es un test completo de primalidad para números grandes                         \
-     * @note Solo verifica divisibilidad por primos pequeños (≤ 61)                             \
+     * @note Solo verifica divisibilidad por primos pequeños (≤ 128)                            \
      * @example                                                                                    \
      * @code{.cpp}                                                                                 \
      * assert(uint128_t(17).is_prime_candidate());   // true                                       \
