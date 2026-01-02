@@ -2157,6 +2157,49 @@ class uint128_t
             return divrem_64bit_divisor(v_in);
         }
 
+        // 6. OPTIMIZACIÓN: V0 = 0 Y U0 = 0 (caso degenerado muy raro)
+        // Tanto dividendo como divisor son múltiplos de 2^64
+        // Resultado: dividendo.high / divisor.high con resto = 0
+        if (v_in.data[0] == 0 && data[0] == 0) {
+            const uint64_t q = data[1] / v_in.data[1];
+            const uint64_t r = data[1] % v_in.data[1];
+            return std::make_pair(uint128_t(0, q), uint128_t(r, 0));
+        }
+
+        // 7. OPTIMIZACIÓN: V0 = 0 (divisor es múltiplo de 2^64)
+        // Divisor = v1 * 2^64, podemos simplificar la división
+        if (v_in.data[0] == 0) {
+            // Dividir por v1 (parte alta del divisor)
+            const uint64_t divisor_high = v_in.data[1];
+
+            // Caso especial: dividendo cabe en parte alta
+            if (data[0] == 0) {
+                // u = u1 * 2^64, v = v1 * 2^64
+                // u / v = (u1 * 2^64) / (v1 * 2^64) = u1 / v1
+                const uint64_t q = data[1] / divisor_high;
+                const uint64_t r = data[1] % divisor_high;
+                return std::make_pair(uint128_t(0, q), uint128_t(r, 0));
+            }
+
+            // Caso general: u = u1 * 2^64 + u0, v = v1 * 2^64
+            // Cociente aproximado: q ≈ u1 / v1
+            uint64_t q = data[1] / divisor_high;
+            uint64_t r_high = data[1] % divisor_high;
+
+            // Calcular resto: r = u - q * v
+            uint128_t remainder(*this);
+            uint128_t product = uint128_t(q * divisor_high, 0);
+
+            // Ajustar si el producto es mayor que el dividendo
+            while (product > remainder) {
+                --q;
+                product = uint128_t(q * divisor_high, 0);
+            }
+
+            remainder = remainder - product;
+            return std::make_pair(uint128_t(0, q), remainder);
+        }
+
         // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
 
         // D1. Normalización
