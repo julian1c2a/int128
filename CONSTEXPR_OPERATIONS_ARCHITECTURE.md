@@ -503,58 +503,58 @@ x / p ≈ x * (2^128 / p) >> 128
 
 ## 🔧 Integración en uint128_t.hpp
 
-### Paso 1: Incluir los headers
+### ✅ Paso 1: Incluir los headers (completado)
 
 ```cpp
 // En uint128_t.hpp (después de línea 40)
-#include "specializations/uint128_power_detection.hpp"
-#include "specializations/uint128_divisibility.hpp"
-#include "specializations/uint128_factorization_helpers.hpp"
-#include "specializations/uint128_multiply_const.hpp"
-#include "specializations/uint128_mod_helpers.hpp"      // Ya existe
-#include "specializations/uint128_div_const.hpp"        // Pendiente
+#include "specializations/uint128_power_detection.hpp"      // ✅
+#include "specializations/uint128_divisibility.hpp"         // ✅
+#include "specializations/uint128_factorization_helpers.hpp" // ✅
+#include "specializations/uint128_multiply_const.hpp"       // ✅
+#include "specializations/uint128_div_const.hpp"            // ✅
+#include "specializations/uint128_mod_helpers.hpp"          // ✅ Refactorizado
 ```
 
-### Paso 2: Añadir macros en la clase
+### ✅ Paso 2: Añadir macros en la clase (listo para integración)
 
 ```cpp
 class uint128_t {
     // ... código existente ...
 
 private:
-    // Métodos helper de divisibilidad
+    // ✅ Métodos helper de divisibilidad
     UINT128_DIVISIBILITY_PRIVATE_METHODS
     
-    // Métodos helper de factorización
+    // ✅ Métodos helper de factorización
     UINT128_FACTORIZATION_PRIVATE_METHODS
     
-    // Métodos helper de multiplicación constante
+    // ✅ Métodos helper de multiplicación constante
     UINT128_MULTIPLY_CONST_PRIVATE_METHODS
     
-    // Métodos helper de módulo (ya existe)
-    UINT128_MOD_HELPERS_PRIVATE_METHODS
+    // ✅ Métodos helper de división constante
+    UINT128_DIV_CONST_PRIVATE_METHODS
     
-    // Métodos helper de división constante (pendiente)
-    // UINT128_DIV_CONST_PRIVATE_METHODS
+    // ✅ Métodos helper de módulo (refactorizado)
+    UINT128_MOD_HELPERS_PRIVATE_METHODS
 
 public:
-    // API pública de divisibilidad
+    // ✅ API pública de divisibilidad
     UINT128_DIVISIBILITY_PUBLIC_METHODS
     
-    // API pública de factorización
+    // ✅ API pública de factorización
     UINT128_FACTORIZATION_PUBLIC_METHODS
     
-    // API pública de multiplicación constante
+    // ✅ API pública de multiplicación constante
     UINT128_MULTIPLY_CONST_PUBLIC_METHODS
     
-    // API pública de división constante (pendiente)
-    // UINT128_DIV_CONST_PUBLIC_METHODS
+    // ✅ API pública de división constante
+    UINT128_DIV_CONST_PUBLIC_METHODS
 };
 ```
 
 ---
 
-## 📊 Resumen de Funcionalidad
+## 📊 Resumen de Funcionalidad Completa
 
 ### Métodos añadidos a uint128_t (API completa)
 
@@ -565,11 +565,14 @@ public:
 | **Divisibilidad** | `is_multiple_of<N>()` | N ∈ [2, 63] | Verifica divisibilidad |
 | **Factorización** | `extract_power_of_2()` | - | Extrae potencia de 2 |
 | | `extract_power_of<P>()` | P ∈ [2, 61] | Extrae potencia de primo |
-| | `find_small_prime_factor()` | - | Busca factor ≤ 61 |
+| | `find_small_prime_factor()` | - | Busca factor ≤ 127 |
 | | `is_prime_candidate()` | - | Test rápido de primalidad |
 | **Multiplicación** | `multiply_by<N>()` | N ∈ [2, 63] | Multiplica por constante |
 | | `multiply_by_power_of_2<E>()` | E ∈ [0, 127] | Multiplica por 2^E |
 | | `multiply_by_power<B, E>()` | B ∈ [2, 61] | Multiplica por B^E |
+| **División** | `divide_by<D>()` | D ∈ [2, 63] | Divide por constante |
+| | `divide_by_power_of_2<E>()` | E ∈ [0, 127] | Divide por 2^E |
+| | `divide_by_power<B, E>()` | B ∈ [2, 61] | Divide por B^E |
 | **Módulo** | `mod<R>()` | R ∈ [2, 63] | Módulo por constante |
 | | `mod_pot2/3/5/7/10<n>()` | n ≥ 1 | Módulo por potencia |
 
@@ -579,8 +582,10 @@ public:
 |-----------|-----------|-----|
 | `uint128_power_detection` | `is_power_of<B>()`, `pow<B,E>()`, `log_base<B>()` | Detección y cálculo de potencias |
 | `uint128_divisibility_details` | `compute_2_64_mod()` | Reducción modular |
-| `uint128_factorization_details` | `small_primes[]` | Lista de primos 2-61 |
+| `uint128_factorization_details` | `small_primes[]` | Lista de primos 2-127 |
 | `uint128_multiply_const_details` | `multiply_by_3/5/7/9/10/11/15()` | Multiplicaciones optimizadas |
+| `uint128_div_const_details` | `divide_by_3/5/10()` | Divisiones optimizadas |
+| `uint128_mod_details` | Algoritmos de reducción modular | Módulo sin división 128-bit |
 
 ---
 
