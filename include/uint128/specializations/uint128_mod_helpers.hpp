@@ -542,7 +542,8 @@ using uint128_divisibility_details::compute_2_64_mod;
     {                                                                                              \
         std::uint64_t h = high();                                                                  \
         std::uint64_t l = low();                                                                   \
-        constexpr std::uint64_t power64_mod = (1ULL % M) * ((1ULL << 63) % M) * 2 % M;             \
+        /* Usar función de uint128_divisibility_details para calcular 2^64 mod M */                \
+        constexpr std::uint64_t power64_mod = uint128_divisibility_details::compute_2_64_mod(M);   \
         std::uint64_t h_mod = h % M;                                                               \
         std::uint64_t l_mod = l % M;                                                               \
         return (h_mod * power64_mod + l_mod) % M;                                                  \

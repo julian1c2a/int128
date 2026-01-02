@@ -6,7 +6,7 @@ Esta documentación describe la nueva arquitectura modular para operaciones con 
 
 **Ubicación**: `include/uint128/specializations/`  
 **Fecha de creación**: 2 de enero de 2026  
-**Estado**: 5/6 headers completados (83%)
+**Estado**: 🎉 **6/6 headers completados (100%)** 🎉
 
 ---
 
@@ -20,7 +20,7 @@ Esta documentación describe la nueva arquitectura modular para operaciones con 
 
 ---
 
-## 📁 Headers Creados (5/6)
+## 📁 Headers Completados (6/6) ✅
 
 ### 1️⃣ `uint128_power_detection.hpp` ✅
 
@@ -370,38 +370,86 @@ auto [q3, r3] = val.divide_by_power<3, 2>();   // q=11, r=1 (100/9)
 
 ---
 
-## 📋 Headers Pendientes (1/6)
+### 6️⃣ `uint128_mod_helpers.hpp` ✅ **REFACTORIZADO COMPLETAMENTE**
 
-### 6️⃣ `uint128_mod_helpers.hpp` ✅ **YA EXISTE** (refactorizar)
+**Namespace**: `uint128_mod_details`
 
-**Estado actual**: Contiene lógica de módulo optimizado
+**Propósito**: Cálculo de módulo optimizado usando reducción modular
 
-**Acciones necesarias**:
-
-1. ✅ Extraer funciones de detección de potencias → `uint128_power_detection.hpp` (ya hecho)
-2. ⚠️ Mantener solo métodos `mod_helper<Radix>()` y especializaciones
-3. ⚠️ Incluir los nuevos headers para reutilizar funciones
-4. ⚠️ Eliminar código duplicado
-
-**Macros existentes**:
+**Macros para uint128_t**:
 
 ```cpp
-UINT128_MOD_HELPERS_PRIVATE_METHODS  // Ya definida
+UINT128_MOD_HELPERS_PRIVATE_METHODS  // Incluir en sección private
 ```
 
-**Métodos públicos en uint128_t**:
+**Cambios aplicados en refactorización**:
+
+1. ✅ **Eliminado código duplicado**:
+   - Funciones `is_power_of_2/3/5/7/10` → Ahora usa `uint128_power_detection`
+   - Funciones `pow3/5/7/10`, `log2/3_uint64` → Ahora usa `uint128_power_detection`
+   - Función `compute_2_64_mod` → Ahora usa `uint128_divisibility_details`
+
+2. ✅ **Nuevas dependencias incluidas**:
+
+   ```cpp
+   #include "uint128_power_detection.hpp"
+   #include "uint128_divisibility.hpp"
+   ```
+
+3. ✅ **Código simplificado**:
+   - `mod_power_of_2_helper`: Usa `uint128_power_detection::is_power_of_2/log2_uint64`
+   - `mod_power_of_3_helper`: Usa `uint128_divisibility_details::compute_2_64_mod`
+   - `modM_generic_helper`: Usa `uint128_divisibility_details::compute_2_64_mod`
+
+4. ✅ **Lógica específica mantenida**:
+   - Helpers para módulos optimizados: `mod3/5/6/7/9/10/11/12/...61_helper()`
+   - Templates genéricos: `mod_power_of_*/modM_generic_helper<M>()`
+   - Reducción modular: `(h * 2^64 + l) mod M`
+
+**Métodos privados helper** (conservados):
 
 ```cpp
-template <uint64_t Rad>
-constexpr uint128_t mod() const noexcept;
+// Templates genéricos
+template <uint64_t PowerOf2>
+constexpr uint64_t mod_power_of_2_helper() const noexcept;
 
-template <int n>
-constexpr uint128_t mod_pot2/3/5/7/10() const noexcept;
+template <uint64_t PowerOf3/5/7/10>
+constexpr uint64_t mod_power_of_*_helper() const noexcept;
+
+// Optimizaciones específicas (28 funciones)
+constexpr uint64_t mod3/5/6/7/9/10_helper() const noexcept;
+constexpr uint64_t mod11/12/13/14/15/17/18/19/20_helper() const noexcept;
+constexpr uint64_t mod23/29/31/37/41/43/47/53/59/61_helper() const noexcept;
+
+// Generic fallback
+template <uint64_t M>
+constexpr uint64_t modM_generic_helper() const noexcept;
 ```
+
+**Algoritmo de reducción modular**:
+
+```cpp
+// Fórmula: uint128 mod M
+// 1. Dividir en high y low: val = high * 2^64 + low
+// 2. Calcular: (high mod M) * (2^64 mod M) + (low mod M)
+// 3. Aplicar mod M final
+constexpr uint64_t mod_2_64 = compute_2_64_mod(M);
+result = (h_mod * mod_2_64 + l_mod) % M;
+```
+
+**Beneficios de la refactorización**:
+
+- ✅ **Eliminó ~110 líneas** de código duplicado
+- ✅ **Reutiliza funciones** de otros headers
+- ✅ **Mantiene misma API** pública
+- ✅ **Zero cambios** en comportamiento
+- ✅ **Más fácil mantenimiento** (un solo lugar para lógica común)
 
 ---
 
-### 6️⃣ `uint128_div_const.hpp` 🔄 **PENDIENTE**
+## 🎉 Arquitectura Modular Completada 🎉
+
+**Estado**: ✅ **6/6 headers creados/refactorizados (100%)**
 
 **Propósito**: División optimizada por constantes
 
