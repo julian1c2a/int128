@@ -1,6 +1,8 @@
 #ifndef UINT128_MOD_HELPERS_HPP
 #define UINT128_MOD_HELPERS_HPP
 
+#include "uint128_divisibility.hpp"
+#include "uint128_power_detection.hpp"
 #include <cstdint>
 
 // Forward declaration
@@ -19,8 +21,13 @@ class uint128_t;
  * Optimizaciones incluidas:
  * - Potencias de 2: Máscaras de bits
  * - Potencias de 3, 5, 7, 10: Reducción modular genérica
- * - Primos pequeños (3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61)
+ * - Primos pequeños ( 3,  5,  7, 11, 13, 17, 19, 23, 29, 31, 
+ *                    37, 41, 43, 47, 53, 59, 61, ... , 127)
  * - Compuestos comunes (6, 9, 10, 12, 14, 15, 18, 20)
+ *
+ * @note Este header usa funciones de:
+ *       - uint128_power_detection.hpp: is_power_of_*, pow*, log*
+ *       - uint128_divisibility.hpp: compute_2_64_mod (reducción modular)
  */
 
 namespace uint128_mod_details
@@ -30,104 +37,11 @@ using uint128_t = nstd::uint128_t;
 using int128_t = nstd::int128_t;
 
 // ============================================================================
-// Funciones auxiliares para detección de patrones
-// ============================================================================
-
-static constexpr bool is_power_of_2(std::uint64_t n) noexcept
-{
-    return n > 0 && (n & (n - 1)) == 0;
-}
-
-static constexpr int log2_uint64(std::uint64_t n) noexcept
-{
-    int result = 0;
-    while (n > 1) {
-        n >>= 1;
-        ++result;
-    }
-    return result;
-}
-
-static constexpr bool is_power_of_3(std::uint64_t n) noexcept
-{
-    if (n < 3)
-        return false;
-    while (n > 1) {
-        if (n % 3 != 0)
-            return false;
-        n /= 3;
-    }
-    return true;
-}
-
-static constexpr int log3_uint64(std::uint64_t n) noexcept
-{
-    int result = 0;
-    while (n > 1) {
-        n /= 3;
-        ++result;
-    }
-    return result;
-}
-
-// ============================================================================
-// Funciones para calcular potencias en tiempo de compilación
-// ============================================================================
-
-static constexpr std::uint64_t pow3(int exp) noexcept
-{
-    std::uint64_t result = 1;
-    for (int i = 0; i < exp; ++i) {
-        result *= 3;
-    }
-    return result;
-}
-
-static constexpr std::uint64_t pow5(int exp) noexcept
-{
-    std::uint64_t result = 1;
-    for (int i = 0; i < exp; ++i) {
-        result *= 5;
-    }
-    return result;
-}
-
-static constexpr std::uint64_t pow7(int exp) noexcept
-{
-    std::uint64_t result = 1;
-    for (int i = 0; i < exp; ++i) {
-        result *= 7;
-    }
-    return result;
-}
-
-static constexpr std::uint64_t pow10(int exp) noexcept
-{
-    std::uint64_t result = 1;
-    for (int i = 0; i < exp; ++i) {
-        result *= 10;
-    }
-    return result;
-}
-
-// ============================================================================
 // Helper genérico para calcular 2^64 mod M en tiempo de compilación
+// Movido desde uint128_divisibility_details
 // ============================================================================
 
-static constexpr std::uint64_t compute_2_64_mod(std::uint64_t M) noexcept
-{
-    std::uint64_t result = 1;
-    std::uint64_t base = 2 % M;
-    int exp = 64;
-    while (exp > 0) {
-        if (exp & 1) {
-            result = (result * base) % M;
-        }
-        base = (base * base) % M;
-        exp >>= 1;
-    }
-    return result;
-}
+using uint128_divisibility_details::compute_2_64_mod;
 
 } // namespace uint128_mod_details
 
