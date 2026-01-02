@@ -2838,7 +2838,7 @@ inline constexpr uint128_t& uint128_t::operator=(const char* str) noexcept
 // Con reflection, estos ~100 operadores simétricos se podrían generar automáticamente:
 //
 // consteval void generate_symmetric_operators() {
-//     for (constexpr auto op : operators_of(^uint128_t)) {  // ^ o ^^ según sintaxis final
+//     for (constexpr auto op : operators_of(^^uint128_t)) {  // ^ o ^^ según sintaxis final
 //         if (is_binary_operator(op)) {
 //             inject(make_symmetric_for<integral_builtin>(op));
 //         }
