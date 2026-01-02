@@ -107,8 +107,8 @@ int main()
     {
         uint128_t val(0, 123);
 
-        auto result = val.mod<7>(); // 123 % 7 = 4
-        assert(result == uint128_t(0, 4));
+        auto result = val.mod<5>(); // 123 % 5 = 3
+        assert(result == uint128_t(0, 3));
 
         auto result2 = val.mod_pot2<3>(); // 123 % 2^3 = 123 % 8 = 3
         assert(result2 == uint128_t(0, 3));

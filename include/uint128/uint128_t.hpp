@@ -372,12 +372,39 @@ class uint128_t
      * assert(static_cast<int64_t>(val) == 123);
      * @endcode
      */
-    template <typename TYPE> explicit constexpr operator TYPE() const noexcept
-    {
-        static_assert((std::is_integral<TYPE>::value && sizeof(TYPE) <= 8) ||
-                          std::is_floating_point<TYPE>::value,
-                      "TYPE must be an integral type of 8 bytes or less, or a floating point type");
 
+    // BEGIN BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
+    template <typename TYPE> struct is_floating_arithmetic_builtin : std::false_type {
+    };
+
+    template <std::arithmetic TYPE> struct is_floating_arithmetic_builtin {
+        static constexpr bool value = (std::is_floating_point_v<TYPE> && (sizeof(TYPE) <= 16));
+    };
+
+    template <std::arithmetic TYPE>
+    constexpr bool is_floating_arithmetic_builtin_v = is_floating_arithmetic_builtin<TYPE>::value;
+
+    template <typename TYPE>
+    concept floating_arithmetic_builtin = is_floating_arithmetic_builtin_v<TYPE>;
+
+    template <typename TYPE> struct is_arithmetic_builtin : std::false_type {
+    };
+
+    template <std::arithmetic TYPE> struct is_arithmetic_builtin {
+        static constexpr bool value =
+            (is_floating_arithmetic_builtin_v<TYPE> || is_integral_builtin_v<TYPE>);
+    };
+
+    template <std::arithmetic TYPE>
+    constexpr bool is_arithmetic_builtin_v = is_arithmetic_builtin<TYPE>::value;
+
+    template <typename TYPE>
+    concept arithmetic_builtin = is_arithmetic_builtin_v<TYPE>;
+
+    // END BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
+
+    template <arithmetic_builtin TYPE> explicit constexpr operator TYPE() const noexcept
+    {
         if constexpr (std::is_floating_point<TYPE>::value) {
             // Conversión a tipos de punto flotante
             // high * 2^64 + low
@@ -388,7 +415,7 @@ class uint128_t
             return static_cast<TYPE>(data[0]);
         }
     }
-
+// BEGIN ENCAPSULAR EN ARITHMETIC_OPERATIONS
 #if defined(__SIZEOF_INT128__)
     /**
      * @brief Conversión al tipo nativo `__uint128_t` del compilador.
@@ -424,8 +451,8 @@ class uint128_t
     {
         return static_cast<__int128_t>((static_cast<__uint128_t>(data[1]) << 64) | data[0]);
     }
-#endif
-
+#endif // __SIZEOF_INT128__ // ¿ESTÁ EL #ENDIF EN EL LUGAR CORRECTO?
+       // END ENCAPSULAR EN ARITHMETIC_OPERATIONS
     // ARITHMETIC OPERATORS
     /**
      * @brief Operador de pre-incremento (++i).
@@ -1479,6 +1506,16 @@ class uint128_t
     }
 
     /**
+     * @brief Operador NOT a nivel de bits (~a).
+     * @return Un nuevo `uint128_t` con todos los bits invertidos.
+     * @test (test_bitwise_operators)
+     */
+    constexpr uint128_t operator~() const noexcept
+    {
+        return uint128_t(~data[1], ~data[0]);
+    }
+
+    /**
      * @brief Operador unario de negación (-x)
      * @return Negación aritmética del valor mediante aritmética modular (2^128 - x)
      *
@@ -1679,8 +1716,7 @@ class uint128_t
      */
     constexpr uint128_t& operator<<=(int shift) noexcept
     {
-        *this = shift_left(shift);
-        return *this;
+        return (*this = shift_left(shift));
     }
 
     /**
@@ -1691,8 +1727,7 @@ class uint128_t
      */
     constexpr uint128_t& operator>>=(int shift) noexcept
     {
-        *this = shift_right(shift);
-        return *this;
+        return (*this = shift_right(shift));
     }
 
     /**
@@ -1855,16 +1890,6 @@ class uint128_t
         return result;
     }
 
-    /**
-     * @brief Operador NOT a nivel de bits (~a).
-     * @return Un nuevo `uint128_t` con todos los bits invertidos.
-     * @test (test_bitwise_operators)
-     */
-    constexpr uint128_t operator~() const noexcept
-    {
-        return uint128_t(~data[1], ~data[0]);
-    }
-
     /// Multiplicación completa: uint128_t * uint64_t -> parte alta (bits 128-191)
     /// Esta función calcula los bits superiores del resultado de multiplicar
     /// un número de 128 bits por uno de 64 bits, útil para el algoritmo de Knuth
@@ -1881,8 +1906,10 @@ class uint128_t
      * @return Par {cociente, resto} de la división
      * @property Es noexcept.
      */
-    std::pair<uint128_t, uint128_t> divrem_64bit_divisor(const uint128_t& divisor) const noexcept
+    constexpr cstd::pair<uint128_t, uint128_t>
+    divrem_64bit_divisor(const uint128_t& divisor) const noexcept
     {
+// BEGIN ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
 #if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
         // Disponible en GCC/Clang/Intel icpx en Linux
         // En Windows (MSVC/Intel ICX) el linker no tiene __udivti3/__umodti3
@@ -1895,6 +1922,7 @@ class uint128_t
         // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
         return divrem(divisor);
 #endif
+        // END ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
     }
 
     /**
@@ -1910,10 +1938,11 @@ class uint128_t
      * @return Par {cociente, resto} de la división
      * @property Es noexcept.
      */
-    std::pair<uint128_t, uint128_t>
+    constexpr std::pair<uint128_t, uint128_t>
     knuth_D_algorithm(uint64_t u_extension, const uint128_t& u_shifted, const uint128_t& v, int s,
                       const uint128_t& original_divisor) const noexcept
     {
+// BEGIN ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
 #if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
         // Disponible en GCC/Clang/Intel icpx en Linux (todos usan libgcc/compiler-rt con __udivti3)
         // En Windows, MSVC y Intel ICX/oneAPI usan el linker de MSVC que no tiene
@@ -1932,28 +1961,29 @@ class uint128_t
         (void)s;
         return divrem(original_divisor);
 #endif
+        // END ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
     }
     // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
 
-    static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
+    constexpr static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
     {
         return n.trailing_zeros();
     }
 
     // Verificar si el número cabe efectivamente en 64 bits
-    static constexpr bool fits_in_64_bits(const uint128_t& n) noexcept
+    constexpr static constexpr bool fits_in_64_bits(const uint128_t& n) noexcept
     {
         return n.data[1] == 0;
     }
 
     // Extraer el valor de 64 bits cuando se sabe que cabe
-    static constexpr uint64_t effective_to_64_bits(const uint128_t& n) noexcept
+    constexpr static constexpr uint64_t effective_to_64_bits(const uint128_t& n) noexcept
     {
         return n.data[0];
     }
 
     // División rápida por potencias de 10 (10^n = 2^n * 5^n)
-    std::optional<std::pair<uint128_t, uint128_t>>
+    constexpr std::optional<std::pair<uint128_t, uint128_t>>
     try_divide_by_power_of_10(const uint128_t& divisor) const noexcept
     {
         // Detectar si es potencia de 10: 1, 10, 100, 1000, etc.
@@ -1971,7 +2001,7 @@ class uint128_t
     }
 
     // División rápida por potencias de 3
-    std::optional<std::pair<uint128_t, uint128_t>>
+    constexpr std::optional<std::pair<uint128_t, uint128_t>>
     try_divide_by_power_of_3(const uint128_t& divisor) const noexcept
     {
         if (divisor == uint128_t(0, 3))
@@ -1985,7 +2015,7 @@ class uint128_t
     }
 
     // División rápida por potencias de 5
-    std::optional<std::pair<uint128_t, uint128_t>>
+    constexpr std::optional<std::pair<uint128_t, uint128_t>>
     try_divide_by_power_of_5(const uint128_t& divisor) const noexcept
     {
         if (divisor == uint128_t(0, 5))
@@ -1999,71 +2029,73 @@ class uint128_t
     }
 
     // Implementaciones específicas de división rápida
-    std::pair<uint128_t, uint128_t> divide_by_10() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_10() const noexcept
     {
         // Implementación correcta: dividir por 10 directamente por ahora
-        auto result = divrem(uint128_t(0, 10));
+        const auto result = divrem(uint128_t(0, 10));
         return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_100() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_100() const noexcept
     {
         // Implementación correcta: dividir por 100 directamente por ahora
-        auto result = divrem(uint128_t(0, 100));
+        const auto result = divrem(uint128_t(0, 100));
         return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_1000() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_1000() const noexcept
     {
         // Implementación correcta: dividir por 1000 directamente por ahora
-        auto result = divrem(uint128_t(0, 1000));
+        const auto result = divrem(uint128_t(0, 1000));
         return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_3() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_3() const noexcept
     {
         // Usar multiplicación por inverso: 1/3 ≈ 0x55555555555555555555555555555556
         // Esta es una aproximación, necesitaría implementación más precisa
-        auto result = divrem(uint128_t(0, 3));
+        const auto result = divrem(uint128_t(0, 3));
         return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_9() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_9() const noexcept
     {
         auto [q3, r3] = divide_by_3();
-        auto [final_q, temp_r] = q3.divide_by_3();
-        const uint128_t final_r = temp_r * uint128_t(0, 3) + r3;
+        auto [q_temp, temp_r] = q3.divide_by_3();
+        uint128_t final_q = q_temp; // Sin const para make_pair
+        uint128_t final_r = temp_r * uint128_t(0, 3) + r3;
         return std::make_pair(final_q, final_r);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_27() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_27() const noexcept
     {
         auto [q9, r9] = divide_by_9();
-        auto [final_q, temp_r] = q9.divide_by_3();
-        const uint128_t final_r = temp_r * uint128_t(0, 9) + r9;
+        auto [q_temp, temp_r] = q9.divide_by_3();
+        uint128_t final_q = q_temp; // Sin const para make_pair
+        uint128_t final_r = temp_r * uint128_t(0, 9) + r9;
         return std::make_pair(final_q, final_r);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_5() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_5() const noexcept
     {
         // Usar multiplicación por inverso: 1/5 ≈ 0x33333333333333333333333333333334
         // Implementación simplificada por ahora
-        auto result = divrem(uint128_t(0, 5));
+        const auto result = divrem(uint128_t(0, 5));
         return result.has_value() ? result.value() : std::make_pair(uint128_t(0, 0), *this);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_25() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_25() const noexcept
     {
-        auto [q5, r5] = divide_by_5();
-        auto [final_q, temp_r] = q5.divide_by_5();
+        const auto [q5, r5] = divide_by_5();
+        const auto [final_q, temp_r] = q5.divide_by_5();
         const uint128_t final_r = temp_r * uint128_t(0, 5) + r5;
         return std::make_pair(final_q, final_r);
     }
 
-    std::pair<uint128_t, uint128_t> divide_by_125() const noexcept
+    constexpr std::pair<uint128_t, uint128_t> divide_by_125() const noexcept
     {
         auto [q25, r25] = divide_by_25();
-        auto [final_q, temp_r] = q25.divide_by_5();
+        const auto [final_q, temp_r] = q25.divide_by_5();
         const uint128_t final_r = temp_r * uint128_t(0, 25) + r25;
         return std::make_pair(final_q, final_r);
     }
@@ -2081,14 +2113,14 @@ class uint128_t
      * @property Es `noexcept`.
      * @test (test_mulhi64)
      */
-    uint64_t mulhi64(uint64_t multiplier) const noexcept
+    constexpr uint64_t mulhi64(uint64_t multiplier) const noexcept
     {
         return intrinsics::mul128x64_high(data[0], data[1], multiplier);
     }
 
     template <integral_builtin T>
         requires(sizeof(T) <= sizeof(uint64_t))
-    uint64_t mulhi64(T multiplier) const noexcept
+    constexpr uint64_t mulhi64(T multiplier) const noexcept
     {
         return intrinsics::mul128x64_high(data[0], data[1], static_cast<uint64_t>(multiplier));
     }
@@ -2113,7 +2145,7 @@ class uint128_t
      * @property Es `noexcept`.
      * @test (test_knuth_D_divrem)
      */
-    std::optional<std::pair<uint128_t, uint128_t>>
+    constexpr std::optional<std::pair<uint128_t, uint128_t>>
     knuth_D_divrem(const uint128_t& v_in) const noexcept
     {
         // 0. Casos triviales
@@ -2135,19 +2167,19 @@ class uint128_t
         }
 
         // 2. OPTIMIZACIÓN: División por potencias de 10 (descomponer en 2^n * 5^n)
-        auto power_of_10_result = try_divide_by_power_of_10(v_in);
+        const auto power_of_10_result = try_divide_by_power_of_10(v_in);
         if (power_of_10_result.has_value()) {
             return power_of_10_result;
         }
 
         // 3. OPTIMIZACIÓN: División por potencias de 3
-        auto power_of_3_result = try_divide_by_power_of_3(v_in);
+        const auto power_of_3_result = try_divide_by_power_of_3(v_in);
         if (power_of_3_result.has_value()) {
             return power_of_3_result;
         }
 
         // 4. OPTIMIZACIÓN: División por potencias de 5
-        auto power_of_5_result = try_divide_by_power_of_5(v_in);
+        const auto power_of_5_result = try_divide_by_power_of_5(v_in);
         if (power_of_5_result.has_value()) {
             return power_of_5_result;
         }
@@ -2207,7 +2239,7 @@ class uint128_t
                 product = uint128_t(q * divisor_high, 0);
             }
 
-            remainder = remainder - product;
+            remainder -= product;
             return std::make_pair(uint128_t(0, q), remainder);
         }
 
@@ -2245,7 +2277,8 @@ class uint128_t
      * @endcode
      */
     template <integral_builtin T>
-    std::optional<std::pair<uint128_t, uint128_t>> knuth_D_divrem(T divisor) const noexcept
+    constexpr std::optional<std::pair<uint128_t, uint128_t>>
+    knuth_D_divrem(T divisor) const noexcept
     {
         return knuth_D_divrem(uint128_t(divisor));
     }

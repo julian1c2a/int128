@@ -37,7 +37,7 @@ using uint128_t = nstd::uint128_t;
  * @param exp Exponente de 2^exp
  * @return val * 2^exp
  */
-static constexpr uint128_t multiply_by_power_of_2(const uint128_t& val, int exp) noexcept;
+inline constexpr uint128_t multiply_by_power_of_2(const uint128_t& val, int exp) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 3 (x + x + x o shift)
@@ -45,7 +45,7 @@ static constexpr uint128_t multiply_by_power_of_2(const uint128_t& val, int exp)
  * @return val * 3
  * @note Usa: x * 3 = (x << 1) + x
  */
-static constexpr uint128_t multiply_by_3(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_3(const uint128_t& val) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 5
@@ -53,7 +53,7 @@ static constexpr uint128_t multiply_by_3(const uint128_t& val) noexcept;
  * @return val * 5
  * @note Usa: x * 5 = (x << 2) + x
  */
-static constexpr uint128_t multiply_by_5(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_5(const uint128_t& val) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 7
@@ -61,7 +61,7 @@ static constexpr uint128_t multiply_by_5(const uint128_t& val) noexcept;
  * @return val * 7
  * @note Usa: x * 7 = (x << 3) - x
  */
-static constexpr uint128_t multiply_by_7(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_7(const uint128_t& val) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 9
@@ -69,7 +69,7 @@ static constexpr uint128_t multiply_by_7(const uint128_t& val) noexcept;
  * @return val * 9
  * @note Usa: x * 9 = (x << 3) + x
  */
-static constexpr uint128_t multiply_by_9(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_9(const uint128_t& val) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 10
@@ -77,7 +77,7 @@ static constexpr uint128_t multiply_by_9(const uint128_t& val) noexcept;
  * @return val * 10
  * @note Usa: x * 10 = ((x << 2) + x) << 1 = (x << 3) + (x << 1)
  */
-static constexpr uint128_t multiply_by_10(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_10(const uint128_t& val) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 11
@@ -85,7 +85,7 @@ static constexpr uint128_t multiply_by_10(const uint128_t& val) noexcept;
  * @return val * 11
  * @note Usa: x * 11 = (x << 3) + (x << 1) + x
  */
-static constexpr uint128_t multiply_by_11(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_11(const uint128_t& val) noexcept;
 
 /**
  * @brief Multiplicación optimizada por 15
@@ -93,45 +93,45 @@ static constexpr uint128_t multiply_by_11(const uint128_t& val) noexcept;
  * @return val * 15
  * @note Usa: x * 15 = (x << 4) - x
  */
-static constexpr uint128_t multiply_by_15(const uint128_t& val) noexcept;
+inline constexpr uint128_t multiply_by_15(const uint128_t& val) noexcept;
 
 // Forward declarations para que compile
-static constexpr uint128_t multiply_by_power_of_2(const uint128_t& val, int exp) noexcept
+inline constexpr uint128_t multiply_by_power_of_2(const uint128_t& val, int exp) noexcept
 {
     return val.shift_left(exp);
 }
 
-static constexpr uint128_t multiply_by_3(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_3(const uint128_t& val) noexcept
 {
     return val.shift_left(1) + val; // (x << 1) + x
 }
 
-static constexpr uint128_t multiply_by_5(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_5(const uint128_t& val) noexcept
 {
     return val.shift_left(2) + val; // (x << 2) + x
 }
 
-static constexpr uint128_t multiply_by_7(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_7(const uint128_t& val) noexcept
 {
     return val.shift_left(3) - val; // (x << 3) - x
 }
 
-static constexpr uint128_t multiply_by_9(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_9(const uint128_t& val) noexcept
 {
     return val.shift_left(3) + val; // (x << 3) + x
 }
 
-static constexpr uint128_t multiply_by_10(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_10(const uint128_t& val) noexcept
 {
     return val.shift_left(3) + val.shift_left(1); // (x << 3) + (x << 1)
 }
 
-static constexpr uint128_t multiply_by_11(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_11(const uint128_t& val) noexcept
 {
     return val.shift_left(3) + val.shift_left(1) + val; // (x << 3) + (x << 1) + x
 }
 
-static constexpr uint128_t multiply_by_15(const uint128_t& val) noexcept
+inline constexpr uint128_t multiply_by_15(const uint128_t& val) noexcept
 {
     return val.shift_left(4) - val; // (x << 4) - x
 }
