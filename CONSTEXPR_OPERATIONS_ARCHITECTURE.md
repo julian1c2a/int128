@@ -6,7 +6,7 @@ Esta documentación describe la nueva arquitectura modular para operaciones con 
 
 **Ubicación**: `include/uint128/specializations/`  
 **Fecha de creación**: 2 de enero de 2026  
-**Estado**: 4/6 headers completados
+**Estado**: 5/6 headers completados (83%)
 
 ---
 
@@ -259,9 +259,120 @@ auto r3 = val.multiply_by_power<3, 2>();   // 900 (100 * 9)
 
 ---
 
-## 📋 Headers Pendientes (2/6)
+### 5️⃣ `uint128_div_const.hpp` ✅
 
-### 5️⃣ `uint128_mod_helpers.hpp` ✅ **YA EXISTE** (refactorizar)
+**Namespace**: `uint128_div_const_details`
+
+**Propósito**: División optimizada por constantes
+
+**Macros para uint128_t**:
+
+```cpp
+UINT128_DIV_CONST_PRIVATE_METHODS  // Incluir en sección private
+UINT128_DIV_CONST_PUBLIC_METHODS   // Incluir en sección public
+```
+
+**Métodos públicos añadidos a uint128_t**:
+
+```cpp
+// División por constante (Divisor ∈ [2, 63])
+template <uint64_t Divisor>
+constexpr std::pair<uint128_t, uint128_t> divide_by() const noexcept;
+
+// División por potencia de 2: x / 2^Exp
+template <int Exp>
+constexpr std::pair<uint128_t, uint128_t> divide_by_power_of_2() const noexcept;
+
+// División por potencia de primo: x / Base^Exp
+template <uint64_t Base, int Exp>
+constexpr std::pair<uint128_t, uint128_t> divide_by_power() const noexcept;
+```
+
+**Métodos privados helper**:
+
+```cpp
+// Divisiones específicas optimizadas
+constexpr std::pair<uint128_t, uint128_t> divide_by_10_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_100_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_1000_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_3_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_9_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_27_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_5_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_25_helper() const noexcept;
+constexpr std::pair<uint128_t, uint128_t> divide_by_125_helper() const noexcept;
+
+// Intentos de división por potencias específicas
+std::optional<std::pair<uint128_t, uint128_t>>
+try_divide_by_power_of_10_helper(const uint128_t& divisor) const noexcept;
+
+std::optional<std::pair<uint128_t, uint128_t>>
+try_divide_by_power_of_3_helper(const uint128_t& divisor) const noexcept;
+
+std::optional<std::pair<uint128_t, uint128_t>>
+try_divide_by_power_of_5_helper(const uint128_t& divisor) const noexcept;
+
+// Templates genéricos
+template <uint64_t Divisor>
+constexpr std::pair<uint128_t, uint128_t> divide_by_const_helper() const noexcept;
+
+template <uint64_t Base, int Exp>
+constexpr std::pair<uint128_t, uint128_t> divide_by_power_helper() const noexcept;
+```
+
+**Optimizaciones específicas**:
+
+```cpp
+// Potencias de 2: shift right
+x / 2^k = x >> k
+Resto: x & ((1 << k) - 1)
+
+// División por 10: Descomposición 2 * 5
+x / 10 = (x / 2) / 5
+
+// División por 100: División iterativa
+x / 100 = ((x / 10) / 10)
+
+// División por potencias de primos: División iterativa
+x / Base^Exp = ((...((x / Base) / Base)...) / Base)  [Exp veces]
+```
+
+**Funciones auxiliares**:
+
+```cpp
+namespace uint128_div_const_details {
+    constexpr std::pair<uint128_t, uint128_t>
+    divide_by_power_of_2(const uint128_t&, int exp);
+    
+    constexpr std::pair<uint128_t, uint128_t>
+    divide_by_3/5/10(const uint128_t&);
+}
+```
+
+**Ejemplo de uso**:
+
+```cpp
+uint128_t val(100);
+
+// División optimizada
+auto [q1, r1] = val.divide_by<10>();           // q=10, r=0
+auto [q2, r2] = val.divide_by_power_of_2<3>(); // q=12, r=4 (100/8)
+auto [q3, r3] = val.divide_by_power<3, 2>();   // q=11, r=1 (100/9)
+```
+
+**Características**:
+
+- ✅ Retorna `std::pair<cociente, resto>`
+- ✅ Potencias de 2: shift right (sin división)
+- ✅ División iterativa para potencias de primos
+- ✅ Funciones de intento (`try_divide_by_power_of_*`)
+- ✅ 100% constexpr y noexcept
+
+---
+
+## 📋 Headers Pendientes (1/6)
+
+### 6️⃣ `uint128_mod_helpers.hpp` ✅ **YA EXISTE** (refactorizar)
 
 **Estado actual**: Contiene lógica de módulo optimizado
 
