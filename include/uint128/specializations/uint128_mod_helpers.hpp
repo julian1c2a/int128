@@ -21,7 +21,7 @@ class uint128_t;
  * Optimizaciones incluidas:
  * - Potencias de 2: Máscaras de bits
  * - Potencias de 3, 5, 7, 10: Reducción modular genérica
- * - Primos pequeños ( 3,  5,  7, 11, 13, 17, 19, 23, 29, 31, 
+ * - Primos pequeños ( 3,  5,  7, 11, 13, 17, 19, 23, 29, 31,
  *                    37, 41, 43, 47, 53, 59, 61, ... , 127)
  * - Compuestos comunes (6, 9, 10, 12, 14, 15, 18, 20)
  *
@@ -57,8 +57,8 @@ using uint128_divisibility_details::compute_2_64_mod;
     template <std::uint64_t PowerOf2>                                                              \
     constexpr std::uint64_t mod_power_of_2_helper() const noexcept                                 \
     {                                                                                              \
-        static_assert(uint128_mod_details::is_power_of_2(PowerOf2), "Must be a power of 2");       \
-        constexpr int bits = uint128_mod_details::log2_uint64(PowerOf2);                           \
+        static_assert(uint128_power_detection::is_power_of_2(PowerOf2), "Must be a power of 2");   \
+        constexpr int bits = uint128_power_detection::log2_uint64(PowerOf2);                       \
         constexpr std::uint64_t mask = PowerOf2 - 1;                                               \
         if constexpr (bits < 64) {                                                                 \
             return low() & mask;                                                                   \
@@ -71,24 +71,13 @@ using uint128_divisibility_details::compute_2_64_mod;
     template <std::uint64_t PowerOf3>                                                              \
     constexpr std::uint64_t mod_power_of_3_helper() const noexcept                                 \
     {                                                                                              \
-        static_assert(uint128_mod_details::is_power_of_3(PowerOf3), "Must be a power of 3");       \
+        static_assert(uint128_power_detection::is_power_of_3(PowerOf3), "Must be a power of 3");   \
         std::uint64_t h = high();                                                                  \
         std::uint64_t l = low();                                                                   \
         h = h % PowerOf3;                                                                          \
         l = l % PowerOf3;                                                                          \
-        constexpr std::uint64_t mod_2_64 = []() constexpr {                                        \
-            std::uint64_t result = 1;                                                              \
-            std::uint64_t base = 2 % PowerOf3;                                                     \
-            int exp = 64;                                                                          \
-            while (exp > 0) {                                                                      \
-                if (exp & 1) {                                                                     \
-                    result = (result * base) % PowerOf3;                                           \
-                }                                                                                  \
-                base = (base * base) % PowerOf3;                                                   \
-                exp >>= 1;                                                                         \
-            }                                                                                      \
-            return result;                                                                         \
-        }();                                                                                       \
+        constexpr std::uint64_t mod_2_64 =                                                         \
+            uint128_divisibility_details::compute_2_64_mod(PowerOf3);                              \
         std::uint64_t result = (h * mod_2_64 + l) % PowerOf3;                                      \
         return result;                                                                             \
     }                                                                                              \
@@ -101,7 +90,8 @@ using uint128_divisibility_details::compute_2_64_mod;
         std::uint64_t l = low();                                                                   \
         h = h % PowerOf5;                                                                          \
         l = l % PowerOf5;                                                                          \
-        constexpr std::uint64_t mod_2_64 = uint128_mod_details::compute_2_64_mod(PowerOf5);        \
+        constexpr std::uint64_t mod_2_64 =                                                         \
+            uint128_divisibility_details::compute_2_64_mod(PowerOf5);                              \
         std::uint64_t result = (h * mod_2_64 + l) % PowerOf5;                                      \
         return result;                                                                             \
     }                                                                                              \
@@ -114,7 +104,8 @@ using uint128_divisibility_details::compute_2_64_mod;
         std::uint64_t l = low();                                                                   \
         h = h % PowerOf7;                                                                          \
         l = l % PowerOf7;                                                                          \
-        constexpr std::uint64_t mod_2_64 = uint128_mod_details::compute_2_64_mod(PowerOf7);        \
+        constexpr std::uint64_t mod_2_64 =                                                         \
+            uint128_divisibility_details::compute_2_64_mod(PowerOf7);                              \
         std::uint64_t result = (h * mod_2_64 + l) % PowerOf7;                                      \
         return result;                                                                             \
     }                                                                                              \
@@ -127,7 +118,8 @@ using uint128_divisibility_details::compute_2_64_mod;
         std::uint64_t l = low();                                                                   \
         h = h % PowerOf10;                                                                         \
         l = l % PowerOf10;                                                                         \
-        constexpr std::uint64_t mod_2_64 = uint128_mod_details::compute_2_64_mod(PowerOf10);       \
+        constexpr std::uint64_t mod_2_64 =                                                         \
+            uint128_divisibility_details::compute_2_64_mod(PowerOf10);                             \
         std::uint64_t result = (h * mod_2_64 + l) % PowerOf10;                                     \
         return result;                                                                             \
     }                                                                                              \
