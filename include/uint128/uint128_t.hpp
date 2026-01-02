@@ -38,8 +38,13 @@
 // Include type traits personalizados
 #include "../type_traits.hpp"
 
-// Include helpers de módulo optimizados
+// Include headers modulares de operaciones constexpr optimizadas
+#include "specializations/uint128_div_const.hpp"
+#include "specializations/uint128_divisibility.hpp"
+#include "specializations/uint128_factorization_helpers.hpp"
 #include "specializations/uint128_mod_helpers.hpp"
+#include "specializations/uint128_multiply_const.hpp"
+#include "specializations/uint128_power_detection.hpp"
 
 namespace nstd
 {
@@ -1210,6 +1215,12 @@ class uint128_t
     // Helpers de módulo optimizados - definidos en specializations/uint128_mod_helpers.hpp
     // ============================================================================
     UINT128_MOD_HELPERS_PRIVATE_METHODS
+
+    // Métodos privados de operaciones constexpr modulares
+    UINT128_DIVISIBILITY_PRIVATE_METHODS
+    UINT128_FACTORIZATION_PRIVATE_METHODS
+    UINT128_MULTIPLY_CONST_PRIVATE_METHODS
+    UINT128_DIV_CONST_PRIVATE_METHODS
 
   public:
     /**
@@ -2815,6 +2826,15 @@ class uint128_t
         (void)error; // Ignorar el error para compatibilidad
         return result;
     }
+
+    // ============================================================================
+    // API pública de operaciones constexpr modulares
+    // ============================================================================
+
+    UINT128_DIVISIBILITY_PUBLIC_METHODS
+    UINT128_FACTORIZATION_PUBLIC_METHODS
+    UINT128_MULTIPLY_CONST_PUBLIC_METHODS
+    UINT128_DIV_CONST_PUBLIC_METHODS
 };
 
 // ========================= DEFINICIONES DE FUNCIONES INLINE =========================
