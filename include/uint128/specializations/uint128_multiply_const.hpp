@@ -56,14 +56,6 @@ inline constexpr uint128_t multiply_by_3(const uint128_t& val) noexcept;
 inline constexpr uint128_t multiply_by_5(const uint128_t& val) noexcept;
 
 /**
- * @brief Multiplicación optimizada por 7
- * @param val Valor a multiplicar
- * @return val * 7
- * @note Usa: x * 7 = (x << 3) - x
- */
-inline constexpr uint128_t multiply_by_7(const uint128_t& val) noexcept;
-
-/**
  * @brief Multiplicación optimizada por 9
  * @param val Valor a multiplicar
  * @return val * 9

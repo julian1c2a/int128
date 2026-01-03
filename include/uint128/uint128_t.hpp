@@ -1050,12 +1050,12 @@ class uint128_t
 
         // Caso 2: Divisor mayor que dividendo
         if (data[1] == 0 && data[0] < divisor_u64) {
-            return std::make_pair(uint128_t(0, 0), *this);
+            return std::pair<uint128_t, uint128_t>{uint128_t(0, 0), *this};
         }
 
         // Caso 3: División por 1
         if (divisor_u64 == 1) {
-            return std::make_pair(*this, uint128_t(0, 0));
+            return std::pair<uint128_t, uint128_t>{*this, uint128_t(0, 0)};
         }
 
         // Caso 4: División por potencia de 2 (optimización)
@@ -1064,14 +1064,14 @@ class uint128_t
             const int shift = intrinsics::ctz64(divisor_u64);
             const uint128_t quotient = this->shift_right(shift);
             const uint128_t remainder = *this & uint128_t(0, divisor_u64 - 1);
-            return std::make_pair(quotient, remainder);
+            return std::pair<uint128_t, uint128_t>{quotient, remainder};
         }
 
         // Caso 5: Dividendo cabe en 64 bits (fast path)
         if (data[1] == 0) {
             const uint64_t q = data[0] / divisor_u64;
             const uint64_t r = data[0] % divisor_u64;
-            return std::make_pair(uint128_t(0, q), uint128_t(0, r));
+            return std::pair<uint128_t, uint128_t>{uint128_t(0, q), uint128_t(0, r)};
         }
 
         // Caso 6: Algoritmo general 128/64 bits
@@ -1104,7 +1104,7 @@ class uint128_t
         const uint128_t quotient(q_hi, q_lo);
         const uint128_t remainder(0, remainder_final);
 
-        return std::make_pair(quotient, remainder);
+        return std::pair<uint128_t, uint128_t>{quotient, remainder};
     }
 
     /**
