@@ -39,10 +39,8 @@
 #include "../type_traits.hpp"
 
 // Include headers modulares de operaciones constexpr optimizadas
-#include "specializations/uint128_div_const.hpp"
 #include "specializations/uint128_divisibility.hpp"
 #include "specializations/uint128_factorization_helpers.hpp"
-#include "specializations/uint128_mod_helpers.hpp"
 #include "specializations/uint128_multiply_const.hpp"
 #include "specializations/uint128_power_detection.hpp"
 
@@ -1240,6 +1238,13 @@ class uint128_t
 
   private:
     // ============================================================================
+    // Includes de headers que usan std::pair<uint128_t, uint128_t>
+    // DEBEN estar DESPUÉS de la declaración de la clase pero ANTES de las macros
+    // ============================================================================
+#include "specializations/uint128_div_const.hpp"
+#include "specializations/uint128_mod_helpers.hpp"
+
+    // ============================================================================
     // Helpers de módulo optimizados - definidos en specializations/uint128_mod_helpers.hpp
     // ============================================================================
     UINT128_MOD_HELPERS_PRIVATE_METHODS
@@ -1964,19 +1969,19 @@ class uint128_t
     }
     // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
 
-    constexpr static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
+    static constexpr int count_trailing_zeros(const uint128_t& n) noexcept
     {
         return n.trailing_zeros();
     }
 
     // Verificar si el número cabe efectivamente en 64 bits
-    constexpr static constexpr bool fits_in_64_bits(const uint128_t& n) noexcept
+    static constexpr bool fits_in_64_bits(const uint128_t& n) noexcept
     {
         return n.data[1] == 0;
     }
 
     // Extraer el valor de 64 bits cuando se sabe que cabe
-    constexpr static constexpr uint64_t effective_to_64_bits(const uint128_t& n) noexcept
+    static constexpr uint64_t effective_to_64_bits(const uint128_t& n) noexcept
     {
         return n.data[0];
     }
