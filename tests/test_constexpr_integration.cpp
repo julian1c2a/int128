@@ -93,11 +93,13 @@ int main()
     {
         uint128_t val(0, 100);
 
-        auto result = val.divide_by<5>();
-        assert(result == uint128_t(0, 20));
+        auto [quotient1, remainder1] = val.divide_by<5>();
+        assert(quotient1 == uint128_t(0, 20));
+        assert(remainder1 == uint128_t(0, 0));
 
-        auto result2 = val.divide_by_power_of_2<2>(); // 100 / 2^2 = 25
-        assert(result2 == uint128_t(0, 25));
+        auto [quotient2, remainder2] = val.divide_by_power_of_2<2>(); // 100 / 2^2 = 25
+        assert(quotient2 == uint128_t(0, 25));
+        assert(remainder2 == uint128_t(0, 0));
 
         std::cout << "   ✓ divide_by<D>() y divide_by_power_of_2<E>() funcionan\n";
     }
