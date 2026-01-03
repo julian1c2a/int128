@@ -1232,11 +1232,15 @@ class uint128_t
 
   private:
     // ============================================================================
-    // Includes de headers que usan std::pair<uint128_t, uint128_t>
-    // DEBEN estar DESPUÉS de la declaración de la clase pero ANTES de las macros
+    // Includes de headers modulares que dependen de la definición completa de uint128_t
+    // DEBEN estar DESPUÉS de la declaración de todos los métodos de la clase
     // ============================================================================
 #include "specializations/uint128_div_const.hpp"
+#include "specializations/uint128_divisibility.hpp"
+#include "specializations/uint128_factorization_helpers.hpp"
 #include "specializations/uint128_mod_helpers.hpp"
+#include "specializations/uint128_multiply_const.hpp"
+#include "specializations/uint128_power_detection.hpp"
 
     // ============================================================================
     // Helpers de módulo optimizados - definidos en specializations/uint128_mod_helpers.hpp
