@@ -373,7 +373,8 @@ class uint128_t
      * @endcode
      */
 
-    // BEGIN TODO BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
+    // NOTE: Estos type traits se moverán a type_traits.hpp en Fase 1.5 (template unificado)
+    // Por ahora permanecen aquí para evitar cambios en múltiples archivos
     template <typename TYPE> struct is_floating_arithmetic_builtin : std::false_type {
     };
 
@@ -401,8 +402,6 @@ class uint128_t
     template <typename TYPE>
     concept arithmetic_builtin = is_arithmetic_builtin_v<TYPE>;
 
-    // END TODO BLOQUE PARA PASAR A TYPE_TRAITS Y A CONCEPTS
-
     template <arithmetic_builtin TYPE> explicit constexpr operator TYPE() const noexcept
     {
         if constexpr (std::is_floating_point<TYPE>::value) {
@@ -415,7 +414,8 @@ class uint128_t
             return static_cast<TYPE>(data[0]);
         }
     }
-// BEGIN TODO ENCAPSULAR EN ARITHMETIC_OPERATIONS
+// NOTE: Estas conversiones permanecerán inline en uint128_t para mejor rendimiento
+// Se encapsularán helpers de conversión en arithmetic_operations.hpp en Fase 1.5 si es necesario
 #if defined(__SIZEOF_INT128__)
     /**
      * @brief Conversión al tipo nativo `__uint128_t` del compilador.
@@ -451,8 +451,7 @@ class uint128_t
     {
         return static_cast<__int128_t>((static_cast<__uint128_t>(data[1]) << 64) | data[0]);
     }
-#endif // __SIZEOF_INT128__ // ¿ESTÁ EL #ENDIF EN EL LUGAR CORRECTO?
-       // END TODO ENCAPSULAR EN ARITHMETIC_OPERATIONS
+#endif // __SIZEOF_INT128__
     // ARITHMETIC OPERATORS
     /**
      * @brief Operador de pre-incremento (++i).
@@ -701,13 +700,14 @@ class uint128_t
         return 128 - leading_zeros();
     }
 
-    // BEGIN TODO ¿DEBE ESTARE NE STEA RCHIVO O ESTÁ DUPLICADO EN OTRO?
     /**
      * @brief Verifica si el número es una potencia de 2.
      * @return `true` si el número es mayor que 0 y solo tiene un bit establecido a 1.
      * `false` en caso contrario.
      * @property Es `constexpr` y `noexcept`.
      * @test (test_is_power_of_2)
+     * @note Esta función delegará a uint128_power_detection en una futura refactorización.
+     *       Por ahora se mantiene inline para rendimiento crítico en divrem().
      * @code{.cpp}
      * @endcode
      */
@@ -716,7 +716,6 @@ class uint128_t
         return (*this != uint128_t(0, 0)) &&
                ((*this & (*this - uint128_t(0, 1))) == uint128_t(0, 0));
     }
-    // END TODO ¿DEBE ESTARE NE STEA RCHIVO O ESTÁ DUPLICADO EN OTRO?
 
     /**
      * @brief Valor absoluto (función identidad para uint128_t)
@@ -1911,20 +1910,19 @@ class uint128_t
     constexpr cstd::pair<uint128_t, uint128_t>
     divrem_64bit_divisor(const uint128_t& divisor) const noexcept
     {
-// BEGIN TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
+        // Lógica de selección de implementación según plataforma
 #if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
-        // Disponible en GCC/Clang/Intel icpx en Linux
-        // En Windows (MSVC/Intel ICX) el linker no tiene __udivti3/__umodti3
+        // GCC/Clang/Intel icpx en Linux: usar intrinsic div128_64 optimizado
+        // (Windows/MSVC/Intel ICX no tienen __udivti3/__umodti3 en linker)
         uint64_t r = 0;
         const uint64_t q_lo = intrinsics::div128_64(data[1], data[0], divisor.data[0], &r);
         const uint128_t quotient(0, q_lo);
         const uint128_t remainder(0, r);
         return std::make_pair(quotient, remainder);
 #else
-        // Fallback para compiladores sin __uint128_t o Intel ICX en Windows
+        // Fallback portable para compiladores sin __uint128_t o Intel ICX en Windows
         return divrem(divisor);
 #endif
-        // END TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
     }
 
     /**
@@ -1944,11 +1942,11 @@ class uint128_t
     knuth_D_algorithm(uint64_t u_extension, const uint128_t& u_shifted, const uint128_t& v, int s,
                       const uint128_t& original_divisor) const noexcept
     {
-// BEGIN TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
+        // Lógica de selección de implementación según plataforma
 #if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
-        // Disponible en GCC/Clang/Intel icpx en Linux (todos usan libgcc/compiler-rt con __udivti3)
-        // En Windows, MSVC y Intel ICX/oneAPI usan el linker de MSVC que no tiene
-        // __udivti3/__umodti3
+        // GCC/Clang/Intel icpx en Linux: usar algoritmo D de Knuth optimizado
+        // (todos tienen libgcc/compiler-rt con __udivti3)
+        // Windows/MSVC/Intel ICX usan linker de MSVC sin __udivti3/__umodti3
         uint64_t remainder_hi, remainder_lo;
         const uint64_t q =
             intrinsics::knuth_division_step(u_extension, u_shifted.data[1], u_shifted.data[0],
@@ -1956,14 +1954,13 @@ class uint128_t
 
         return std::make_pair(uint128_t(0, q), uint128_t(remainder_hi, remainder_lo));
 #else
-        // Fallback sin __uint128_t - usar algoritmo básico
+        // Fallback portable sin __uint128_t - usar algoritmo básico
         (void)u_extension; // Evitar warning de parámetro no usado
         (void)u_shifted;
         (void)v;
         (void)s;
         return divrem(original_divisor);
 #endif
-        // END TODO ENCAPSULACIÓN EN ARITHMETIC_OPERATIONS
     }
     // === FUNCIONES AUXILIARES PARA OPTIMIZACIONES ===
 
