@@ -2165,7 +2165,7 @@ class uint128_t
             const uint128_t quotient = this->shift_right(shift_amount);
             const uint128_t mask = v_in - uint128_t(0, 1); // 2^n - 1
             const uint128_t remainder = *this & mask;
-            return std::make_pair(quotient, remainder);
+            return std::pair<uint128_t, uint128_t>{quotient, remainder};
         }
 
         // 2. OPTIMIZACIÓN: División por potencias de 10 (descomponer en 2^n * 5^n)
@@ -2192,7 +2192,7 @@ class uint128_t
             const uint64_t divisor_64 = effective_to_64_bits(v_in);
             const uint64_t q_64 = dividend_64 / divisor_64;
             const uint64_t r_64 = dividend_64 % divisor_64;
-            return std::make_pair(uint128_t(0, q_64), uint128_t(0, r_64));
+            return std::pair<uint128_t, uint128_t>{uint128_t(0, q_64), uint128_t(0, r_64)};
         }
 
         // === RUTAS ESTÁNDAR ===
@@ -2208,7 +2208,7 @@ class uint128_t
         if (v_in.data[0] == 0 && data[0] == 0) {
             const uint64_t q = data[1] / v_in.data[1];
             const uint64_t r = data[1] % v_in.data[1];
-            return std::make_pair(uint128_t(0, q), uint128_t(r, 0));
+            return std::pair<uint128_t, uint128_t>{uint128_t(0, q), uint128_t(r, 0)};
         }
 
         // 7. OPTIMIZACIÓN: V0 = 0 (divisor es múltiplo de 2^64)
@@ -2223,7 +2223,7 @@ class uint128_t
                 // u / v = (u1 * 2^64) / (v1 * 2^64) = u1 / v1
                 const uint64_t q = data[1] / divisor_high;
                 const uint64_t r = data[1] % divisor_high;
-                return std::make_pair(uint128_t(0, q), uint128_t(r, 0));
+                return std::pair<uint128_t, uint128_t>{uint128_t(0, q), uint128_t(r, 0)};
             }
 
             // Caso general: u = u1 * 2^64 + u0, v = v1 * 2^64
@@ -2242,7 +2242,7 @@ class uint128_t
             }
 
             remainder -= product;
-            return std::make_pair(uint128_t(0, q), remainder);
+            return std::pair<uint128_t, uint128_t>{uint128_t(0, q), remainder};
         }
 
         // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
