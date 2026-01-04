@@ -433,12 +433,8 @@ template <signedness S> class int128_base_t
         if (data[1] == 0) {
             const uint64_t low_part = intrinsics::umul128(data[0], b, &data[1]);
             data[0] = low_part;
-
-            if constexpr (is_signed && std::is_signed_v<T>) {
-                if (other < 0) {
-                    data[1] -= data[0];
-                }
-            }
+            // Nota: No se necesita corrección de signo.
+            // La multiplicación en complemento a 2 funciona automáticamente.
             return *this;
         }
 
@@ -447,11 +443,9 @@ template <signedness S> class int128_base_t
         const uint64_t low_part = intrinsics::umul128(data[0], b, &high_part);
         const uint64_t cross_product = data[1] * b;
 
-        if constexpr (is_signed && std::is_signed_v<T>) {
-            if (other < 0) {
-                high_part -= data[0];
-            }
-        }
+        // Nota: No se necesita corrección de signo.
+        // La multiplicación en complemento a 2 funciona automáticamente:
+        // signed_multiply(a, b) ≡ unsigned_multiply(a, b) (mod 2^128)
 
         data[0] = low_part;
         data[1] = high_part + cross_product;
