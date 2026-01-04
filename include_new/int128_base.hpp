@@ -594,6 +594,17 @@ template <signedness S> class int128_base_t
         return result;
     }
 
+    // Operadores bitwise AND con integral_builtin
+    template <integral_builtin T> constexpr int128_base_t& operator&=(T other) noexcept
+    {
+        return *this &= int128_base_t(other);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator&(T other) const noexcept
+    {
+        return *this & int128_base_t(other);
+    }
+
     constexpr int128_base_t& operator|=(const int128_base_t& other) noexcept
     {
         data[0] |= other.data[0];
@@ -624,6 +635,17 @@ template <signedness S> class int128_base_t
         return result;
     }
 
+    // Operadores bitwise OR con integral_builtin
+    template <integral_builtin T> constexpr int128_base_t& operator|=(T other) noexcept
+    {
+        return *this |= int128_base_t(other);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator|(T other) const noexcept
+    {
+        return *this | int128_base_t(other);
+    }
+
     constexpr int128_base_t& operator^=(const int128_base_t& other) noexcept
     {
         data[0] ^= other.data[0];
@@ -652,6 +674,17 @@ template <signedness S> class int128_base_t
         int128_base_t result(*this);
         result ^= other;
         return result;
+    }
+
+    // Operadores bitwise XOR con integral_builtin
+    template <integral_builtin T> constexpr int128_base_t& operator^=(T other) noexcept
+    {
+        return *this ^= int128_base_t(other);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator^(T other) const noexcept
+    {
+        return *this ^ int128_base_t(other);
     }
 
     // Left shift (idéntico para signed/unsigned)
@@ -685,6 +718,17 @@ template <signedness S> class int128_base_t
         int128_base_t result(*this);
         result <<= shift;
         return result;
+    }
+
+    // Left shift con integral_builtin
+    template <integral_builtin T> constexpr int128_base_t& operator<<=(T shift) noexcept
+    {
+        return *this <<= static_cast<int>(shift);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator<<(T shift) const noexcept
+    {
+        return *this << static_cast<int>(shift);
     }
 
     // Right shift: arithmetic (signed) vs logical (unsigned)
@@ -744,6 +788,17 @@ template <signedness S> class int128_base_t
         int128_base_t result(*this);
         result >>= shift;
         return result;
+    }
+
+    // Right shift con integral_builtin
+    template <integral_builtin T> constexpr int128_base_t& operator>>=(T shift) noexcept
+    {
+        return *this >>= static_cast<int>(shift);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator>>(T shift) const noexcept
+    {
+        return *this >> static_cast<int>(shift);
     }
 
     // ============================================================================
@@ -1076,22 +1131,23 @@ template <signedness S> class int128_base_t
     {
         // Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
         if (divisor.data[0] == 0 && divisor.data[1] == 0) {
-            return {int128_base_t{0ull, 0ull}, int128_base_t{0ull, 0ull}};
+            return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
         }
 
         // Fast path: dividendo es 0
         if (data[0] == 0 && data[1] == 0) {
-            return {int128_base_t{0ull, 0ull}, int128_base_t{0ull, 0ull}};
+            return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
         }
 
         // Fast path: divisor > dividendo
         if (*this < divisor) {
-            return {int128_base_t{0ull, 0ull}, *this};
+            return {int128_base_t(0ull, 0ull), *this};
         }
 
         // Fast path: divisor == dividendo
         if (*this == divisor) {
-            return {int128_base_t{1ull, 0ull}, int128_base_t{0ull, 0ull}};
+            return {int128_base_t(0ull, 1ull), int128_base_t(0ull, 0ull)};
+            //                    ^high ^low = 1 (correcto)
         }
 
         // Fast path: divisor cabe en 64 bits
@@ -1102,7 +1158,8 @@ template <signedness S> class int128_base_t
             if (data[1] == 0) {
                 const uint64_t q = data[0] / divisor_64;
                 const uint64_t r = data[0] % divisor_64;
-                return {int128_base_t{q, 0ull}, int128_base_t{r, 0ull}};
+                // Constructor toma (high, low), entonces (0, q) para quotient en palabra baja
+                return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
             }
 
             // Dividendo de 128 bits / divisor de 64 bits
