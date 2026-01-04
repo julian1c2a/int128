@@ -2,8 +2,8 @@
 // phase15_uint128_tests.cpp - Tests para validar template unificado
 // ==============================================================================
 
-#include "int128_base.hpp"
 #include <cassert>
+#include <int128_base.hpp>
 #include <iostream>
 
 using namespace nstd;
@@ -48,14 +48,16 @@ int main()
 
     // Aritmética
     TEST("Suma básica")
-    uint128_t a(0, 100), b(0, 200);
-    uint128_t c = a + b;
+    uint128_t a(100);    // Constructor desde uint64_t: a = 100
+    uint128_t b(200);    // b = 200
+    uint128_t c = a + b; // c = 300
     assert(c.low() == 300 && c.high() == 0);
     END_TEST
 
     TEST("Suma con carry")
-    uint128_t a(0, 0xFFFFFFFFFFFFFFFFULL), b(0, 1);
-    uint128_t c = a + b;
+    uint128_t a(0xFFFFFFFFFFFFFFFFULL); // a = UINT64_MAX
+    uint128_t b(1);                     // b = 1
+    uint128_t c = a + b;                // c = UINT64_MAX + 1 = 0x1'0000000000000000
     assert(c.low() == 0 && c.high() == 1);
     END_TEST
 

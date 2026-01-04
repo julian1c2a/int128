@@ -59,9 +59,12 @@
 
 namespace nstd
 {
-// Forward declare nstd::uint128_t (do NOT include uint128_t.hpp here!)
-class uint128_t;
-class int128_t;
+// NOTE: En Phase 1.5, uint128_t e int128_t son type aliases del template int128_base_t<signedness>,
+// NO son clases separadas. Las forward declarations ya no son necesarias aquí.
+// Las definiciones reales están en int128_base.hpp (líneas 479-480).
+//
+// class uint128_t;  // ← Ya no válido (ahora es type alias)
+// class int128_t;   // ← Ya no válido (ahora es type alias)
 
 // ===============================================================================
 // TYPE TRAITS FUNDAMENTALES (1 PARÁMETRO)
