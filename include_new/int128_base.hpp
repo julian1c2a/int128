@@ -476,6 +476,91 @@ template <signedness S> class int128_base_t
     }
 
     // ============================================================================
+    // OPERADORES DE DIVISIÓN Y MÓDULO
+    // ============================================================================
+
+    // División entre dos int128_base_t (mismo signedness)
+    constexpr int128_base_t& operator/=(const int128_base_t& other) noexcept
+    {
+        auto [quotient, remainder] = divrem(other);
+        *this = quotient;
+        return *this;
+    }
+
+    constexpr int128_base_t operator/(const int128_base_t& other) const noexcept
+    {
+        auto [quotient, remainder] = divrem(other);
+        return quotient;
+    }
+
+    constexpr int128_base_t& operator%=(const int128_base_t& other) noexcept
+    {
+        auto [quotient, remainder] = divrem(other);
+        *this = remainder;
+        return *this;
+    }
+
+    constexpr int128_base_t operator%(const int128_base_t& other) const noexcept
+    {
+        auto [quotient, remainder] = divrem(other);
+        return remainder;
+    }
+
+    // Sobrecargas para tipos builtin
+    template <integral_builtin T> constexpr int128_base_t& operator/=(T other) noexcept
+    {
+        return *this /= int128_base_t(other);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator/(T other) const noexcept
+    {
+        int128_base_t result(*this);
+        result /= other;
+        return result;
+    }
+
+    template <integral_builtin T> constexpr int128_base_t& operator%=(T other) noexcept
+    {
+        return *this %= int128_base_t(other);
+    }
+
+    template <integral_builtin T> constexpr int128_base_t operator%(T other) const noexcept
+    {
+        int128_base_t result(*this);
+        result %= other;
+        return result;
+    }
+
+    // Sobrecargas para signedness diferente
+    template <signedness S2>
+    constexpr int128_base_t& operator/=(const int128_base_t<S2>& other) noexcept
+    {
+        return *this /= int128_base_t(other);
+    }
+
+    template <signedness S2>
+    constexpr int128_base_t operator/(const int128_base_t<S2>& other) const noexcept
+    {
+        int128_base_t result(*this);
+        result /= other;
+        return result;
+    }
+
+    template <signedness S2>
+    constexpr int128_base_t& operator%=(const int128_base_t<S2>& other) noexcept
+    {
+        return *this %= int128_base_t(other);
+    }
+
+    template <signedness S2>
+    constexpr int128_base_t operator%(const int128_base_t<S2>& other) const noexcept
+    {
+        int128_base_t result(*this);
+        result %= other;
+        return result;
+    }
+
+    // ============================================================================
     // OPERADORES BITWISE
     // ============================================================================
 
@@ -977,6 +1062,109 @@ template <signedness S> class int128_base_t
         }
 
         return {int128_base_t{q_low, q_high}, rem};
+    }
+
+    /**
+     * @brief División y módulo general con división binaria larga
+     * @param divisor El divisor (debe ser != 0)
+     * @return std::pair<cociente, resto> donde 0 <= resto < divisor
+     * @note Algoritmo de división binaria (escolar) O(128)
+     * @warning Si divisor == 0, comportamiento indefinido
+     */
+    constexpr std::pair<int128_base_t, int128_base_t>
+    divrem(const int128_base_t& divisor) const noexcept
+    {
+        // Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
+        if (divisor.data[0] == 0 && divisor.data[1] == 0) {
+            return {int128_base_t{0ull, 0ull}, int128_base_t{0ull, 0ull}};
+        }
+
+        // Fast path: dividendo es 0
+        if (data[0] == 0 && data[1] == 0) {
+            return {int128_base_t{0ull, 0ull}, int128_base_t{0ull, 0ull}};
+        }
+
+        // Fast path: divisor > dividendo
+        if (*this < divisor) {
+            return {int128_base_t{0ull, 0ull}, *this};
+        }
+
+        // Fast path: divisor == dividendo
+        if (*this == divisor) {
+            return {int128_base_t{1ull, 0ull}, int128_base_t{0ull, 0ull}};
+        }
+
+        // Fast path: divisor cabe en 64 bits
+        if (divisor.data[1] == 0) {
+            const uint64_t divisor_64 = divisor.data[0];
+
+            // Si dividendo también cabe en 64 bits
+            if (data[1] == 0) {
+                const uint64_t q = data[0] / divisor_64;
+                const uint64_t r = data[0] % divisor_64;
+                return {int128_base_t{q, 0ull}, int128_base_t{r, 0ull}};
+            }
+
+            // Dividendo de 128 bits / divisor de 64 bits
+            // Usar algoritmo optimizado
+            uint64_t quotient_low = 0;
+            uint64_t quotient_high = data[1] / divisor_64;
+            uint64_t remainder = data[1] % divisor_64;
+
+            // Dividir parte baja bit a bit
+            for (int i = 63; i >= 0; --i) {
+                remainder = (remainder << 1) | ((data[0] >> i) & 1);
+                if (remainder >= divisor_64) {
+                    remainder -= divisor_64;
+                    quotient_low |= (1ULL << i);
+                }
+            }
+
+            return {int128_base_t{quotient_low, quotient_high}, int128_base_t{remainder, 0ull}};
+        }
+
+        // Caso general: división binaria larga (128 bits / 128 bits)
+        // Algoritmo de división escolar bit a bit
+        int128_base_t quotient{0ull, 0ull};
+        int128_base_t remainder{0ull, 0ull};
+
+        // Procesar desde el bit más significativo
+        for (int i = 127; i >= 0; --i) {
+            // Shift left remainder y añadir el siguiente bit del dividendo
+            remainder <<= 1;
+            const int word = i / 64;
+            const int bit = i % 64;
+            if ((data[word] & (1ULL << bit)) != 0) {
+                remainder.data[0] |= 1;
+            }
+
+            // Si remainder >= divisor, restar y añadir 1 al cociente
+            if (remainder >= divisor) {
+                remainder -= divisor;
+                const int q_word = i / 64;
+                const int q_bit = i % 64;
+                quotient.data[q_word] |= (1ULL << q_bit);
+            }
+        }
+
+        return {quotient, remainder};
+    }
+
+    /**
+     * @brief División y módulo usando el algoritmo D de Knuth
+     * @param divisor El divisor (debe ser != 0)
+     * @return std::pair<cociente, resto> donde 0 <= resto < divisor
+     * @note Algoritmo de Knuth (The Art of Computer Programming, Vol. 2, Sec. 4.3.1)
+     * @note Más eficiente que divrem() para divisores grandes (> 64 bits)
+     * @warning Si divisor == 0, comportamiento indefinido
+     * @todo Implementar en el futuro para mejor performance con divisores grandes
+     */
+    constexpr std::pair<int128_base_t, int128_base_t>
+    divrem_knuth_D(const int128_base_t& divisor) const noexcept
+    {
+        // Por ahora, delegar a divrem() (división binaria)
+        // En el futuro, implementar el algoritmo D de Knuth completo
+        return divrem(divisor);
     }
 
     // ============================================================================
