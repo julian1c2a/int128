@@ -274,8 +274,9 @@ template <signedness S> class int128_base_t
     // Left shift (idéntico para signed/unsigned)
     constexpr int128_base_t& operator<<=(int shift) noexcept
     {
-        if (shift <= 0)
+        if (shift <= 0) {
             return *this;
+        }
         if (shift >= 128) {
             data[0] = 0;
             data[1] = 0;
@@ -304,8 +305,9 @@ template <signedness S> class int128_base_t
     // Right shift: arithmetic (signed) vs logical (unsigned)
     constexpr int128_base_t& operator>>=(int shift) noexcept
     {
-        if (shift <= 0)
+        if (shift <= 0) {
             return *this;
+        }
         if (shift >= 128) {
             if constexpr (is_signed) {
                 // Arithmetic shift: propagar signo

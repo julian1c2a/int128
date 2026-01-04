@@ -70,10 +70,12 @@ inline constexpr unsigned char addcarry_u64(unsigned char carry_in, uint64_t a, 
         return (sum < a) || (sum_with_carry < sum) ? 1 : 0;
     }
 #if (defined(__GNUC__) && __GNUC__ >= 5) || (defined(__clang__) && __clang_major__ >= 3)
-    unsigned long long r;
-    unsigned char carry_out = __builtin_addcll(a, b, carry_in, &r);
-    *result = r;
-    return carry_out;
+    // GCC/Clang: usar __builtin_uaddll_overflow para detección de overflow
+    // Necesitamos manejar carry_in manualmente ya que __builtin_uaddll_overflow no lo soporta
+    unsigned long long temp_sum;
+    unsigned char overflow1 = __builtin_uaddll_overflow(a, b, &temp_sum);
+    unsigned char overflow2 = __builtin_uaddll_overflow(temp_sum, carry_in, result);
+    return overflow1 | overflow2;
 #else
     // Fallback para versiones antiguas
     uint64_t sum = a + b;
