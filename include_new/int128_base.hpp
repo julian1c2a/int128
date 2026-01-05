@@ -4,10 +4,16 @@
 #include "type_traits.hpp"
 // NOTA: uint128_traits_specializations.hpp se incluye al FINAL del archivo,
 // después de las definiciones de uint128_t e int128_t (type aliases).
-#include <climits> // Para CHAR_BIT
+#include <algorithm> // Para std::reverse
+#include <climits>   // Para CHAR_BIT
 #include <compare>
 #include <cstdint>
-#include <limits> // Para std::numeric_limits (comparaciones floating_point)
+#include <istream>     // Para operator>>
+#include <limits>      // Para std::numeric_limits (comparaciones floating_point)
+#include <ostream>     // Para operator<<
+#include <stdexcept>   // Para std::invalid_argument
+#include <string>      // Para std::string
+#include <string_view> // Para std::string_view
 #include <type_traits>
 #include <utility> // Para std::move
 
@@ -154,6 +160,99 @@ template <signedness S> class int128_base_t
     }
 
     // ============================================================================
+    // CONSTRUCTORES DESDE STRINGS
+    // ============================================================================
+
+    // Constructor desde const char* con auto-detección de base
+    // Usa parse() que detecta automáticamente el formato (0x, 0b, 0, decimal)
+    // Lanza std::invalid_argument si el string no es válido
+    explicit int128_base_t(const char* str)
+    {
+        if (str == nullptr) {
+            throw std::invalid_argument("Cannot parse null pointer");
+        }
+
+        auto [error, value] = parse(str);
+        if (error != parse_error::success) {
+            // Construir mensaje de error descriptivo
+            const char* error_msg = "Unknown error";
+            switch (error) {
+            case parse_error::empty_string:
+                error_msg = "Empty string";
+                break;
+            case parse_error::invalid_base:
+                error_msg = "Invalid base";
+                break;
+            case parse_error::invalid_character:
+                error_msg = "Invalid character";
+                break;
+            case parse_error::overflow:
+                error_msg = "Overflow";
+                break;
+            default:
+                break;
+            }
+            throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
+        }
+        *this = value;
+    }
+
+    // Constructor desde const char* con base explícita
+    // Usa parse_base() con la base especificada (2-36)
+    // Lanza std::invalid_argument si el string o la base no son válidos
+    explicit int128_base_t(const char* str, int base)
+    {
+        if (str == nullptr) {
+            throw std::invalid_argument("Cannot parse null pointer");
+        }
+        if (base < 2 || base > 36) {
+            throw std::invalid_argument("Invalid base: must be between 2 and 36");
+        }
+
+        auto [error, value] = parse_base(str, base);
+        if (error != parse_error::success) {
+            // Construir mensaje de error descriptivo
+            const char* error_msg = "Unknown error";
+            switch (error) {
+            case parse_error::empty_string:
+                error_msg = "Empty string";
+                break;
+            case parse_error::invalid_base:
+                error_msg = "Invalid base";
+                break;
+            case parse_error::invalid_character:
+                error_msg = "Invalid character";
+                break;
+            case parse_error::overflow:
+                error_msg = "Overflow";
+                break;
+            default:
+                break;
+            }
+            throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
+        }
+        *this = value;
+    }
+
+    // Constructor desde std::string con auto-detección de base
+    // Delega al constructor de const char*
+    explicit int128_base_t(const std::string& str) : int128_base_t(str.c_str()) {}
+
+    // Constructor desde std::string con base explícita
+    // Delega al constructor de const char* con base
+    explicit int128_base_t(const std::string& str, int base) : int128_base_t(str.c_str(), base) {}
+
+    // Constructor desde std::string_view con auto-detección de base
+    // std::string_view no garantiza null-termination, así que convertimos a std::string primero
+    explicit int128_base_t(std::string_view str) : int128_base_t(std::string(str)) {}
+
+    // Constructor desde std::string_view con base explícita
+    // std::string_view no garantiza null-termination, así que convertimos a std::string primero
+    explicit int128_base_t(std::string_view str, int base) : int128_base_t(std::string(str), base)
+    {
+    }
+
+    // ============================================================================
     // SOBRECARGA DEL OPERADOR DE ASIGNACIÓN
     // ============================================================================
 
@@ -243,6 +342,41 @@ template <signedness S> class int128_base_t
             }
         }
 
+        return *this;
+    }
+
+    // Operador de asignación desde const char*
+    // Usa parse() para auto-detección de formato (0x, 0b, 0, decimal)
+    // Lanza std::invalid_argument si el string no es válido
+    int128_base_t& operator=(const char* str)
+    {
+        if (str == nullptr) {
+            throw std::invalid_argument("Cannot parse null pointer");
+        }
+
+        auto [error, value] = parse(str);
+        if (error != parse_error::success) {
+            // Construir mensaje de error descriptivo
+            const char* error_msg = "Unknown error";
+            switch (error) {
+            case parse_error::empty_string:
+                error_msg = "Empty string";
+                break;
+            case parse_error::invalid_base:
+                error_msg = "Invalid base";
+                break;
+            case parse_error::invalid_character:
+                error_msg = "Invalid character";
+                break;
+            case parse_error::overflow:
+                error_msg = "Overflow";
+                break;
+            default:
+                break;
+            }
+            throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
+        }
+        *this = value;
         return *this;
     }
 
@@ -1047,6 +1181,102 @@ template <signedness S> class int128_base_t
     }
 
     // ============================================================================
+    // CONVERSIONES A STRING
+    // ============================================================================
+
+    // Convertir a std::string en base 10 (decimal)
+    // Usa divrem_by_10() optimizado para mejor rendimiento
+    std::string to_string() const
+    {
+        // Caso especial: cero
+        if (data[0] == 0 && data[1] == 0) {
+            return "0";
+        }
+
+        std::string result;
+        result.reserve(40); // Reservar espacio (~39 dígitos para 2^128)
+
+        // Manejar signo para tipos signed
+        bool negative = false;
+        int128_base_t temp = *this;
+        if constexpr (is_signed) {
+            if (is_negative()) {
+                negative = true;
+                temp = -temp; // Obtener valor absoluto
+            }
+        }
+
+        // Extraer dígitos usando divrem_by_10()
+        while (temp.data[0] != 0 || temp.data[1] != 0) {
+            auto [quotient, remainder] = temp.divrem_by_10();
+            result += static_cast<char>('0' + remainder); // Construir en reversa
+            temp = quotient;
+        }
+
+        // Añadir signo si es negativo
+        if (negative) {
+            result += '-';
+        }
+
+        // Invertir el string (lo construimos al revés)
+        std::reverse(result.begin(), result.end());
+        return result;
+    }
+
+    // Convertir a std::string en la base especificada (2-36)
+    // Bases: 2 (binario), 8 (octal), 10 (decimal), 16 (hexadecimal), etc.
+    // Dígitos: 0-9, a-z (lowercase)
+    std::string to_string(int base) const
+    {
+        if (base < 2 || base > 36) {
+            throw std::invalid_argument("Invalid base: must be between 2 and 36");
+        }
+
+        // Optimización: delegar a to_string() para base 10
+        if (base == 10) {
+            return to_string();
+        }
+
+        // Caso especial: cero
+        if (data[0] == 0 && data[1] == 0) {
+            return "0";
+        }
+
+        // Tabla de dígitos
+        static constexpr char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+        std::string result;
+        result.reserve(128); // Reservar espacio generoso (128 bits en binario)
+
+        // Manejar signo para tipos signed
+        bool negative = false;
+        int128_base_t temp = *this;
+        if constexpr (is_signed) {
+            if (is_negative()) {
+                negative = true;
+                temp = -temp; // Obtener valor absoluto
+            }
+        }
+
+        // Extraer dígitos usando divrem()
+        int128_base_t base_val(0ull, static_cast<uint64_t>(base));
+        while (temp.data[0] != 0 || temp.data[1] != 0) {
+            auto [quotient, remainder] = temp.divrem(base_val);
+            result += digits[remainder.data[0]]; // Construir en reversa
+            temp = quotient;
+        }
+
+        // Añadir signo si es negativo
+        if (negative) {
+            result += '-';
+        }
+
+        // Invertir el string (lo construimos al revés)
+        std::reverse(result.begin(), result.end());
+        return result;
+    }
+
+    // ============================================================================
     // HELPERS
     // ============================================================================
 
@@ -1412,6 +1642,39 @@ template <signedness S> class int128_base_t
             // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
             return int128_base_t(0xFFFFFFFFFFFFFFFFull, 0xFFFFFFFFFFFFFFFFull);
         }
+    }
+
+    // ============================================================================
+    // OPERADORES DE STREAM (FRIEND FUNCTIONS)
+    // ============================================================================
+
+    // Operador de inserción en stream (salida)
+    // Convierte el valor a string en base 10 y lo escribe al stream
+    // Ejemplo: std::cout << value;
+    friend std::ostream& operator<<(std::ostream& os, const int128_base_t& value)
+    {
+        return os << value.to_string();
+    }
+
+    // Operador de extracción desde stream (entrada)
+    // Lee un string del stream y lo convierte al tipo int128_base_t
+    // Ejemplo: std::cin >> value;
+    // Si el parsing falla, establece el failbit del stream
+    friend std::istream& operator>>(std::istream& is, int128_base_t& value)
+    {
+        std::string str;
+        is >> str; // Lee string hasta el primer whitespace
+
+        if (is) { // Si la lectura fue exitosa
+            try {
+                value = int128_base_t(str.c_str());
+            } catch (const std::invalid_argument&) {
+                // Si el parsing falla, establecer failbit
+                is.setstate(std::ios::failbit);
+            }
+        }
+
+        return is;
     }
 };
 
