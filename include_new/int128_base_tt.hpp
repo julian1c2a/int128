@@ -1587,27 +1587,45 @@ template <signedness S> class int128_base_t
     {
         // [0.a] Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
         if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0) {
-            return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
+            int128_base_t zero;
+            zero.data[LSULL] = 0;
+            zero.data[MSULL] = 0;
+            return {zero, zero};
         }
 
         // [0.b] Fast path: dividendo es 0
         if (data[LSULL] == 0 && data[MSULL] == 0) {
-            return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
+            int128_base_t zero;
+            zero.data[LSULL] = 0;
+            zero.data[MSULL] = 0;
+            return {zero, zero};
         }
 
         // [0.c] Fast path: divisor > dividendo
         if (*this < divisor) {
-            return {int128_base_t(0ull, 0ull), *this};
+            int128_base_t zero;
+            zero.data[LSULL] = 0;
+            zero.data[MSULL] = 0;
+            return {zero, *this};
         }
 
         // [0.d] Fast path: divisor == dividendo
         if (*this == divisor) {
-            return {int128_base_t(0ull, 1ull), int128_base_t(0ull, 0ull)};
+            int128_base_t one;
+            one.data[LSULL] = 1;
+            one.data[MSULL] = 0;
+            int128_base_t zero;
+            zero.data[LSULL] = 0;
+            zero.data[MSULL] = 0;
+            return {one, zero};
         }
 
         // [0.e] Fast path: divisor == 1
         if (divisor.data[LSULL] == 1ull && divisor.data[MSULL] == 0ull) {
-            return {*this, int128_base_t(0ull, 0ull)};
+            int128_base_t zero;
+            zero.data[LSULL] = 0;
+            zero.data[MSULL] = 0;
+            return {*this, zero};
         }
 
         // ========================================================================
@@ -1647,7 +1665,10 @@ template <signedness S> class int128_base_t
                     quotient = *this;
                 }
 
-                return {quotient, int128_base_t(0ull, remainder)};
+                int128_base_t rem_obj;
+                rem_obj.data[LSULL] = remainder;
+                rem_obj.data[MSULL] = 0;
+                return {quotient, rem_obj};
             }
 
             // [1.2-1.11] Divisores específicos comunes (no potencias de 2)
@@ -1667,7 +1688,12 @@ template <signedness S> class int128_base_t
                 if (data[MSULL] == 0) {
                     const uint64_t q = data[LSULL] / d;
                     const uint64_t r = data[LSULL] % d;
-                    return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
+                    int128_base_t quot, rem;
+                    quot.data[LSULL] = q;
+                    quot.data[MSULL] = 0;
+                    rem.data[LSULL] = r;
+                    rem.data[MSULL] = 0;
+                    return {quot, rem};
                 }
                 // Si no cabe en 64 bits, continuar al caso [2]
                 break;
@@ -1685,7 +1711,12 @@ template <signedness S> class int128_base_t
         if (data[MSULL] == 0 && divisor.data[MSULL] == 0) {
             const uint64_t q = data[LSULL] / divisor.data[LSULL];
             const uint64_t r = data[LSULL] % divisor.data[LSULL];
-            return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
+            int128_base_t quot, rem;
+            quot.data[LSULL] = q;
+            quot.data[MSULL] = 0;
+            rem.data[LSULL] = r;
+            rem.data[MSULL] = 0;
+            return {quot, rem};
         }
 
         // ========================================================================
@@ -1710,303 +1741,308 @@ template <signedness S> class int128_base_t
                 }
             }
 
-            return {int128_base_t(quotient_high, quotient_low), int128_base_t(0ull, remainder)};
+            int128_base_t quot, rem;
+            quot.data[LSULL] = quotient_low;
+            quot.data[MSULL] = quotient_high;
+            rem.data[LSULL] = remainder;
+            rem.data[MSULL] = 0;
+            return {quot, rem};
         }
 
         // ========================================================================
         // [0] CASO GENERAL: DIVISIÓN BINARIA LARGA (128 bits / 128 bits)
         // ========================================================================
 
-        int128_base_t quotient(0ull, 0ull);
-        int128_base_t remainder(0ull, 0ull);
-
-        // Procesar desde el bit más significativo (MSB)
-        for (int i = 127; i >= 0; --i) {
-            // Shift left remainder y añadir el siguiente bit del dividendo
-            remainder <<= 1;
-            const int word = i / 64;
-            const int bit = i % 64;
-            if ((data[word] & (1ULL << bit)) != 0) {
-                remainder.data[LSULL] |= 1;
-            }
-
-            // Si remainder >= divisor, restar y añadir 1 al cociente
-            if (remainder >= divisor) {
-                remainder -= divisor;
-                const int q_word = i / 64;
-                const int q_bit = i % 64;
-                quotient.data[q_word] |= (1ULL << q_bit);
-            }
+        int128_base_t quotient;
+        quotient.data[LSULL] = 0;
+        quotient.data[MSULL] = 0;
+        int128_base_t remainder;
+        remainder.data[LSULL] = 0;
+        remainder.data[MSULL] = 0;
+        remainder <<= 1;
+        const int word = i / 64;
+        const int bit = i % 64;
+        if ((data[word] & (1ULL << bit)) != 0) {
+            remainder.data[LSULL] |= 1;
         }
 
-        return {quotient, remainder};
+        // Si remainder >= divisor, restar y añadir 1 al cociente
+        if (remainder >= divisor) {
+            remainder -= divisor;
+            const int q_word = i / 64;
+            const int q_bit = i % 64;
+            quotient.data[q_word] |= (1ULL << q_bit);
+        }
     }
 
-    /**
-     * @brief División y módulo usando el algoritmo D de Knuth
-     * @param divisor El divisor (debe ser != 0)
-     * @return std::pair<cociente, resto> donde 0 <= resto < divisor
-     * @note Algoritmo de Knuth (The Art of Computer Programming, Vol. 2, Sec. 4.3.1)
-     * @note Más eficiente que divrem() para divisores grandes (> 64 bits)
-     * @warning Si divisor == 0, comportamiento indefinido
-     * @todo Implementar en el futuro para mejor performance con divisores grandes
-     */
-    constexpr std::pair<int128_base_t, int128_base_t>
-    divrem_knuth_D(const int128_base_t& divisor) const noexcept
-    {
-        // Por ahora, delegar a divrem() (división binaria)
-        // En el futuro, implementar el algoritmo D de Knuth completo
-        return divrem(divisor);
+    return {quotient, remainder};
+}
+
+/**
+ * @brief División y módulo usando el algoritmo D de Knuth
+ * @param divisor El divisor (debe ser != 0)
+ * @return std::pair<cociente, resto> donde 0 <= resto < divisor
+ * @note Algoritmo de Knuth (The Art of Computer Programming, Vol. 2, Sec. 4.3.1)
+ * @note Más eficiente que divrem() para divisores grandes (> 64 bits)
+ * @warning Si divisor == 0, comportamiento indefinido
+ * @todo Implementar en el futuro para mejor performance con divisores grandes
+ */
+constexpr std::pair<int128_base_t, int128_base_t>
+divrem_knuth_D(const int128_base_t& divisor) const noexcept
+{
+    // Por ahora, delegar a divrem() (división binaria)
+    // En el futuro, implementar el algoritmo D de Knuth completo
+    return divrem(divisor);
+}
+
+// ============================================================================
+// STRING PARSING
+// ============================================================================
+
+/**
+ * @brief Parsea una cadena de caracteres en una base específica
+ * @details Realiza el parsing con validación completa de caracteres y detección de overflow
+ *
+ * @param str Puntero a la cadena de caracteres C-string
+ * @param base Base numérica (debe estar entre 2 y 36)
+ * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
+ *
+ * @note Si hay error, el int128_base_t retornado es cero
+ * @property Es static, constexpr y noexcept
+ */
+static constexpr std::pair<parse_error, int128_base_t> parse_base(const char* str,
+                                                                  int base) noexcept
+{
+    if (!str) {
+        return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
     }
 
-    // ============================================================================
-    // STRING PARSING
-    // ============================================================================
+    if (!*str) {
+        return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
+    }
 
-    /**
-     * @brief Parsea una cadena de caracteres en una base específica
-     * @details Realiza el parsing con validación completa de caracteres y detección de overflow
-     *
-     * @param str Puntero a la cadena de caracteres C-string
-     * @param base Base numérica (debe estar entre 2 y 36)
-     * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
-     *
-     * @note Si hay error, el int128_base_t retornado es cero
-     * @property Es static, constexpr y noexcept
-     */
-    static constexpr std::pair<parse_error, int128_base_t> parse_base(const char* str,
-                                                                      int base) noexcept
-    {
-        if (!str) {
-            return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
+    if (base < 2 || base > 36) {
+        return {parse_error::invalid_base, int128_base_t(0ull, 0ull)};
+    }
+
+    // parse_base() NO maneja signos - solo parsea dígitos
+    // El manejo de signos es responsabilidad de parse()
+    int128_base_t result(0ull, 0ull); // Constructor(high=0, low=0)
+    const int128_base_t base_val(0ull,
+                                 static_cast<uint64_t>(base)); // Constructor(high=0, low=base)
+
+    for (const char* p = str; *p; ++p) {
+        // Ignorar separadores de dígitos (C++14 digit separator)
+        if (*p == '\'') {
+            continue;
         }
 
-        if (!*str) {
+        int digit_value = -1;
+
+        if (*p >= '0' && *p <= '9') {
+            digit_value = *p - '0';
+        } else if (*p >= 'A' && *p <= 'Z') {
+            digit_value = *p - 'A' + 10;
+        } else if (*p >= 'a' && *p <= 'z') {
+            digit_value = *p - 'a' + 10;
+        }
+
+        if (digit_value == -1 || digit_value >= base) {
+            // Carácter inválido para esta base
+            return {parse_error::invalid_character, int128_base_t(0ull, 0ull)};
+        }
+
+        // Verificar overflow ANTES de multiplicar
+        // NOTA: parse_base() usa aritmética UNSIGNED para overflow checking
+        // Reinterpretamos result, base_val como uint128_t temporalmente
+        // El overflow para signed se verifica después en parse() al aplicar el signo
+
+        // Crear versiones unsigned para las operaciones de overflow
+        using uint128_t = int128_base_t<signedness::unsigned_type>;
+        constexpr uint128_t max_val(std::numeric_limits<uint64_t>::max(),
+                                    std::numeric_limits<uint64_t>::max()); // UINT128_MAX
+
+        // Reinterpretar result y base_val como unsigned para operaciones
+        const uint128_t& result_u = reinterpret_cast<const uint128_t&>(result);
+        const uint128_t& base_val_u = reinterpret_cast<const uint128_t&>(base_val);
+
+        const uint128_t max_div_base = max_val / base_val_u;
+
+        if (result_u > max_div_base) {
+            return {parse_error::overflow, int128_base_t(0ull, 0ull)};
+        }
+
+        result *= base_val;
+
+        // Verificar overflow ANTES de sumar el dígito
+        // max_value - result < digit significa que result + digit > max_value
+        const int128_base_t digit_val(
+            0ull, static_cast<uint64_t>(digit_value)); // Constructor(high=0, low=digit)
+        const uint128_t& digit_val_u = reinterpret_cast<const uint128_t&>(digit_val);
+        const uint128_t max_minus_result = max_val - result_u;
+
+        if (digit_val_u > max_minus_result) {
+            return {parse_error::overflow, int128_base_t(0ull, 0ull)};
+        }
+
+        result += digit_val;
+    }
+
+    // parse_base() retorna el valor parseado SIN modificaciones de signo
+    // El manejo de signos es responsabilidad de parse()
+    return {parse_error::success, result};
+}
+
+/**
+ * @brief Parsea una cadena de caracteres con auto-detección de base
+ * @details Detecta automáticamente la base según el prefijo:
+ *          - "0x" o "0X" → hexadecimal (base 16)
+ *          - "0b" o "0B" → binario (base 2)
+ *          - "0" seguido de dígitos 0-7 → octal (base 8)
+ *          - Otros casos → decimal (base 10)
+ *
+ * @param str Puntero a la cadena de caracteres C-string
+ * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
+ *
+ * @note Soporta signos '+' y '-' para tipos signed al inicio de la cadena
+ * @property Es static, constexpr y noexcept
+ */
+static constexpr std::pair<parse_error, int128_base_t> parse(const char* str) noexcept
+{
+    if (!str) {
+        return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
+    }
+
+    if (!*str) {
+        return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
+    }
+
+    // Manejo de signo para tipos signed
+    bool is_negative_input = false;
+    const char* parse_start = str;
+
+    if constexpr (is_signed) {
+        if (*parse_start == '-') {
+            is_negative_input = true;
+            ++parse_start;
+        } else if (*parse_start == '+') {
+            ++parse_start;
+        }
+
+        // Verificar que hay contenido después del signo
+        if (!*parse_start) {
             return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
         }
-
-        if (base < 2 || base > 36) {
-            return {parse_error::invalid_base, int128_base_t(0ull, 0ull)};
-        }
-
-        // parse_base() NO maneja signos - solo parsea dígitos
-        // El manejo de signos es responsabilidad de parse()
-        int128_base_t result(0ull, 0ull); // Constructor(high=0, low=0)
-        const int128_base_t base_val(0ull,
-                                     static_cast<uint64_t>(base)); // Constructor(high=0, low=base)
-
-        for (const char* p = str; *p; ++p) {
-            // Ignorar separadores de dígitos (C++14 digit separator)
-            if (*p == '\'') {
-                continue;
-            }
-
-            int digit_value = -1;
-
-            if (*p >= '0' && *p <= '9') {
-                digit_value = *p - '0';
-            } else if (*p >= 'A' && *p <= 'Z') {
-                digit_value = *p - 'A' + 10;
-            } else if (*p >= 'a' && *p <= 'z') {
-                digit_value = *p - 'a' + 10;
-            }
-
-            if (digit_value == -1 || digit_value >= base) {
-                // Carácter inválido para esta base
-                return {parse_error::invalid_character, int128_base_t(0ull, 0ull)};
-            }
-
-            // Verificar overflow ANTES de multiplicar
-            // NOTA: parse_base() usa aritmética UNSIGNED para overflow checking
-            // Reinterpretamos result, base_val como uint128_t temporalmente
-            // El overflow para signed se verifica después en parse() al aplicar el signo
-
-            // Crear versiones unsigned para las operaciones de overflow
-            using uint128_t = int128_base_t<signedness::unsigned_type>;
-            constexpr uint128_t max_val(std::numeric_limits<uint64_t>::max(),
-                                        std::numeric_limits<uint64_t>::max()); // UINT128_MAX
-
-            // Reinterpretar result y base_val como unsigned para operaciones
-            const uint128_t& result_u = reinterpret_cast<const uint128_t&>(result);
-            const uint128_t& base_val_u = reinterpret_cast<const uint128_t&>(base_val);
-
-            const uint128_t max_div_base = max_val / base_val_u;
-
-            if (result_u > max_div_base) {
-                return {parse_error::overflow, int128_base_t(0ull, 0ull)};
-            }
-
-            result *= base_val;
-
-            // Verificar overflow ANTES de sumar el dígito
-            // max_value - result < digit significa que result + digit > max_value
-            const int128_base_t digit_val(
-                0ull, static_cast<uint64_t>(digit_value)); // Constructor(high=0, low=digit)
-            const uint128_t& digit_val_u = reinterpret_cast<const uint128_t&>(digit_val);
-            const uint128_t max_minus_result = max_val - result_u;
-
-            if (digit_val_u > max_minus_result) {
-                return {parse_error::overflow, int128_base_t(0ull, 0ull)};
-            }
-
-            result += digit_val;
-        }
-
-        // parse_base() retorna el valor parseado SIN modificaciones de signo
-        // El manejo de signos es responsabilidad de parse()
-        return {parse_error::success, result};
     }
 
-    /**
-     * @brief Parsea una cadena de caracteres con auto-detección de base
-     * @details Detecta automáticamente la base según el prefijo:
-     *          - "0x" o "0X" → hexadecimal (base 16)
-     *          - "0b" o "0B" → binario (base 2)
-     *          - "0" seguido de dígitos 0-7 → octal (base 8)
-     *          - Otros casos → decimal (base 10)
-     *
-     * @param str Puntero a la cadena de caracteres C-string
-     * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
-     *
-     * @note Soporta signos '+' y '-' para tipos signed al inicio de la cadena
-     * @property Es static, constexpr y noexcept
-     */
-    static constexpr std::pair<parse_error, int128_base_t> parse(const char* str) noexcept
-    {
-        if (!str) {
-            return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
-        }
+    // Detectar base y posición inicial
+    int base = 10;
+    const char* start = parse_start;
 
-        if (!*str) {
-            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
-        }
-
-        // Manejo de signo para tipos signed
-        bool is_negative_input = false;
-        const char* parse_start = str;
-
-        if constexpr (is_signed) {
-            if (*parse_start == '-') {
-                is_negative_input = true;
-                ++parse_start;
-            } else if (*parse_start == '+') {
-                ++parse_start;
-            }
-
-            // Verificar que hay contenido después del signo
-            if (!*parse_start) {
-                return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
-            }
-        }
-
-        // Detectar base y posición inicial
-        int base = 10;
-        const char* start = parse_start;
-
-        if (parse_start[0] == '0' && parse_start[1]) {
-            if (parse_start[1] == 'x' || parse_start[1] == 'X') {
-                base = 16;
-                start = parse_start + 2;
-            } else if (parse_start[1] == 'b' || parse_start[1] == 'B') {
-                base = 2;
-                start = parse_start + 2;
-            } else {
-                // Verificar si es octal válido
-                bool is_octal = true;
-                for (const char* p = parse_start + 1; *p && is_octal; ++p) {
-                    if (*p < '0' || *p > '7') {
-                        is_octal = false;
-                    }
-                }
-                if (is_octal && parse_start[1] >= '0' && parse_start[1] <= '7') {
-                    base = 8;
-                    start = parse_start + 1;
+    if (parse_start[0] == '0' && parse_start[1]) {
+        if (parse_start[1] == 'x' || parse_start[1] == 'X') {
+            base = 16;
+            start = parse_start + 2;
+        } else if (parse_start[1] == 'b' || parse_start[1] == 'B') {
+            base = 2;
+            start = parse_start + 2;
+        } else {
+            // Verificar si es octal válido
+            bool is_octal = true;
+            for (const char* p = parse_start + 1; *p && is_octal; ++p) {
+                if (*p < '0' || *p > '7') {
+                    is_octal = false;
                 }
             }
-        }
-
-        // Validar que hay contenido después del prefijo
-        if (!*start) {
-            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
-        }
-
-        // Parsear sin signo (parse_base ya maneja el signo si viene en str)
-        // Pero necesitamos pasar el string sin el signo porque ya lo procesamos
-        auto [error, result] = parse_base(start, base);
-
-        // Aplicar signo si no hubo error
-        if constexpr (is_signed) {
-            if (error == parse_error::success && is_negative_input) {
-                result = -result;
+            if (is_octal && parse_start[1] >= '0' && parse_start[1] <= '7') {
+                base = 8;
+                start = parse_start + 1;
             }
         }
-
-        return {error, result};
     }
 
-    // ============================================================================
-    // CONSTANTES ESTÁTICAS
-    // ============================================================================
+    // Validar que hay contenido después del prefijo
+    if (!*start) {
+        return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
+    }
 
-    static consteval int128_base_t min() noexcept
-    {
-        if constexpr (is_signed) {
-            // INT128_MIN = -2^127 = 0x8000000000000000'0000000000000000
-            // Constructor(high, low): high=0x8000000000000000, low=0
-            return int128_base_t(static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), 0ull);
-        } else {
-            // UINT128_MIN = 0
-            return int128_base_t(0ull, 0ull);
+    // Parsear sin signo (parse_base ya maneja el signo si viene en str)
+    // Pero necesitamos pasar el string sin el signo porque ya lo procesamos
+    auto [error, result] = parse_base(start, base);
+
+    // Aplicar signo si no hubo error
+    if constexpr (is_signed) {
+        if (error == parse_error::success && is_negative_input) {
+            result = -result;
         }
     }
 
-    static consteval int128_base_t max() noexcept
-    {
-        if constexpr (is_signed) {
-            // INT128_MAX = 2^127-1 = 0x7FFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            // Constructor(high, low): high=0x7FFFFFFFFFFFFFFF, low=0xFFFFFFFFFFFFFFFF
-            return int128_base_t(std::numeric_limits<int64_t>::max(),
-                                 std::numeric_limits<uint64_t>::max());
-        } else {
-            // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            // Constructor(high, low): high=0xFFFFFFFFFFFFFFFF, low=0xFFFFFFFFFFFFFFFF
-            return int128_base_t(std::numeric_limits<uint64_t>::max(),
-                                 std::numeric_limits<uint64_t>::max());
+    return {error, result};
+}
+
+// ============================================================================
+// CONSTANTES ESTÁTICAS
+// ============================================================================
+
+static consteval int128_base_t min() noexcept
+{
+    if constexpr (is_signed) {
+        // INT128_MIN = -2^127 = 0x8000000000000000'0000000000000000
+        // Constructor(high, low): high=0x8000000000000000, low=0
+        return int128_base_t(static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), 0ull);
+    } else {
+        // UINT128_MIN = 0
+        return int128_base_t(0ull, 0ull);
+    }
+}
+
+static consteval int128_base_t max() noexcept
+{
+    if constexpr (is_signed) {
+        // INT128_MAX = 2^127-1 = 0x7FFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
+        // Constructor(high, low): high=0x7FFFFFFFFFFFFFFF, low=0xFFFFFFFFFFFFFFFF
+        return int128_base_t(std::numeric_limits<int64_t>::max(),
+                             std::numeric_limits<uint64_t>::max());
+    } else {
+        // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
+        // Constructor(high, low): high=0xFFFFFFFFFFFFFFFF, low=0xFFFFFFFFFFFFFFFF
+        return int128_base_t(std::numeric_limits<uint64_t>::max(),
+                             std::numeric_limits<uint64_t>::max());
+    }
+}
+
+// ============================================================================
+// OPERADORES DE STREAM (FRIEND FUNCTIONS)
+// ============================================================================
+
+// Operador de inserción en stream (salida)
+// Convierte el valor a string en base 10 y lo escribe al stream
+// Ejemplo: std::cout << value;
+friend std::ostream& operator<<(std::ostream& os, const int128_base_t& value)
+{
+    return os << value.to_string();
+}
+
+// Operador de extracción desde stream (entrada)
+// Lee un string del stream y lo convierte al tipo int128_base_t
+// Ejemplo: std::cin >> value;
+// Si el parsing falla, establece el failbit del stream
+friend std::istream& operator>>(std::istream& is, int128_base_t& value)
+{
+    std::string str;
+    is >> str; // Lee string hasta el primer whitespace
+
+    if (is) { // Si la lectura fue exitosa
+        try {
+            value = int128_base_t(str.c_str());
+        } catch (const std::invalid_argument&) {
+            // Si el parsing falla, establecer failbit
+            is.setstate(std::ios::failbit);
         }
     }
 
-    // ============================================================================
-    // OPERADORES DE STREAM (FRIEND FUNCTIONS)
-    // ============================================================================
-
-    // Operador de inserción en stream (salida)
-    // Convierte el valor a string en base 10 y lo escribe al stream
-    // Ejemplo: std::cout << value;
-    friend std::ostream& operator<<(std::ostream& os, const int128_base_t& value)
-    {
-        return os << value.to_string();
-    }
-
-    // Operador de extracción desde stream (entrada)
-    // Lee un string del stream y lo convierte al tipo int128_base_t
-    // Ejemplo: std::cin >> value;
-    // Si el parsing falla, establece el failbit del stream
-    friend std::istream& operator>>(std::istream& is, int128_base_t& value)
-    {
-        std::string str;
-        is >> str; // Lee string hasta el primer whitespace
-
-        if (is) { // Si la lectura fue exitosa
-            try {
-                value = int128_base_t(str.c_str());
-            } catch (const std::invalid_argument&) {
-                // Si el parsing falla, establecer failbit
-                is.setstate(std::ios::failbit);
-            }
-        }
-
-        return is;
-    }
+    return is;
+}
 };
 
 // ============================================================================
