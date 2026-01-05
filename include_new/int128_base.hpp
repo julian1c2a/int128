@@ -410,7 +410,7 @@ template <signedness S> class int128_base_t
     // Operador negación bit a bit
     constexpr int128_base_t operator~() const noexcept
     {
-        return int128_base_t(~data[0], ~data[1]);
+        return int128_base_t(~data[1], ~data[0]); // Constructor(high, low)
     }
 
     // Operador negación (según el comportamiento estándar
@@ -1202,7 +1202,7 @@ template <signedness S> class int128_base_t
         if constexpr (is_signed) {
             if (is_negative()) {
                 negative = true;
-                temp = -temp; // Obtener valor absoluto
+                temp = abs(); // Obtener valor absoluto
             }
         }
 
@@ -1254,7 +1254,7 @@ template <signedness S> class int128_base_t
         if constexpr (is_signed) {
             if (is_negative()) {
                 negative = true;
-                temp = -temp; // Obtener valor absoluto
+                temp = abs(); // Obtener valor absoluto
             }
         }
 
@@ -1474,15 +1474,15 @@ template <signedness S> class int128_base_t
                                                                       int base) noexcept
     {
         if (!str) {
-            return {parse_error::null_pointer, int128_base_t{0ull, 0ull}};
+            return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
         }
 
         if (!*str) {
-            return {parse_error::empty_string, int128_base_t{0ull, 0ull}};
+            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
         }
 
         if (base < 2 || base > 36) {
-            return {parse_error::invalid_base, int128_base_t{0ull, 0ull}};
+            return {parse_error::invalid_base, int128_base_t(0ull, 0ull)};
         }
 
         // parse_base() NO maneja signos - solo parsea dígitos
@@ -1513,11 +1513,22 @@ template <signedness S> class int128_base_t
             }
 
             // Verificar overflow ANTES de multiplicar
-            // max_value / base < result significa que result * base > max_value
-            const int128_base_t max_val = max();
-            const int128_base_t max_div_base = max_val / base_val;
+            // NOTA: parse_base() usa aritmética UNSIGNED para overflow checking
+            // Reinterpretamos result, base_val como uint128_t temporalmente
+            // El overflow para signed se verifica después en parse() al aplicar el signo
 
-            if (result > max_div_base) {
+            // Crear versiones unsigned para las operaciones de overflow
+            using uint128_t = int128_base_t<signedness::unsigned_type>;
+            constexpr uint128_t max_val(std::numeric_limits<uint64_t>::max(),
+                                        std::numeric_limits<uint64_t>::max()); // UINT128_MAX
+
+            // Reinterpretar result y base_val como unsigned para operaciones
+            const uint128_t& result_u = reinterpret_cast<const uint128_t&>(result);
+            const uint128_t& base_val_u = reinterpret_cast<const uint128_t&>(base_val);
+
+            const uint128_t max_div_base = max_val / base_val_u;
+
+            if (result_u > max_div_base) {
                 return {parse_error::overflow, int128_base_t(0ull, 0ull)};
             }
 
@@ -1527,9 +1538,10 @@ template <signedness S> class int128_base_t
             // max_value - result < digit significa que result + digit > max_value
             const int128_base_t digit_val(
                 0ull, static_cast<uint64_t>(digit_value)); // Constructor(high=0, low=digit)
-            const int128_base_t max_minus_result = max_val - result;
+            const uint128_t& digit_val_u = reinterpret_cast<const uint128_t&>(digit_val);
+            const uint128_t max_minus_result = max_val - result_u;
 
-            if (digit_val > max_minus_result) {
+            if (digit_val_u > max_minus_result) {
                 return {parse_error::overflow, int128_base_t(0ull, 0ull)};
             }
 
@@ -1558,11 +1570,11 @@ template <signedness S> class int128_base_t
     static constexpr std::pair<parse_error, int128_base_t> parse(const char* str) noexcept
     {
         if (!str) {
-            return {parse_error::null_pointer, int128_base_t{0ull, 0ull}};
+            return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
         }
 
         if (!*str) {
-            return {parse_error::empty_string, int128_base_t{0ull, 0ull}};
+            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
         }
 
         // Manejo de signo para tipos signed
@@ -1579,7 +1591,7 @@ template <signedness S> class int128_base_t
 
             // Verificar que hay contenido después del signo
             if (!*parse_start) {
-                return {parse_error::empty_string, int128_base_t{0ull, 0ull}};
+                return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
             }
         }
 
@@ -1611,7 +1623,7 @@ template <signedness S> class int128_base_t
 
         // Validar que hay contenido después del prefijo
         if (!*start) {
-            return {parse_error::empty_string, int128_base_t{0ull, 0ull}};
+            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
         }
 
         // Parsear sin signo (parse_base ya maneja el signo si viene en str)
@@ -1636,8 +1648,8 @@ template <signedness S> class int128_base_t
     {
         if constexpr (is_signed) {
             // INT128_MIN = -2^127 = 0x8000000000000000'0000000000000000
-            // Constructor(low, high): low=0, high=0x8000000000000000
-            return int128_base_t(0ull, 0x8000000000000000ull);
+            // Constructor(high, low): high=0x8000000000000000, low=0
+            return int128_base_t(static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), 0ull);
         } else {
             // UINT128_MIN = 0
             return int128_base_t(0ull, 0ull);
@@ -1648,12 +1660,14 @@ template <signedness S> class int128_base_t
     {
         if constexpr (is_signed) {
             // INT128_MAX = 2^127-1 = 0x7FFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            // Constructor(low, high): low=0xFFFFFFFFFFFFFFFF, high=0x7FFFFFFFFFFFFFFF
-            return int128_base_t(0xFFFFFFFFFFFFFFFFull, 0x7FFFFFFFFFFFFFFFull);
+            // Constructor(high, low): high=0x7FFFFFFFFFFFFFFF, low=0xFFFFFFFFFFFFFFFF
+            return int128_base_t(std::numeric_limits<int64_t>::max(),
+                                 std::numeric_limits<uint64_t>::max());
         } else {
             // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            // Constructor(low, high): low=0xFFFFFFFFFFFFFFFF, high=0xFFFFFFFFFFFFFFFF
-            return int128_base_t(0xFFFFFFFFFFFFFFFFull, 0xFFFFFFFFFFFFFFFFull);
+            // Constructor(high, low): high=0xFFFFFFFFFFFFFFFF, low=0xFFFFFFFFFFFFFFFF
+            return int128_base_t(std::numeric_limits<uint64_t>::max(),
+                                 std::numeric_limits<uint64_t>::max());
         }
     }
 
@@ -1697,6 +1711,22 @@ template <signedness S> class int128_base_t
 
 using uint128_t = int128_base_t<signedness::unsigned_type>;
 using int128_t = int128_base_t<signedness::signed_type>;
+
+// ============================================================================
+// CONSTANTES NUMÉRICAS GLOBALES
+// ============================================================================
+
+/// Máximo valor representable para uint128_t (2^128 - 1)
+inline constexpr uint128_t UINT128_MAX =
+    uint128_t(std::numeric_limits<uint64_t>::max(), std::numeric_limits<uint64_t>::max());
+
+/// Máximo valor representable para int128_t (2^127 - 1)
+inline constexpr int128_t INT128_MAX =
+    int128_t(std::numeric_limits<int64_t>::max(), std::numeric_limits<uint64_t>::max());
+
+/// Mínimo valor representable para int128_t (-2^127)
+inline constexpr int128_t INT128_MIN =
+    int128_t(static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), 0ull);
 
 // ============================================================================
 // LITERALES DE USUARIO (User-Defined Literals)
