@@ -1328,7 +1328,7 @@ template <signedness S> class int128_base_t
         if (high == 0) {
             const uint64_t quotient = low / 10;
             const uint64_t remainder = low % 10;
-            return {int128_base_t{quotient, 0ull}, remainder};
+            return {int128_base_t(0ull, quotient), remainder}; // Constructor(high=0, low=quotient)
         }
 
         // Caso general: división de 128 bits por 10
@@ -1346,7 +1346,7 @@ template <signedness S> class int128_base_t
             }
         }
 
-        return {int128_base_t{q_low, q_high}, rem};
+        return {int128_base_t(q_high, q_low), rem}; // Constructor(high, low)
     }
 
     /**
@@ -1407,13 +1407,14 @@ template <signedness S> class int128_base_t
                 }
             }
 
-            return {int128_base_t{quotient_low, quotient_high}, int128_base_t{remainder, 0ull}};
+            return {int128_base_t(quotient_high, quotient_low),
+                    int128_base_t(0ull, remainder)}; // Constructor(high, low)
         }
 
         // Caso general: división binaria larga (128 bits / 128 bits)
         // Algoritmo de división escolar bit a bit
-        int128_base_t quotient{0ull, 0ull};
-        int128_base_t remainder{0ull, 0ull};
+        int128_base_t quotient(0ull, 0ull);  // Constructor(high=0, low=0)
+        int128_base_t remainder(0ull, 0ull); // Constructor(high=0, low=0)
 
         // Procesar desde el bit más significativo
         for (int i = 127; i >= 0; --i) {
@@ -1491,6 +1492,11 @@ template <signedness S> class int128_base_t
                                      static_cast<uint64_t>(base)); // Constructor(high=0, low=base)
 
         for (const char* p = str; *p; ++p) {
+            // Ignorar separadores de dígitos (C++14 digit separator)
+            if (*p == '\'') {
+                continue;
+            }
+
             int digit_value = -1;
 
             if (*p >= '0' && *p <= '9') {
@@ -1691,6 +1697,123 @@ template <signedness S> class int128_base_t
 
 using uint128_t = int128_base_t<signedness::unsigned_type>;
 using int128_t = int128_base_t<signedness::signed_type>;
+
+// ============================================================================
+// LITERALES DE USUARIO (User-Defined Literals)
+// ============================================================================
+
+/**
+ * @brief Namespace para literales de usuario de int128
+ * @note Uso: using namespace nstd::literals; o using namespace nstd::int128_literals;
+ */
+namespace int128_literals
+{
+/**
+ * @brief Literal de usuario para uint128_t (lowercase)
+ * @param str Cadena de caracteres a parsear
+ * @return uint128_t parseado desde la cadena
+ * @note Soporta auto-detección de base (0x, 0b, 0) y digit separators (')
+ * @example auto x = 1'234'567_u128;
+ * @example auto y = 0xFF'AA'BB_u128;
+ */
+constexpr uint128_t operator""_u128(const char* str) noexcept
+{
+    auto [error, value] = uint128_t::parse(str);
+    return value; // Retorna 0 si hay error
+}
+
+/**
+ * @brief Literal de usuario para uint128_t (uppercase)
+ * @param str Cadena de caracteres a parsear
+ * @return uint128_t parseado desde la cadena
+ * @note Alias de _u128 para consistencia
+ * @example auto x = 1234567_U128;
+ */
+constexpr uint128_t operator""_U128(const char* str) noexcept
+{
+    return operator""_u128(str);
+}
+
+/**
+ * @brief Literal de usuario para int128_t (lowercase)
+ * @param str Cadena de caracteres a parsear
+ * @return int128_t parseado desde la cadena
+ * @note Soporta signo '+'/'-', auto-detección de base y digit separators (')
+ * @example auto x = -1'234'567_i128;
+ * @example auto y = 0x7FFF'FFFF_i128;
+ */
+constexpr int128_t operator""_i128(const char* str) noexcept
+{
+    auto [error, value] = int128_t::parse(str);
+    return value; // Retorna 0 si hay error
+}
+
+/**
+ * @brief Literal de usuario para int128_t (uppercase)
+ * @param str Cadena de caracteres a parsear
+ * @return int128_t parseado desde la cadena
+ * @note Alias de _i128 para consistencia
+ * @example auto x = -1234567_I128;
+ */
+constexpr int128_t operator""_I128(const char* str) noexcept
+{
+    return operator""_i128(str);
+}
+
+} // namespace int128_literals
+
+// Alias del namespace literals para compatibilidad
+namespace literals
+{
+using namespace int128_literals;
+}
+
+// ============================================================================
+// FUNCIONES FACTORY (make_int128)
+// ============================================================================
+
+/**
+ * @brief Función factory type-safe para crear int128_base_t desde C-string
+ * @tparam S Signedness del tipo (unsigned_type o signed_type)
+ * @param str Cadena de caracteres a parsear
+ * @return int128_base_t<S> parseado desde la cadena
+ * @note Soporta digit separators ('), auto-detección de base y signos
+ * @example auto x = make_int128<unsigned_type>("1'234'567");
+ * @example auto y = make_int128<signed_type>("-0xFF'AA");
+ */
+template <signedness S> constexpr int128_base_t<S> make_int128(const char* str) noexcept
+{
+    auto [error, value] = int128_base_t<S>::parse(str);
+    return value; // Retorna 0 si hay error
+}
+
+/**
+ * @brief Función factory con verificación de errores
+ * @tparam S Signedness del tipo (unsigned_type o signed_type)
+ * @param str Cadena de caracteres a parsear
+ * @return std::pair<parse_error, int128_base_t<S>> con error y valor
+ * @note Permite verificar si hubo error en el parsing
+ * @example auto [err, val] = make_int128_checked<unsigned_type>("invalid");
+ * @example if (err != parse_error::success) { // manejar error }
+ */
+template <signedness S>
+constexpr std::pair<parse_error, int128_base_t<S>> make_int128_checked(const char* str) noexcept
+{
+    return int128_base_t<S>::parse(str);
+}
+
+/**
+ * @brief Shortcuts para tipos específicos
+ */
+inline constexpr uint128_t make_uint128(const char* str) noexcept
+{
+    return make_int128<signedness::unsigned_type>(str);
+}
+
+inline constexpr int128_t make_int128_signed(const char* str) noexcept
+{
+    return make_int128<signedness::signed_type>(str);
+}
 
 } // namespace nstd
 
