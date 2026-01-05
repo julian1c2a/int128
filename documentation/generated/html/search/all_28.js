@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['💡_20ejemplos_0',['💡 Ejemplos',['../index.html#autotoc_md59',1,'']]]
+  ['➕_20arithmetic_5foperations_20hpp_0',['➕ arithmetic_operations.hpp',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md160',1,'']]]
 ];

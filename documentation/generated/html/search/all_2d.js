@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['📋_20características_0',['📋 Características',['../index.html#autotoc_md57',1,'']]],
-  ['📋_20otras_20plataformas_20sin_20testear_20debería_20funcionar_1',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]]
+  ['🎨_20formatting_20uint128_5fformat_20hpp_20int128_5fformat_20hpp_20✅_0',['🎨 Formatting - uint128_format.hpp &amp;amp; int128_format.hpp ✅',['../index.html#autotoc_md97',1,'']]]
 ];

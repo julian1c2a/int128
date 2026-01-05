@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['�️_20arquitectura_20modular_0',['�️ Arquitectura Modular',['../index.html#autotoc_md64',1,'']]],
-  ['�🎯_20type_20traits_20y_20stl_20compatibility_1',['�🎯 Type Traits y STL Compatibility',['../index.html#autotoc_md73',1,'']]],
-  ['�📝_20licencia_2',['�📝 Licencia',['../index.html#autotoc_md82',1,'']]]
+  ['x_0',['x',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md179',1,'<span class="tt">int clz64(uint64_t x)</span>'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md180',1,'<span class="tt">int ctz64(uint64_t x)</span>'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md181',1,'<span class="tt">int ffs64(uint64_t x)</span>'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md182',1,'<span class="tt">int parity64(uint64_t x)</span>'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md178',1,'<span class="tt">int popcount64(uint64_t x)</span>'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md187',1,'<span class="tt">uint64_t bswap64(uint64_t x)</span>']]],
+  ['x_20int_20s_1',['x int s',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md188',1,'<span class="tt">uint64_t rotl64(uint64_t x, int s)</span>'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md189',1,'<span class="tt">uint64_t rotr64(uint64_t x, int s)</span>']]],
+  ['x86_2064_20intel_20amd_2',['x86 64 Intel AMD',['../arithmetic_ops_arch.html#autotoc_md124',1,'x86-64 (Intel/AMD)'],['../bit_ops_arch.html#autotoc_md130',1,'x86-64 (Intel/AMD)'],['../byte_ops_arch.html#autotoc_md136',1,'x86-64 (Intel/AMD)'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md220',1,'x86-64 (Intel/AMD)']]]
 ];

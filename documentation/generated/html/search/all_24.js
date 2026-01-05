@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🎨_20formatting_20uint128_5fformat_20hpp_20int128_5fformat_20hpp_20✅_0',['🎨 Formatting - uint128_format.hpp &amp;amp; int128_format.hpp ✅',['../index.html#autotoc_md56',1,'']]]
+  ['★_20nuevo_0',['5. &lt;b&gt;Expression Templates&lt;/b&gt; - Técnicas Avanzadas de Metaprogramación ★ NUEVO',['../index.html#autotoc_md38',1,'']]]
 ];

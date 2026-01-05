@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📈_20resultados_0',['📈 Resultados',['../index.html#autotoc_md38',1,'📈 Resultados'],['../index.html#autotoc_md54',1,'📈 Resultados']]]
+  ['🆕_0',['Numérico (&lt;span class=&quot;tt&quot;&gt;uint128_numeric.hpp&lt;/span&gt;) 🆕',['../index.html#autotoc_md112',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['📝_20características_0',['📝 Características',['../index.html#autotoc_md32',1,'📝 Características'],['../index.html#autotoc_md41',1,'📝 Características']]]
+  ['🎮_20demos_20y_20ejemplos_20interactivos_0',['🎮 Demos y Ejemplos Interactivos',['../index.html#autotoc_md26',1,'']]]
 ];

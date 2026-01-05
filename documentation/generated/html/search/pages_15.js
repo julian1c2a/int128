@@ -1,21 +1,15 @@
 var searchData=
 [
-  ['safety_0',['Safety',['../architecture.html#arch_thread_safety',1,'Thread Safety'],['../quickstart.html#qs_threads',1,'Thread Safety']]],
-  ['salida_1',['Entrada/Salida',['../quickstart.html#qs_io',1,'']]],
-  ['seguras_2',['Operaciones Seguras',['../quickstart.html#qs_safe',1,'']]],
-  ['showcase_5fcryptography_20cpp_20aplicaciones_20criptográficas_3',['2. &lt;b&gt;showcase_cryptography.cpp&lt;/b&gt; - Aplicaciones Criptográficas',['../index.html#autotoc_md21',1,'']]],
-  ['showcase_5fperformance_20cpp_20análisis_20de_20rendimiento_4',['4. &lt;b&gt;showcase_performance.cpp&lt;/b&gt; - Análisis de Rendimiento',['../index.html#autotoc_md23',1,'']]],
-  ['showcase_5fscientific_20cpp_20computación_20científica_5',['3. &lt;b&gt;showcase_scientific.cpp&lt;/b&gt; - Computación Científica',['../index.html#autotoc_md22',1,'']]],
-  ['showcases_20avanzados_204_20archivos_6',['🎭 Showcases Avanzados (4 archivos)',['../index.html#autotoc_md19',1,'']]],
-  ['signed_7',['int128_t (Signed)',['../architecture.html#arch_int128',1,'']]],
-  ['siguientes_20pasos_8',['Siguientes Pasos',['../quickstart.html#qs_next',1,'']]],
-  ['sin_20testear_20debería_20funcionar_9',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]],
-  ['sistema_20de_20build_10',['Sistema de Build',['../architecture.html#arch_build',1,'']]],
-  ['soportadas_11',['🌍 Plataformas Soportadas',['../index.html#autotoc_md2',1,'']]],
-  ['soportados_12',['Compiladores Soportados',['../quickstart.html#qs_compilers',1,'']]],
-  ['soporte_20atómico_13',['Soporte Atómico',['../architecture.html#arch_atomic',1,'']]],
-  ['soporte_20y_20compiladores_14',['Soporte y Compiladores',['../quickstart.html#qs_support',1,'']]],
-  ['stl_15',['STL',['../quickstart.html#qs_algorithms',1,'Algoritmos STL'],['../examples.html#examples_algorithms',1,'Algoritmos y STL'],['../architecture.html#arch_std_traits',1,'Especialización de Traits STL']]],
-  ['stl_20compatibility_16',['�🎯 Type Traits y STL Compatibility',['../index.html#autotoc_md73',1,'']]],
-  ['suite_20de_20tests_17',['Suite de Tests',['../architecture.html#arch_test_suite',1,'']]]
+  ['números_0',['Creación de Números',['../quickstart.html#qs_creation',1,'']]],
+  ['números_20de_20fibonacci_1',['Números de Fibonacci',['../examples.html#ex_fibonacci',1,'']]],
+  ['navegador_3a_20http_3a_20localhost_3a8000_2',['Abrir en navegador: &lt;a href=&quot;http://localhost:8000&quot;&gt;http://localhost:8000&lt;/a&gt;',['../index.html#autotoc_md121',1,'']]],
+  ['no_20reinventar_20la_20rueda_3',['3. &lt;b&gt;No Reinventar la Rueda&lt;/b&gt;',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md198',1,'']]],
+  ['normales_4',['Compilar demos normales',['../index.html#autotoc_md14',1,'']]],
+  ['notas_20de_20arquitectura_20para_20operaciones_20aritméticas_5',['Notas de Arquitectura para Operaciones Aritméticas',['../arithmetic_ops_arch.html',1,'']]],
+  ['notas_20de_20arquitectura_20para_20operaciones_20de_20bits_6',['Notas de Arquitectura para Operaciones de Bits',['../bit_ops_arch.html',1,'']]],
+  ['notas_20de_20arquitectura_20para_20operaciones_20de_20bytes_7',['Notas de Arquitectura para Operaciones de Bytes',['../byte_ops_arch.html',1,'']]],
+  ['nueva_20en_20diciembre_202025_8',['make.py - Interfaz Unificada (nueva en diciembre 2025)',['../index.html#autotoc_md68',1,'']]],
+  ['nuevo_9',['5. &lt;b&gt;Expression Templates&lt;/b&gt; - Técnicas Avanzadas de Metaprogramación ★ NUEVO',['../index.html#autotoc_md38',1,'']]],
+  ['numéricas_10',['Funciones Numéricas',['../quickstart.html#qs_numeric',1,'']]],
+  ['numérico_20uint128_5fnumeric_20hpp_20🆕_11',['Numérico (&lt;span class=&quot;tt&quot;&gt;uint128_numeric.hpp&lt;/span&gt;) 🆕',['../index.html#autotoc_md112',1,'']]]
 ];

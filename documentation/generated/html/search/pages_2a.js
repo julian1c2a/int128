@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['📊_20resultados_20generales_0',['📊 Resultados Generales',['../index.html#autotoc_md63',1,'']]],
-  ['📊_20tests_20incluidos_1',['📊 Tests Incluidos',['../index.html#autotoc_md35',1,'📊 Tests Incluidos'],['../index.html#autotoc_md44',1,'📊 Tests Incluidos'],['../index.html#autotoc_md51',1,'📊 Tests Incluidos']]]
+  ['🌍_0',['2. &lt;b&gt;Soporte Universal&lt;/b&gt; 🌍',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md150',1,'']]],
+  ['🌍_20plataformas_20soportadas_1',['🌍 Plataformas Soportadas',['../index.html#autotoc_md2',1,'']]],
+  ['🌍_20soporte_20de_20arquitecturas_2',['🌍 Soporte de Arquitecturas',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md219',1,'']]]
 ];

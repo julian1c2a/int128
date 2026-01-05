@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['📚_20contenido_20documentado_0',['📚 Contenido Documentado',['../index.html#autotoc_md81',1,'']]],
-  ['📚_20documentación_1',['📚 Documentación',['../index.html#autotoc_md16',1,'📚 Documentación'],['../index.html#autotoc_md37',1,'📚 Documentación'],['../index.html#autotoc_md45',1,'📚 Documentación'],['../index.html#autotoc_md53',1,'📚 Documentación']]],
-  ['📚_20tutoriales_2013_20archivos_2',['📚 Tutoriales (13 archivos)',['../index.html#autotoc_md18',1,'']]]
+  ['🎭_0',['1. &lt;b&gt;Agnóstico al Tipo&lt;/b&gt; 🎭',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md149',1,'']]],
+  ['🎭_20showcases_20avanzados_204_20demos_1',['🎭 Showcases Avanzados (4 demos)',['../index.html#autotoc_md33',1,'']]]
 ];

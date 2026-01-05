@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🆕_0',['Numérico (&lt;span class=&quot;tt&quot;&gt;uint128_numeric.hpp&lt;/span&gt;) 🆕',['../index.html#autotoc_md71',1,'']]]
+  ['→_20128_0',['Multiplicación 64×64 → 128',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md203',1,'']]]
 ];

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['�️_20arquitectura_20modular_0',['�️ Arquitectura Modular',['../index.html#autotoc_md64',1,'']]],
-  ['�🎯_20type_20traits_20y_20stl_20compatibility_1',['�🎯 Type Traits y STL Compatibility',['../index.html#autotoc_md73',1,'']]],
-  ['�📝_20licencia_2',['�📝 Licencia',['../index.html#autotoc_md82',1,'']]]
+  ['zero_5fcount_0',['zero_count',['../structnstd_1_1int128__algorithm_1_1int128__stats.html#a43d400b6fbbd95c918fb0e1e02f3aa0b',1,'nstd::int128_algorithm::int128_stats']]]
 ];

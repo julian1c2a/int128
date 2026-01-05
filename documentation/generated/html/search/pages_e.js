@@ -1,10 +1,25 @@
 var searchData=
 [
-  ['límites_20uint128_5flimits_20hpp_0',['Límites (&lt;span class=&quot;tt&quot;&gt;uint128_limits.hpp&lt;/span&gt;)',['../index.html#autotoc_md67',1,'']]],
-  ['licencia_1',['�📝 Licencia',['../index.html#autotoc_md82',1,'']]],
-  ['linux_2',['Linux',['../index.html#autotoc_md78',1,'']]],
-  ['linux_20macos_3',['En MSYS2/Linux/macOS',['../index.html#autotoc_md74',1,'']]],
-  ['lista_20de_20pruebas_4',['Lista de pruebas',['../test.html',1,'']]],
-  ['localhost_3a8000_5',['Abrir en navegador: &lt;a href=&quot;http://localhost:8000&quot;&gt;http://localhost:8000&lt;/a&gt;',['../index.html#autotoc_md80',1,'']]],
-  ['lock_20free_6',['Lock-Free',['../architecture.html#arch_lock_free',1,'']]]
+  ['factorial_0',['Factorial',['../examples.html#ex_factorial',1,'']]],
+  ['factorización_20de_20primos_20350_20loc_1',['4. &lt;b&gt;prime_factorization.cpp&lt;/b&gt; - Factorización de Primos (350 LOC)',['../index.html#autotoc_md49',1,'']]],
+  ['fallback_20automático_20🔄_2',['3. &lt;b&gt;Fallback Automático&lt;/b&gt; 🔄',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md151',1,'']]],
+  ['fallback_5fportable_20hpp_3',['🛠️ fallback_portable.hpp',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md192',1,'']]],
+  ['feature_20interop_4',['Usando el Makefile con FEATURE=interop',['../index.html#autotoc_md23',1,'']]],
+  ['feature_20test_20macros_20de_20std_5fcompat_5',['Feature Test Macros de std_compat',['../feature_macros.html',1,'']]],
+  ['ffs64_20uint64_5ft_20x_6',['&lt;span class=&quot;tt&quot;&gt;int ffs64(uint64_t x)&lt;/span&gt;',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md181',1,'']]],
+  ['fibonacci_7',['Números de Fibonacci',['../examples.html#ex_fibonacci',1,'']]],
+  ['filosofía_20de_20diseño_8',['🎯 Filosofía de Diseño',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md148',1,'']]],
+  ['flags_20adicionales_9',['flags adicionales',['../index.html#autotoc_md15',1,'⚠️ IMPORTANTE: Demos con thread safety REQUIEREN flags adicionales'],['../index.html#autotoc_md13',1,'Benchmarks con thread safety REQUIEREN flags adicionales']]],
+  ['formateo_20avanzado_10',['Formateo Avanzado',['../quickstart.html#qs_format',1,'']]],
+  ['formatting_20uint128_5fformat_20hpp_20int128_5fformat_20hpp_20✅_11',['🎨 Formatting - uint128_format.hpp &amp;amp; int128_format.hpp ✅',['../index.html#autotoc_md97',1,'']]],
+  ['free_12',['Lock-Free',['../architecture.html#arch_lock_free',1,'']]],
+  ['friendly_20⚡_13',['4. &lt;b&gt;Constexpr-Friendly&lt;/b&gt; ⚡',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md152',1,'']]],
+  ['funcionar_14',['📋 Otras Plataformas (Sin Testear - Debería Funcionar)',['../index.html#autotoc_md4',1,'']]],
+  ['funciones_20cmath_15',['Funciones cmath',['../quickstart.html#qs_cmath',1,'']]],
+  ['funciones_20disponibles_16',['Funciones Disponibles',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md161',1,'Funciones Disponibles'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md177',1,'Funciones Disponibles'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md186',1,'Funciones Disponibles'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md193',1,'Funciones Disponibles']]],
+  ['funciones_20matemáticas_17',['Funciones Matemáticas',['../quickstart.html#qs_math',1,'']]],
+  ['funciones_20numéricas_18',['Funciones Numéricas',['../quickstart.html#qs_numeric',1,'']]],
+  ['futura_19',['Compatibilidad Futura',['../architecture.html#arch_compatibility',1,'']]],
+  ['futuras_20',['Futuras',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md234',1,'🚀 Extensiones Futuras'],['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md236',1,'Arquitecturas Futuras']]],
+  ['futuro_21',['Roadmap Futuro',['../architecture.html#arch_future',1,'']]]
 ];
