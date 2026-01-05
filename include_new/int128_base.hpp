@@ -1486,8 +1486,9 @@ template <signedness S> class int128_base_t
 
         // parse_base() NO maneja signos - solo parsea dígitos
         // El manejo de signos es responsabilidad de parse()
-        int128_base_t result{0ull, 0ull};
-        const int128_base_t base_val{static_cast<uint64_t>(base), 0ull}; // low=base, high=0
+        int128_base_t result(0ull, 0ull); // Constructor(high=0, low=0)
+        const int128_base_t base_val(0ull,
+                                     static_cast<uint64_t>(base)); // Constructor(high=0, low=base)
 
         for (const char* p = str; *p; ++p) {
             int digit_value = -1;
@@ -1502,28 +1503,31 @@ template <signedness S> class int128_base_t
 
             if (digit_value == -1 || digit_value >= base) {
                 // Carácter inválido para esta base
-                return {parse_error::invalid_character, int128_base_t{0ull, 0ull}};
+                return {parse_error::invalid_character, int128_base_t(0ull, 0ull)};
             }
 
-            const int128_base_t old_result = result;
-            result = result * base_val;
+            // Verificar overflow ANTES de multiplicar
+            // max_value / base < result significa que result * base > max_value
+            const int128_base_t max_val = max();
+            const int128_base_t max_div_base = max_val / base_val;
 
-            // Verificar overflow en la multiplicación
-            // Si result < old_result después de multiplicar, hubo overflow (wrap-around)
-            if (result < old_result && old_result != int128_base_t{0ull, 0ull}) {
-                return {parse_error::overflow, int128_base_t{0ull, 0ull}};
+            if (result > max_div_base) {
+                return {parse_error::overflow, int128_base_t(0ull, 0ull)};
             }
 
-            // Sumar el dígito
-            const int128_base_t digit_val{static_cast<uint64_t>(digit_value),
-                                          0ull}; // low=digit, high=0
-            const int128_base_t old_result2 = result;
-            result = result + digit_val;
+            result *= base_val;
 
-            // Verificar overflow en la suma
-            if (result < old_result2) {
-                return {parse_error::overflow, int128_base_t{0ull, 0ull}};
+            // Verificar overflow ANTES de sumar el dígito
+            // max_value - result < digit significa que result + digit > max_value
+            const int128_base_t digit_val(
+                0ull, static_cast<uint64_t>(digit_value)); // Constructor(high=0, low=digit)
+            const int128_base_t max_minus_result = max_val - result;
+
+            if (digit_val > max_minus_result) {
+                return {parse_error::overflow, int128_base_t(0ull, 0ull)};
             }
+
+            result += digit_val;
         }
 
         // parse_base() retorna el valor parseado SIN modificaciones de signo
@@ -1626,7 +1630,8 @@ template <signedness S> class int128_base_t
     {
         if constexpr (is_signed) {
             // INT128_MIN = -2^127 = 0x8000000000000000'0000000000000000
-            return int128_base_t(0x8000000000000000ull, 0ull);
+            // Constructor(low, high): low=0, high=0x8000000000000000
+            return int128_base_t(0ull, 0x8000000000000000ull);
         } else {
             // UINT128_MIN = 0
             return int128_base_t(0ull, 0ull);
@@ -1637,9 +1642,11 @@ template <signedness S> class int128_base_t
     {
         if constexpr (is_signed) {
             // INT128_MAX = 2^127-1 = 0x7FFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            return int128_base_t(0x7FFFFFFFFFFFFFFFull, 0xFFFFFFFFFFFFFFFFull);
+            // Constructor(low, high): low=0xFFFFFFFFFFFFFFFF, high=0x7FFFFFFFFFFFFFFF
+            return int128_base_t(0xFFFFFFFFFFFFFFFFull, 0x7FFFFFFFFFFFFFFFull);
         } else {
             // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
+            // Constructor(low, high): low=0xFFFFFFFFFFFFFFFF, high=0xFFFFFFFFFFFFFFFF
             return int128_base_t(0xFFFFFFFFFFFFFFFFull, 0xFFFFFFFFFFFFFFFFull);
         }
     }
