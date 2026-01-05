@@ -520,43 +520,9 @@ template <signedness S> class int128_base_t
         return ~(*this) + int128_base_t(1);
     }
 
-    // Operador suma (idéntico para signed/unsigned)
-    constexpr int128_base_t& operator+=(const int128_base_t& other) noexcept
-    {
-        uint64_t temp_low = 0;
-        const unsigned char carry = intrinsics::add_u64(data[0], other.data[0], &temp_low);
-        data[0] = temp_low;
-        uint64_t temp_high = 0;
-        intrinsics::addcarry_u64(carry, data[1], other.data[1], &temp_high);
-        data[1] = temp_high;
-        return *this;
-    }
+    // Operador suma: templates S2 manejan todos los casos (incluyendo S2==S)
 
-    constexpr int128_base_t operator+(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result += other;
-        return result;
-    }
-
-    // Operador resta (idéntico para signed/unsigned)
-    constexpr int128_base_t& operator-=(const int128_base_t& other) noexcept
-    {
-        uint64_t temp_low = 0;
-        const unsigned char borrow = intrinsics::sub_u64(data[0], other.data[0], &temp_low);
-        data[0] = temp_low;
-        uint64_t temp_high = 0;
-        intrinsics::subborrow_u64(borrow, data[1], other.data[1], &temp_high);
-        data[1] = temp_high;
-        return *this;
-    }
-
-    constexpr int128_base_t operator-(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result -= other;
-        return result;
-    }
+    // Operador resta: templates S2 manejan todos los casos (incluyendo S2==S)
 
     // Sobrecargas para tipos builtin
     template <integral_builtin T> constexpr int128_base_t& operator+=(T other) noexcept
@@ -624,39 +590,7 @@ template <signedness S> class int128_base_t
         return result;
     }
 
-    // Multiplicación entre dos int128_base_t (mismo signedness)
-    constexpr int128_base_t& operator*=(const int128_base_t& other) noexcept
-    {
-        // Usamos el algoritmo estándar de multiplicación 128x128:
-        // (a1*2^64 + a0) * (b1*2^64 + b0) = a0*b0 + (a0*b1 + a1*b0)*2^64 + a1*b1*2^128
-        // Solo necesitamos los 128 bits bajos del resultado, entonces a1*b1*2^128 se descarta.
-
-        const uint64_t a0 = data[0];
-        const uint64_t a1 = data[1];
-        const uint64_t b0 = other.data[0];
-        const uint64_t b1 = other.data[1];
-
-        // a0 * b0 (128 bits)
-        uint64_t high_part;
-        const uint64_t low_part = intrinsics::umul128(a0, b0, &high_part);
-
-        // a0 * b1 (solo necesitamos parte baja, va sumada a high_part)
-        const uint64_t cross1 = a0 * b1;
-
-        // a1 * b0 (solo necesitamos parte baja, va sumada a high_part)
-        const uint64_t cross2 = a1 * b0;
-
-        data[0] = low_part;
-        data[1] = high_part + cross1 + cross2;
-        return *this;
-    }
-
-    constexpr int128_base_t operator*(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result *= other;
-        return result;
-    }
+    // Multiplicación: templates S2 manejan todos los casos (incluyendo S2==S)
 
     // Operador multiplicación (FASE 0.5 optimizado)
     template <integral_builtin T> constexpr int128_base_t& operator*=(T other) noexcept
