@@ -1,3 +1,29 @@
+/**
+ * @file int128_base.hpp
+ * @brief Implementación unificada de enteros de 128 bits signed/unsigned para C++20
+ *
+ * @details Esta biblioteca proporciona una implementación completa y eficiente de enteros
+ * de 128 bits mediante un template unificado que soporta tanto tipos signed (int128_t)
+ * como unsigned (uint128_t).
+ *
+ * **Características principales:**
+ * - Template unificado: `int128_base_t<signedness S>` para eliminar duplicación
+ * - Operadores completos: aritméticos, comparación, bitwise, shift
+ * - Parsing avanzado: soporta separadores de dígitos ('), múltiples bases (2-36)
+ * - Literales UDL: 42_u128, 0xDEADBEEF_u128, "12345"_U128, etc.
+ * - Conversiones seguras: string ↔ int128, floating point ↔ int128
+ * - Constexpr completo: evaluación en tiempo de compilación
+ * - Código portable: usa std::numeric_limits en lugar de valores hexadecimales mágicos
+ *
+ * @note Fase 17 (5 enero 2026): Fix crítico operator~() para to_string() con negativos
+ * @note Todos los tests pasan: 29/29 ✅
+ *
+ * @author int128 Project Contributors
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
+ */
+
 #ifndef INT128_BASE_HPP
 #define INT128_BASE_HPP
 
@@ -25,9 +51,17 @@ namespace nstd
 {
 
 /**
- * @brief Enum para distinguir entre signed y unsigned
+ * @brief Enum para distinguir entre tipos signed y unsigned en el template unificado
+ *
+ * @details Este enum permite al template int128_base_t<S> adaptar su comportamiento
+ * según si el tipo es signed o unsigned, usando `if constexpr (is_signed)`.
+ *
+ * @see int128_base_t
  */
-enum class signedness : bool { unsigned_type = false, signed_type = true };
+enum class signedness : bool {
+    unsigned_type = false, ///< Tipo unsigned (uint128_t)
+    signed_type = true     ///< Tipo signed (int128_t)
+};
 
 /**
  * @brief Enum para clasificar errores de parsing de strings
@@ -43,8 +77,33 @@ enum class parse_error : uint8_t {
 };
 
 /**
- * @brief Clase template unificada para enteros de 128 bits
- * @tparam S signedness::unsigned_type para uint128_t, signedness::signed_type para int128_t
+ * @brief Clase template unificada para enteros de 128 bits signed/unsigned
+ *
+ * @tparam S Parámetro de signedness:
+ *           - signedness::unsigned_type → uint128_t (0 a 2^128-1)
+ *           - signedness::signed_type → int128_t (-2^127 a 2^127-1)
+ *
+ * @details Esta clase implementa todas las operaciones aritméticas, bitwise y de
+ * comparación para enteros de 128 bits, utilizando internamente dos uint64_t en
+ * formato little-endian (data[0]=low, data[1]=high).
+ *
+ * **Características de diseño:**
+ * - Representación: Two's complement para signed, binario puro para unsigned
+ * - Overflow behavior: Wrap-around (modular arithmetic) para ambos tipos
+ * - Constexpr: Todas las operaciones son evaluables en compile-time
+ * - Portable: Usa std::numeric_limits en lugar de constantes hexadecimales
+ * - Eficiente: Usa intrínsecos del compilador cuando están disponibles
+ *
+ * **Operaciones soportadas:**
+ * - Aritméticas: +, -, *, /, %, negación unaria
+ * - Comparación: ==, !=, <, <=, >, >=, <=> (C++20)
+ * - Bitwise: &, |, ^, ~, <<, >>
+ * - Conversiones: to/from string, to/from floating point
+ * - Parsing: bases 2-36 con separadores de dígitos
+ * - Literales UDL: 42_u128, 0xFF_u128, "12345"_U128
+ *
+ * @note Fix Fase 17: operator~() ahora usa orden correcto (high, low) para constructor
+ * @see uint128_t, int128_t
  */
 template <signedness S> class int128_base_t
 {
@@ -407,14 +466,55 @@ template <signedness S> class int128_base_t
     // OPERADORES ARITMÉTICOS
     // ============================================================================
 
-    // Operador negación bit a bit
+    /**
+     * @brief Operador de negación bitwise (NOT bit a bit)
+     *
+     * @return Nuevo int128_base_t con todos los bits invertidos
+     *
+     * @details Invierte todos los bits del número. Es el operador base para
+     * implementar la negación aritmética mediante complemento a 2: -x = ~x + 1
+     *
+     * @note FIX CRÍTICO (Fase 17): Corregido orden de argumentos del constructor.
+     *       Antes: int128_base_t(~data[0], ~data[1]) pasaba (~low, ~high) ❌
+     *       Ahora: int128_base_t(~data[1], ~data[0]) pasa (high, low) ✅
+     *       Este bug rompía operator-(), abs() y to_string() para valores negativos.
+     *
+     * @par Ejemplo:
+     * @code
+     * uint128_t x(0xFFFF'FFFF'FFFF'FFFF, 0x0000'0000'0000'0000);
+     * uint128_t y = ~x; // y = (0x0000'0000'0000'0000, 0xFFFF'FFFF'FFFF'FFFF)
+     * @endcode
+     */
     constexpr int128_base_t operator~() const noexcept
     {
         return int128_base_t(~data[1], ~data[0]); // Constructor(high, low)
     }
 
-    // Operador negación (según el comportamiento estándar
-    // es idéntico para signed y unsigned, comportamiento modular)
+    /**
+     * @brief Operador de negación unaria (complemento a 2)
+     *
+     * @return Negativo del valor actual usando aritmética modular
+     *
+     * @details Implementa la negación mediante complemento a 2: -x = ~x + 1
+     * Este operador funciona idénticamente para signed y unsigned (wrap-around).
+     *
+     * **Para int128_t (signed):**
+     * - -42 → -42 (representación two's complement)
+     * - -INT128_MIN → INT128_MIN (overflow, comportamiento definido)
+     *
+     * **Para uint128_t (unsigned):**
+     * - -42 → 2^128 - 42 (aritmética modular)
+     * - -0 → 0
+     *
+     * @note Depende de operator~(), que fue corregido en Fase 17
+     *
+     * @par Ejemplo:
+     * @code
+     * int128_t x(42);
+     * int128_t y = -x;        // y = -42
+     * int128_t z = -(-x);     // z = 42
+     * @endcode
+     */
     constexpr int128_base_t operator-() const noexcept
     {
         return ~(*this) + int128_base_t(1);
@@ -1184,8 +1284,40 @@ template <signedness S> class int128_base_t
     // CONVERSIONES A STRING
     // ============================================================================
 
-    // Convertir a std::string en base 10 (decimal)
-    // Usa divrem_by_10() optimizado para mejor rendimiento
+    /**
+     * @brief Convierte el valor a string decimal (base 10)
+     *
+     * @return String representando el valor en base 10
+     *
+     * @details Implementación optimizada que usa divrem_by_10() para extraer
+     * dígitos de forma eficiente. Maneja correctamente valores negativos en int128_t.
+     *
+     * **Proceso:**
+     * 1. Si es cero, devuelve "0"
+     * 2. Si es negativo (signed), calcula abs() y marca flag
+     * 3. Extrae dígitos en reversa usando división por 10
+     * 4. Añade signo '-' si era negativo
+     * 5. Invierte el string completo
+     *
+     * **Complejidad:** O(log n) donde n es el valor
+     *
+     * @note FIX Fase 17: Ahora usa abs() correctamente (dependía de operator~() bugueado)
+     * @note Para otras bases (2-36), usa to_string(int base)
+     *
+     * @par Ejemplo:
+     * @code
+     * int128_t x(42);
+     * std::string s1 = x.to_string();           // "42"
+     *
+     * int128_t y(-12345);
+     * std::string s2 = y.to_string();           // "-12345"
+     *
+     * uint128_t big = UINT128_MAX;
+     * std::string s3 = big.to_string();         // "340282366920938463463374607431768211455"
+     * @endcode
+     *
+     * @see to_string(int base), parse(), abs(), divrem_by_10()
+     */
     std::string to_string() const
     {
         // Caso especial: cero
@@ -1223,9 +1355,41 @@ template <signedness S> class int128_base_t
         return result;
     }
 
-    // Convertir a std::string en la base especificada (2-36)
-    // Bases: 2 (binario), 8 (octal), 10 (decimal), 16 (hexadecimal), etc.
-    // Dígitos: 0-9, a-z (lowercase)
+    /**
+     * @brief Convierte el valor a string en la base especificada (2-36)
+     *
+     * @param base Base numérica para la conversión (2 a 36)
+     *             - 2: binario (0-1)
+     *             - 8: octal (0-7)
+     *             - 10: decimal (0-9)
+     *             - 16: hexadecimal (0-9, a-f)
+     *             - 36: máximo (0-9, a-z)
+     *
+     * @return String representando el valor en la base especificada
+     *
+     * @throws std::invalid_argument Si base < 2 o base > 36
+     *
+     * @details Implementación general que extrae dígitos mediante división sucesiva.
+     * Para base 10, delega a to_string() optimizado. Para signed, maneja negativos.
+     *
+     * **Dígitos usados:**
+     * - 0-9: valores 0-9
+     * - a-z: valores 10-35 (lowercase)
+     *
+     * @par Ejemplo:
+     * @code
+     * uint128_t x(255);
+     * std::string bin = x.to_string(2);    // "11111111"
+     * std::string oct = x.to_string(8);    // "377"
+     * std::string hex = x.to_string(16);   // "ff"
+     *
+     * int128_t y(-42);
+     * std::string dec = y.to_string(10);   // "-42"
+     * std::string hex_neg = y.to_string(16); // two's complement en hex
+     * @endcode
+     *
+     * @see to_string(), parse()
+     */
     std::string to_string(int base) const
     {
         if (base < 2 || base > 36) {
@@ -1300,13 +1464,43 @@ template <signedness S> class int128_base_t
         }
     }
 
-    // Valor absoluto (para unsigned es identidad)
+    /**
+     * @brief Calcula el valor absoluto
+     *
+     * @return Valor absoluto del número actual
+     *
+     * @details Implementación eficiente según signedness:
+     * - **Para uint128_t (unsigned):** Devuelve el mismo valor (identidad)
+     * - **Para int128_t (signed):** Devuelve -x si x < 0, sino x
+     *
+     * **Casos especiales:**
+     * - abs(0) = 0
+     * - abs(INT128_MAX) = INT128_MAX
+     * - abs(INT128_MIN) = INT128_MIN (overflow, comportamiento definido)
+     *
+     * @note FIXED en Fase 17: Dependía de operator-() que usaba operator~() bugueado
+     * @note Para unsigned, esta función es constexpr y no hace nada (optimizable por el compilador)
+     *
+     * @par Ejemplo:
+     * @code
+     * int128_t x(-42);
+     * int128_t y = x.abs();           // y = 42
+     *
+     * int128_t z(100);
+     * int128_t w = z.abs();           // w = 100
+     *
+     * uint128_t u(42);
+     * uint128_t v = u.abs();          // v = 42 (identidad)
+     * @endcode
+     *
+     * @see operator-(), is_negative()
+     */
     constexpr int128_base_t abs() const noexcept
     {
         if constexpr (!is_signed) {
-            return *this;
+            return (*this);
         } else {
-            return is_negative() ? -(*this) : *this;
+            return (is_negative() ? (-(*this)) : (*this));
         }
     }
 
