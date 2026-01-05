@@ -301,16 +301,26 @@ constexpr int128_base_t operator-() const noexcept;
 ## Operadores Aritméticos
 
 ### Operadores con mismo tipo
+### Operadores con otro signedness
 
 ```cpp
-constexpr int128_base_t& operator+=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator+(const int128_base_t& other) const noexcept;
+template <signedness S2>
+constexpr int128_base_t& operator+=(const int128_base_t<S2>& other) noexcept;
 
-constexpr int128_base_t& operator-=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator-(const int128_base_t& other) const noexcept;
+template <signedness S2>
+constexpr int128_base_t operator+(const int128_base_t<S2>& other) const noexcept;
 
-constexpr int128_base_t& operator*=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator*(const int128_base_t& other) const noexcept;
+template <signedness S2>
+constexpr int128_base_t& operator-=(const int128_base_t<S2>& other) noexcept;
+
+template <signedness S2>
+constexpr int128_base_t operator-(const int128_base_t<S2>& other) const noexcept;
+
+template <signedness S2>
+constexpr int128_base_t& operator*=(const int128_base_t<S2>& other) noexcept;
+
+template <signedness S2>
+constexpr int128_base_t operator*(const int128_base_t<S2>& other) const noexcept;
 ```
 
 ---
@@ -339,40 +349,23 @@ constexpr int128_base_t operator*(T other) const noexcept;
 
 ---
 
-### Operadores con otro signedness
-
-```cpp
-template <signedness S2>
-constexpr int128_base_t& operator+=(const int128_base_t<S2>& other) noexcept;
-
-template <signedness S2>
-constexpr int128_base_t operator+(const int128_base_t<S2>& other) const noexcept;
-
-template <signedness S2>
-constexpr int128_base_t& operator-=(const int128_base_t<S2>& other) noexcept;
-
-template <signedness S2>
-constexpr int128_base_t operator-(const int128_base_t<S2>& other) const noexcept;
-
-template <signedness S2>
-constexpr int128_base_t& operator*=(const int128_base_t<S2>& other) noexcept;
-
-template <signedness S2>
-constexpr int128_base_t operator*(const int128_base_t<S2>& other) const noexcept;
-```
-
----
-
 ## Operadores de División/Módulo
 
-### Con mismo tipo
+### Con mismo tipo o distinto signedness template <signedness S2>
 
 ```cpp
-constexpr int128_base_t& operator/=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator/(const int128_base_t& other) const noexcept;
+```cpp
+template <signedness S2>
+constexpr int128_base_t& operator/=(const int128_base_t<S2>& other) noexcept;
 
-constexpr int128_base_t& operator%=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator%(const int128_base_t& other) const noexcept;
+template <signedness S2>
+constexpr int128_base_t operator/(const int128_base_t<S2>& other) const noexcept;
+
+template <signedness S2>
+constexpr int128_base_t& operator%=(const int128_base_t<S2>& other) noexcept;
+
+template <signedness S2>
+constexpr int128_base_t operator%(const int128_base_t<S2>& other) const noexcept;
 ```
 
 ---
@@ -397,20 +390,6 @@ constexpr int128_base_t operator%(T other) const noexcept;
 
 ### Con otro signedness
 
-```cpp
-template <signedness S2>
-constexpr int128_base_t& operator/=(const int128_base_t<S2>& other) noexcept;
-
-template <signedness S2>
-constexpr int128_base_t operator/(const int128_base_t<S2>& other) const noexcept;
-
-template <signedness S2>
-constexpr int128_base_t& operator%=(const int128_base_t<S2>& other) noexcept;
-
-template <signedness S2>
-constexpr int128_base_t operator%(const int128_base_t<S2>& other) const noexcept;
-```
-
 ---
 
 ## Operadores Bitwise
@@ -418,9 +397,6 @@ constexpr int128_base_t operator%(const int128_base_t<S2>& other) const noexcept
 ### AND (&)
 
 ```cpp
-constexpr int128_base_t& operator&=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator&(const int128_base_t& other) const noexcept;
-
 template <signedness S2>
 constexpr int128_base_t& operator&=(const int128_base_t<S2>& other) noexcept;
 
@@ -439,9 +415,6 @@ constexpr int128_base_t operator&(T other) const noexcept;
 ### OR (|)
 
 ```cpp
-constexpr int128_base_t& operator|=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator|(const int128_base_t& other) const noexcept;
-
 template <signedness S2>
 constexpr int128_base_t& operator|=(const int128_base_t<S2>& other) noexcept;
 
@@ -460,9 +433,6 @@ constexpr int128_base_t operator|(T other) const noexcept;
 ### XOR (^)
 
 ```cpp
-constexpr int128_base_t& operator^=(const int128_base_t& other) noexcept;
-constexpr int128_base_t operator^(const int128_base_t& other) const noexcept;
-
 template <signedness S2>
 constexpr int128_base_t& operator^=(const int128_base_t<S2>& other) noexcept;
 
@@ -483,9 +453,6 @@ constexpr int128_base_t operator^(T other) const noexcept;
 ### Left Shift (<<)
 
 ```cpp
-constexpr int128_base_t& operator<<=(int shift) noexcept;
-constexpr int128_base_t operator<<(int shift) const noexcept;
-
 template <integral_builtin T>
 constexpr int128_base_t& operator<<=(T shift) noexcept;
 

@@ -115,7 +115,20 @@ template <signedness S> class int128_base_t
     static constexpr int BITS = 128;
     static constexpr int BYTES = BITS / CHAR_BIT;
 
-    uint64_t data[2]; // data[0] = low, data[1] = high (little-endian)
+    // ============================================================================
+    // CONSTANTES DE TAMAÑO (Preparación para template<size_t N>)
+    // ============================================================================
+
+    /// Número de uint64_t en la representación (2 para 128 bits, será N en el futuro)
+    static constexpr size_t sz_N_Uint64_t = 2;
+
+    /// Índice del uint64_t más significativo (Most Significant ULongLong)
+    static constexpr size_t MSULL = sz_N_Uint64_t - 1; // = 1 actualmente
+
+    /// Índice del uint64_t menos significativo (Least Significant ULongLong)
+    static constexpr size_t LSULL = 0;
+
+    uint64_t data[sz_N_Uint64_t]; // data[LSULL] = low, data[MSULL] = high (little-endian)
 
   public:
     // ============================================================================
@@ -124,6 +137,7 @@ template <signedness S> class int128_base_t
 
     // Constructor por defecto
     constexpr int128_base_t() noexcept : data{0ull, 0ull} {}
+    // data[LSULL] = 0, data[MSULL] = 0
 
     // Constructor desde tipos integrales builtin
     template <integral_builtin T>
@@ -132,7 +146,7 @@ template <signedness S> class int128_base_t
         if constexpr (is_signed && std::is_signed_v<T>) {
             // Sign extension para signed types
             if (value < 0) {
-                data[1] = ~0ull;
+                data[MSULL] = ~0ull;
             }
         }
     }
@@ -142,6 +156,7 @@ template <signedness S> class int128_base_t
     explicit constexpr int128_base_t(T1 high, T2 low) noexcept
         : data{static_cast<uint64_t>(low), static_cast<uint64_t>(high)}
     {
+        // data[LSULL] = low, data[MSULL] = high
     }
 
     // Constructor desde tipos floating point (float, double, long double)
@@ -158,40 +173,40 @@ template <signedness S> class int128_base_t
             if (abs_value >= 18446744073709551616.0L) {
                 // Valor >= 2^64, necesitamos ambas partes
                 const T high_part = abs_value / 18446744073709551616.0L;
-                data[1] = static_cast<uint64_t>(high_part);
+                data[MSULL] = static_cast<uint64_t>(high_part);
                 const T low_part = abs_value - (high_part * 18446744073709551616.0L);
-                data[0] = static_cast<uint64_t>(low_part);
+                data[LSULL] = static_cast<uint64_t>(low_part);
             } else {
                 // Valor < 2^64, solo parte baja
-                data[0] = static_cast<uint64_t>(abs_value);
+                data[LSULL] = static_cast<uint64_t>(abs_value);
             }
 
             // Si era negativo, aplicar complemento a 2
             if (is_negative) {
                 // Negar usando complemento a 2: ~value + 1
-                data[0] = ~data[0];
-                data[1] = ~data[1];
+                data[LSULL] = ~data[LSULL];
+                data[MSULL] = ~data[MSULL];
                 uint64_t temp = 0;
-                const unsigned char carry = intrinsics::add_u64(data[0], 1ull, &temp);
-                data[0] = temp;
-                intrinsics::addcarry_u64(carry, data[1], 0ull, &temp);
-                data[1] = temp;
+                const unsigned char carry = intrinsics::add_u64(data[LSULL], 1ull, &temp);
+                data[LSULL] = temp;
+                intrinsics::addcarry_u64(carry, data[MSULL], 0ull, &temp);
+                data[MSULL] = temp;
             }
         } else {
             // Unsigned: solo manejar valores no negativos
             if (value < 0) {
                 // Valor negativo para unsigned → cero
-                data[0] = 0ull;
-                data[1] = 0ull;
+                data[LSULL] = 0ull;
+                data[MSULL] = 0ull;
             } else if (value >= 18446744073709551616.0L) {
                 // Valor >= 2^64
                 const T high_part = value / 18446744073709551616.0L;
-                data[1] = static_cast<uint64_t>(high_part);
+                data[MSULL] = static_cast<uint64_t>(high_part);
                 const T low_part = value - (high_part * 18446744073709551616.0L);
-                data[0] = static_cast<uint64_t>(low_part);
+                data[LSULL] = static_cast<uint64_t>(low_part);
             } else {
                 // Valor < 2^64
-                data[0] = static_cast<uint64_t>(value);
+                data[LSULL] = static_cast<uint64_t>(value);
             }
         }
     }
@@ -319,43 +334,44 @@ template <signedness S> class int128_base_t
     constexpr int128_base_t& operator=(const int128_base_t<S2>& other) noexcept
     {
         if (this != &other) {
-            data[0] = other.low();
-            data[1] = other.high();
+            data[LSULL] = other.low();
+            data[MSULL] = other.high();
         } // IDÉNTICO A UN MEMCPY
         return *this;
     }
     template <signedness S2> constexpr int128_base_t& operator=(int128_base_t<S2>&& other) noexcept
     {
         if (this != &other) {
-            data[0] = std::move(other.low());
-            data[1] = std::move(other.high());
+            data[LSULL] = std::move(other.low());
+            data[MSULL] = std::move(other.high());
         } // CEDE LA PROPIEDAD
         return *this;
     }
 
     template <integral_builtin T> constexpr int128_base_t& operator=(T other) noexcept
     {
-        data[0] = static_cast<uint64_t>(other);
+        data[LSULL] = static_cast<uint64_t>(other);
 
         if constexpr (std::is_signed_v<T>) {
             if (other < 0) {
-                data[1] = ~0ull; // Extensión de signo correcta para negativos
+                data[MSULL] = ~0ull; // Extensión de signo correcta para negativos
             } else {
-                data[1] = 0ull;
+                data[MSULL] = 0ull;
             }
         } else {
-            data[1] = 0ull;
+            data[MSULL] = 0ull;
         }
 
         return *this;
     }
 
     // Operador de asignación desde tipos floating point
-    template <floating_point_builtin T> constexpr int128_base_t& operator=(T value) noexcept
+    template <floating_point_builtin T> constexpr 
+    int128_base_t& operator=(T value) noexcept
     {
         // Conversión de floating point a entero de 128 bits
-        data[0] = 0ull;
-        data[1] = 0ull;
+        data[LSULL] = 0ull;
+        data[MSULL] = 0ull;
 
         if constexpr (is_signed) {
             const bool is_negative = (value < 0);
@@ -365,39 +381,39 @@ template <signedness S> class int128_base_t
             if (abs_value >= 18446744073709551616.0L) {
                 // Valor >= 2^64
                 const T high_part = abs_value / 18446744073709551616.0L;
-                data[1] = static_cast<uint64_t>(high_part);
+                data[MSULL] = static_cast<uint64_t>(high_part);
                 const T low_part = abs_value - (high_part * 18446744073709551616.0L);
-                data[0] = static_cast<uint64_t>(low_part);
+                data[LSULL] = static_cast<uint64_t>(low_part);
             } else {
                 // Valor < 2^64
-                data[0] = static_cast<uint64_t>(abs_value);
+                data[LSULL] = static_cast<uint64_t>(abs_value);
             }
 
             // Si era negativo, aplicar complemento a 2
             if (is_negative) {
-                data[0] = ~data[0];
-                data[1] = ~data[1];
+                data[LSULL] = ~data[LSULL];
+                data[MSULL] = ~data[MSULL];
                 uint64_t temp = 0;
-                const unsigned char carry = intrinsics::add_u64(data[0], 1ull, &temp);
-                data[0] = temp;
-                intrinsics::addcarry_u64(carry, data[1], 0ull, &temp);
-                data[1] = temp;
+                const unsigned char carry = intrinsics::add_u64(data[LSULL], 1ull, &temp);
+                data[LSULL] = temp;
+                intrinsics::addcarry_u64(carry, data[MSULL], 0ull, &temp);
+                data[MSULL] = temp;
             }
         } else {
             // Unsigned: solo manejar valores no negativos
             if (value < 0) {
                 // Valor negativo para unsigned → cero
-                data[0] = 0ull;
-                data[1] = 0ull;
+                data[LSULL] = 0ull;
+                data[MSULL] = 0ull;
             } else if (value >= 18446744073709551616.0L) {
                 // Valor >= 2^64
                 const T high_part = value / 18446744073709551616.0L;
-                data[1] = static_cast<uint64_t>(high_part);
+                data[MSULL] = static_cast<uint64_t>(high_part);
                 const T low_part = value - (high_part * 18446744073709551616.0L);
-                data[0] = static_cast<uint64_t>(low_part);
+                data[LSULL] = static_cast<uint64_t>(low_part);
             } else {
                 // Valor < 2^64
-                data[0] = static_cast<uint64_t>(value);
+                data[LSULL] = static_cast<uint64_t>(value);
             }
         }
 
@@ -445,21 +461,21 @@ template <signedness S> class int128_base_t
 
     constexpr uint64_t high() const noexcept
     {
-        return data[1];
+        return data[MSULL];
     }
     constexpr uint64_t low() const noexcept
     {
-        return data[0];
+        return data[LSULL];
     }
 
     template <typename T> constexpr void set_high(T value) noexcept
     {
-        data[1] = static_cast<uint64_t>(value);
+        data[MSULL] = static_cast<uint64_t>(value);
     }
 
     template <typename T> constexpr void set_low(T value) noexcept
     {
-        data[0] = static_cast<uint64_t>(value);
+        data[LSULL] = static_cast<uint64_t>(value);
     }
 
     // ============================================================================
@@ -487,7 +503,8 @@ template <signedness S> class int128_base_t
      */
     constexpr int128_base_t operator~() const noexcept
     {
-        return int128_base_t(~data[1], ~data[0]); // Constructor(high, low)
+        // Constructor(high, low) - orden correcto con constantes
+        return int128_base_t(~data[MSULL], ~data[LSULL]);
     }
 
     /**
@@ -525,24 +542,28 @@ template <signedness S> class int128_base_t
     // Operador resta: templates S2 manejan todos los casos (incluyendo S2==S)
 
     // Sobrecargas para tipos builtin
-    template <integral_builtin T> constexpr int128_base_t& operator+=(T other) noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t& operator+=(T other) noexcept
     {
         return *this += int128_base_t(other);
     }
 
-    template <integral_builtin T> constexpr int128_base_t operator+(T other) const noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t operator+(T other) const noexcept
     {
         int128_base_t result(*this);
         result += other;
         return result;
     }
 
-    template <integral_builtin T> constexpr int128_base_t& operator-=(T other) noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t& operator-=(T other) noexcept
     {
         return *this -= int128_base_t(other);
     }
 
-    template <integral_builtin T> constexpr int128_base_t operator-(T other) const noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t operator-(T other) const noexcept
     {
         int128_base_t result(*this);
         result -= other;
@@ -550,40 +571,40 @@ template <signedness S> class int128_base_t
     }
 
     // Sobrecargas para signedness diferente
-    template <signedness S2>
-    constexpr int128_base_t& operator+=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr 
+    int128_base_t& operator+=(const int128_base_t<S2>& other) noexcept
     {
         uint64_t temp_low = 0;
-        const unsigned char carry = intrinsics::add_u64(data[0], other.low(), &temp_low);
-        data[0] = temp_low;
+        const unsigned char carry = intrinsics::add_u64(data[LSULL], other.low(), &temp_low);
+        data[LSULL] = temp_low;
         uint64_t temp_high = 0;
-        intrinsics::addcarry_u64(carry, data[1], other.high(), &temp_high);
-        data[1] = temp_high;
+        intrinsics::addcarry_u64(carry, data[MSULL], other.high(), &temp_high);
+        data[MSULL] = temp_high;
         return *this;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t operator+(const int128_base_t<S2>& other) const noexcept
+    template <signedness S2> constexpr 
+    int128_base_t operator+(const int128_base_t<S2>& other) const noexcept
     {
         int128_base_t result(*this);
         result += other;
         return result;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t& operator-=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr 
+    int128_base_t& operator-=(const int128_base_t<S2>& other) noexcept
     {
         uint64_t temp_low = 0;
-        const unsigned char borrow = intrinsics::sub_u64(data[0], other.low(), &temp_low);
-        data[0] = temp_low;
+        const unsigned char borrow = intrinsics::sub_u64(data[LSULL], other.low(), &temp_low);
+        data[LSULL] = temp_low;
         uint64_t temp_high = 0;
-        intrinsics::subborrow_u64(borrow, data[1], other.high(), &temp_high);
-        data[1] = temp_high;
+        intrinsics::subborrow_u64(borrow, data[MSULL], other.high(), &temp_high);
+        data[MSULL] = temp_high;
         return *this;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t operator-(const int128_base_t<S2>& other) const noexcept
+    template <signedness S2> constexpr
+    int128_base_t operator-(const int128_base_t<S2>& other) const noexcept
     {
         int128_base_t result(*this);
         result -= other;
@@ -593,14 +614,15 @@ template <signedness S> class int128_base_t
     // Multiplicación: templates S2 manejan todos los casos (incluyendo S2==S)
 
     // Operador multiplicación (FASE 0.5 optimizado)
-    template <integral_builtin T> constexpr int128_base_t& operator*=(T other) noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t& operator*=(T other) noexcept
     {
         const uint64_t b = static_cast<uint64_t>(other);
 
         // Fast path: valor cabe en 64 bits
-        if (data[1] == 0) {
-            const uint64_t low_part = intrinsics::umul128(data[0], b, &data[1]);
-            data[0] = low_part;
+        if (data[MSULL] == 0) {
+            const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &data[MSULL]);
+            data[LSULL] = low_part;
             // Nota: No se necesita corrección de signo.
             // La multiplicación en complemento a 2 funciona automáticamente.
             return *this;
@@ -608,19 +630,20 @@ template <signedness S> class int128_base_t
 
         // General case: multiplicación 128×64
         uint64_t high_part;
-        const uint64_t low_part = intrinsics::umul128(data[0], b, &high_part);
-        const uint64_t cross_product = data[1] * b;
+        const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &high_part);
+        const uint64_t cross_product = data[MSULL] * b;
 
         // Nota: No se necesita corrección de signo.
         // La multiplicación en complemento a 2 funciona automáticamente:
         // signed_multiply(a, b) ≡ unsigned_multiply(a, b) (mod 2^128)
 
-        data[0] = low_part;
-        data[1] = high_part + cross_product;
+        data[LSULL] = low_part;
+        data[MSULL] = high_part + cross_product;
         return *this;
     }
 
-    template <integral_builtin T> constexpr int128_base_t operator*(T other) const noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t operator*(T other) const noexcept
     {
         int128_base_t result(*this);
         result *= other;
@@ -628,8 +651,8 @@ template <signedness S> class int128_base_t
     }
 
     // Sobrecarga para signedness diferente
-    template <signedness S2>
-    constexpr int128_base_t& operator*=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr
+    int128_base_t& operator*=(const int128_base_t<S2>& other) noexcept
     {
         // Convertimos a nuestro tipo y usamos el operador existente
         return *this *= int128_base_t(other);
@@ -675,24 +698,28 @@ template <signedness S> class int128_base_t
     }
 
     // Sobrecargas para tipos builtin
-    template <integral_builtin T> constexpr int128_base_t& operator/=(T other) noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t& operator/=(T other) noexcept
     {
         return *this /= int128_base_t(other);
     }
 
-    template <integral_builtin T> constexpr int128_base_t operator/(T other) const noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t operator/(T other) const noexcept
     {
         int128_base_t result(*this);
         result /= other;
         return result;
     }
 
-    template <integral_builtin T> constexpr int128_base_t& operator%=(T other) noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t& operator%=(T other) noexcept
     {
         return *this %= int128_base_t(other);
     }
 
-    template <integral_builtin T> constexpr int128_base_t operator%(T other) const noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t operator%(T other) const noexcept
     {
         int128_base_t result(*this);
         result %= other;
@@ -700,28 +727,28 @@ template <signedness S> class int128_base_t
     }
 
     // Sobrecargas para signedness diferente
-    template <signedness S2>
-    constexpr int128_base_t& operator/=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr
+    int128_base_t& operator/=(const int128_base_t<S2>& other) noexcept
     {
         return *this /= int128_base_t(other);
     }
 
-    template <signedness S2>
-    constexpr int128_base_t operator/(const int128_base_t<S2>& other) const noexcept
+    template <signedness S2> constexpr
+    int128_base_t operator/(const int128_base_t<S2>& other) const noexcept
     {
         int128_base_t result(*this);
         result /= other;
         return result;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t& operator%=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr
+    int128_base_t& operator%=(const int128_base_t<S2>& other) noexcept
     {
         return *this %= int128_base_t(other);
     }
 
-    template <signedness S2>
-    constexpr int128_base_t operator%(const int128_base_t<S2>& other) const noexcept
+    template <signedness S2> constexpr
+    int128_base_t operator%(const int128_base_t<S2>& other) const noexcept
     {
         int128_base_t result(*this);
         result %= other;
@@ -739,8 +766,8 @@ template <signedness S> class int128_base_t
         return *this;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t& operator&=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr
+    int128_base_t& operator&=(const int128_base_t<S2>& other) noexcept
     {
         data[0] &= other.low();
         data[1] &= other.high();
@@ -754,8 +781,8 @@ template <signedness S> class int128_base_t
         return result;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t operator&(const int128_base_t<S2>& other) const noexcept
+    template <signedness S2> constexpr
+    int128_base_t operator&(const int128_base_t<S2>& other) const noexcept
     {
         int128_base_t result(*this);
         result &= other;
@@ -763,12 +790,14 @@ template <signedness S> class int128_base_t
     }
 
     // Operadores bitwise AND con integral_builtin
-    template <integral_builtin T> constexpr int128_base_t& operator&=(T other) noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t& operator&=(T other) noexcept
     {
         return *this &= int128_base_t(other);
     }
 
-    template <integral_builtin T> constexpr int128_base_t operator&(T other) const noexcept
+    template <integral_builtin T> constexpr 
+    int128_base_t operator&(T other) const noexcept
     {
         return *this & int128_base_t(other);
     }
@@ -780,8 +809,8 @@ template <signedness S> class int128_base_t
         return *this;
     }
 
-    template <signedness S2>
-    constexpr int128_base_t& operator|=(const int128_base_t<S2>& other) noexcept
+    template <signedness S2> constexpr
+    int128_base_t& operator|=(const int128_base_t<S2>& other) noexcept
     {
         data[0] |= other.low();
         data[1] |= other.high();
@@ -1185,7 +1214,8 @@ template <signedness S> class int128_base_t
         return (data[0] != 0) || (data[1] != 0);
     }
 
-    template <arithmetic_builtin T> explicit constexpr operator T() const noexcept
+    template <arithmetic_builtin T> explicit constexpr 
+    operator T() const noexcept
     {
         if constexpr (floating_point_builtin<T>) {
             // Si es int128_t y es negativo, necesitamos manejar correctamente
