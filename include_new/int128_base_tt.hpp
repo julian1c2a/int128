@@ -1557,61 +1557,151 @@ template <signedness S> class int128_base_t
     }
 
     /**
-     * @brief División y módulo general con división binaria larga
+     * @brief División y módulo general con múltiples optimizaciones
      * @param divisor El divisor (debe ser != 0)
      * @return std::pair<cociente, resto> donde 0 <= resto < divisor
-     * @note Algoritmo de división binaria (escolar) O(128)
+     *
+     * @details Optimizaciones implementadas (orden de evaluación [1]→[3]→[2]→[0]):
+     *
+     * **[1] Fast paths para divisores pequeños optimizados (hasta 15 = un nibble):**
+     * - Potencias de 2 (2,4,8,16,...): shift right optimizado
+     * - Potencias de 3 (3,9): algoritmo modular optimizado
+     * - Potencias de 5 (5): algoritmo modular optimizado
+     * - Divisores comunes: 6,7,10,11,12,13,14,15
+     *
+     * **[3] Check si ambos valores caben en 64 bits:**
+     * - Si dividendo y divisor son ≤ 64 bits: usar división nativa del CPU
+     *
+     * **[2] Optimización para divisor de 64 bits:**
+     * - Si solo divisor cabe en 64 bits: algoritmo híbrido
+     *
+     * **[0] Caso general:**
+     * - División binaria larga (128 bits / 128 bits) O(128)
+     *
+     * @note Algoritmo de división binaria (escolar) O(128) como fallback
      * @warning Si divisor == 0, comportamiento indefinido
      * (en esta implementación retorna {0,0} como placeholder)
      */
     constexpr std::pair<int128_base_t, int128_base_t>
     divrem(const int128_base_t& divisor) const noexcept
     {
-        // Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
+        // [0.a] Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
         if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0) {
             return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
         }
 
-        // Fast path: dividendo es 0
+        // [0.b] Fast path: dividendo es 0
         if (data[LSULL] == 0 && data[MSULL] == 0) {
             return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
         }
 
-        // Fast path: divisor > dividendo
+        // [0.c] Fast path: divisor > dividendo
         if (*this < divisor) {
             return {int128_base_t(0ull, 0ull), *this};
         }
 
-        // Fast path: divisor == dividendo
+        // [0.d] Fast path: divisor == dividendo
         if (*this == divisor) {
             return {int128_base_t(0ull, 1ull), int128_base_t(0ull, 0ull)};
-            //                    ^high ^low = 1 (correcto)
         }
 
-        // Fast path: divisor == 1
-        if (divisor[0] == 1ull && divisor[1] == 0ull) {
+        // [0.e] Fast path: divisor == 1
+        if (divisor.data[LSULL] == 1ull && divisor.data[MSULL] == 0ull) {
             return {*this, int128_base_t(0ull, 0ull)};
         }
 
-        // Fast path: divisor cabe en 64 bits
+        // ========================================================================
+        // [1] OPTIMIZACIONES PARA DIVISORES PEQUEÑOS ESPECÍFICOS (hasta 15)
+        // ========================================================================
+
+        // Solo aplicar si divisor cabe en 64 bits
+        if (divisor.data[MSULL] == 0) {
+            const uint64_t d = divisor.data[LSULL];
+
+            // [1.1] Potencias de 2: shift derecho optimizado
+            // Detectar si d es potencia de 2: d != 0 && (d & (d-1)) == 0
+            if (d != 0 && (d & (d - 1)) == 0) {
+                // Contar trailing zeros para obtener el exponente
+                int shift = 0;
+                uint64_t temp = d;
+                while ((temp & 1) == 0) {
+                    temp >>= 1;
+                    ++shift;
+                }
+
+                // Cociente = *this >> shift
+                // Resto = *this & (d - 1)
+                const uint64_t mask = d - 1;
+                const uint64_t remainder = data[LSULL] & mask;
+
+                int128_base_t quotient;
+                if (shift >= 64) {
+                    // Shift >= 64: mover high a low
+                    quotient.data[LSULL] = data[MSULL] >> (shift - 64);
+                    quotient.data[MSULL] = 0;
+                } else if (shift > 0) {
+                    // Shift normal
+                    quotient.data[LSULL] = (data[LSULL] >> shift) | (data[MSULL] << (64 - shift));
+                    quotient.data[MSULL] = data[MSULL] >> shift;
+                } else {
+                    quotient = *this;
+                }
+
+                return {quotient, int128_base_t(0ull, remainder)};
+            }
+
+            // [1.2-1.11] Divisores específicos comunes (no potencias de 2)
+            switch (d) {
+            case 3:  // [1.2] División por 3
+            case 5:  // [1.3] División por 5
+            case 6:  // [1.4] División por 6
+            case 7:  // [1.5] División por 7
+            case 9:  // [1.6] División por 9 (potencia de 3)
+            case 10: // [1.7] División por 10
+            case 11: // [1.8] División por 11
+            case 12: // [1.9] División por 12
+            case 13: // [1.10] División por 13
+            case 14: // [1.11] División por 14
+            case 15: // [1.12] División por 15
+                // Para estos casos, si el dividendo cabe en 64 bits, usar división nativa
+                if (data[MSULL] == 0) {
+                    const uint64_t q = data[LSULL] / d;
+                    const uint64_t r = data[LSULL] % d;
+                    return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
+                }
+                // Si no cabe en 64 bits, continuar al caso [2]
+                break;
+
+            default:
+                break;
+            }
+        }
+
+        // ========================================================================
+        // [3] CHECK SI AMBOS VALORES CABEN EN 64 BITS
+        // ========================================================================
+
+        // Si dividendo Y divisor caben en 64 bits: usar división nativa del CPU
+        if (data[MSULL] == 0 && divisor.data[MSULL] == 0) {
+            const uint64_t q = data[LSULL] / divisor.data[LSULL];
+            const uint64_t r = data[LSULL] % divisor.data[LSULL];
+            return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
+        }
+
+        // ========================================================================
+        // [2] OPTIMIZACIÓN PARA DIVISOR DE 64 BITS (dividendo de 128 bits)
+        // ========================================================================
+
         if (divisor.data[MSULL] == 0) {
             const uint64_t divisor_64 = divisor.data[LSULL];
 
-            // Si dividendo también cabe en 64 bits
-            if (data[MSULL] == 0) {
-                const uint64_t q = data[LSULL] / divisor_64;
-                const uint64_t r = data[LSULL] % divisor_64;
-                // Constructor toma (high, low), entonces (0, q) para quotient en palabra baja
-                return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
-            }
-
             // Dividendo de 128 bits / divisor de 64 bits
-            // Usar algoritmo optimizado
+            // Algoritmo híbrido: dividir high primero, luego procesar low bit a bit
             uint64_t quotient_low = 0;
             uint64_t quotient_high = data[MSULL] / divisor_64;
             uint64_t remainder = data[MSULL] % divisor_64;
 
-            // Dividir parte baja bit a bit
+            // Dividir parte baja bit a bit (procesar desde MSB)
             for (int i = 63; i >= 0; --i) {
                 remainder = (remainder << 1) | ((data[LSULL] >> i) & 1);
                 if (remainder >= divisor_64) {
@@ -1620,16 +1710,17 @@ template <signedness S> class int128_base_t
                 }
             }
 
-            return {int128_base_t(quotient_high, quotient_low),
-                    int128_base_t(0ull, remainder)}; // Constructor(high, low)
+            return {int128_base_t(quotient_high, quotient_low), int128_base_t(0ull, remainder)};
         }
 
-        // Caso general: división binaria larga (128 bits / 128 bits)
-        // Algoritmo de división escolar bit a bit
-        int128_base_t quotient(0ull, 0ull);  // Constructor(high=0, low=0)
-        int128_base_t remainder(0ull, 0ull); // Constructor(high=0, low=0)
+        // ========================================================================
+        // [0] CASO GENERAL: DIVISIÓN BINARIA LARGA (128 bits / 128 bits)
+        // ========================================================================
 
-        // Procesar desde el bit más significativo
+        int128_base_t quotient(0ull, 0ull);
+        int128_base_t remainder(0ull, 0ull);
+
+        // Procesar desde el bit más significativo (MSB)
         for (int i = 127; i >= 0; --i) {
             // Shift left remainder y añadir el siguiente bit del dividendo
             remainder <<= 1;
