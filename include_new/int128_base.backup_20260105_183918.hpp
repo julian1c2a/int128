@@ -85,7 +85,7 @@ enum class parse_error : uint8_t {
  *
  * @details Esta clase implementa todas las operaciones aritméticas, bitwise y de
  * comparación para enteros de 128 bits, utilizando internamente dos uint64_t en
- * formato little-endian (data[LSULL]=low, data[MSULL]=high).
+ * formato little-endian (data[0]=low, data[1]=high).
  *
  * **Características de diseño:**
  * - Representación: Two's complement para signed, binario puro para unsigned
@@ -491,8 +491,8 @@ template <signedness S> class int128_base_t
      * implementar la negación aritmética mediante complemento a 2: -x = ~x + 1
      *
      * @note FIX CRÍTICO (Fase 17): Corregido orden de argumentos del constructor.
-     *       Antes: int128_base_t(~data[LSULL], ~data[MSULL]) pasaba (~low, ~high) ❌
-     *       Ahora: int128_base_t(~data[MSULL], ~data[LSULL]) pasa (high, low) ✅
+     *       Antes: int128_base_t(~data[0], ~data[1]) pasaba (~low, ~high) ❌
+     *       Ahora: int128_base_t(~data[1], ~data[0]) pasa (high, low) ✅
      *       Este bug rompía operator-(), abs() y to_string() para valores negativos.
      *
      * @par Ejemplo:
@@ -761,16 +761,16 @@ template <signedness S> class int128_base_t
 
     constexpr int128_base_t& operator&=(const int128_base_t& other) noexcept
     {
-        data[LSULL] &= other.data[LSULL];
-        data[MSULL] &= other.data[MSULL];
+        data[0] &= other.data[0];
+        data[1] &= other.data[1];
         return *this;
     }
 
     template <signedness S2> constexpr
     int128_base_t& operator&=(const int128_base_t<S2>& other) noexcept
     {
-        data[LSULL] &= other.low();
-        data[MSULL] &= other.high();
+        data[0] &= other.low();
+        data[1] &= other.high();
         return *this;
     }
 
@@ -804,16 +804,16 @@ template <signedness S> class int128_base_t
 
     constexpr int128_base_t& operator|=(const int128_base_t& other) noexcept
     {
-        data[LSULL] |= other.data[LSULL];
-        data[MSULL] |= other.data[MSULL];
+        data[0] |= other.data[0];
+        data[1] |= other.data[1];
         return *this;
     }
 
     template <signedness S2> constexpr
     int128_base_t& operator|=(const int128_base_t<S2>& other) noexcept
     {
-        data[LSULL] |= other.low();
-        data[MSULL] |= other.high();
+        data[0] |= other.low();
+        data[1] |= other.high();
         return *this;
     }
 
@@ -845,16 +845,16 @@ template <signedness S> class int128_base_t
 
     constexpr int128_base_t& operator^=(const int128_base_t& other) noexcept
     {
-        data[LSULL] ^= other.data[LSULL];
-        data[MSULL] ^= other.data[MSULL];
+        data[0] ^= other.data[0];
+        data[1] ^= other.data[1];
         return *this;
     }
 
     template <signedness S2>
     constexpr int128_base_t& operator^=(const int128_base_t<S2>& other) noexcept
     {
-        data[LSULL] ^= other.low();
-        data[MSULL] ^= other.high();
+        data[0] ^= other.low();
+        data[1] ^= other.high();
         return *this;
     }
 
@@ -891,20 +891,20 @@ template <signedness S> class int128_base_t
             return *this;
         }
         if (shift >= 128) {
-            data[LSULL] = 0;
-            data[MSULL] = 0;
+            data[0] = 0;
+            data[1] = 0;
             return *this;
         }
 
         if (shift >= 64) {
-            const uint64_t new_high = data[LSULL] << (shift - 64);
-            data[LSULL] = 0;
-            data[MSULL] = new_high;
+            const uint64_t new_high = data[0] << (shift - 64);
+            data[0] = 0;
+            data[1] = new_high;
         } else {
-            const uint64_t new_high = (data[MSULL] << shift) | (data[LSULL] >> (64 - shift));
-            const uint64_t new_low = data[LSULL] << shift;
-            data[LSULL] = new_low;
-            data[MSULL] = new_high;
+            const uint64_t new_high = (data[1] << shift) | (data[0] >> (64 - shift));
+            const uint64_t new_low = data[0] << shift;
+            data[0] = new_low;
+            data[1] = new_high;
         }
 
         return *this;
@@ -937,13 +937,13 @@ template <signedness S> class int128_base_t
         if (shift >= 128) {
             if constexpr (is_signed) {
                 // Arithmetic shift: propagar signo
-                const bool is_negative = (static_cast<int64_t>(data[MSULL]) < 0);
-                data[LSULL] = is_negative ? ~0ull : 0ull;
-                data[MSULL] = is_negative ? ~0ull : 0ull;
+                const bool is_negative = (static_cast<int64_t>(data[1]) < 0);
+                data[0] = is_negative ? ~0ull : 0ull;
+                data[1] = is_negative ? ~0ull : 0ull;
             } else {
                 // Logical shift: rellenar con ceros
-                data[LSULL] = 0;
-                data[MSULL] = 0;
+                data[0] = 0;
+                data[1] = 0;
             }
             return *this;
         }
@@ -952,28 +952,28 @@ template <signedness S> class int128_base_t
             if constexpr (is_signed) {
                 // Arithmetic shift
                 const uint64_t new_low =
-                    static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> (shift - 64));
+                    static_cast<uint64_t>(static_cast<int64_t>(data[1]) >> (shift - 64));
                 const uint64_t new_high =
-                    static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> 63);
-                data[LSULL] = new_low;
-                data[MSULL] = new_high;
+                    static_cast<uint64_t>(static_cast<int64_t>(data[1]) >> 63);
+                data[0] = new_low;
+                data[1] = new_high;
             } else {
                 // Logical shift
-                const uint64_t new_low = data[MSULL] >> (shift - 64);
-                data[LSULL] = new_low;
-                data[MSULL] = 0;
+                const uint64_t new_low = data[1] >> (shift - 64);
+                data[0] = new_low;
+                data[1] = 0;
             }
         } else {
-            const uint64_t new_low = (data[LSULL] >> shift) | (data[MSULL] << (64 - shift));
+            const uint64_t new_low = (data[0] >> shift) | (data[1] << (64 - shift));
             if constexpr (is_signed) {
                 const uint64_t new_high =
-                    static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> shift);
-                data[LSULL] = new_low;
-                data[MSULL] = new_high;
+                    static_cast<uint64_t>(static_cast<int64_t>(data[1]) >> shift);
+                data[0] = new_low;
+                data[1] = new_high;
             } else {
-                const uint64_t new_high = data[MSULL] >> shift;
-                data[LSULL] = new_low;
-                data[MSULL] = new_high;
+                const uint64_t new_high = data[1] >> shift;
+                data[0] = new_low;
+                data[1] = new_high;
             }
         }
 
@@ -1004,7 +1004,7 @@ template <signedness S> class int128_base_t
 
     constexpr bool operator==(const int128_base_t& other) const noexcept
     {
-        return (data[LSULL] == other.data[LSULL]) && (data[MSULL] == other.data[MSULL]);
+        return (data[0] == other.data[0]) && (data[1] == other.data[1]);
     }
 
     constexpr bool operator!=(const int128_base_t& other) const noexcept
@@ -1016,18 +1016,18 @@ template <signedness S> class int128_base_t
     {
         if constexpr (is_signed) {
             // Comparación signed
-            const int64_t this_high = static_cast<int64_t>(data[MSULL]);
-            const int64_t other_high = static_cast<int64_t>(other.data[MSULL]);
+            const int64_t this_high = static_cast<int64_t>(data[1]);
+            const int64_t other_high = static_cast<int64_t>(other.data[1]);
             if (this_high != other_high) {
                 return this_high < other_high;
             }
-            return data[LSULL] < other.data[LSULL];
+            return data[0] < other.data[0];
         } else {
             // Comparación unsigned
-            if (data[MSULL] != other.data[MSULL]) {
-                return data[MSULL] < other.data[MSULL];
+            if (data[1] != other.data[1]) {
+                return data[1] < other.data[1];
             }
-            return data[LSULL] < other.data[LSULL];
+            return data[0] < other.data[0];
         }
     }
 
@@ -1050,10 +1050,10 @@ template <signedness S> class int128_base_t
     {
         // Convertir rhs a int128_base_t con sign extension apropiada
         int128_base_t rhs_converted{};
-        rhs_converted.data[LSULL] = static_cast<uint64_t>(rhs);
+        rhs_converted.data[0] = static_cast<uint64_t>(rhs);
         if constexpr (std::is_signed_v<T>) {
             if (rhs < 0) {
-                rhs_converted.data[MSULL] = ~0ull;
+                rhs_converted.data[1] = ~0ull;
             }
         }
         return lhs == rhs_converted;
@@ -1081,10 +1081,10 @@ template <signedness S> class int128_base_t
     friend constexpr bool operator<(const int128_base_t& lhs, T rhs) noexcept
     {
         int128_base_t rhs_converted{};
-        rhs_converted.data[LSULL] = static_cast<uint64_t>(rhs);
+        rhs_converted.data[0] = static_cast<uint64_t>(rhs);
         if constexpr (std::is_signed_v<T>) {
             if (rhs < 0) {
-                rhs_converted.data[MSULL] = ~0ull;
+                rhs_converted.data[1] = ~0ull;
             }
         }
         return lhs < rhs_converted;
@@ -1094,10 +1094,10 @@ template <signedness S> class int128_base_t
     friend constexpr bool operator<(T lhs, const int128_base_t& rhs) noexcept
     {
         int128_base_t lhs_converted{};
-        lhs_converted.data[LSULL] = static_cast<uint64_t>(lhs);
+        lhs_converted.data[0] = static_cast<uint64_t>(lhs);
         if constexpr (std::is_signed_v<T>) {
             if (lhs < 0) {
-                lhs_converted.data[MSULL] = ~0ull;
+                lhs_converted.data[1] = ~0ull;
             }
         }
         return lhs_converted < rhs;
@@ -1273,7 +1273,7 @@ template <signedness S> class int128_base_t
 
     explicit constexpr operator bool() const noexcept
     {
-        return (data[LSULL] != 0) || (data[MSULL] != 0);
+        return (data[0] != 0) || (data[1] != 0);
     }
 
     template <arithmetic_builtin T> explicit constexpr 
@@ -1284,8 +1284,8 @@ template <signedness S> class int128_base_t
             if constexpr (is_signed) {
                 if (is_negative()) {
                     // Calcular el valor positivo (complemento a 2 invertido)
-                    uint64_t temp_low = ~data[LSULL];
-                    uint64_t temp_high = ~data[MSULL];
+                    uint64_t temp_low = ~data[0];
+                    uint64_t temp_high = ~data[1];
 
                     // Sumar 1 para obtener el valor absoluto
                     uint64_t abs_low = temp_low + 1ull;
@@ -1300,9 +1300,9 @@ template <signedness S> class int128_base_t
                     return -abs_value;
                 }
             }
-            return static_cast<T>(data[MSULL]) * 18446744073709551616.0L + static_cast<T>(data[LSULL]);
+            return static_cast<T>(data[1]) * 18446744073709551616.0L + static_cast<T>(data[0]);
         } else {
-            return static_cast<T>(data[LSULL]);
+            return static_cast<T>(data[0]);
         }
     }
 
@@ -1347,7 +1347,7 @@ template <signedness S> class int128_base_t
     std::string to_string() const
     {
         // Caso especial: cero
-        if (data[LSULL] == 0 && data[MSULL] == 0) {
+        if (data[0] == 0 && data[1] == 0) {
             return "0";
         }
 
@@ -1365,7 +1365,7 @@ template <signedness S> class int128_base_t
         }
 
         // Extraer dígitos usando divrem_by_10()
-        while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0) {
+        while (temp.data[0] != 0 || temp.data[1] != 0) {
             auto [quotient, remainder] = temp.divrem_by_10();
             result += static_cast<char>('0' + remainder); // Construir en reversa
             temp = quotient;
@@ -1428,7 +1428,7 @@ template <signedness S> class int128_base_t
         }
 
         // Caso especial: cero
-        if (data[LSULL] == 0 && data[MSULL] == 0) {
+        if (data[0] == 0 && data[1] == 0) {
             return "0";
         }
 
@@ -1450,9 +1450,9 @@ template <signedness S> class int128_base_t
 
         // Extraer dígitos usando divrem()
         int128_base_t base_val(0ull, static_cast<uint64_t>(base));
-        while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0) {
+        while (temp.data[0] != 0 || temp.data[1] != 0) {
             auto [quotient, remainder] = temp.divrem(base_val);
-            result += digits[remainder.data[LSULL]]; // Construir en reversa
+            result += digits[remainder.data[0]]; // Construir en reversa
             temp = quotient;
         }
 
@@ -1472,10 +1472,10 @@ template <signedness S> class int128_base_t
 
     constexpr int leading_zeros() const noexcept
     {
-        if (data[MSULL] != 0) {
-            return intrinsics::clz64(data[MSULL]);
-        } else if (data[LSULL] != 0) {
-            return 64 + intrinsics::clz64(data[LSULL]);
+        if (data[1] != 0) {
+            return intrinsics::clz64(data[1]);
+        } else if (data[0] != 0) {
+            return 64 + intrinsics::clz64(data[0]);
         } else {
             return 128;
         }
@@ -1486,7 +1486,7 @@ template <signedness S> class int128_base_t
         if constexpr (!is_signed) {
             return false;
         } else {
-            return static_cast<int64_t>(data[MSULL]) < 0;
+            return static_cast<int64_t>(data[1]) < 0;
         }
     }
 
@@ -1541,8 +1541,8 @@ template <signedness S> class int128_base_t
      */
     constexpr std::pair<int128_base_t, uint64_t> divrem_by_10() const noexcept
     {
-        const uint64_t low = data[LSULL];
-        const uint64_t high = data[MSULL];
+        const uint64_t low = data[0];
+        const uint64_t high = data[1];
 
         // Fast path: valor cabe en 64 bits
         if (high == 0) {
@@ -1581,12 +1581,12 @@ template <signedness S> class int128_base_t
     divrem(const int128_base_t& divisor) const noexcept
     {
         // Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
-        if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0) {
+        if (divisor.data[0] == 0 && divisor.data[1] == 0) {
             return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
         }
 
         // Fast path: dividendo es 0
-        if (data[LSULL] == 0 && data[MSULL] == 0) {
+        if (data[0] == 0 && data[1] == 0) {
             return {int128_base_t(0ull, 0ull), int128_base_t(0ull, 0ull)};
         }
 
@@ -1602,13 +1602,13 @@ template <signedness S> class int128_base_t
         }
 
         // Fast path: divisor cabe en 64 bits
-        if (divisor.data[MSULL] == 0) {
-            const uint64_t divisor_64 = divisor.data[LSULL];
+        if (divisor.data[1] == 0) {
+            const uint64_t divisor_64 = divisor.data[0];
 
             // Si dividendo también cabe en 64 bits
-            if (data[MSULL] == 0) {
-                const uint64_t q = data[LSULL] / divisor_64;
-                const uint64_t r = data[LSULL] % divisor_64;
+            if (data[1] == 0) {
+                const uint64_t q = data[0] / divisor_64;
+                const uint64_t r = data[0] % divisor_64;
                 // Constructor toma (high, low), entonces (0, q) para quotient en palabra baja
                 return {int128_base_t(0ull, q), int128_base_t(0ull, r)};
             }
@@ -1616,12 +1616,12 @@ template <signedness S> class int128_base_t
             // Dividendo de 128 bits / divisor de 64 bits
             // Usar algoritmo optimizado
             uint64_t quotient_low = 0;
-            uint64_t quotient_high = data[MSULL] / divisor_64;
-            uint64_t remainder = data[MSULL] % divisor_64;
+            uint64_t quotient_high = data[1] / divisor_64;
+            uint64_t remainder = data[1] % divisor_64;
 
             // Dividir parte baja bit a bit
             for (int i = 63; i >= 0; --i) {
-                remainder = (remainder << 1) | ((data[LSULL] >> i) & 1);
+                remainder = (remainder << 1) | ((data[0] >> i) & 1);
                 if (remainder >= divisor_64) {
                     remainder -= divisor_64;
                     quotient_low |= (1ULL << i);
@@ -1644,7 +1644,7 @@ template <signedness S> class int128_base_t
             const int word = i / 64;
             const int bit = i % 64;
             if ((data[word] & (1ULL << bit)) != 0) {
-                remainder.data[LSULL] |= 1;
+                remainder.data[0] |= 1;
             }
 
             // Si remainder >= divisor, restar y añadir 1 al cociente

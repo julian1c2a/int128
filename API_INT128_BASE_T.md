@@ -22,13 +22,14 @@
 11. [Operadores Bitwise](#operadores-bitwise)
 12. [Operadores de Shift](#operadores-de-shift)
 13. [Operadores de Comparación](#operadores-de-comparación)
-14. [Operadores de Incremento/Decremento](#operadores-de-incremento-decremento)
-15. [Conversiones Explícitas](#conversiones-explícitas)
-16. [Métodos Auxiliares](#métodos-auxiliares)
-17. [Funciones Estáticas](#funciones-estáticas)
-18. [Stream I/O](#stream-io)
-19. [Literales UDL](#literales-udl)
-20. [Funciones Factory](#funciones-factory)
+14. [Funciones Puras de Incremento/Decremento](#funciones-puras-de-incremento-decremento)
+15. [Operadores de Incremento/Decremento](#operadores-de-incremento-decremento)
+16. [Conversiones Explícitas](#conversiones-explícitas)
+17. [Métodos Auxiliares](#métodos-auxiliares)
+18. [Funciones Estáticas](#funciones-estáticas)
+19. [Stream I/O](#stream-io)
+20. [Literales UDL](#literales-udl)
+21. [Funciones Factory](#funciones-factory)
 
 ---
 
@@ -301,6 +302,7 @@ constexpr int128_base_t operator-() const noexcept;
 ## Operadores Aritméticos
 
 ### Operadores con mismo tipo
+
 ### Operadores con otro signedness
 
 ```cpp
@@ -544,6 +546,70 @@ friend constexpr bool operator==(const int128_base_t& lhs, const int128_base_t<S
 template <signedness S2>
 friend constexpr bool operator!=(const int128_base_t& lhs, const int128_base_t<S2>& rhs) noexcept;
 ```
+
+---
+
+## Funciones Puras de Incremento/Decremento
+
+### incr() - Incremento con Semántica de Valor
+
+```cpp
+constexpr int128_base_t incr() const noexcept;
+```
+
+**Descripción:** Retorna un nuevo `int128_base_t` con valor incrementado en 1.  
+**Semántica:** Función **pura** (no modifica el objeto actual).  
+**Optimización:** Delega a `operator+=` que usa intrínsecos optimizados.  
+**Portabilidad:** Funciona en x86-64, ARM64, RISC-V con intrínsecos específicos.
+
+**Intrínsecos usados:**
+
+- **x86-64**: `ADC` (add with carry) via `_addcarry_u64` (MSVC/Intel) o `__builtin_add_overflow` (GCC/Clang)
+- **ARM64**: `ADDS` (add with set flags)
+- **RISC-V**: `ADD + SLTU` (overflow detection)
+
+**Ejemplo:**
+
+```cpp
+int128_t x(42);
+int128_t y = x.incr();  // y = 43, x permanece = 42
+
+// Equivalente a: y = x + 1;
+// Pero con intención más explícita (valor puro, no mutación)
+```
+
+**Nota:** Prefiere `incr()` sobre `operator++` cuando necesites semántica de valor puro.
+
+---
+
+### decr() - Decremento con Semántica de Valor
+
+```cpp
+constexpr int128_base_t decr() const noexcept;
+```
+
+**Descripción:** Retorna un nuevo `int128_base_t` con valor decrementado en 1.  
+**Semántica:** Función **pura** (no modifica el objeto actual).  
+**Optimización:** Delega a `operator-=` que usa intrínsecos optimizados.  
+**Portabilidad:** Misma optimización que `incr()` pero para resta.
+
+**Intrínsecos usados:**
+
+- **x86-64**: `SBB` (subtract with borrow) via `_subborrow_u64` o `__builtin_sub_overflow`
+- **ARM64**: `SUBS` (subtract with set flags)
+- **RISC-V**: `SUB + SLTU` (underflow detection)
+
+**Ejemplo:**
+
+```cpp
+uint128_t x(100);
+uint128_t y = x.decr();  // y = 99, x permanece = 100
+
+// Equivalente a: y = x - 1;
+// Pero con intención más explícita (valor puro, no mutación)
+```
+
+**Nota:** Prefiere `decr()` sobre `operator--` cuando necesites semántica de valor puro.
 
 ---
 

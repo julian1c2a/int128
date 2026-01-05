@@ -2,7 +2,7 @@
 #define UINT128_T_HPP
 
 // NOTA: Este header ahora es un wrapper que usa el template unificado
-#include "../int128_base.hpp"
+#include "../../include_new/int128_base.hpp"
 
 namespace nstd
 {
