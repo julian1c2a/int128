@@ -18,7 +18,7 @@
  * @note Fase 17 (5 enero 2026): Fix crítico operator~() para to_string() con negativos
  * @note Todos los tests pasan: 29/29 ✅
  *
- * @author int128 Project Contributors
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
  * @version 1.0.0
  * @date 2026-01-05
  * @copyright Boost Software License 1.0
@@ -1548,7 +1548,7 @@ template <signedness S> class int128_base_t
      * @param divisor El divisor (debe ser != 0)
      * @return std::pair<cociente, resto> donde 0 <= resto < divisor
      * @note Algoritmo de división binaria (escolar) O(128)
-     * @warning Si divisor == 0, comportamiento indefinido 
+     * @warning Si divisor == 0, comportamiento indefinido
      * (en esta implementación retorna {0,0} como placeholder)
      */
     constexpr std::pair<int128_base_t, int128_base_t>
