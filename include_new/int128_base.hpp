@@ -1548,7 +1548,8 @@ template <signedness S> class int128_base_t
      * @param divisor El divisor (debe ser != 0)
      * @return std::pair<cociente, resto> donde 0 <= resto < divisor
      * @note Algoritmo de división binaria (escolar) O(128)
-     * @warning Si divisor == 0, comportamiento indefinido
+     * @warning Si divisor == 0, comportamiento indefinido 
+     * (en esta implementación retorna {0,0} como placeholder)
      */
     constexpr std::pair<int128_base_t, int128_base_t>
     divrem(const int128_base_t& divisor) const noexcept
