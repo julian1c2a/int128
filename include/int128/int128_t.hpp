@@ -27,8 +27,14 @@
 #ifndef INT128_T_HPP
 #define INT128_T_HPP
 
-// NOTA: Este header ahora es un wrapper que usa el template unificado
-#include "../../include_new/int128_base.hpp"
+// NOTA: Template unificado int128_base.hpp AÚN NO ESTÁ COMPLETO
+// Temporalmente usando implementación original hasta completar migración
+// TODO: Descomentar cuando int128_base.hpp tenga TODA la funcionalidad
+// #include "../../include_new/int128_base.hpp"
+
+// Implementación original completa
+#error                                                                                             \
+    "int128_t.hpp necesita restaurarse desde backup - el template int128_base.hpp no está completo"
 
 namespace nstd
 {
