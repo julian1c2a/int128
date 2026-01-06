@@ -224,7 +224,7 @@ int main()
     RUN_TEST(int128_parse_errors_signed);
 
     std::cout << "\n========================================\n";
-    std::cout << "TODOS LOS TESTS PASARON ✓\n";
+    std::cout << "TODOS LOS TESTS PASARON OK\n";
     std::cout << "========================================\n";
 
     return 0;

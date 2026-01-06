@@ -23,10 +23,10 @@ int tests_failed = 0;
 void check(bool condition, const char* test_name)
 {
     if (condition) {
-        std::cout << "[✓] " << test_name << "\n";
+        std::cout << "[OK] " << test_name << "\n";
         ++tests_passed;
     } else {
-        std::cout << "[✗] " << test_name << " FAILED\n";
+        std::cout << "[FAIL] " << test_name << " FAILED\n";
         ++tests_failed;
     }
 }
@@ -44,9 +44,9 @@ template <typename T1, typename T2> bool bits_equal(const T1& a, const T2& b)
 
 void test_multiplication_types()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: Multiplicación idéntica a nivel de bits            ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: Multiplicación idéntica a nivel de bits            |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Caso 1: Valores pequeños positivos
     {
@@ -106,9 +106,9 @@ void test_multiplication_types()
 
 void test_multiplication_random()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: Multiplicación aleatoria - verificar bits          ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: Multiplicación aleatoria - verificar bits          |\n";
+    std::cout << "+============================================================+\n\n";
 
     std::mt19937_64 rng(42); // Semilla fija para reproducibilidad
 
@@ -139,7 +139,7 @@ void test_multiplication_random()
         if (bits_equal(r_uu, r_ss)) {
             ++random_passed;
         } else {
-            std::cout << "[✗] Test " << i << " falló\n";
+            std::cout << "[FAIL] Test " << i << " falló\n";
             std::cout << "    a = " << ua.to_string() << "\n";
             std::cout << "    b = " << ub.to_string() << "\n";
             std::cout << "    u*u = " << r_uu.to_string() << "\n";
@@ -154,9 +154,9 @@ void test_multiplication_random()
 
 void test_multiplication_edge_cases()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: Multiplicación - casos extremos                    ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: Multiplicación - casos extremos                    |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Caso 1: Multiplicación por 0
     {
@@ -223,9 +223,9 @@ void test_multiplication_edge_cases()
 
 void test_multiplication_with_smaller_types()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: Multiplicación con tipos más pequeños              ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: Multiplicación con tipos más pequeños              |\n";
+    std::cout << "+============================================================+\n\n";
 
     // uint128_t * uint64_t
     {
@@ -270,26 +270,26 @@ void test_multiplication_with_smaller_types()
 
 int main()
 {
-    std::cout << "╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TESTS DE MULTIPLICACIÓN - IDENTIDAD DE BITS              ║\n";
-    std::cout << "║   Verifica que la multiplicación es idéntica para          ║\n";
-    std::cout << "║   uint128_t y int128_t cuando los bits son los mismos      ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n";
+    std::cout << "+============================================================+\n";
+    std::cout << "|   TESTS DE MULTIPLICACIÓN - IDENTIDAD DE BITS              |\n";
+    std::cout << "|   Verifica que la multiplicación es idéntica para          |\n";
+    std::cout << "|   uint128_t y int128_t cuando los bits son los mismos      |\n";
+    std::cout << "+============================================================+\n";
 
     test_multiplication_types();
     test_multiplication_random();
     test_multiplication_edge_cases();
     test_multiplication_with_smaller_types();
 
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║                        RESUMEN                             ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|                        RESUMEN                             |\n";
+    std::cout << "+============================================================+\n";
 
     std::cout << "[";
     if (tests_failed == 0) {
-        std::cout << "✓";
+        std::cout << "OK";
     } else {
-        std::cout << "✗";
+        std::cout << "FAIL";
     }
     std::cout << "] Tests pasados: " << tests_passed << "/" << (tests_passed + tests_failed)
               << "\n";

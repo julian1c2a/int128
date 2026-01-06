@@ -26,6 +26,6 @@ int main()
 
     std::cout << "1024 / 16 = " << q2.to_string() << " remainder " << r2.to_string() << std::endl;
 
-    std::cout << "\n✓ Compilación exitosa" << std::endl;
+    std::cout << "\nOK Compilación exitosa" << std::endl;
     return 0;
 }

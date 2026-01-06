@@ -52,10 +52,10 @@ int main()
     std::cout << "Verificación: " << verification.to_string() << "\n";
 
     if (verification == dividend && quotient.low() == 333 && remainder.low() == 1) {
-        std::cout << "✓ PASS\n";
+        std::cout << "OK PASS\n";
         return 0;
     } else {
-        std::cout << "✗ FAIL\n";
+        std::cout << "FAIL FAIL\n";
         return 1;
     }
 }

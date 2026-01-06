@@ -15,9 +15,9 @@ int main()
     std::cout << "Esperado: 70" << std::endl;
 
     if (u1.low() == 70) {
-        std::cout << "✓ CORRECTO" << std::endl;
+        std::cout << "OK CORRECTO" << std::endl;
     } else {
-        std::cout << "✗ ERROR: Resultado = " << u1.low() << std::endl;
+        std::cout << "FAIL ERROR: Resultado = " << u1.low() << std::endl;
     }
 
     return 0;

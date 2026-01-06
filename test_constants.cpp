@@ -61,7 +61,7 @@ int main()
     std::cout << "   ¿abs(positive) == abs(negative)? " << (abs_pos == abs_neg ? "SI" : "NO")
               << "\n\n";
 
-    std::cout << "✓ Todos los tests completados\n";
+    std::cout << "OK Todos los tests completados\n";
 
     return 0;
 }

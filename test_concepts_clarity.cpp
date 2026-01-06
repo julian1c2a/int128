@@ -74,9 +74,9 @@ auto process_signed(T value) noexcept
 
 void test_concepts_clarity()
 {
-    std::cout << "╔═══════════════════════════════════════════════════════════╗\n";
-    std::cout << "║  Test de Claridad con Concepts                            ║\n";
-    std::cout << "╚═══════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "+===========================================================+\n";
+    std::cout << "|  Test de Claridad con Concepts                            |\n";
+    std::cout << "+===========================================================+\n\n";
 
     // Test multiply_new con tipos builtin
     {
@@ -85,7 +85,7 @@ void test_concepts_clarity()
         auto r3 = multiply_new(3LL);  // long long
         auto r4 = multiply_new(7ULL); // unsigned long long
 
-        std::cout << "✓ multiply_new funciona con int, unsigned, long long, etc.\n";
+        std::cout << "OK multiply_new funciona con int, unsigned, long long, etc.\n";
     }
 
     // Test convert_new con tipos arithmetic (int y float)
@@ -94,13 +94,13 @@ void test_concepts_clarity()
         auto r2 = convert_new(3.14); // double (se trunca a uint64_t)
         auto r3 = convert_new(2.5f); // float
 
-        std::cout << "✓ convert_new funciona con int y floating point\n";
+        std::cout << "OK convert_new funciona con int y floating point\n";
     }
 
     // Test multiply_alt (sintaxis alternativa)
     {
         auto r1 = multiply_alt(8);
-        std::cout << "✓ multiply_alt (requires clause con concept) funciona\n";
+        std::cout << "OK multiply_alt (requires clause con concept) funciona\n";
     }
 
     // Test process_signed (concept compuesto)
@@ -108,12 +108,12 @@ void test_concepts_clarity()
         auto r1 = process_signed(-42);    // int negativo → abs
         auto r2 = process_signed(-100LL); // long long negativo → abs
 
-        std::cout << "✓ process_signed funciona solo con tipos signed\n";
+        std::cout << "OK process_signed funciona solo con tipos signed\n";
     }
 
-    std::cout << "\n╔═══════════════════════════════════════════════════════════╗\n";
-    std::cout << "║  ✅ TODOS LOS TESTS DE CONCEPTS PASARON                  ║\n";
-    std::cout << "╚═══════════════════════════════════════════════════════════╝\n";
+    std::cout << "\n+===========================================================+\n";
+    std::cout << "|  ✅ TODOS LOS TESTS DE CONCEPTS PASARON                  |\n";
+    std::cout << "+===========================================================+\n";
 }
 
 int main()

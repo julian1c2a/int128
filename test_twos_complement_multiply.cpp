@@ -34,7 +34,7 @@ void test_case_1_neg_neg()
     print_hex("Esperado(15)", int128_t(15));
 
     bool test1_pass = (result1 == int128_t(15));
-    std::cout << "Resultado: " << (test1_pass ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Resultado: " << (test1_pass ? "OK PASS" : "FAIL FAIL") << "\n";
 
     // Test con valores medianos: -1000 * -500 = 500000
     int128_t n2(-1000);
@@ -48,7 +48,7 @@ void test_case_1_neg_neg()
     print_hex("Esperado   ", int128_t(500000));
 
     bool test2_pass = (result2 == int128_t(500000));
-    std::cout << "Resultado: " << (test2_pass ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Resultado: " << (test2_pass ? "OK PASS" : "FAIL FAIL") << "\n";
 
     // Verificar que la representación unsigned da el mismo resultado
     uint128_t u_n1 = *reinterpret_cast<uint128_t*>(&n1);
@@ -63,7 +63,7 @@ void test_case_1_neg_neg()
     print_hex("conv signed", converted_result1);
 
     bool test_unsigned = (converted_result1 == result1);
-    std::cout << "Unsigned == Signed: " << (test_unsigned ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Unsigned == Signed: " << (test_unsigned ? "OK PASS" : "FAIL FAIL") << "\n";
 
     return;
 }
@@ -84,7 +84,7 @@ void test_case_2_neg_pos()
     print_hex("Esperado(-15)", int128_t(-15));
 
     bool test1_pass = (result1 == int128_t(-15));
-    std::cout << "Resultado: " << (test1_pass ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Resultado: " << (test1_pass ? "OK PASS" : "FAIL FAIL") << "\n";
 
     // Test: -1000 * 500 = -500000
     int128_t n2(-1000);
@@ -98,7 +98,7 @@ void test_case_2_neg_pos()
     print_hex("Esperado   ", int128_t(-500000));
 
     bool test2_pass = (result2 == int128_t(-500000));
-    std::cout << "Resultado: " << (test2_pass ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Resultado: " << (test2_pass ? "OK PASS" : "FAIL FAIL") << "\n";
 
     // Verificar que la multiplicación unsigned da el mismo resultado
     uint128_t u_n1 = *reinterpret_cast<uint128_t*>(&n1);
@@ -113,7 +113,7 @@ void test_case_2_neg_pos()
     print_hex("conv signed", converted_result1);
 
     bool test_unsigned = (converted_result1 == result1);
-    std::cout << "Unsigned == Signed: " << (test_unsigned ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Unsigned == Signed: " << (test_unsigned ? "OK PASS" : "FAIL FAIL") << "\n";
 }
 
 void test_case_3_pos_neg()
@@ -132,7 +132,7 @@ void test_case_3_pos_neg()
     print_hex("Esperado(-15)", int128_t(-15));
 
     bool test1_pass = (result1 == int128_t(-15));
-    std::cout << "Resultado: " << (test1_pass ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Resultado: " << (test1_pass ? "OK PASS" : "FAIL FAIL") << "\n";
 
     // Test: 1000 * -500 = -500000
     int128_t n2(1000);
@@ -146,7 +146,7 @@ void test_case_3_pos_neg()
     print_hex("Esperado   ", int128_t(-500000));
 
     bool test2_pass = (result2 == int128_t(-500000));
-    std::cout << "Resultado: " << (test2_pass ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Resultado: " << (test2_pass ? "OK PASS" : "FAIL FAIL") << "\n";
 
     // Verificar que la multiplicación unsigned da el mismo resultado
     uint128_t u_n2 = *reinterpret_cast<uint128_t*>(&n2);
@@ -161,7 +161,7 @@ void test_case_3_pos_neg()
     print_hex("conv signed", converted_result2);
 
     bool test_unsigned = (converted_result2 == result2);
-    std::cout << "Unsigned == Signed: " << (test_unsigned ? "✓ PASS" : "✗ FAIL") << "\n";
+    std::cout << "Unsigned == Signed: " << (test_unsigned ? "OK PASS" : "FAIL FAIL") << "\n";
 }
 
 void test_edge_cases()
@@ -189,25 +189,25 @@ void test_edge_cases()
 
 int main()
 {
-    std::cout << "═══════════════════════════════════════════════════════════════\n";
+    std::cout << "===============================================================\n";
     std::cout << "  TEST: Identidades de Multiplicación en Complemento a 2\n";
-    std::cout << "═══════════════════════════════════════════════════════════════\n";
+    std::cout << "===============================================================\n";
 
     test_case_1_neg_neg();
     test_case_2_neg_pos();
     test_case_3_pos_neg();
     test_edge_cases();
 
-    std::cout << "\n═══════════════════════════════════════════════════════════════\n";
+    std::cout << "\n===============================================================\n";
     std::cout << "  CONCLUSIÓN\n";
-    std::cout << "═══════════════════════════════════════════════════════════════\n";
-    std::cout << "\n✓ La multiplicación en complemento a 2 funciona automáticamente\n";
+    std::cout << "===============================================================\n";
+    std::cout << "\nOK La multiplicación en complemento a 2 funciona automáticamente\n";
     std::cout << "  sin necesidad de casos especiales para signos.\n";
-    std::cout << "\n✓ Las identidades son CORRECTAS:\n";
+    std::cout << "\nOK Las identidades son CORRECTAS:\n";
     std::cout << "  1. n<0 && m<0: El producto se calcula correctamente\n";
     std::cout << "  2. n<0 && m>0: El producto se calcula correctamente\n";
     std::cout << "  3. n>0 && m<0: El producto se calcula correctamente\n";
-    std::cout << "\n✓ IMPLICACIÓN: Puedes usar multiplicación unsigned directamente\n";
+    std::cout << "\nOK IMPLICACIÓN: Puedes usar multiplicación unsigned directamente\n";
     std::cout << "  para int128_t sin ningún 'if' para manejar signos.\n";
     std::cout << "  El complemento a 2 hace que 'funcione simplemente'.\n";
     std::cout << "\n";

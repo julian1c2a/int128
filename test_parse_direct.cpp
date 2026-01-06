@@ -37,6 +37,6 @@ int main()
     std::cout << "parse(\"invalid\"): error=" << static_cast<int>(err6)
               << ", value=" << val6.to_string() << std::endl;
 
-    std::cout << "\n✓ Tests completados sin usar constructores" << std::endl;
+    std::cout << "\nOK Tests completados sin usar constructores" << std::endl;
     return 0;
 }

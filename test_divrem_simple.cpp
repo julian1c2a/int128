@@ -31,10 +31,10 @@ int main()
     std::cout << "Verificación: " << verification.to_string() << "\n";
 
     if (verification == dividend) {
-        std::cout << "✓ PASS\n";
+        std::cout << "OK PASS\n";
         return 0;
     } else {
-        std::cout << "✗ FAIL: " << verification.to_string() << " != " << dividend.to_string()
+        std::cout << "FAIL FAIL: " << verification.to_string() << " != " << dividend.to_string()
                   << "\n";
         return 1;
     }

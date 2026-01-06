@@ -66,6 +66,6 @@ int main()
     std::cout << "constexpr 12345_u128 = " << c1.to_string() << std::endl;
     std::cout << "constexpr make_uint128(\"999\") = " << c2.to_string() << std::endl;
 
-    std::cout << "\n✓ Todos los tests completados exitosamente" << std::endl;
+    std::cout << "\nOK Todos los tests completados exitosamente" << std::endl;
     return 0;
 }

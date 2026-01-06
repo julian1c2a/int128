@@ -22,10 +22,10 @@ int tests_failed = 0;
 void check(bool condition, const char* test_name)
 {
     if (condition) {
-        std::cout << "[✓] " << test_name << "\n";
+        std::cout << "[OK] " << test_name << "\n";
         ++tests_passed;
     } else {
-        std::cout << "[✗] " << test_name << " FAILED\n";
+        std::cout << "[FAIL] " << test_name << " FAILED\n";
         ++tests_failed;
     }
 }
@@ -36,9 +36,9 @@ void check(bool condition, const char* test_name)
 
 void test_trailing_zeros()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: trailing_zeros()                                    ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: trailing_zeros()                                    |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Casos básicos
     check(uint128_t(0ull).trailing_zeros() == 128, "tz(0) == 128");
@@ -84,9 +84,9 @@ void test_trailing_zeros()
 
 void test_leading_zeros()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: leading_zeros()                                     ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: leading_zeros()                                     |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Casos básicos
     check(uint128_t(0ull).leading_zeros() == 128, "lz(0) == 128");
@@ -120,9 +120,9 @@ void test_leading_zeros()
 
 void test_bit_width()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: bit_width()                                         ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: bit_width()                                         |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Casos básicos
     check(uint128_t(0ull).bit_width() == 0, "bw(0) == 0");
@@ -153,9 +153,9 @@ void test_bit_width()
 
 void test_is_power_of_2()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: is_power_of_2()                                     ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: is_power_of_2()                                     |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Caso especial: 0 no es potencia de 2
     check(!uint128_t(0ull).is_power_of_2(), "0 NO es potencia de 2");
@@ -205,9 +205,9 @@ void test_is_power_of_2()
 
 void test_coherence()
 {
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TEST: Coherencia entre funciones                         ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|   TEST: Coherencia entre funciones                         |\n";
+    std::cout << "+============================================================+\n\n";
 
     // Para potencias de 2: trailing_zeros() + leading_zeros() + 1 == 128
     for (int i = 0; i < 64; ++i) {
@@ -238,9 +238,9 @@ void test_coherence()
 
 int main()
 {
-    std::cout << "╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║   TESTS DE FUNCIONES DE MANIPULACIÓN DE BITS               ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n";
+    std::cout << "+============================================================+\n";
+    std::cout << "|   TESTS DE FUNCIONES DE MANIPULACIÓN DE BITS               |\n";
+    std::cout << "+============================================================+\n";
 
     test_trailing_zeros();
     test_leading_zeros();
@@ -248,15 +248,15 @@ int main()
     test_is_power_of_2();
     test_coherence();
 
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗\n";
-    std::cout << "║                        RESUMEN                             ║\n";
-    std::cout << "╚════════════════════════════════════════════════════════════╝\n";
+    std::cout << "\n+============================================================+\n";
+    std::cout << "|                        RESUMEN                             |\n";
+    std::cout << "+============================================================+\n";
 
     std::cout << "[";
     if (tests_failed == 0) {
-        std::cout << "✓";
+        std::cout << "OK";
     } else {
-        std::cout << "✗";
+        std::cout << "FAIL";
     }
     std::cout << "] Tests pasados: " << tests_passed << "/" << (tests_passed + tests_failed)
               << "\n";

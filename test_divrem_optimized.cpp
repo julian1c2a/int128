@@ -23,7 +23,7 @@ void test_basic_divrem()
     uint128_t verification = quotient * uint128_t(divisor) + remainder;
     assert(verification == dividend);
 
-    std::cout << "✓ División por uint64_t: PASS\n";
+    std::cout << "OK División por uint64_t: PASS\n";
     std::cout << "  Dividendo: 0x" << dividend.to_string_hex() << "\n";
     std::cout << "  Divisor:   0x" << std::hex << divisor << "\n";
     std::cout << "  Cociente:  0x" << quotient.to_string_hex() << "\n";
@@ -38,14 +38,14 @@ void test_basic_divrem()
     uint128_t verification2 = q2 * uint128_t(divisor2) + r2;
     assert(verification2 == dividend);
 
-    std::cout << "✓ División por uint32_t: PASS\n";
+    std::cout << "OK División por uint32_t: PASS\n";
 
     // Caso 3: División por signed int64_t
     int64_t divisor3 = -12345;
     auto result3 = uint128_t(100000000000ULL).divrem(divisor3);
     assert(result3.has_value());
 
-    std::cout << "✓ División por int64_t negativo: PASS\n";
+    std::cout << "OK División por int64_t negativo: PASS\n";
 
     // Caso 4: División por potencia de 2
     uint64_t divisor4 = 1024; // 2^10
@@ -56,7 +56,7 @@ void test_basic_divrem()
     uint128_t verification4 = q4 * uint128_t(divisor4) + r4;
     assert(verification4 == dividend);
 
-    std::cout << "✓ División por potencia de 2: PASS\n";
+    std::cout << "OK División por potencia de 2: PASS\n";
 
     // Caso 5: División por 1
     auto result5 = dividend.divrem(1ULL);
@@ -64,13 +64,13 @@ void test_basic_divrem()
     assert(result5.value().first == dividend);
     assert(result5.value().second == uint128_t(0));
 
-    std::cout << "✓ División por 1: PASS\n";
+    std::cout << "OK División por 1: PASS\n";
 
     // Caso 6: División por 0 (debe retornar nullopt)
     auto result6 = dividend.divrem(0ULL);
     assert(!result6.has_value());
 
-    std::cout << "✓ División por 0 retorna nullopt: PASS\n";
+    std::cout << "OK División por 0 retorna nullopt: PASS\n";
 }
 
 void test_operators()
@@ -88,7 +88,7 @@ void test_operators()
     uint128_t verification = q * uint128_t(divisor) + r;
     assert(verification == original_a);
 
-    std::cout << "✓ Operadores / y % coherentes: PASS\n";
+    std::cout << "OK Operadores / y % coherentes: PASS\n";
 
     // Test con operadores compuestos
     uint128_t b = original_a;
@@ -99,7 +99,7 @@ void test_operators()
     c %= divisor;
     assert(c == r);
 
-    std::cout << "✓ Operadores /= y %= funcionan correctamente: PASS\n";
+    std::cout << "OK Operadores /= y %= funcionan correctamente: PASS\n";
 }
 
 void benchmark_divrem()
@@ -145,12 +145,12 @@ int main()
         benchmark_divrem();
 
         std::cout << "\n========================================================\n";
-        std::cout << "✓ TODOS LOS TESTS PASARON\n";
+        std::cout << "OK TODOS LOS TESTS PASARON\n";
         std::cout << "========================================================\n";
 
         return 0;
     } catch (const std::exception& e) {
-        std::cerr << "\n✗ ERROR: " << e.what() << "\n";
+        std::cerr << "\nFAIL ERROR: " << e.what() << "\n";
         return 1;
     }
 }

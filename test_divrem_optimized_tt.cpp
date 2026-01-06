@@ -66,21 +66,21 @@ void test_euclidean_properties(const int128_base_t<S>& n, const int128_base_t<S>
     if (n < m) {
         assert(q == zero && "prop_1 failed: q should be 0");
         assert(r == n && "prop_1 failed: r should be n");
-        std::cout << "✓ prop_1: (n < m) => (q==0 && r==n)\n";
+        std::cout << "OK prop_1: (n < m) => (q==0 && r==n)\n";
     }
 
     // prop_2: (n == m) => (q==1 && r==0)
     if (n == m) {
         assert(q == one && "prop_2 failed: q should be 1");
         assert(r == zero && "prop_2 failed: r should be 0");
-        std::cout << "✓ prop_2: (n == m) => (q==1 && r==0)\n";
+        std::cout << "OK prop_2: (n == m) => (q==1 && r==0)\n";
     }
 
     // prop_3: (m == 1) => (q==n && r==0)
     if (m == one) {
         assert(q == n && "prop_3 failed: q should be n");
         assert(r == zero && "prop_3 failed: r should be 0");
-        std::cout << "✓ prop_3: (m == 1) => (q==n && r==0)\n";
+        std::cout << "OK prop_3: (m == 1) => (q==n && r==0)\n";
     }
 
     // prop_4: (p|n && p|m) => (q==(n/p)/(m/p)) - testeado separadamente con GCD
@@ -88,28 +88,28 @@ void test_euclidean_properties(const int128_base_t<S>& n, const int128_base_t<S>
     // prop_5: (q*m <= n)
     int128 qm = q * m;
     assert(qm <= n && "prop_5 failed: q*m should be <= n");
-    std::cout << "✓ prop_5: (q*m <= n)\n";
+    std::cout << "OK prop_5: (q*m <= n)\n";
 
     // prop_6: ((q+1)*m > n)
     int128 q_plus_1 = q + one;
     int128 q_plus_1_m = q_plus_1 * m;
     assert(q_plus_1_m > n && "prop_6 failed: (q+1)*m should be > n");
-    std::cout << "✓ prop_6: ((q+1)*m > n)\n";
+    std::cout << "OK prop_6: ((q+1)*m > n)\n";
 
     // prop_7: (r < m)
     assert(r < m && "prop_7 failed: r should be < m");
-    std::cout << "✓ prop_7: (r < m)\n";
+    std::cout << "OK prop_7: (r < m)\n";
 
     // prop_8: (q*m + r == n) - División euclidiana fundamental
     int128 reconstructed = q * m + r;
     assert(reconstructed == n && "prop_8 failed: q*m + r should equal n");
-    std::cout << "✓ prop_8: (q*m + r == n)\n";
+    std::cout << "OK prop_8: (q*m + r == n)\n";
 
     // prop_9: (q*m + r+1 > n) - Resto es mínimo
     int128 r_plus_1 = r + one;
     int128 qm_plus_r_plus_1 = q * m + r_plus_1;
     assert(qm_plus_r_plus_1 > n && "prop_9 failed: q*m + r+1 should be > n");
-    std::cout << "✓ prop_9: (q*m + r+1 > n)\n";
+    std::cout << "OK prop_9: (q*m + r+1 > n)\n";
 
     std::cout << "✅ All euclidean properties verified for " << test_name << "\n";
 }

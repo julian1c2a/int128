@@ -34,10 +34,10 @@ int failed = 0;
 void test_property(const char* name, bool condition)
 {
     if (condition) {
-        std::cout << GREEN << "[✓] " << RESET << name << std::endl;
+        std::cout << GREEN << "[OK] " << RESET << name << std::endl;
         ++passed;
     } else {
-        std::cout << RED << "[✗] " << RESET << name << std::endl;
+        std::cout << RED << "[FAIL] " << RESET << name << std::endl;
         ++failed;
     }
 }
@@ -121,9 +121,9 @@ void test_euclidean_properties(const uint128_t& n, const uint128_t& m, const cha
 
 int main()
 {
-    std::cout << "╔════════════════════════════════════════════════════════════╗" << std::endl;
-    std::cout << "║   TEST: PROPIEDADES EUCLIDIANAS DE LA DIVISIÓN            ║" << std::endl;
-    std::cout << "╚════════════════════════════════════════════════════════════╝" << std::endl;
+    std::cout << "+============================================================+" << std::endl;
+    std::cout << "|   TEST: PROPIEDADES EUCLIDIANAS DE LA DIVISIÓN            |" << std::endl;
+    std::cout << "+============================================================+" << std::endl;
 
     // Test 1: Casos básicos
     uint128_t n1(0, 100);
@@ -179,11 +179,11 @@ int main()
     // TESTS CON TIPOS SIGNED (int128_t)
     // ========================================================================
     std::cout << "\n"
-              << CYAN << "╔════════════════════════════════════════════════════════════╗" << RESET
+              << CYAN << "+============================================================+" << RESET
               << std::endl;
-    std::cout << CYAN << "║   TESTS SIGNED (int128_t) - PROPIEDADES CON SIGNOS         ║" << RESET
+    std::cout << CYAN << "|   TESTS SIGNED (int128_t) - PROPIEDADES CON SIGNOS         |" << RESET
               << std::endl;
-    std::cout << CYAN << "╚════════════════════════════════════════════════════════════╝" << RESET
+    std::cout << CYAN << "+============================================================+" << RESET
               << std::endl;
 
     // Test 11: División signed positivo/positivo
@@ -239,11 +239,11 @@ int main()
     // BATERÍA DE TESTS ALEATORIOS (uint128_t)
     // ========================================================================
     std::cout << "\n"
-              << CYAN << "╔════════════════════════════════════════════════════════════╗" << RESET
+              << CYAN << "+============================================================+" << RESET
               << std::endl;
-    std::cout << CYAN << "║   BATERÍA ALEATORIA - 100 TESTS RANDOM                     ║" << RESET
+    std::cout << CYAN << "|   BATERÍA ALEATORIA - 100 TESTS RANDOM                     |" << RESET
               << std::endl;
-    std::cout << CYAN << "╚════════════════════════════════════════════════════════════╝" << RESET
+    std::cout << CYAN << "+============================================================+" << RESET
               << std::endl;
 
     std::random_device rd;
@@ -283,7 +283,7 @@ int main()
             ++random_passed;
         } else {
             ++random_failed;
-            std::cout << RED << "[✗] Random test " << i << " FAILED" << RESET << std::endl;
+            std::cout << RED << "[FAIL] Random test " << i << " FAILED" << RESET << std::endl;
             std::cout << "    n = " << n.to_string() << std::endl;
             std::cout << "    m = " << m.to_string() << std::endl;
             std::cout << "    q = " << q.to_string() << std::endl;
@@ -295,10 +295,10 @@ int main()
         }
     }
 
-    std::cout << GREEN << "[✓] Random tests pasados: " << random_passed << "/100" << RESET
+    std::cout << GREEN << "[OK] Random tests pasados: " << random_passed << "/100" << RESET
               << std::endl;
     if (random_failed > 0) {
-        std::cout << RED << "[✗] Random tests fallidos: " << random_failed << "/100" << RESET
+        std::cout << RED << "[FAIL] Random tests fallidos: " << random_failed << "/100" << RESET
                   << std::endl;
     }
     passed += random_passed;
@@ -308,11 +308,11 @@ int main()
     // TESTS DE CASOS EXTREMOS Y POTENCIAS DE 2
     // ========================================================================
     std::cout << "\n"
-              << CYAN << "╔════════════════════════════════════════════════════════════╗" << RESET
+              << CYAN << "+============================================================+" << RESET
               << std::endl;
-    std::cout << CYAN << "║   CASOS EXTREMOS Y POTENCIAS DE 2                          ║" << RESET
+    std::cout << CYAN << "|   CASOS EXTREMOS Y POTENCIAS DE 2                          |" << RESET
               << std::endl;
-    std::cout << CYAN << "╚════════════════════════════════════════════════════════════╝" << RESET
+    std::cout << CYAN << "+============================================================+" << RESET
               << std::endl;
 
     // Test: Dividendo con muchos ceros trailing (potencia de 2)
@@ -356,12 +356,12 @@ int main()
     test_property("resto = 0", r_s.low() == 0 && r_s.high() == 0);
 
     // Resumen
-    std::cout << "\n╔════════════════════════════════════════════════════════════╗" << std::endl;
-    std::cout << "║                        RESUMEN                             ║" << std::endl;
-    std::cout << "╚════════════════════════════════════════════════════════════╝" << std::endl;
-    std::cout << GREEN << "[✓] Tests pasados: " << passed << RESET << std::endl;
+    std::cout << "\n+============================================================+" << std::endl;
+    std::cout << "|                        RESUMEN                             |" << std::endl;
+    std::cout << "+============================================================+" << std::endl;
+    std::cout << GREEN << "[OK] Tests pasados: " << passed << RESET << std::endl;
     if (failed > 0) {
-        std::cout << RED << "[✗] Tests fallidos: " << failed << RESET << std::endl;
+        std::cout << RED << "[FAIL] Tests fallidos: " << failed << RESET << std::endl;
     }
 
     return (failed == 0) ? 0 : 1;

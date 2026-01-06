@@ -19,7 +19,7 @@ int main()
         std::cout << "  Result: " << c.low() << std::endl;
         assert(c.low() == 300 && "100 + 200 should equal 300");
         assert(c.high() == 0 && "High part should be 0");
-        std::cout << "  PASSED ✓" << std::endl;
+        std::cout << "  PASSED OK" << std::endl;
     }
 
     // Test 2: Addition with carry
@@ -32,7 +32,7 @@ int main()
         std::cout << "  Result: low=" << c.low() << ", high=" << c.high() << std::endl;
         assert(c.low() == 0 && "Low part should overflow to 0");
         assert(c.high() == 1 && "High part should receive carry");
-        std::cout << "  PASSED ✓" << std::endl;
+        std::cout << "  PASSED OK" << std::endl;
     }
 
     // Test 3: Compound assignment
@@ -43,7 +43,7 @@ int main()
         std::cout << "\nTest 3: a=100; a += 200" << std::endl;
         std::cout << "  Result: " << a.low() << std::endl;
         assert(a.low() == 300 && "100 += 200 should equal 300");
-        std::cout << "  PASSED ✓" << std::endl;
+        std::cout << "  PASSED OK" << std::endl;
     }
 
     // Test 4: Multiple operations
@@ -56,7 +56,7 @@ int main()
         std::cout << "\nTest 4: 10 + 20 + 30" << std::endl;
         std::cout << "  Result: " << result.low() << std::endl;
         assert(result.low() == 60 && "10 + 20 + 30 should equal 60");
-        std::cout << "  PASSED ✓" << std::endl;
+        std::cout << "  PASSED OK" << std::endl;
     }
 
     // Test 5: int128_t (signed) addition
@@ -68,9 +68,9 @@ int main()
         std::cout << "\nTest 5: int128_t: 100 + 200" << std::endl;
         std::cout << "  Result: " << c.low() << std::endl;
         assert(c.low() == 300 && "int128_t: 100 + 200 should equal 300");
-        std::cout << "  PASSED ✓" << std::endl;
+        std::cout << "  PASSED OK" << std::endl;
     }
 
-    std::cout << "\n=== All Phase 1.5 Operator Tests PASSED ✓ ===" << std::endl;
+    std::cout << "\n=== All Phase 1.5 Operator Tests PASSED OK ===" << std::endl;
     return 0;
 }
