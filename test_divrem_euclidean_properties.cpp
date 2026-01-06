@@ -345,8 +345,7 @@ int main()
     test_property("resto = 0", r_big.low() == 0 && r_big.high() == 0);
 
     // Test: Caso donde dividendo y divisor comparten factores de 2
-    std::cout << "\n=== Test: (12 * 2^60) / (4 * 2^60) ===" << std::endl;
-    uint128_t n_shared(12ULL << (60 - 64), 0); // Ajustado para 128 bits
+    std::cout << "\n=== Test: (12 * 2^10) / (4 * 2^10) ===" << std::endl;
     // Simplificado: 12 * 2^10 / 4 * 2^10 = 3
     uint128_t n_s(0, 12ULL << 10);
     uint128_t m_s(0, 4ULL << 10);
