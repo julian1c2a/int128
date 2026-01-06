@@ -7,7 +7,7 @@ int main()
 {
     uint64_t result = 0;
 
-    // Test directo de la función intrínseca
+    // Test directo de la funcion intrinseca
     std::cout << "Test intrinsics::add_u64(100, 200, &result)" << std::endl;
     unsigned char carry = add_u64(100, 200, &result);
     std::cout << "result = " << result << ", carry = " << (int)carry << std::endl;

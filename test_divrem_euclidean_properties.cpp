@@ -1,6 +1,6 @@
 /**
  * @file test_divrem_euclidean_properties.cpp
- * @brief Tests exhaustivos de las propiedades de la división euclidiana
+ * @brief Tests exhaustivos de las propiedades de la division euclidiana
  *
  * Verifica las 9 propiedades fundamentales:
  * - prop_1: (n < m)  => (q==0 && r==n)
@@ -78,7 +78,7 @@ void test_euclidean_properties(const uint128_t& n, const uint128_t& m, const cha
 
     // prop_6: (q+1)*m > n
     // NOTA: Si q+1 desborda (q+1 < q), entonces la propiedad es verdadera trivialmente
-    //       porque el valor real de (q+1)*m sería > UINT128_MAX > n
+    //       porque el valor real de (q+1)*m seria > UINT128_MAX > n
     uint128_t one(0, 1);
     uint128_t q_plus_1 = q + one;
     bool prop6_overflow = (q_plus_1 < q); // Detectar overflow en q+1
@@ -86,7 +86,7 @@ void test_euclidean_properties(const uint128_t& n, const uint128_t& m, const cha
         test_property("prop_6: (q+1)*m > n [overflow detected - trivially true]", true);
     } else {
         uint128_t q_plus_1_m = q_plus_1 * m;
-        // También detectar overflow en la multiplicación
+        // Tambien detectar overflow en la multiplicacion
         bool mult_overflow = (q_plus_1_m < q_plus_1 || q_plus_1_m < m);
         if (mult_overflow) {
             test_property("prop_6: (q+1)*m > n [mult overflow - trivially true]", true);
@@ -102,7 +102,7 @@ void test_euclidean_properties(const uint128_t& n, const uint128_t& m, const cha
     uint128_t qm_plus_r = qm + r;
     test_property("prop_8: q*m + r == n", qm_plus_r == n);
 
-    // prop_9: q*m + r+1 > n (equivalente a q*m + r >= n, que es q*m + r == n para división exacta)
+    // prop_9: q*m + r+1 > n (equivalente a q*m + r >= n, que es q*m + r == n para division exacta)
     // NOTA: Si qm + r + 1 desborda, la propiedad es trivialmente verdadera
     uint128_t r_plus_1 = r + one;
     bool r_overflow = (r_plus_1 < r); // Si r == MAX, r+1 desborda
@@ -125,7 +125,7 @@ int main()
     std::cout << "|   TEST: PROPIEDADES EUCLIDIANAS DE LA DIVISION            |" << std::endl;
     std::cout << "+============================================================+" << std::endl;
 
-    // Test 1: Casos básicos
+    // Test 1: Casos basicos
     uint128_t n1(0, 100);
     uint128_t m1(0, 10);
     test_euclidean_properties(n1, m1, "Test 1: 100 / 10");
@@ -145,32 +145,32 @@ int main()
     uint128_t m4(0, 1);
     test_euclidean_properties(n4, m4, "Test 4: 999 / 1 (m == 1)");
 
-    // Test 5: División por potencia de 2
+    // Test 5: Division por potencia de 2
     uint128_t n5(0, 1024);
     uint128_t m5(0, 16);
     test_euclidean_properties(n5, m5, "Test 5: 1024 / 16 (potencia de 2)");
 
-    // Test 6: División con resto
+    // Test 6: Division con resto
     uint128_t n6(0, 123);
     uint128_t m6(0, 10);
     test_euclidean_properties(n6, m6, "Test 6: 123 / 10 (con resto)");
 
-    // Test 7: Número grande (128 bits)
+    // Test 7: Numero grande (128 bits)
     uint128_t n7(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL); // MAX
     uint128_t m7(0, 1000000);
     test_euclidean_properties(n7, m7, "Test 7: UINT128_MAX / 1000000");
 
-    // Test 8: División por 3
+    // Test 8: Division por 3
     uint128_t n8(0, 1000);
     uint128_t m8(0, 3);
     test_euclidean_properties(n8, m8, "Test 8: 1000 / 3");
 
-    // Test 9: División por 7
+    // Test 9: Division por 7
     uint128_t n9(0, 777);
     uint128_t m9(0, 7);
     test_euclidean_properties(n9, m9, "Test 9: 777 / 7");
 
-    // Test 10: División por 15 (múltiplo de 3 y 5)
+    // Test 10: Division por 15 (multiplo de 3 y 5)
     uint128_t n10(0, 1500);
     uint128_t m10(0, 15);
     test_euclidean_properties(n10, m10, "Test 10: 1500 / 15");
@@ -186,7 +186,7 @@ int main()
     std::cout << CYAN << "+============================================================+" << RESET
               << std::endl;
 
-    // Test 11: División signed positivo/positivo
+    // Test 11: Division signed positivo/positivo
     int128_t s_n1(0, 100);
     int128_t s_m1(0, 7);
     auto [s_q1, s_r1] = s_n1.divrem(s_m1);
@@ -196,20 +196,20 @@ int main()
     test_property("prop_signed: q=14, r=2", s_q1.low() == 14 && s_r1.low() == 2);
     test_property("prop_8: q*m + r == n", s_q1 * s_m1 + s_r1 == s_n1);
 
-    // Test 12: División signed negativo/positivo
+    // Test 12: Division signed negativo/positivo
     // En C++, -13 / 5 = -2, -13 % 5 = -3 (truncamiento hacia cero)
-    // Pero nuestra implementación unsigned no maneja signos directamente
+    // Pero nuestra implementacion unsigned no maneja signos directamente
     // Verificamos el comportamiento esperado
     int128_t s_n2 = -int128_t(0, 13);
     int128_t s_m2(0, 5);
     std::cout << "\n=== Test 12: -13 / 5 (signed -/+) ===" << std::endl;
     std::cout << "n = " << s_n2.to_string() << ", m = " << s_m2.to_string() << std::endl;
-    // Para signed, necesitamos implementar la división con signo
+    // Para signed, necesitamos implementar la division con signo
     // Por ahora, verificamos que los valores se representan correctamente
     test_property("prop_signed: n es negativo", s_n2.is_negative());
     test_property("prop_signed: m es positivo", !s_m2.is_negative());
 
-    // Test 13: División signed positivo/negativo
+    // Test 13: Division signed positivo/negativo
     int128_t s_n3(0, 13);
     int128_t s_m3 = -int128_t(0, 5);
     std::cout << "\n=== Test 13: 13 / -5 (signed +/-) ===" << std::endl;
@@ -217,7 +217,7 @@ int main()
     test_property("prop_signed: n es positivo", !s_n3.is_negative());
     test_property("prop_signed: m es negativo", s_m3.is_negative());
 
-    // Test 14: División signed negativo/negativo
+    // Test 14: Division signed negativo/negativo
     int128_t s_n4 = -int128_t(0, 20);
     int128_t s_m4 = -int128_t(0, 7);
     std::cout << "\n=== Test 14: -20 / -7 (signed -/-) ===" << std::endl;
@@ -225,7 +225,7 @@ int main()
     test_property("prop_signed: n es negativo", s_n4.is_negative());
     test_property("prop_signed: m es negativo", s_m4.is_negative());
 
-    // Test 15: INT128_MAX / valor pequeño
+    // Test 15: INT128_MAX / valor pequeno
     int128_t s_n5 = INT128_MAX;
     int128_t s_m5(0, 1000);
     auto [s_q5, s_r5] = s_n5.divrem(s_m5);
@@ -236,12 +236,12 @@ int main()
     test_property("prop_8: q*m + r == n", s_q5 * s_m5 + s_r5 == s_n5);
 
     // ========================================================================
-    // BATERÍA DE TESTS ALEATORIOS (uint128_t)
+    // BATERIA DE TESTS ALEATORIOS (uint128_t)
     // ========================================================================
     std::cout << "\n"
               << CYAN << "+============================================================+" << RESET
               << std::endl;
-    std::cout << CYAN << "|   BATERÍA ALEATORIA - 100 TESTS RANDOM                     |" << RESET
+    std::cout << CYAN << "|   BATERIA ALEATORIA - 100 TESTS RANDOM                     |" << RESET
               << std::endl;
     std::cout << CYAN << "+============================================================+" << RESET
               << std::endl;
@@ -268,7 +268,7 @@ int main()
         uint128_t n(n_hi, n_lo);
         uint128_t m(m_hi, m_lo);
 
-        // Calcular división
+        // Calcular division
         auto [q, r] = n.divrem(m);
 
         // Verificar propiedad fundamental: q*m + r == n
@@ -334,7 +334,7 @@ int main()
     test_property("q*m + r == n", q_odd * big_even + r_odd == big_odd);
     test_property("r < m", r_odd < big_even);
 
-    // Test: División donde high(divisor) != 0
+    // Test: Division donde high(divisor) != 0
     std::cout << "\n=== Test: (2^80) / (2^65) ===" << std::endl;
     uint128_t n_2_80(1ULL << 16, 0); // 2^80 = 2^16 * 2^64
     uint128_t m_2_65(1ULL << 1, 0);  // 2^65 = 2^1 * 2^64

@@ -24,20 +24,20 @@ int main()
     std::cout << "\n3. max_div_base = max_val / base_val:\n";
     std::cout << "   high=" << max_div_base.high() << ", low=" << max_div_base.low() << "\n";
 
-    // 4. Comparación result > max_div_base
+    // 4. Comparacion result > max_div_base
     std::cout << "\n4. ¿result > max_div_base?\n";
     bool cmp = result > max_div_base;
-    std::cout << "   " << (cmp ? "SI" : "NO") << " (debería ser NO)\n";
+    std::cout << "   " << (cmp ? "SI" : "NO") << " (deberia ser NO)\n";
 
-    // 5. Comparación inversa para debug
+    // 5. Comparacion inversa para debug
     std::cout << "\n5. ¿result < max_div_base?\n";
     bool cmp2 = result < max_div_base;
-    std::cout << "   " << (cmp2 ? "SI" : "NO") << " (debería ser SI)\n";
+    std::cout << "   " << (cmp2 ? "SI" : "NO") << " (deberia ser SI)\n";
 
     std::cout << "\n6. ¿result == 0?\n";
     int128_t zero(0ull, 0ull);
     bool cmp3 = (result == zero);
-    std::cout << "   " << (cmp3 ? "SI" : "NO") << " (debería ser SI)\n";
+    std::cout << "   " << (cmp3 ? "SI" : "NO") << " (deberia ser SI)\n";
 
     return 0;
 }

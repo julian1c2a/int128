@@ -1,8 +1,8 @@
 /**
  * @file test_multiplication_bitwise.cpp
- * @brief Verifica que la multiplicación es idéntica a nivel de bits para todos los tipos
+ * @brief Verifica que la multiplicacion es identica a nivel de bits para todos los tipos
  *
- * Según el teorema de complemento a 2:
+ * Segun el teorema de complemento a 2:
  *   uint128_t * uint128_t, uint128_t * int128_t,
  *   int128_t * uint128_t, int128_t * int128_t
  * producen el MISMO resultado a nivel de bits (los 128 bits inferiores).
@@ -39,16 +39,16 @@ template <typename T1, typename T2> bool bits_equal(const T1& a, const T2& b)
 }
 
 // ============================================================================
-// TESTS DE MULTIPLICACIÓN - VERIFICAR IDENTIDAD DE BITS
+// TESTS DE MULTIPLICACION - VERIFICAR IDENTIDAD DE BITS
 // ============================================================================
 
 void test_multiplication_types()
 {
     std::cout << "\n+============================================================+\n";
-    std::cout << "|   TEST: Multiplicación idéntica a nivel de bits            |\n";
+    std::cout << "|   TEST: Multiplicacion identica a nivel de bits            |\n";
     std::cout << "+============================================================+\n\n";
 
-    // Caso 1: Valores pequeños positivos
+    // Caso 1: Valores pequenos positivos
     {
         uint128_t ua(12ull), ub(34ull);
         int128_t sa(12ll), sb(34ll);
@@ -58,7 +58,7 @@ void test_multiplication_types()
         int128_t r_ss = sa * sb;
         int128_t r_su = sa * static_cast<int128_t>(ub);
 
-        // Todos deberían ser 408
+        // Todos deberian ser 408
         check(r_uu == uint128_t(408ull), "12*34 = 408 (u*u)");
         check(r_ss == int128_t(408ll), "12*34 = 408 (s*s)");
         check(bits_equal(r_uu, r_ss), "u*u == s*s a nivel de bits");
@@ -86,7 +86,7 @@ void test_multiplication_types()
 
     // Caso 3: Verificar que el producto de los MISMOS bits da el MISMO resultado
     {
-        // Crear dos números con los mismos bits
+        // Crear dos numeros con los mismos bits
         uint128_t ua(0x123456789ABCDEFull, 0xFEDCBA9876543210ull);
         uint128_t ub(0xAAAABBBBCCCCDDDDull);
 
@@ -99,7 +99,7 @@ void test_multiplication_types()
         uint128_t r_uu = ua * ub;
         int128_t r_ss = sa * sb;
 
-        // Los 128 bits inferiores DEBEN ser idénticos
+        // Los 128 bits inferiores DEBEN ser identicos
         check(bits_equal(r_uu, r_ss), "Mismos bits de entrada → mismos bits de salida");
     }
 }
@@ -107,7 +107,7 @@ void test_multiplication_types()
 void test_multiplication_random()
 {
     std::cout << "\n+============================================================+\n";
-    std::cout << "|   TEST: Multiplicación aleatoria - verificar bits          |\n";
+    std::cout << "|   TEST: Multiplicacion aleatoria - verificar bits          |\n";
     std::cout << "+============================================================+\n\n";
 
     std::mt19937_64 rng(42); // Semilla fija para reproducibilidad
@@ -135,11 +135,11 @@ void test_multiplication_random()
         uint128_t r_uu = ua * ub;
         int128_t r_ss = sa * sb;
 
-        // Verificar que los bits son idénticos
+        // Verificar que los bits son identicos
         if (bits_equal(r_uu, r_ss)) {
             ++random_passed;
         } else {
-            std::cout << "[FAIL] Test " << i << " falló\n";
+            std::cout << "[FAIL] Test " << i << " fallo\n";
             std::cout << "    a = " << ua.to_string() << "\n";
             std::cout << "    b = " << ub.to_string() << "\n";
             std::cout << "    u*u = " << r_uu.to_string() << "\n";
@@ -155,10 +155,10 @@ void test_multiplication_random()
 void test_multiplication_edge_cases()
 {
     std::cout << "\n+============================================================+\n";
-    std::cout << "|   TEST: Multiplicación - casos extremos                    |\n";
+    std::cout << "|   TEST: Multiplicacion - casos extremos                    |\n";
     std::cout << "+============================================================+\n\n";
 
-    // Caso 1: Multiplicación por 0
+    // Caso 1: Multiplicacion por 0
     {
         uint128_t u(12345ull);
         int128_t s(12345ll);
@@ -167,7 +167,7 @@ void test_multiplication_edge_cases()
         check((s * int128_t(0ll)) == int128_t(0ll), "s * 0 = 0");
     }
 
-    // Caso 2: Multiplicación por 1
+    // Caso 2: Multiplicacion por 1
     {
         uint128_t u(0xABCDEF123456789Aull, 0xFEDCBA9876543210ull);
         int128_t s;
@@ -224,7 +224,7 @@ void test_multiplication_edge_cases()
 void test_multiplication_with_smaller_types()
 {
     std::cout << "\n+============================================================+\n";
-    std::cout << "|   TEST: Multiplicación con tipos más pequeños              |\n";
+    std::cout << "|   TEST: Multiplicacion con tipos mas pequenos              |\n";
     std::cout << "+============================================================+\n\n";
 
     // uint128_t * uint64_t
@@ -244,15 +244,15 @@ void test_multiplication_with_smaller_types()
         check(result == int128_t(-5000000ll), "int128_t * int64_t negativo");
     }
 
-    // uint128_t * int32_t (extensión de signo)
+    // uint128_t * int32_t (extension de signo)
     {
         uint128_t a(100ull);
         int32_t b = -1;
         // -1 se extiende a int128_t y luego se convierte a uint128_t
-        // El resultado depende de cómo se maneje la conversión
+        // El resultado depende de como se maneje la conversion
     }
 
-    // Verificar que la multiplicación con uint64_t es igual a uint128_t
+    // Verificar que la multiplicacion con uint64_t es igual a uint128_t
     {
         uint128_t a(0xABCDEF1234567890ull, 0x1234567890ABCDEFull);
         uint64_t b = 0xDEADBEEFCAFEBABEull;
@@ -271,8 +271,8 @@ void test_multiplication_with_smaller_types()
 int main()
 {
     std::cout << "+============================================================+\n";
-    std::cout << "|   TESTS DE MULTIPLICACIÓN - IDENTIDAD DE BITS              |\n";
-    std::cout << "|   Verifica que la multiplicación es idéntica para          |\n";
+    std::cout << "|   TESTS DE MULTIPLICACION - IDENTIDAD DE BITS              |\n";
+    std::cout << "|   Verifica que la multiplicacion es identica para          |\n";
     std::cout << "|   uint128_t y int128_t cuando los bits son los mismos      |\n";
     std::cout << "+============================================================+\n";
 

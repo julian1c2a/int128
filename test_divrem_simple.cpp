@@ -17,7 +17,7 @@ int main()
 
     auto result = dividend.divrem(divisor);
     if (!result.has_value()) {
-        std::cout << "ERROR: divrem retornó nullopt\n";
+        std::cout << "ERROR: divrem retorno nullopt\n";
         return 1;
     }
 
@@ -28,7 +28,7 @@ int main()
 
     // Verificar
     uint128_t verification = quotient * uint128_t(divisor) + remainder;
-    std::cout << "Verificación: " << verification.to_string() << "\n";
+    std::cout << "Verificacion: " << verification.to_string() << "\n";
 
     if (verification == dividend) {
         std::cout << "OK PASS\n";

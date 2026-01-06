@@ -55,8 +55,8 @@ int main()
     auto result4 = g & -1; // -1 es 0xFFFFFFFFFFFFFFFF en complemento a 2
     print_result("0xFF & (-1)", result4, 0xFF);
 
-    // Test 5: Operaciones con diferentes tamaños
-    std::cout << "\nTest 5: Bitwise con diferentes tamaños\n";
+    // Test 5: Operaciones con diferentes tamanos
+    std::cout << "\nTest 5: Bitwise con diferentes tamanos\n";
     uint128_t h(0x123456789ABCDEFULL);
     auto result5 = h & 0xFFULL;
     print_result("0x123456789ABCDEF & 0xFF", result5, 0xEF);
@@ -74,7 +74,7 @@ int main()
     // Test 6: int128_t con signed values
     std::cout << std::dec << "\nTest 6: int128_t con valores signed\n";
     int128_t j(-100);
-    j &= 0xFFu; // Máscara solo los últimos 8 bits
+    j &= 0xFFu; // Mascara solo los ultimos 8 bits
     std::cout << "(-100) &= 0xFF = " << static_cast<int64_t>(j.low()) << " (expected: 156) ";
     if (j.low() == 156) {
         std::cout << "\u2713 PASS\n";

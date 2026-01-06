@@ -57,7 +57,7 @@ int main()
     std::cout << "Sign bit propagated: "
               << (static_cast<int64_t>(g.high()) < 0 ? "YES (PASS)" : "NO (FAIL)") << "\n\n";
 
-    // Test 4: Shift con size_t (común en loops)
+    // Test 4: Shift con size_t (comun en loops)
     std::cout << "Test 4: Shift con size_t\n";
     uint128_t h(0, 1);
     for (size_t i = 0; i < 8; ++i) {

@@ -1,4 +1,4 @@
-// Test rápido de divrem optimizado para tipos integrales builtin
+// Test rapido de divrem optimizado para tipos integrales builtin
 #include "int128.hpp"
 #include <cassert>
 #include <chrono>
@@ -8,9 +8,9 @@ using namespace nstd;
 
 void test_basic_divrem()
 {
-    std::cout << "=== Test Básico divrem(integral_builtin) ===\n";
+    std::cout << "=== Test Basico divrem(integral_builtin) ===\n";
 
-    // Caso 1: División por uint64_t
+    // Caso 1: Division por uint64_t
     uint128_t dividend(0x1234567890ABCDEF, 0xFEDCBA0987654321);
     uint64_t divisor = 0x123456;
 
@@ -23,13 +23,13 @@ void test_basic_divrem()
     uint128_t verification = quotient * uint128_t(divisor) + remainder;
     assert(verification == dividend);
 
-    std::cout << "OK División por uint64_t: PASS\n";
+    std::cout << "OK Division por uint64_t: PASS\n";
     std::cout << "  Dividendo: 0x" << dividend.to_string_hex() << "\n";
     std::cout << "  Divisor:   0x" << std::hex << divisor << "\n";
     std::cout << "  Cociente:  0x" << quotient.to_string_hex() << "\n";
     std::cout << "  Resto:     0x" << remainder.to_string_hex() << "\n";
 
-    // Caso 2: División por uint32_t
+    // Caso 2: Division por uint32_t
     uint32_t divisor2 = 1000000;
     auto result2 = dividend.divrem(divisor2);
     assert(result2.has_value());
@@ -38,16 +38,16 @@ void test_basic_divrem()
     uint128_t verification2 = q2 * uint128_t(divisor2) + r2;
     assert(verification2 == dividend);
 
-    std::cout << "OK División por uint32_t: PASS\n";
+    std::cout << "OK Division por uint32_t: PASS\n";
 
-    // Caso 3: División por signed int64_t
+    // Caso 3: Division por signed int64_t
     int64_t divisor3 = -12345;
     auto result3 = uint128_t(100000000000ULL).divrem(divisor3);
     assert(result3.has_value());
 
-    std::cout << "OK División por int64_t negativo: PASS\n";
+    std::cout << "OK Division por int64_t negativo: PASS\n";
 
-    // Caso 4: División por potencia de 2
+    // Caso 4: Division por potencia de 2
     uint64_t divisor4 = 1024; // 2^10
     auto result4 = dividend.divrem(divisor4);
     assert(result4.has_value());
@@ -56,21 +56,21 @@ void test_basic_divrem()
     uint128_t verification4 = q4 * uint128_t(divisor4) + r4;
     assert(verification4 == dividend);
 
-    std::cout << "OK División por potencia de 2: PASS\n";
+    std::cout << "OK Division por potencia de 2: PASS\n";
 
-    // Caso 5: División por 1
+    // Caso 5: Division por 1
     auto result5 = dividend.divrem(1ULL);
     assert(result5.has_value());
     assert(result5.value().first == dividend);
     assert(result5.value().second == uint128_t(0));
 
-    std::cout << "OK División por 1: PASS\n";
+    std::cout << "OK Division por 1: PASS\n";
 
-    // Caso 6: División por 0 (debe retornar nullopt)
+    // Caso 6: Division por 0 (debe retornar nullopt)
     auto result6 = dividend.divrem(0ULL);
     assert(!result6.has_value());
 
-    std::cout << "OK División por 0 retorna nullopt: PASS\n";
+    std::cout << "OK Division por 0 retorna nullopt: PASS\n";
 }
 
 void test_operators()
@@ -114,7 +114,7 @@ void benchmark_divrem()
     auto start1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < iterations; ++i) {
         auto result = dividend.divrem(divisor_u64);
-        (void)result; // Evitar optimización del compilador
+        (void)result; // Evitar optimizacion del compilador
     }
     auto end1 = std::chrono::high_resolution_clock::now();
     auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(end1 - start1).count();

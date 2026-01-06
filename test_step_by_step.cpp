@@ -14,7 +14,7 @@ void test_manual_parse()
 
     std::cout << "Inicial: result = " << result.low() << ", " << result.high() << "\n";
 
-    // Primera iteración: dígito '1'
+    // Primera iteracion: digito '1'
     {
         std::cout << "\n--- Iteracion 1: digito='1' (value=1) ---\n";
         uint128_t old_result = result;
@@ -24,7 +24,7 @@ void test_manual_parse()
         std::cout << "Despues de multiplicar: result = " << result.low() << ", " << result.high()
                   << "\n";
 
-        // Check overflow multiplicación
+        // Check overflow multiplicacion
         bool overflow_mul = result < old_result && old_result != uint128_t{0ull, 0ull};
         std::cout << "result < old_result = " << (result < old_result ? "true" : "false") << "\n";
         std::cout << "old_result != 0 = "
@@ -36,7 +36,7 @@ void test_manual_parse()
             return;
         }
 
-        // Sumar el dígito
+        // Sumar el digito
         uint128_t digit_val{1ull, 0ull};
         uint128_t old_result2 = result;
         std::cout << "old_result2 antes de sumar = " << old_result2.low() << ", "
@@ -60,7 +60,7 @@ void test_manual_parse()
                   << "\n";
     }
 
-    // Segunda iteración: dígito '2'
+    // Segunda iteracion: digito '2'
     {
         std::cout << "\n--- Iteracion 2: digito='2' (value=2) ---\n";
         uint128_t old_result = result;
@@ -70,7 +70,7 @@ void test_manual_parse()
         std::cout << "Despues de multiplicar: result = " << result.low() << ", " << result.high()
                   << "\n";
 
-        // Check overflow multiplicación
+        // Check overflow multiplicacion
         bool overflow_mul = result < old_result && old_result != uint128_t{0ull, 0ull};
         std::cout << "result < old_result = " << (result < old_result ? "true" : "false") << "\n";
         std::cout << "old_result != 0 = "
@@ -82,7 +82,7 @@ void test_manual_parse()
             return;
         }
 
-        // Sumar el dígito
+        // Sumar el digito
         uint128_t digit_val{2ull, 0ull};
         uint128_t old_result2 = result;
         std::cout << "old_result2 antes de sumar = " << old_result2.low() << ", "

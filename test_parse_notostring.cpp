@@ -12,7 +12,7 @@ int main()
     auto [ierr, ival] = int128_t::parse("42");
     std::cout << "int128_t::parse(\"42\"): error=" << static_cast<int>(ierr) << std::endl;
 
-    // Verificar si el valor es 42 (comparación directa)
+    // Verificar si el valor es 42 (comparacion directa)
     int128_t expected(0ull, 42ull); // high=0, low=42
     std::cout << "¿Es ival == 42? " << (ival == expected ? "SI" : "NO") << std::endl;
 

@@ -1,4 +1,4 @@
-// Test de literales de usuario y separadores de dígitos
+// Test de literales de usuario y separadores de digitos
 // Demuestra todas las formas de crear int128_t/uint128_t desde strings
 
 #include "include_new/int128_base.hpp"
@@ -9,14 +9,14 @@ using namespace nstd::int128_literals;
 
 int main()
 {
-    std::cout << "=== Test 1: Literales básicos (unsigned) ===" << std::endl;
+    std::cout << "=== Test 1: Literales basicos (unsigned) ===" << std::endl;
     auto u1 = 12345_u128;
     std::cout << "12345_u128 = " << u1.to_string() << std::endl;
 
     auto u2 = 0xDEADBEEF_u128;
     std::cout << "0xDEADBEEF_u128 = " << u2.to_string() << " (hex)" << std::endl;
 
-    std::cout << "\n=== Test 2: Separadores de dígitos ===" << std::endl;
+    std::cout << "\n=== Test 2: Separadores de digitos ===" << std::endl;
     auto u3 = 1'234'567_u128;
     std::cout << "1'234'567_u128 = " << u3.to_string() << std::endl;
 
@@ -24,13 +24,13 @@ int main()
     std::cout << "0xFF'AA'BB'CC_u128 = " << u4.to_string() << " (decimal)" << std::endl;
     std::cout << "  En hex: 0x" << u4.to_string(16) << std::endl;
 
-    std::cout << "\n=== Test 3: Literales firmados (NO usan signo explícito) ===" << std::endl;
+    std::cout << "\n=== Test 3: Literales firmados (NO usan signo explicito) ===" << std::endl;
     std::cout << "NOTA: -42_i128 se parsea como -(42_i128), el literal NO recibe el signo"
               << std::endl;
     auto i1 = 42_i128; // Parse "42" como signed
     std::cout << "42_i128 = " << i1.to_string() << std::endl;
 
-    // Para negativos, usar factory functions con string explícita:
+    // Para negativos, usar factory functions con string explicita:
     auto i2 = make_int128_signed("-42");
     std::cout << "make_int128_signed(\"-42\") = " << i2.to_string() << std::endl;
 
@@ -44,7 +44,7 @@ int main()
     auto f2 = make_int128_signed("-888'888'888");
     std::cout << "make_int128_signed(\"-888'888'888\") = " << f2.to_string() << std::endl;
 
-    std::cout << "\n=== Test 5: Verificación de errores ===" << std::endl;
+    std::cout << "\n=== Test 5: Verificacion de errores ===" << std::endl;
     auto [err1, val1] = make_int128_checked<signedness::unsigned_type>("123'456");
     std::cout << "make_int128_checked(\"123'456\") -> error=" << static_cast<int>(err1)
               << ", value=" << val1.to_string() << std::endl;
@@ -53,7 +53,7 @@ int main()
     std::cout << "make_int128_checked(\"invalid\") -> error=" << static_cast<int>(err2)
               << ", value=" << val2.to_string() << std::endl;
 
-    std::cout << "\n=== Test 6: Combinación con operadores ===" << std::endl;
+    std::cout << "\n=== Test 6: Combinacion con operadores ===" << std::endl;
     auto sum = 1'000_u128 + 234'567_u128;
     std::cout << "1'000_u128 + 234'567_u128 = " << sum.to_string() << std::endl;
 

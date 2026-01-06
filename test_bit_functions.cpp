@@ -1,11 +1,11 @@
 /**
  * @file test_bit_functions.cpp
- * @brief Tests para funciones de manipulación de bits de int128_base_t
+ * @brief Tests para funciones de manipulacion de bits de int128_base_t
  *
  * Tests para:
  * - trailing_zeros(): Contar ceros desde el LSB
  * - leading_zeros(): Contar ceros desde el MSB
- * - bit_width(): Número de bits significativos
+ * - bit_width(): Numero de bits significativos
  * - is_power_of_2(): Verificar si es potencia de 2
  */
 
@@ -40,7 +40,7 @@ void test_trailing_zeros()
     std::cout << "|   TEST: trailing_zeros()                                    |\n";
     std::cout << "+============================================================+\n\n";
 
-    // Casos básicos
+    // Casos basicos
     check(uint128_t(0ull).trailing_zeros() == 128, "tz(0) == 128");
     check(uint128_t(1ull).trailing_zeros() == 0, "tz(1) == 0");
     check(uint128_t(2ull).trailing_zeros() == 1, "tz(2) == 1");
@@ -48,7 +48,7 @@ void test_trailing_zeros()
     check(uint128_t(8ull).trailing_zeros() == 3, "tz(8) == 3");
     check(uint128_t(16ull).trailing_zeros() == 4, "tz(16) == 4");
 
-    // Potencias de 2 más grandes
+    // Potencias de 2 mas grandes
     check(uint128_t(1ull << 10).trailing_zeros() == 10, "tz(2^10) == 10");
     check(uint128_t(1ull << 32).trailing_zeros() == 32, "tz(2^32) == 32");
     check(uint128_t(1ull << 63).trailing_zeros() == 63, "tz(2^63) == 63");
@@ -60,12 +60,12 @@ void test_trailing_zeros()
     uint128_t high_bit_70(1ull << 6, 0ull); // 2^70
     check(high_bit_70.trailing_zeros() == 70, "tz(2^70) == 70");
 
-    // Números impares (trailing zeros = 0)
+    // Numeros impares (trailing zeros = 0)
     check(uint128_t(3ull).trailing_zeros() == 0, "tz(3) == 0");
     check(uint128_t(15ull).trailing_zeros() == 0, "tz(15) == 0");
     check(uint128_t(999ull).trailing_zeros() == 0, "tz(999) == 0");
 
-    // Números con trailing zeros específicos
+    // Numeros con trailing zeros especificos
     check(uint128_t(12ull).trailing_zeros() == 2, "tz(12) == 2 (12=0b1100)");
     check(uint128_t(24ull).trailing_zeros() == 3, "tz(24) == 3 (24=0b11000)");
     check(uint128_t(80ull).trailing_zeros() == 4, "tz(80) == 4 (80=0b1010000)");
@@ -88,7 +88,7 @@ void test_leading_zeros()
     std::cout << "|   TEST: leading_zeros()                                     |\n";
     std::cout << "+============================================================+\n\n";
 
-    // Casos básicos
+    // Casos basicos
     check(uint128_t(0ull).leading_zeros() == 128, "lz(0) == 128");
     check(uint128_t(1ull).leading_zeros() == 127, "lz(1) == 127");
     check(uint128_t(2ull).leading_zeros() == 126, "lz(2) == 126");
@@ -110,7 +110,7 @@ void test_leading_zeros()
     // UINT128_MAX
     check(uint128_t::max().leading_zeros() == 0, "lz(UINT128_MAX) == 0");
 
-    // Valores específicos
+    // Valores especificos
     check(uint128_t(0x1000000000000000ull).leading_zeros() == 64 + 3, "lz(0x1000...) == 67");
 }
 
@@ -124,7 +124,7 @@ void test_bit_width()
     std::cout << "|   TEST: bit_width()                                         |\n";
     std::cout << "+============================================================+\n\n";
 
-    // Casos básicos
+    // Casos basicos
     check(uint128_t(0ull).bit_width() == 0, "bw(0) == 0");
     check(uint128_t(1ull).bit_width() == 1, "bw(1) == 1");
     check(uint128_t(2ull).bit_width() == 2, "bw(2) == 2");
@@ -135,7 +135,7 @@ void test_bit_width()
     check(uint128_t(255ull).bit_width() == 8, "bw(255) == 8");
     check(uint128_t(256ull).bit_width() == 9, "bw(256) == 9");
 
-    // Valores más grandes
+    // Valores mas grandes
     check(uint128_t(1ull << 32).bit_width() == 33, "bw(2^32) == 33");
     check(uint128_t(1ull << 63).bit_width() == 64, "bw(2^63) == 64");
 
@@ -194,7 +194,7 @@ void test_is_power_of_2()
     // UINT128_MAX no es potencia de 2
     check(!uint128_t::max().is_power_of_2(), "UINT128_MAX NO es potencia de 2");
 
-    // Números con múltiples bits = no son potencia de 2
+    // Numeros con multiples bits = no son potencia de 2
     uint128_t multi_bits(3ull, 0ull); // 2^64 + 2^65
     check(!multi_bits.is_power_of_2(), "3*2^64 NO es potencia de 2");
 }
@@ -239,7 +239,7 @@ void test_coherence()
 int main()
 {
     std::cout << "+============================================================+\n";
-    std::cout << "|   TESTS DE FUNCIONES DE MANIPULACIÓN DE BITS               |\n";
+    std::cout << "|   TESTS DE FUNCIONES DE MANIPULACION DE BITS               |\n";
     std::cout << "+============================================================+\n";
 
     test_trailing_zeros();

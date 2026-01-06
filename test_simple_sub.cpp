@@ -11,7 +11,7 @@ int main()
     // Probar operator-= con builtin
     u1 -= 30;
 
-    std::cout << "u1.low() después de -= 30: " << u1.low() << std::endl;
+    std::cout << "u1.low() despues de -= 30: " << u1.low() << std::endl;
     std::cout << "Esperado: 70" << std::endl;
 
     if (u1.low() == 70) {

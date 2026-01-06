@@ -23,7 +23,7 @@ int main()
     std::cout << "int128_t::parse_base(\"42\", 10): error=" << static_cast<int>(berr)
               << ", value=" << bval.to_string() << std::endl;
 
-    // Ver el overflow límite
+    // Ver el overflow limite
     std::cout << "\nint128_t::max() = " << int128_t::max().to_string() << std::endl;
     std::cout << "uint128_t::max() = " << uint128_t::max().to_string() << std::endl;
 

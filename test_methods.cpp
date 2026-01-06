@@ -3,7 +3,7 @@
 int main() {
     unsigned long long a = 100, b = 30;
     
-    // Probar diferentes intrínsecos
+    // Probar diferentes intrinsecos
     
     // 1. __builtin_sub_overflow
     unsigned long long r1;

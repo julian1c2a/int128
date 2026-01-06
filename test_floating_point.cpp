@@ -1,4 +1,4 @@
-// Test para constructor y asignación desde floating point
+// Test para constructor y asignacion desde floating point
 #include "include_new/int128_base.hpp"
 #include <cassert>
 #include <cmath>
@@ -20,11 +20,11 @@ void test_uint128_constructor_float()
 {
     std::cout << "\n=== Constructor uint128_t desde float ===\n";
 
-    // Test 1: Valor pequeño (< 2^64)
+    // Test 1: Valor pequeno (< 2^64)
     uint128_t val1(42.0f);
     assert(val1.low() == 42ull);
     assert(val1.high() == 0ull);
-    std::cout << "OK Constructor desde float pequeño: 42.0f\n";
+    std::cout << "OK Constructor desde float pequeno: 42.0f\n";
 
     // Test 2: Valor grande (>= 2^64)
     const float big = 18446744073709551616.0f * 2.0f; // 2^65
@@ -59,39 +59,39 @@ void test_uint128_constructor_double()
 
 void test_uint128_assignment_float()
 {
-    std::cout << "\n=== Asignación uint128_t = float ===\n";
+    std::cout << "\n=== Asignacion uint128_t = float ===\n";
 
     uint128_t val;
 
-    // Test 1: Asignar valor pequeño
+    // Test 1: Asignar valor pequeno
     val = 100.0f;
     assert(val.low() == 100ull);
     assert(val.high() == 0ull);
-    std::cout << "OK Asignación desde float pequeño: 100.0f\n";
+    std::cout << "OK Asignacion desde float pequeno: 100.0f\n";
 
     // Test 2: Asignar valor grande
     val = 18446744073709551616.0f * 5.0f;
     assert(val.high() == 5ull);
-    std::cout << "OK Asignación desde float grande: 2^64 * 5\n";
+    std::cout << "OK Asignacion desde float grande: 2^64 * 5\n";
 
     // Test 3: Valor negativo → cero
     val = -50.0f;
     assert(val.low() == 0ull);
     assert(val.high() == 0ull);
-    std::cout << "OK Asignación desde float negativo → 0\n";
+    std::cout << "OK Asignacion desde float negativo → 0\n";
 }
 
 void test_int128_constructor_float()
 {
     std::cout << "\n=== Constructor int128_t desde float ===\n";
 
-    // Test 1: Valor positivo pequeño
+    // Test 1: Valor positivo pequeno
     int128_t val1(42.0f);
     assert(val1.low() == 42ull);
     assert(val1.high() == 0ull);
     std::cout << "OK Constructor int128 desde float positivo: 42.0f\n";
 
-    // Test 2: Valor negativo pequeño
+    // Test 2: Valor negativo pequeno
     int128_t val2(-100.0f);
     // -100 en complemento a 2
     uint128_t unsigned_rep(val2);
@@ -124,7 +124,7 @@ void test_int128_constructor_double()
 
 void test_int128_assignment_double()
 {
-    std::cout << "\n=== Asignación int128_t = double ===\n";
+    std::cout << "\n=== Asignacion int128_t = double ===\n";
 
     int128_t val;
 
@@ -132,41 +132,41 @@ void test_int128_assignment_double()
     val = 1234.0;
     assert(val.low() == 1234ull);
     assert(val.high() == 0ull);
-    std::cout << "OK Asignación int128 desde double positivo: 1234.0\n";
+    std::cout << "OK Asignacion int128 desde double positivo: 1234.0\n";
 
     // Test 2: Asignar negativo
     val = -5678.0;
     assert(val.is_negative());
-    std::cout << "OK Asignación int128 desde double negativo: -5678.0\n";
+    std::cout << "OK Asignacion int128 desde double negativo: -5678.0\n";
 
     // Test 3: Asignar grande
     val = 18446744073709551616.0 * 10.0;
     assert(val.high() == 10ull);
-    std::cout << "OK Asignación int128 desde double grande: 2^64 * 10\n";
+    std::cout << "OK Asignacion int128 desde double grande: 2^64 * 10\n";
 }
 
 void test_conversion_to_float()
 {
-    std::cout << "\n=== Conversión a float/double ===\n";
+    std::cout << "\n=== Conversion a float/double ===\n";
 
     // Test 1: uint128_t → float (usar constructor con un solo argumento = low)
     uint128_t uval(1000ull);
     float f = static_cast<float>(uval);
     assert(std::abs(f - 1000.0f) < 1.0f);
-    std::cout << "OK Conversión uint128_t → float: 1000\n";
+    std::cout << "OK Conversion uint128_t → float: 1000\n";
 
     // Test 2: int128_t positivo → double
     int128_t ival1(5000ull);
     double d1 = static_cast<double>(ival1);
     assert(std::abs(d1 - 5000.0) < 1.0);
-    std::cout << "OK Conversión int128_t positivo → double: 5000\n";
+    std::cout << "OK Conversion int128_t positivo → double: 5000\n";
 
     // Test 3: uint128_t grande → double
     uint128_t uval_big(10ull, 0ull); // high=10, low=0 → 10 * 2^64
     double d2 = static_cast<double>(uval_big);
     const double expected = 10.0 * 18446744073709551616.0;
     assert(std::abs(d2 - expected) < expected * 1e-10);
-    std::cout << "OK Conversión uint128_t grande → double: 10 * 2^64\n";
+    std::cout << "OK Conversion uint128_t grande → double: 10 * 2^64\n";
 }
 
 void test_roundtrip()
@@ -197,18 +197,18 @@ void test_roundtrip()
 
 void test_explicit_requirement()
 {
-    std::cout << "\n=== Verificación de explicit (debe requerir cast) ===\n";
+    std::cout << "\n=== Verificacion de explicit (debe requerir cast) ===\n";
 
-    // Estas líneas NO deben compilar (comentadas):
+    // Estas lineas NO deben compilar (comentadas):
     // uint128_t implicit1 = 42.0f;        // FAIL Error: constructor explicit
     // int128_t implicit2 = -100.0;        // FAIL Error: constructor explicit
 
-    // Estas SÍ deben compilar (cast explícito):
+    // Estas SI deben compilar (cast explicito):
     uint128_t explicit1(42.0f);             // OK OK
     int128_t explicit2(-100.0);             // OK OK
     uint128_t explicit3 = uint128_t(3.14f); // OK OK
 
-    std::cout << "OK Constructores requieren cast explícito (regla explicit)\n";
+    std::cout << "OK Constructores requieren cast explicito (regla explicit)\n";
 }
 
 int main()

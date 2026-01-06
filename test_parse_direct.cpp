@@ -1,4 +1,4 @@
-// Test mínimo para verificar parse() directamente sin constructores
+// Test minimo para verificar parse() directamente sin constructores
 #include "include_new/int128_base.hpp"
 #include <iostream>
 
@@ -32,7 +32,7 @@ int main()
     std::cout << "parse(\"-42\"): error=" << static_cast<int>(err5)
               << ", value=" << val5.to_string() << std::endl;
 
-    std::cout << "\nTest 6: Parse inválido" << std::endl;
+    std::cout << "\nTest 6: Parse invalido" << std::endl;
     auto [err6, val6] = uint128_t::parse("invalid");
     std::cout << "parse(\"invalid\"): error=" << static_cast<int>(err6)
               << ", value=" << val6.to_string() << std::endl;

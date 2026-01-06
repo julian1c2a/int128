@@ -1,6 +1,6 @@
 /**
  * @file test_parse.cpp
- * @brief Tests para el método parse() de int128_base_t
+ * @brief Tests para el metodo parse() de int128_base_t
  */
 
 #include "include_new/int128_base.hpp"
@@ -104,10 +104,10 @@ TEST(uint128_parse_errors)
     ASSERT_PARSE_ERROR("", parse_error::empty_string);
     ASSERT_PARSE_ERROR("0x", parse_error::empty_string);
     ASSERT_PARSE_ERROR("0b", parse_error::empty_string);
-    ASSERT_PARSE_ERROR("12G34", parse_error::invalid_character);  // G no es válido en decimal
+    ASSERT_PARSE_ERROR("12G34", parse_error::invalid_character);  // G no es valido en decimal
     ASSERT_PARSE_ERROR("0xGHIJ", parse_error::invalid_character); // G-J no son hex
     ASSERT_PARSE_ERROR("0b12", parse_error::invalid_character);   // 2 no es binario
-    // Nota: "089" es válido como decimal 89 (no es tratado como octal)
+    // Nota: "089" es valido como decimal 89 (no es tratado como octal)
     ASSERT_PARSE_SUCCESS("089", 0, 89); // Parseado como decimal, no octal
 }
 
@@ -129,7 +129,7 @@ TEST(uint128_parse_base_explicit)
     assert(err4 == parse_error::success);
     assert(val4.low() == 1679615); // 35*36^3 + 35*36^2 + 35*36 + 35
 
-    // Base inválida
+    // Base invalida
     auto [err5, val5] = uint128_t::parse_base("123", 1);
     assert(err5 == parse_error::invalid_base);
 
@@ -191,9 +191,9 @@ TEST(int128_parse_errors_signed)
 TEST(uint128_parse_overflow)
 {
     // UINT128_MAX = 340282366920938463463374607431768211455
-    // UINT128_MAX + 1 debería dar overflow
+    // UINT128_MAX + 1 deberia dar overflow
     auto [err, val] = uint128_t::parse("340282366920938463463374607431768211456");
-    // Puede ser overflow o success dependiendo de la implementación
+    // Puede ser overflow o success dependiendo de la implementacion
     // Si falla, comentar este test
     std::cout << "(overflow test executed, err=" << static_cast<int>(err) << ") ";
 }

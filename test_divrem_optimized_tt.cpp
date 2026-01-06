@@ -1,10 +1,10 @@
 /**
  * @file test_divrem_optimized_tt.cpp
- * @brief Tests de división optimizada para int128_base_tt.hpp
+ * @brief Tests de division optimizada para int128_base_tt.hpp
  *
  * Verifica las optimizaciones implementadas:
  * [1] Potencias de 2, 3, 5 y divisores hasta 15
- * [3] Factorización de potencias de 2 comunes
+ * [3] Factorizacion de potencias de 2 comunes
  * [2] Divisor de 64 bits con dividendo de 128 bits
  * [0] Caso general 128/128
  *
@@ -16,12 +16,12 @@
  * prop_1: (n < m)  => (q==0 && r==n)
  * prop_2: (n == m) => (q==1 && r==0)
  * prop_3: (m == 1) => (q==n && r==0)
- * prop_4: (p|n && p|m) => (q==(n/p)/(m/p))      [factorización común]
+ * prop_4: (p|n && p|m) => (q==(n/p)/(m/p))      [factorizacion comun]
  * prop_5: (q*m <= n)                             [cociente no excede]
- * prop_6: ((q+1)*m > n)                          [cociente es máximo]
+ * prop_6: ((q+1)*m > n)                          [cociente es maximo]
  * prop_7: (r < m)                                [resto menor que divisor]
- * prop_8: (q*m + r == n)                         [división euclidiana]
- * prop_9: (q*m + r+1 > n)                        [resto es mínimo]
+ * prop_8: (q*m + r == n)                         [division euclidiana]
+ * prop_9: (q*m + r+1 > n)                        [resto es minimo]
  */
 
 #include "include_new/int128_base_tt.hpp"
@@ -100,12 +100,12 @@ void test_euclidean_properties(const int128_base_t<S>& n, const int128_base_t<S>
     assert(r < m && "prop_7 failed: r should be < m");
     std::cout << "OK prop_7: (r < m)\n";
 
-    // prop_8: (q*m + r == n) - División euclidiana fundamental
+    // prop_8: (q*m + r == n) - Division euclidiana fundamental
     int128 reconstructed = q * m + r;
     assert(reconstructed == n && "prop_8 failed: q*m + r should equal n");
     std::cout << "OK prop_8: (q*m + r == n)\n";
 
-    // prop_9: (q*m + r+1 > n) - Resto es mínimo
+    // prop_9: (q*m + r+1 > n) - Resto es minimo
     int128 r_plus_1 = r + one;
     int128 qm_plus_r_plus_1 = q * m + r_plus_1;
     assert(qm_plus_r_plus_1 > n && "prop_9 failed: q*m + r+1 should be > n");
@@ -116,7 +116,7 @@ void test_euclidean_properties(const int128_base_t<S>& n, const int128_base_t<S>
 
 int main()
 {
-    std::cout << "=== Tests de División Optimizada int128_base_tt.hpp ===\n\n";
+    std::cout << "=== Tests de Division Optimizada int128_base_tt.hpp ===\n\n";
 
     // Usar uint128_t como alias del template
     using uint128_t = int128_base_t<signedness::unsigned_type>;
@@ -131,8 +131,8 @@ int main()
     print_divrem(big1, uint128_t(0, 256));  // /256
     print_divrem(big1, uint128_t(0, 1024)); // /1024
 
-    // [1] Divisores específicos (3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15)
-    std::cout << "\n[1] Divisores específicos hasta 15:\n";
+    // [1] Divisores especificos (3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15)
+    std::cout << "\n[1] Divisores especificos hasta 15:\n";
     uint128_t medium(0, 1000000);
     print_divrem(medium, uint128_t(0, 3));
     print_divrem(medium, uint128_t(0, 5));
@@ -146,13 +146,13 @@ int main()
     print_divrem(medium, uint128_t(0, 14));
     print_divrem(medium, uint128_t(0, 15));
 
-    // [3] Factorización de potencias de 2 comunes
-    std::cout << "\n[3] Factorización de potencias de 2 comunes:\n";
+    // [3] Factorizacion de potencias de 2 comunes
+    std::cout << "\n[3] Factorizacion de potencias de 2 comunes:\n";
     uint128_t n1(0, 1024 * 7); // 7168 = 2^10 * 7
     uint128_t m1(0, 64 * 3);   // 192 = 2^6 * 3
-    print_divrem(n1, m1);      // Debería simplificar a (7*16)/3 = 37 con resto 1*64 = 64
+    print_divrem(n1, m1);      // Deberia simplificar a (7*16)/3 = 37 con resto 1*64 = 64
 
-    // [3] Ambos valores en 64 bits (división nativa CPU)
+    // [3] Ambos valores en 64 bits (division nativa CPU)
     std::cout << "\n[3] Ambos valores en 64 bits:\n";
     uint128_t small_dividend(0, 12345678);
     uint128_t small_divisor(0, 123);
@@ -164,7 +164,7 @@ int main()
     uint128_t divisor_64(0, 17);
     print_divrem(big_dividend, divisor_64);
 
-    // [0] Caso general: división 128/128
+    // [0] Caso general: division 128/128
     std::cout << "\n[0] Caso general 128/128 bits:\n";
     uint128_t very_big1(0x8000000000000000ULL, 0);
     uint128_t very_big2(0x4000000000000000ULL, 0);
@@ -193,10 +193,10 @@ int main()
     // Test 3: m == 1 (prop_3)
     test_euclidean_properties(uint128_t(0, 12345), uint128_t(0, 1), "m == 1");
 
-    // Test 4: División normal con resto
+    // Test 4: Division normal con resto
     test_euclidean_properties(uint128_t(0, 100), uint128_t(0, 7), "100/7");
 
-    // Test 5: Número grande / número pequeño
+    // Test 5: Numero grande / numero pequeno
     test_euclidean_properties(uint128_t(0x1000, 0), uint128_t(0, 256), "big/small");
 
     // Test 6: Potencias de 2
@@ -205,6 +205,6 @@ int main()
     // Test 7: Con factores comunes de 2 (prop_4 indirectamente)
     test_euclidean_properties(uint128_t(0, 1024 * 7), uint128_t(0, 64 * 3), "common factor 2^6");
 
-    std::cout << "\n✅ Todos los tests de división optimizada pasaron!\n";
+    std::cout << "\n✅ Todos los tests de division optimizada pasaron!\n";
     return 0;
 }

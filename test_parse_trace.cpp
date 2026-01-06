@@ -19,7 +19,7 @@ int main()
     std::cout << "   uint128_t::max().high()=" << uint_max.high() << "\n";
     std::cout << "   uint128_t::max().low()=" << uint_max.low() << "\n";
 
-    // 3. Test con valor que debería ser válido para int128
+    // 3. Test con valor que deberia ser valido para int128
     std::cout << "\n3. int128_t::parse(\"42\"):\n";
     auto [err3, val3] = int128_t::parse("42");
     std::cout << "   error=" << static_cast<int>(err3) << "\n";

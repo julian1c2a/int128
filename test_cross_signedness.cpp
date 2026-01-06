@@ -11,10 +11,10 @@ using namespace nstd;
 
 void test_constructor_conversion()
 {
-    std::cout << "=== Test: Constructor de conversión ===" << std::endl;
+    std::cout << "=== Test: Constructor de conversion ===" << std::endl;
 
     // uint128_t -> int128_t
-    uint128_t u1(0xFFFFFFFFFFFFFFFFull, 0x7FFFFFFFFFFFFFFFull); // Número grande positivo
+    uint128_t u1(0xFFFFFFFFFFFFFFFFull, 0x7FFFFFFFFFFFFFFFull); // Numero grande positivo
     int128_t i1(u1);
     assert(i1.low() == u1.low());
     assert(i1.high() == u1.high());
@@ -27,7 +27,7 @@ void test_constructor_conversion()
     assert(u2.high() == 0xFFFFFFFFFFFFFFFFull);
     std::cout << "OK int128_t(-1) -> uint128_t = MAX" << std::endl;
 
-    // Número negativo grande
+    // Numero negativo grande
     int128_t i3(-12345);
     uint128_t u3(i3);
     assert(u3.low() == static_cast<uint64_t>(-12345));
@@ -82,7 +82,7 @@ void test_subtraction_builtin()
 
 void test_multiplication_builtin()
 {
-    std::cout << "\n=== Test: Multiplicación con tipos builtin ===" << std::endl;
+    std::cout << "\n=== Test: Multiplicacion con tipos builtin ===" << std::endl;
 
     uint128_t u1(100);
     u1 *= 5; // uint128_t *= int
@@ -156,7 +156,7 @@ void test_cross_signedness_subtraction()
 
 void test_cross_signedness_multiplication()
 {
-    std::cout << "\n=== Test: Multiplicación entre uint128_t e int128_t ===" << std::endl;
+    std::cout << "\n=== Test: Multiplicacion entre uint128_t e int128_t ===" << std::endl;
 
     uint128_t u1(100);
     int128_t i1(5);
@@ -193,8 +193,8 @@ void test_negative_cross()
     uint128_t u2(100);
     int128_t i2(-10);
     uint128_t result_u = u2 + i2;
-    // -10 como uint128_t es un número muy grande, pero en aritmética modular:
-    // 100 + (-10 interpretado como uint128_t) debería dar 90 en los bits bajos
+    // -10 como uint128_t es un numero muy grande, pero en aritmetica modular:
+    // 100 + (-10 interpretado como uint128_t) deberia dar 90 en los bits bajos
     assert(result_u.low() == 90);
     std::cout << "OK uint128_t(100) + int128_t(-10) = uint128_t(90)" << std::endl;
 }

@@ -1,4 +1,4 @@
-// Test de compilación para int128_base.hpp con las nuevas características
+// Test de compilacion para int128_base.hpp con las nuevas caracteristicas
 #include "include_new/int128_base.hpp"
 #include <iostream>
 
@@ -33,10 +33,10 @@ int main()
     auto result3 = u_val ^ s_val; // uint128 ^ int128
     std::cout << "Test operadores bitwise S2: PASS\n";
 
-    // Test 5: Operadores aritméticos con S2 (ya existían)
+    // Test 5: Operadores aritmeticos con S2 (ya existian)
     auto result4 = u_val + s_val; // uint128 + int128
     auto result5 = u_val - s_val; // uint128 - int128
-    std::cout << "Test operadores aritméticos S2: PASS\n";
+    std::cout << "Test operadores aritmeticos S2: PASS\n";
 
     std::cout << "\n=== TODOS LOS TESTS PASARON ===\n";
     return 0;

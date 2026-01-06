@@ -1,4 +1,4 @@
-// Test para verificar la encapsulación de div128_64_composed
+// Test para verificar la encapsulacion de div128_64_composed
 #include "int128.hpp"
 #include <iostream>
 

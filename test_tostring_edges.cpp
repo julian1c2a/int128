@@ -58,7 +58,7 @@ int main()
     uint128_t uint_max_minus1 = UINT128_MAX - uint128_t(1);
     TEST("UINT128_MAX - 1", uint_max_minus1.to_string(), "340282366920938463463374607431768211454");
 
-    // Segundo valor más grande
+    // Segundo valor mas grande
     uint128_t uint_max_minus2 = UINT128_MAX - uint128_t(2);
     TEST("UINT128_MAX - 2", uint_max_minus2.to_string(), "340282366920938463463374607431768211453");
 
@@ -103,9 +103,9 @@ int main()
     std::cout << "\n";
 
     // ============================================================================
-    // Test 5: to_string() con múltiples bases
+    // Test 5: to_string() con multiples bases
     // ============================================================================
-    std::cout << "--- Test 5: Conversión a diferentes bases ---\n";
+    std::cout << "--- Test 5: Conversion a diferentes bases ---\n";
 
     uint128_t val(255); // 0xFF
     TEST("255 base 2", val.to_string(2), "11111111");
@@ -123,7 +123,7 @@ int main()
 
     uint128_t big(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF); // UINT128_MAX
 
-    // Base 2 (129 dígitos: 128 unos)
+    // Base 2 (129 digitos: 128 unos)
     auto bin_result = big.to_string(2);
     std::cout << "Test UINT128_MAX base 2: ";
     if (bin_result.length() == 128 && bin_result.find('0') == std::string::npos) {
@@ -132,16 +132,16 @@ int main()
         std::cout << "\u2717 FAIL (expected 128 '1' characters)\n";
     }
 
-    // Base 16 (32 dígitos 'f')
+    // Base 16 (32 digitos 'f')
     auto hex_result = big.to_string(16);
     TEST("UINT128_MAX base 16", hex_result, "ffffffffffffffffffffffffffffffff");
 
     std::cout << "\n";
 
     // ============================================================================
-    // Test 7: Negación y to_string() encadenados
+    // Test 7: Negacion y to_string() encadenados
     // ============================================================================
-    std::cout << "--- Test 7: Operaciones negación + to_string() ---\n";
+    std::cout << "--- Test 7: Operaciones negacion + to_string() ---\n";
 
     int128_t pos(42);
     int128_t neg = -pos;
@@ -151,7 +151,7 @@ int main()
     TEST("-pos", neg.to_string(), "-42");
     TEST("-(-pos)", double_neg.to_string(), "42");
 
-    // Triple negación
+    // Triple negacion
     int128_t triple_neg = -double_neg;
     TEST("-(-(-pos))", triple_neg.to_string(), "-42");
 
@@ -162,7 +162,7 @@ int main()
     // ============================================================================
     std::cout << "--- Test 8: abs() + to_string() ---\n";
 
-    // Usar valores más pequeños que caben en int64_t para evitar problemas con __int128
+    // Usar valores mas pequenos que caben en int64_t para evitar problemas con __int128
     int128_t neg_medium(-1234567890123456LL);
     int128_t abs_medium = neg_medium.abs();
 

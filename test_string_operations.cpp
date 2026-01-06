@@ -61,7 +61,7 @@ void test_constructor_from_cstr_with_base()
     assert(u3 == uint128_t(0ull, 255ull));
     std::cout << "  FF (base 16) -> " << u3.to_string() << " OK\n";
 
-    // Base 36 (máximo)
+    // Base 36 (maximo)
     uint128_t u4("ZZ", 36);
     std::cout << "  ZZ (base 36) -> " << u4.to_string() << " OK\n";
 
@@ -183,7 +183,7 @@ void test_to_string_other_bases()
     assert(hex == "ff");
     std::cout << "  255 -> base 16: \"" << hex << "\" OK\n";
 
-    // Base 36 (máximo)
+    // Base 36 (maximo)
     uint128_t u2(0ull, 1295ull); // ZZ en base 36 = 35*36 + 35 = 1295
     std::string b36 = u2.to_string(36);
     assert(b36 == "zz");

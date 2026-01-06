@@ -16,7 +16,7 @@ int main()
     // Test 2: Valores negativos simples
     std::cout << "Test 2: Valores negativos simples\n";
     int128_t neg42 = -pos42;
-    std::cout << "  -pos42 (negación de 42)\n";
+    std::cout << "  -pos42 (negacion de 42)\n";
     std::cout << "  low() = " << neg42.low() << "\n";
     std::cout << "  high() = " << neg42.high() << "\n";
     std::cout << "  is_negative() = " << (neg42.is_negative() ? "SI" : "NO") << "\n";
@@ -33,8 +33,8 @@ int main()
     std::cout << "  to_string() = \"" << parsed_neg.to_string() << "\"\n";
     std::cout << "  ¿Es \"-42\"? " << (parsed_neg.to_string() == "-42" ? "SI" : "NO") << "\n\n";
 
-    // Test 4: Operador unario negación
-    std::cout << "Test 4: Probar abs() explícitamente\n";
+    // Test 4: Operador unario negacion
+    std::cout << "Test 4: Probar abs() explicitamente\n";
     std::cout << "  neg42.abs().low() = " << neg42.abs().low() << "\n";
     std::cout << "  neg42.abs().high() = " << neg42.abs().high() << "\n";
     std::cout << "  neg42.abs().to_string() = \"" << neg42.abs().to_string() << "\"\n\n";
@@ -42,7 +42,7 @@ int main()
     // Test 5: Probar operator-() directamente
     std::cout << "Test 5: Probar operator-() directamente\n";
     int128_t negated = -neg42;
-    std::cout << "  -neg42 (doble negación, debería dar 42)\n";
+    std::cout << "  -neg42 (doble negacion, deberia dar 42)\n";
     std::cout << "  low() = " << negated.low() << "\n";
     std::cout << "  high() = " << negated.high() << "\n";
 }

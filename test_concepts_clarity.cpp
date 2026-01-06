@@ -1,6 +1,6 @@
 /**
  * @file test_concepts_clarity.cpp
- * @brief Demostración de la mejora de claridad usando concepts vs requires clauses
+ * @brief Demostracion de la mejora de claridad usando concepts vs requires clauses
  */
 
 #include "include_new/int128_base.hpp"
@@ -9,7 +9,7 @@
 using namespace nstd;
 
 // ============================================================================
-// ANTES: Usando requires clause con _v (más verboso)
+// ANTES: Usando requires clause con _v (mas verboso)
 // ============================================================================
 
 #if 0
@@ -31,7 +31,7 @@ auto convert_old(T value) noexcept
 #endif
 
 // ============================================================================
-// AHORA: Usando concepts (más limpio y expresivo)
+// AHORA: Usando concepts (mas limpio y expresivo)
 // ============================================================================
 
 template <integral_builtin T> auto multiply_new(T value) noexcept
@@ -46,7 +46,7 @@ template <arithmetic_builtin T> auto convert_new(T value) noexcept
     return uint128_t(static_cast<uint64_t>(value));
 }
 
-// También se puede usar en requires clauses (pero ahora con concepts)
+// Tambien se puede usar en requires clauses (pero ahora con concepts)
 template <typename T>
     requires integral_builtin<T>
 auto multiply_alt(T value) noexcept
