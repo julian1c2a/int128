@@ -165,16 +165,17 @@ template <signedness S> class int128_base_t
     // CONSTANTES DE TAMAÑO (Preparación para template<size_t N>)
     // ============================================================================
 
-    /// Número de uint64_t en la representación (2 para 128 bits, será N en el futuro)
-    static constexpr size_t sz_N_Uint64_t = 2;
+    /// Número de "limbs" (uint64_t) en la representación (2 para 128 bits)
+    /// Término estándar en aritmética de multiprecisión (GMP, Boost.Multiprecision)
+    static constexpr size_t LIMBS = 2;
 
     /// Índice del uint64_t más significativo (Most Significant ULongLong)
-    static constexpr size_t MSULL = sz_N_Uint64_t - 1; // = 1 actualmente
+    static constexpr size_t MSULL = LIMBS - 1; // = 1 actualmente
 
     /// Índice del uint64_t menos significativo (Least Significant ULongLong)
     static constexpr size_t LSULL = 0;
 
-    uint64_t data[sz_N_Uint64_t]; // data[LSULL] = low, data[MSULL] = high (little-endian)
+    uint64_t data[LIMBS]; // data[LSULL] = low, data[MSULL] = high (little-endian)
 
   public:
     // ============================================================================

@@ -235,6 +235,127 @@ int main()
     test_property("prop_signed: q es positivo", !s_q5.is_negative());
     test_property("prop_8: q*m + r == n", s_q5 * s_m5 + s_r5 == s_n5);
 
+    // ========================================================================
+    // BATERÍA DE TESTS ALEATORIOS (uint128_t)
+    // ========================================================================
+    std::cout << "\n"
+              << CYAN << "╔════════════════════════════════════════════════════════════╗" << RESET
+              << std::endl;
+    std::cout << CYAN << "║   BATERÍA ALEATORIA - 100 TESTS RANDOM                     ║" << RESET
+              << std::endl;
+    std::cout << CYAN << "╚════════════════════════════════════════════════════════════╝" << RESET
+              << std::endl;
+
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    std::uniform_int_distribution<uint64_t> dist64(1, UINT64_MAX);
+
+    int random_passed = 0;
+    int random_failed = 0;
+
+    for (int i = 0; i < 100; ++i) {
+        // Generar dividendo y divisor aleatorios
+        uint64_t n_hi = dist64(gen);
+        uint64_t n_lo = dist64(gen);
+        uint64_t m_hi = dist64(gen) % (n_hi + 1); // Asegurar que a veces m <= n
+        uint64_t m_lo = dist64(gen);
+
+        // Asegurar que m != 0
+        if (m_hi == 0 && m_lo == 0) {
+            m_lo = 1;
+        }
+
+        uint128_t n(n_hi, n_lo);
+        uint128_t m(m_hi, m_lo);
+
+        // Calcular división
+        auto [q, r] = n.divrem(m);
+
+        // Verificar propiedad fundamental: q*m + r == n
+        uint128_t qm = q * m;
+        uint128_t qm_plus_r = qm + r;
+        bool prop8_ok = (qm_plus_r == n);
+
+        // Verificar r < m
+        bool prop7_ok = (r < m);
+
+        if (prop8_ok && prop7_ok) {
+            ++random_passed;
+        } else {
+            ++random_failed;
+            std::cout << RED << "[✗] Random test " << i << " FAILED" << RESET << std::endl;
+            std::cout << "    n = " << n.to_string() << std::endl;
+            std::cout << "    m = " << m.to_string() << std::endl;
+            std::cout << "    q = " << q.to_string() << std::endl;
+            std::cout << "    r = " << r.to_string() << std::endl;
+            if (!prop8_ok)
+                std::cout << "    FAIL: q*m + r != n" << std::endl;
+            if (!prop7_ok)
+                std::cout << "    FAIL: r >= m" << std::endl;
+        }
+    }
+
+    std::cout << GREEN << "[✓] Random tests pasados: " << random_passed << "/100" << RESET
+              << std::endl;
+    if (random_failed > 0) {
+        std::cout << RED << "[✗] Random tests fallidos: " << random_failed << "/100" << RESET
+                  << std::endl;
+    }
+    passed += random_passed;
+    failed += random_failed;
+
+    // ========================================================================
+    // TESTS DE CASOS EXTREMOS Y POTENCIAS DE 2
+    // ========================================================================
+    std::cout << "\n"
+              << CYAN << "╔════════════════════════════════════════════════════════════╗" << RESET
+              << std::endl;
+    std::cout << CYAN << "║   CASOS EXTREMOS Y POTENCIAS DE 2                          ║" << RESET
+              << std::endl;
+    std::cout << CYAN << "╚════════════════════════════════════════════════════════════╝" << RESET
+              << std::endl;
+
+    // Test: Dividendo con muchos ceros trailing (potencia de 2)
+    std::cout << "\n=== Test: 2^100 / 2^50 ===" << std::endl;
+    uint128_t pow2_100(1ULL << 36, 0); // 2^100 = 2^36 * 2^64
+    uint128_t pow2_50(0, 1ULL << 50);  // 2^50
+    auto [q_pow, r_pow] = pow2_100.divrem(pow2_50);
+    std::cout << "q = " << q_pow.to_string() << ", r = " << r_pow.to_string() << std::endl;
+    // 2^100 / 2^50 = 2^50, r = 0
+    test_property("2^100 / 2^50 = 2^50", q_pow == pow2_50);
+    test_property("resto = 0", r_pow.low() == 0 && r_pow.high() == 0);
+
+    // Test: Dividendo impar / divisor par
+    std::cout << "\n=== Test: 999999999999999999 / 1000000000 ===" << std::endl;
+    uint128_t big_odd(0, 999999999999999999ULL);
+    uint128_t big_even(0, 1000000000ULL);
+    auto [q_odd, r_odd] = big_odd.divrem(big_even);
+    std::cout << "q = " << q_odd.to_string() << ", r = " << r_odd.to_string() << std::endl;
+    test_property("q*m + r == n", q_odd * big_even + r_odd == big_odd);
+    test_property("r < m", r_odd < big_even);
+
+    // Test: División donde high(divisor) != 0
+    std::cout << "\n=== Test: (2^80) / (2^65) ===" << std::endl;
+    uint128_t n_2_80(1ULL << 16, 0); // 2^80 = 2^16 * 2^64
+    uint128_t m_2_65(1ULL << 1, 0);  // 2^65 = 2^1 * 2^64
+    auto [q_big, r_big] = n_2_80.divrem(m_2_65);
+    std::cout << "q = " << q_big.to_string() << ", r = " << r_big.to_string() << std::endl;
+    // 2^80 / 2^65 = 2^15, r = 0
+    test_property("2^80 / 2^65 = 2^15", q_big.low() == (1ULL << 15) && q_big.high() == 0);
+    test_property("resto = 0", r_big.low() == 0 && r_big.high() == 0);
+
+    // Test: Caso donde dividendo y divisor comparten factores de 2
+    std::cout << "\n=== Test: (12 * 2^60) / (4 * 2^60) ===" << std::endl;
+    uint128_t n_shared(12ULL << (60 - 64), 0); // Ajustado para 128 bits
+    // Simplificado: 12 * 2^10 / 4 * 2^10 = 3
+    uint128_t n_s(0, 12ULL << 10);
+    uint128_t m_s(0, 4ULL << 10);
+    auto [q_s, r_s] = n_s.divrem(m_s);
+    std::cout << "n = " << n_s.to_string() << ", m = " << m_s.to_string() << std::endl;
+    std::cout << "q = " << q_s.to_string() << ", r = " << r_s.to_string() << std::endl;
+    test_property("(12*2^10)/(4*2^10) = 3", q_s.low() == 3);
+    test_property("resto = 0", r_s.low() == 0 && r_s.high() == 0);
+
     // Resumen
     std::cout << "\n╔════════════════════════════════════════════════════════════╗" << std::endl;
     std::cout << "║                        RESUMEN                             ║" << std::endl;
