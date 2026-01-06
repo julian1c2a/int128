@@ -16,7 +16,8 @@ INTEL_CANDIDATES = [
     r"C:\Program Files (x86)\Intel\oneAPI\setvars.bat",
     r"D:\Program Files (x86)\Intel\oneAPI\setvars.bat",
     r"C:\Program Files\Intel\oneAPI\setvars.bat",
-    r"D:\Program Files\Intel\oneAPI\setvars.bat"
+    r"D:\Program Files\Intel\oneAPI\setvars.bat",
+    r"C:\Program Files (x86)\Intel\oneAPI\compiler\latest\env\vars.bat"
 ]
 
 VSWHERE = r"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"

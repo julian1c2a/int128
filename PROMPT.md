@@ -1018,3 +1018,50 @@ commands = {
 
 **Con make.py, el proyecto tiene un sistema de build moderno, portable y
 mantenible que reemplaza completamente el Makefile tradicional.**
+
+     GENERACIÓN DE DOCUMENTACIÓN (Doxygen)
+     =====================================
+     
+     El proyecto incluye configuración para generar documentación técnica automática usando Doxygen.
+     
+     1. Requisitos:
+        - Doxygen (debe estar en el PATH)
+        - Graphviz (opcional, para gráficos de dependencias)
+     
+     2. Configuración:
+        - Archivo: Doxyfile (en la raíz del proyecto)
+        - Directorio de entrada: include/ y documentation/doxygen/pages/
+        - Directorio de salida: documentation/generated/html/
+     
+     3. Scripts de Generación:
+        - Bash (MSYS2/Linux): scripts/generate_docs.bash
+        - PowerShell (Windows): scripts/generate_docs.ps1
+     
+     4. Estructura de la Documentación:
+        - API Reference: Generada desde los comentarios Doxygen en headers (.hpp)
+        - Páginas Adicionales: documentation/doxygen/pages/ (quickstart.md, examples.md, architecture.md)
+     
+     5. Visualización:
+        Abrir documentation/generated/html/index.html en un navegador web.
+
+     PRUEBAS EN WSL (Windows Subsystem for Linux)
+     ============================================
+     
+     El proyecto incluye un puente para ejecutar la batería de tests en un entorno Linux (WSL)
+     directamente desde Windows, asegurando portabilidad total.
+     
+     1. Requisitos:
+        - WSL instalado (Ubuntu recomendado)
+        - Compiladores en WSL: g++, clang++, icpx (Intel oneAPI opcional)
+        - Python 3 en WSL
+     
+     2. Ejecución:
+        Desde una terminal de Windows (PowerShell/CMD) o MSYS2 en la raíz del proyecto:
+        
+        python scripts/run_wsl_tests.py
+     
+     3. Funcionamiento:
+        - Monta la carpeta actual en WSL (/mnt/c/...)
+        - Carga el entorno de Intel oneAPI (si existe)
+        - Limpia builds previos para evitar conflictos de binarios
+        - Ejecuta 'make.py init' y 'make.py test' dentro de Linux
