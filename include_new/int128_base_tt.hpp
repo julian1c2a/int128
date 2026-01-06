@@ -1775,30 +1775,17 @@ template <signedness S> class int128_base_t
         const int g = count_trailing_zeros_128(*this);   // 2^g divide a dividendo
         const int j = count_trailing_zeros_128(divisor); // 2^j divide a divisor
 
-        // Solo aplicar optimización si al menos uno tiene factor de 2 significativo
-        if (j > 0 || (g > 0 && g > j)) {
-            const int common_shift = (j < g) ? j : g; // min(j, g)
+        // Solo aplicar optimización si AMBOS tienen factor de 2 significativo (> 2 bits)
+        // Esto evita recursión infinita y solo optimiza cuando hay ganancia real
+        const int common_shift = (j < g) ? j : g; // min(j, g)
+        if (common_shift >= 3) { // Solo optimizar si ganamos al menos 3 shifts (factor 8)
+            // Factorizar potencias de 2 comunes
+            int128_base_t n_prime = *this >> common_shift;   // n' = n / 2^common_shift
+            int128_base_t m_prime = divisor >> common_shift; // m' = m / 2^common_shift
 
-            if (common_shift > 0) {
-                // Factorizar potencias de 2 comunes
-                int128_base_t n_prime = *this >> common_shift;   // n' = n / 2^common_shift
-                int128_base_t m_prime = divisor >> common_shift; // m' = m / 2^common_shift
-
-                // Dividir los números simplificados
-                auto [q_prime, r_prime] = n_prime.divrem(m_prime);
-
-                // Reintegrar el shift en el resultado:
-                // q = q' * 2^(g-j) = q' << (g-j)
-                // r = r' * 2^common_shift = r' << common_shift
-                int128_base_t quotient = q_prime;
-                if (g > j) {
-                    quotient <<= (g - j);
-                }
-
-                int128_base_t remainder = r_prime << common_shift;
-
-                return {quotient, remainder};
-            }
+            // IMPORTANTE: Continuar con los otros fast paths, NO recursión directa
+            // Los fast paths [3] y [2] manejarán los números simplificados
+            goto skip_factor2_optimization;
         }
 
         // ========================================================================
