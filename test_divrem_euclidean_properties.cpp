@@ -122,7 +122,7 @@ void test_euclidean_properties(const uint128_t& n, const uint128_t& m, const cha
 int main()
 {
     std::cout << "+============================================================+" << std::endl;
-    std::cout << "|   TEST: PROPIEDADES EUCLIDIANAS DE LA DIVISIÓN            |" << std::endl;
+    std::cout << "|   TEST: PROPIEDADES EUCLIDIANAS DE LA DIVISION            |" << std::endl;
     std::cout << "+============================================================+" << std::endl;
 
     // Test 1: Casos básicos
