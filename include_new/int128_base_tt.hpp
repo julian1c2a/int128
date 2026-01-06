@@ -575,25 +575,12 @@ template <signedness S> class int128_base_t
     constexpr int leading_zeros() const noexcept
     {
         if (data[MSULL] != 0) {
-            // Contar leading zeros en la parte alta
-            uint64_t v = data[MSULL];
-            int count = 0;
-            while ((v & (1ULL << 63)) == 0 && count < 64) {
-                v <<= 1;
-                ++count;
-            }
-            return count;
+            return intrinsics::clz64(data[MSULL]);
         } else if (data[LSULL] != 0) {
-            // Parte alta es 0, contar en parte baja + 64
-            uint64_t v = data[LSULL];
-            int count = 0;
-            while ((v & (1ULL << 63)) == 0 && count < 64) {
-                v <<= 1;
-                ++count;
-            }
-            return 64 + count;
+            return 64 + intrinsics::clz64(data[LSULL]);
+        } else {
+            return 128;
         }
-        return 128; // Valor es 0
     }
 
     /**
@@ -770,16 +757,27 @@ template <signedness S> class int128_base_t
     // Multiplicación: templates S2 manejan todos los casos (incluyendo S2==S)
 
     // Operador multiplicación (FASE 0.5 optimizado)
+    // CORRECCIÓN DE COMPLEMENTO A 2:
+    // Cuando multiplicamos A (128 bits) × b (64 bits signed negativo):
+    // - b como unsigned = 2^64 + b_signed
+    // - A × b_unsigned = A × 2^64 + A × b_signed
+    // - Queremos solo A × b_signed, entonces: high -= A.low (original)
     template <integral_builtin T> constexpr int128_base_t& operator*=(T other) noexcept
     {
+        const uint64_t original_low = data[LSULL]; // Guardar para corrección
         const uint64_t b = static_cast<uint64_t>(other);
 
         // Fast path: valor cabe en 64 bits
         if (data[MSULL] == 0) {
             const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &data[MSULL]);
             data[LSULL] = low_part;
-            // Nota: No se necesita corrección de signo.
-            // La multiplicación en complemento a 2 funciona automáticamente.
+
+            // Corrección para signed negativos
+            if constexpr (std::is_signed_v<T>) {
+                if (other < 0) {
+                    data[MSULL] -= original_low;
+                }
+            }
             return *this;
         }
 
@@ -788,12 +786,15 @@ template <signedness S> class int128_base_t
         const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &high_part);
         const uint64_t cross_product = data[MSULL] * b;
 
-        // Nota: No se necesita corrección de signo.
-        // La multiplicación en complemento a 2 funciona automáticamente:
-        // signed_multiply(a, b) ≡ unsigned_multiply(a, b) (mod 2^128)
-
         data[LSULL] = low_part;
         data[MSULL] = high_part + cross_product;
+
+        // Corrección para signed negativos
+        if constexpr (std::is_signed_v<T>) {
+            if (other < 0) {
+                data[MSULL] -= original_low;
+            }
+        }
         return *this;
     }
 
@@ -1648,17 +1649,6 @@ template <signedness S> class int128_base_t
     // HELPERS
     // ============================================================================
 
-    constexpr int leading_zeros() const noexcept
-    {
-        if (data[MSULL] != 0) {
-            return intrinsics::clz64(data[MSULL]);
-        } else if (data[LSULL] != 0) {
-            return 64 + intrinsics::clz64(data[LSULL]);
-        } else {
-            return 128;
-        }
-    }
-
     constexpr bool is_negative() const noexcept
     {
         if constexpr (!is_signed) {
@@ -1950,32 +1940,8 @@ template <signedness S> class int128_base_t
         // Beneficio: Reduce el número de bits efectivos en la división
         // Especialmente útil cuando ambos números tienen muchos trailing zeros
 
-        // Calcular trailing zeros para dividendo y divisor
-        auto count_trailing = [](const int128_base_t& val) constexpr -> int {
-            if (val.data[LSULL] != 0) {
-                // __builtin_ctzll no es constexpr en todos los compiladores
-                // Usar algoritmo portable
-                uint64_t v = val.data[LSULL];
-                int count = 0;
-                while ((v & 1) == 0 && count < 64) {
-                    v >>= 1;
-                    ++count;
-                }
-                return count;
-            } else if (val.data[MSULL] != 0) {
-                uint64_t v = val.data[MSULL];
-                int count = 0;
-                while ((v & 1) == 0 && count < 64) {
-                    v >>= 1;
-                    ++count;
-                }
-                return 64 + count;
-            }
-            return 128; // valor es 0
-        };
-
-        const int tz_n = count_trailing(*this);
-        const int tz_m = count_trailing(divisor);
+        const int tz_n = this->trailing_zeros();
+        const int tz_m = divisor.trailing_zeros();
 
         // Solo optimizar si ambos tienen trailing zeros y al menos uno tiene muchos
         // Umbral: al menos 4 bits de trailing zeros en común
