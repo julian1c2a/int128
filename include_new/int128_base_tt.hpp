@@ -525,6 +525,120 @@ template <signedness S> class int128_base_t
     }
 
     // ============================================================================
+    // BIT MANIPULATION FUNCTIONS
+    // ============================================================================
+
+    /**
+     * @brief Cuenta los ceros finales (trailing zeros) en la representación binaria
+     * @return Número de bits en 0 desde el LSB hasta el primer bit en 1
+     *         Retorna 128 si el valor es 0
+     * @note Útil para factorización de potencias de 2 y optimizaciones de división
+     * @example
+     *   uint128_t(8).trailing_zeros() == 3   // 8 = 0b1000
+     *   uint128_t(12).trailing_zeros() == 2  // 12 = 0b1100
+     *   uint128_t(0).trailing_zeros() == 128
+     */
+    constexpr int trailing_zeros() const noexcept
+    {
+        if (data[LSULL] != 0) {
+            // Contar trailing zeros en la parte baja
+            uint64_t v = data[LSULL];
+            int count = 0;
+            while ((v & 1) == 0 && count < 64) {
+                v >>= 1;
+                ++count;
+            }
+            return count;
+        } else if (data[MSULL] != 0) {
+            // Parte baja es 0, contar en parte alta + 64
+            uint64_t v = data[MSULL];
+            int count = 0;
+            while ((v & 1) == 0 && count < 64) {
+                v >>= 1;
+                ++count;
+            }
+            return 64 + count;
+        }
+        return 128; // Valor es 0
+    }
+
+    /**
+     * @brief Cuenta los ceros iniciales (leading zeros) en la representación binaria
+     * @return Número de bits en 0 desde el MSB hasta el primer bit en 1
+     *         Retorna 128 si el valor es 0
+     * @note Útil para determinar el número efectivo de bits significativos
+     * @example
+     *   uint128_t(8).leading_zeros() == 124  // 8 = 0b1000, necesita 4 bits
+     *   uint128_t(255).leading_zeros() == 120 // 255 = 0xFF, necesita 8 bits
+     *   uint128_t(0).leading_zeros() == 128
+     */
+    constexpr int leading_zeros() const noexcept
+    {
+        if (data[MSULL] != 0) {
+            // Contar leading zeros en la parte alta
+            uint64_t v = data[MSULL];
+            int count = 0;
+            while ((v & (1ULL << 63)) == 0 && count < 64) {
+                v <<= 1;
+                ++count;
+            }
+            return count;
+        } else if (data[LSULL] != 0) {
+            // Parte alta es 0, contar en parte baja + 64
+            uint64_t v = data[LSULL];
+            int count = 0;
+            while ((v & (1ULL << 63)) == 0 && count < 64) {
+                v <<= 1;
+                ++count;
+            }
+            return 64 + count;
+        }
+        return 128; // Valor es 0
+    }
+
+    /**
+     * @brief Retorna el número de bits significativos (bit width)
+     * @return 128 - leading_zeros(), o sea, el número de bits necesarios para representar el valor
+     * @example
+     *   uint128_t(8).bit_width() == 4   // 8 = 0b1000
+     *   uint128_t(255).bit_width() == 8 // 255 = 0xFF
+     *   uint128_t(0).bit_width() == 0
+     */
+    constexpr int bit_width() const noexcept
+    {
+        return 128 - leading_zeros();
+    }
+
+    /**
+     * @brief Verifica si el valor es una potencia de 2
+     * @return true si el valor es una potencia de 2 (1, 2, 4, 8, ...), false en caso contrario
+     * @note Un número es potencia de 2 si tiene exactamente un bit en 1
+     * @example
+     *   uint128_t(8).is_power_of_2() == true
+     *   uint128_t(12).is_power_of_2() == false
+     *   uint128_t(0).is_power_of_2() == false
+     */
+    constexpr bool is_power_of_2() const noexcept
+    {
+        // Un número n es potencia de 2 si n != 0 && (n & (n-1)) == 0
+        if (data[LSULL] == 0 && data[MSULL] == 0)
+            return false;
+
+        // Calcular n - 1
+        int128_base_t n_minus_1 = *this;
+        if (n_minus_1.data[LSULL] == 0) {
+            n_minus_1.data[MSULL] -= 1;
+            n_minus_1.data[LSULL] = UI64_MAX;
+        } else {
+            n_minus_1.data[LSULL] -= 1;
+        }
+
+        // n & (n-1) debe ser 0
+        return ((data[LSULL] & n_minus_1.data[LSULL]) == 0) &&
+               ((data[MSULL] & n_minus_1.data[MSULL]) == 0);
+    }
+
+    // ============================================================================
     // OPERADORES ARITMÉTICOS
     // ============================================================================
 
@@ -1824,6 +1938,59 @@ template <signedness S> class int128_base_t
             rem.data[LSULL] = remainder;
             rem.data[MSULL] = 0;
             return {quot, rem};
+        }
+
+        // ========================================================================
+        // [3] OPTIMIZACIÓN: FACTORIZACIÓN DE POTENCIAS DE 2 COMUNES
+        // ========================================================================
+        // Si n = n' * 2^k y m = m' * 2^h (donde n', m' son impares o tienen menos 2s)
+        // Entonces: n / m = n' / m'  (el cociente no cambia si dividimos ambos por 2^s)
+        //           n % m = (n' % m') * 2^s  donde s = min(k, h)
+        //
+        // Beneficio: Reduce el número de bits efectivos en la división
+        // Especialmente útil cuando ambos números tienen muchos trailing zeros
+
+        // Calcular trailing zeros para dividendo y divisor
+        auto count_trailing = [](const int128_base_t& val) constexpr -> int {
+            if (val.data[LSULL] != 0) {
+                // __builtin_ctzll no es constexpr en todos los compiladores
+                // Usar algoritmo portable
+                uint64_t v = val.data[LSULL];
+                int count = 0;
+                while ((v & 1) == 0 && count < 64) {
+                    v >>= 1;
+                    ++count;
+                }
+                return count;
+            } else if (val.data[MSULL] != 0) {
+                uint64_t v = val.data[MSULL];
+                int count = 0;
+                while ((v & 1) == 0 && count < 64) {
+                    v >>= 1;
+                    ++count;
+                }
+                return 64 + count;
+            }
+            return 128; // valor es 0
+        };
+
+        const int tz_n = count_trailing(*this);
+        const int tz_m = count_trailing(divisor);
+
+        // Solo optimizar si ambos tienen trailing zeros y al menos uno tiene muchos
+        // Umbral: al menos 4 bits de trailing zeros en común
+        const int common_tz = (tz_n < tz_m) ? tz_n : tz_m;
+
+        if (common_tz >= 4) {
+            // Dividir ambos por 2^common_tz
+            int128_base_t n_reduced = *this >> common_tz;
+            int128_base_t m_reduced = divisor >> common_tz;
+
+            // Hacer la división con los valores reducidos
+            auto [q_reduced, r_reduced] = n_reduced.divrem(m_reduced);
+
+            // El cociente es el mismo, el resto se multiplica por 2^common_tz
+            return {q_reduced, r_reduced << common_tz};
         }
 
         // ========================================================================
