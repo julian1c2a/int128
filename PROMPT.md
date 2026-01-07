@@ -2,7 +2,7 @@
 
 > 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [TODO.md](TODO.md) | [README.md](README.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
 >
-> ⏰ **Última actualización:** 2026-01-07 19:00
+> ⏰ **Última actualización:** 2026-01-07 23:30
 
 ---
 
