@@ -125,15 +125,17 @@ int main()
 
     // Predicado lambda
     auto is_positive = [](auto x) { return x > decltype(x)(0); };
-    TEST("int128_predicate<lambda, uint128_t>", int128_predicate<decltype(is_positive), uint128_t>);
-    TEST("int128_predicate<lambda, int128_t>", int128_predicate<decltype(is_positive), int128_t>);
+    constexpr bool pred_uint128 = int128_predicate<decltype(is_positive), uint128_t>;
+    constexpr bool pred_int128 = int128_predicate<decltype(is_positive), int128_t>;
+    TEST("int128_predicate<lambda, uint128_t>", pred_uint128);
+    TEST("int128_predicate<lambda, int128_t>", pred_int128);
 
     // Operación binaria lambda
     auto add_op = [](auto a, auto b) { return a + b; };
-    TEST("int128_binary_operation<lambda, uint128_t>",
-         int128_binary_operation<decltype(add_op), uint128_t>);
-    TEST("int128_binary_operation<lambda, int128_t>",
-         int128_binary_operation<decltype(add_op), int128_t>);
+    constexpr bool binop_uint128 = int128_binary_operation<decltype(add_op), uint128_t>;
+    constexpr bool binop_int128 = int128_binary_operation<decltype(add_op), int128_t>;
+    TEST("int128_binary_operation<lambda, uint128_t>", binop_uint128);
+    TEST("int128_binary_operation<lambda, int128_t>", binop_int128);
 
     // =========================================================================
     // SECCIÓN 8: Namespaces de compatibilidad
