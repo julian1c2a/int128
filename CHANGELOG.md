@@ -7,6 +7,90 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 
 ---
 
+## 📋 Normativa de Documentación
+
+### ⏰ Actualización Horaria (OBLIGATORIO)
+
+**REGLA:** Este archivo DEBE actualizarse **cada hora** durante sesiones de desarrollo activo.
+
+**Formato de entrada horaria:**
+
+```markdown
+### [HH:MM] YYYY-MM-DD - Resumen breve
+- Cambio 1
+- Cambio 2
+```
+
+**Beneficios:**
+
+- ✅ Preserva contexto entre sesiones
+- ✅ Facilita revisión de cambios
+- ✅ Evita pérdida de información
+
+### 🔗 Documentos Interconectados
+
+Este proyecto mantiene documentación sincronizada. Al actualizar un documento, verifica si los relacionados necesitan cambios:
+
+| Documento | Propósito | Actualizar cuando... |
+|-----------|-----------|----------------------|
+| **[CHANGELOG.md](CHANGELOG.md)** | Historial de cambios | Cualquier cambio significativo |
+| **[TODO.md](TODO.md)** | Roadmap y tareas | Cambios de estado de fases/tareas |
+| **[README.md](README.md)** | Documentación usuario | Nuevas features o API changes |
+| **[PROMPT.md](PROMPT.md)** | Convenciones de código | Nuevas reglas o patrones |
+| **[API_INT128_BASE_T.md](API_INT128_BASE_T.md)** | Referencia API | Cambios en firmas de funciones |
+| **[PORTABILITY_GUIDE.md](PORTABILITY_GUIDE.md)** | Guía portabilidad | Nuevos compiladores/plataformas |
+| **[DEV_ENV_VARS.md](DEV_ENV_VARS.md)** | Entorno desarrollo | Cambios en configuración |
+
+### 📊 Matriz de Dependencias
+
+```
+CHANGELOG.md ──────┬──> TODO.md (estado de fases)
+                   ├──> README.md (features nuevas)
+                   └──> API_*.md (cambios API)
+
+TODO.md ───────────┬──> CHANGELOG.md (completar tareas)
+                   └──> README.md (roadmap público)
+
+PROMPT.md ─────────┬──> Todos (convenciones aplican a todo)
+                   └──> copilot-instructions.md (reglas AI)
+
+README.md ─────────┬──> CHANGELOG.md (historial)
+                   └──> TODO.md (próximos pasos)
+```
+
+---
+
+## [Unreleased] - Fase 1.5 en Progreso
+
+### 🔄 Sesión Actual
+
+#### [17:00] 2026-01-07 - Auditoría y Normativa
+
+- Auditoría completa de `include_new/` vs `include/`
+- Creación de normativa de actualización horaria del CHANGELOG
+- Sistema de interconexión de documentos *.md
+- Estado: Template `int128_base_tt.hpp` tiene core completo, faltan features modulares
+
+#### Estado de Migración de Features
+
+| Feature | En `include/` | En `include_new/` | Estado |
+|---------|---------------|-------------------|--------|
+| Core (`_t.hpp`) | ✅ uint128 + int128 | ✅ Template unificado | ✅ Listo |
+| `_algorithm.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_bits.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_cmath.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_concepts.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_format.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_iostreams.hpp` | ✅ | ✅ Parcial | 🔄 En progreso |
+| `_limits.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_numeric.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_ranges.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_safe.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_thread_safety.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_traits.hpp` | ✅ | ⚠️ Desactualizado | 📋 Pendiente |
+
+---
+
 ## [1.0.0] - 2026-01-05
 
 ### 🎉 Versión Release - Biblioteca Production-Ready

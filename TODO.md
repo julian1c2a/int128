@@ -1,5 +1,9 @@
 # TODO: uint128_t & int128_t - Lista de Mejoras y Estado
 
+> 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
+>
+> ⏰ **Última actualización:** 2026-01-07 17:00 (ver CHANGELOG.md para historial horario)
+
 ---
 
 ## 📁 FASE 0.5 - Optimizaciones Pre-Unificación ✅

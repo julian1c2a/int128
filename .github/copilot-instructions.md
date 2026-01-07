@@ -31,6 +31,13 @@
 ### 4. Report Status Every 5 Minutes
 During long tasks, provide brief status updates every ~5 minutes to maintain user awareness.
 
+### 5. Update CHANGELOG.md Every Hour ⏰ NEW
+**CHANGELOG.md MUST be updated every hour during active development.**
+- Format: `### [HH:MM] YYYY-MM-DD - Brief summary`
+- Include: Changes made, files modified, tests run
+- Cross-reference: Update related docs (TODO.md, README.md) as needed
+- See CHANGELOG.md header for document interconnection rules
+
 ---
 
 ## Project Overview

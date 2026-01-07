@@ -1,3 +1,103 @@
+# PROMPT.md - Especificación Técnica del Proyecto int128
+
+> 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [TODO.md](TODO.md) | [README.md](README.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
+>
+> ⏰ **Última actualización:** 2026-01-07 19:00
+
+---
+
+## 🔄 FASE 1.5: Arquitectura Template Unificada (EN PROGRESO)
+
+**Rama actual:** `phase-1.5-template-unification`
+
+### Nueva Arquitectura de Headers
+
+A partir de Fase 1.5, los tipos `uint128_t` e `int128_t` se definen como **type aliases** de un template unificado:
+
+```cpp
+// include_new/int128_base_tt.hpp
+namespace nstd {
+    enum class signedness : bool { unsigned_type = false, signed_type = true };
+    
+    template<signedness S>
+    class int128_base_t { /* implementación unificada */ };
+    
+    using uint128_t = int128_base_t<signedness::unsigned_type>;
+    using int128_t = int128_base_t<signedness::signed_type>;
+}
+```
+
+### Nomenclatura Actualizada (Fase 1.5+)
+
+| Variable | Valores | Descripción |
+|----------|---------|-------------|
+| **[signedness]** | `unsigned` \| `signed` | Distingue tipo signed/unsigned |
+| **[limbs]** (futuro) | `2` \| `4` \| `8` | Número de palabras de 64 bits (128/256/512 bits) |
+| **[feature]** | Ver lista | Característica específica |
+
+**Nomenclatura de headers nueva (Fase 1.5):**
+
+```
+include/
+├── int128_base.hpp              # Template unificado principal
+├── int128_base_[feature].hpp    # Features del template unificado
+└── type_traits.hpp              # Concepts y traits
+```
+
+**Nomenclatura legacy (pre-1.5, deprecada pero mantenida):**
+
+```
+include/
+├── uint128/uint128_[feature].hpp
+└── int128/int128_[feature].hpp
+```
+
+---
+
+## 🔒 Sanitizadores, Hardening y Análisis Estático
+
+### Flags de Sanitización (GCC/Clang)
+
+| Sanitizador | Flag | Propósito |
+|-------------|------|----------|
+| AddressSanitizer | `-fsanitize=address` | Buffer overflow, use-after-free |
+| UndefinedBehaviorSan | `-fsanitize=undefined` | Comportamiento indefinido |
+| ThreadSanitizer | `-fsanitize=thread` | Data races |
+| MemorySanitizer | `-fsanitize=memory` | Memoria no inicializada (solo Clang) |
+
+### Flags de Hardening
+
+| Flag | Propósito |
+|------|----------|
+| `-fstack-protector-strong` | Protección de stack |
+| `-fcf-protection=full` | Control Flow Integrity |
+| `-fPIE -pie` | Position Independent Executable |
+| `-D_FORTIFY_SOURCE=2` | Protección funciones libc |
+
+### Analizadores Estáticos
+
+| Herramienta | Comando | Instalación MSYS2 |
+|-------------|---------|------------------|
+| **cppcheck** | `cppcheck --enable=all include/` | `pacman -S cppcheck` |
+| **clang-tidy** | `clang-tidy file.cpp --` | Incluido con Clang |
+| **PVS-Studio** | Integración IDE | Gratis para OSS |
+| **Infer** | `infer run -- g++ file.cpp` | `pacman -S infer` |
+
+### Modos de Compilación con Sanitizadores
+
+```bash
+# Modo debug con AddressSanitizer
+[mode]=debug-asan     -> -O0 -g -fsanitize=address
+
+# Modo debug con UBSan
+[mode]=debug-ubsan    -> -O0 -g -fsanitize=undefined
+
+# Modo debug con ThreadSanitizer
+[mode]=debug-tsan     -> -O0 -g -fsanitize=thread
+```
+
+---
+
 Seguiremos con haciendo pruebas extractadas por cada función de uint128_traits.hpp, poniéndoles nombre test_(function name).cpp, y en un archivo tests/uint128_traits_extracted_tests.cpp y pruebas de benchmark en benchs/uint128_traits_extracted_benchs.cpp. Los tests y los benchs han de compilarse con los 4 compiladores que llevamos g++ en /c/msys64/ucrt64/bin/ (includes y libs también en /c/msys64/ucrt64), clang en /c/msys64/clang64/bin/ (includes y libs también en /c/msys64/clang64), y con Intel OneApi, en C:\Program Files (x86)\Intel\oneAPI, como con msvc en C:\Program Files\Microsoft Visual Studio\18\Community\ . Los benchmarks han de dar tanto tiempos como ciclos de reloj.
 
 Tengo cuatro terminales msys/bash abiertas, uno para cada compilador (gnu g++, llvm clang++, intel icpx/icx, msvc cl). En cada terminal navego a la raíz del proyecto y ejecuto el script de build (o la acción correspondiente).
