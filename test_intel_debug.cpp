@@ -20,18 +20,29 @@ int main()
     // Verificacion manual
     uint128_t qm = q * m;
     std::cout << "q * m = " << qm.to_string() << std::endl;
+    std::cout << "qm.high = " << qm.high() << ", qm.low = " << qm.low() << std::endl;
 
+    // Test suma simple
+    std::cout << "\n--- TEST SUMA SIMPLE ---" << std::endl;
+    uint128_t a(0, 100);
+    uint128_t b(0, 0);
+    uint128_t c = a + b;
+    std::cout << "100 + 0 = " << c.to_string() << std::endl;
+
+    uint128_t d(0, 50);
+    uint128_t e(0, 25);
+    uint128_t f = d + e;
+    std::cout << "50 + 25 = " << f.to_string() << std::endl;
+
+    // Test qm + r
+    std::cout << "\n--- TEST QM + R ---" << std::endl;
     uint128_t qm_plus_r = qm + r;
-    std::cout << "q*m + r = " << qm_plus_r.to_string() << std::endl;
+    std::cout << "qm + r = " << qm_plus_r.to_string() << std::endl;
+    std::cout << "qm_plus_r.high = " << qm_plus_r.high() << ", qm_plus_r.low = " << qm_plus_r.low()
+              << std::endl;
 
     bool prop8 = (qm_plus_r == n);
     std::cout << "q*m + r == n? " << (prop8 ? "SI" : "NO") << std::endl;
-
-    // Debug de bits
-    std::cout << "\n--- DEBUG BITS ---" << std::endl;
-    std::cout << "n.high = " << n.high() << ", n.low = " << n.low() << std::endl;
-    std::cout << "qm_plus_r.high = " << qm_plus_r.high() << ", qm_plus_r.low = " << qm_plus_r.low()
-              << std::endl;
 
     return prop8 ? 0 : 1;
 }
