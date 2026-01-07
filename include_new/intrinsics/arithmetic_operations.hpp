@@ -11,6 +11,11 @@
  * - GCC/Clang/Intel: __builtin_* cuando disponible
  * - MSVC: intrínsecos _addcarry_u64, _subborrow_u64
  * - Fallback: Implementación C++ puro portable
+ * 
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INTRINSICS_ARITHMETIC_OPERATIONS_HPP

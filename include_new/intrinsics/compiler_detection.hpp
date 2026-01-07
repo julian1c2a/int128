@@ -8,6 +8,11 @@
  *
  * Este header proporciona macros para detectar el compilador en uso,
  * la arquitectura objetivo y las capacidades disponibles.
+ * 
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INTRINSICS_COMPILER_DETECTION_HPP

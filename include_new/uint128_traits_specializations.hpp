@@ -37,6 +37,10 @@
  * This header only contains forward declarations and specializations for
  * std::type_traits. It does NOT include nstd::uint128_t.hpp to avoid circular
  * dependencies and ensure traits are available when type_traits is first included.
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 // Detectar si las especializaciones de traits están disponibles

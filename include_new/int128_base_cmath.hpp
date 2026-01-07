@@ -32,6 +32,11 @@
  * Funciona para uint128_t e int128_t usando el template unificado.
  *
  * @note Fase 1.5: Template unificado para signed/unsigned
+ *
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INT128_BASE_CMATH_HPP

@@ -3,8 +3,10 @@
  * @brief Type traits y concepts personalizados para el proyecto int128
  * @details Define traits y concepts auxiliares usados en todo el proyecto
  *
- * @author Julián
- * @date 2025-12-30
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef NSTD_TYPE_TRAITS_HPP

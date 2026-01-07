@@ -32,6 +32,10 @@
  * uint128_t e int128_t usando un template unificado.
  *
  * @note Fase 1.5: Template unificado para signed/unsigned
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INT128_BASE_LIMITS_HPP
@@ -98,15 +102,7 @@ template <signedness S> class numeric_limits<int128_base_t<S>>
      */
     static constexpr value_type min() noexcept
     {
-        if constexpr (is_signed_type) {
-            // -2^127: high = 0x8000000000000000, low = 0
-            return value_type(
-                static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), // high = 0x8000...
-                0ULL                                                        // low = 0
-            );
-        } else {
-            return value_type(0ULL, 0ULL);
-        }
+        return value_type::min();
     }
 
     /**
@@ -114,7 +110,7 @@ template <signedness S> class numeric_limits<int128_base_t<S>>
      */
     static constexpr value_type lowest() noexcept
     {
-        return min();
+        return value_type::min();
     }
 
     /**
@@ -123,16 +119,7 @@ template <signedness S> class numeric_limits<int128_base_t<S>>
      */
     static constexpr value_type max() noexcept
     {
-        if constexpr (is_signed_type) {
-            // 2^127 - 1: high = 0x7FFFFFFFFFFFFFFF, low = 0xFFFFFFFFFFFFFFFF
-            return value_type(std::numeric_limits<int64_t>::max(), // high = 0x7FFF...
-                              std::numeric_limits<uint64_t>::max() // low = 0xFFFF...
-            );
-        } else {
-            // 2^128 - 1: high = low = 0xFFFFFFFFFFFFFFFF
-            return value_type(std::numeric_limits<uint64_t>::max(),
-                              std::numeric_limits<uint64_t>::max());
-        }
+        return value_type::max();
     }
 
     /**
