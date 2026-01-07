@@ -214,19 +214,54 @@ template <> struct is_trivially_assignable<int128_t&, int128_t&> : std::true_typ
 // ===============================================================================
 
 // Templates base para make_signed/make_unsigned
-template <typename T> struct make_signed : std::make_signed<T> {
+// NOTA: No heredamos de std:: porque no existe para int128_base_t
+template <typename T> struct make_signed {
+    using type = std::make_signed_t<T>;
 };
 
-template <typename T> struct make_unsigned : std::make_unsigned<T> {
+template <typename T> struct make_unsigned {
+    using type = std::make_unsigned_t<T>;
 };
 
-// Especializaciones
+// Especializaciones para nuestros tipos
 template <> struct make_signed<uint128_t> {
+    using type = int128_t;
+};
+
+template <> struct make_signed<int128_t> {
     using type = int128_t;
 };
 
 template <> struct make_unsigned<int128_t> {
     using type = uint128_t;
+};
+
+template <> struct make_unsigned<uint128_t> {
+    using type = uint128_t;
+};
+
+// ===============================================================================
+// HASH
+// ===============================================================================
+
+// Template base para hash
+template <typename T> struct hash;
+
+// Especializaciones para int128_base_t<S>
+template <> struct hash<uint128_t> {
+    size_t operator()(const uint128_t& value) const noexcept
+    {
+        std::hash<uint64_t> hasher;
+        return hasher(value.high()) ^ (hasher(value.low()) << 1);
+    }
+};
+
+template <> struct hash<int128_t> {
+    size_t operator()(const int128_t& value) const noexcept
+    {
+        std::hash<uint64_t> hasher;
+        return hasher(value.high()) ^ (hasher(value.low()) << 1);
+    }
 };
 
 // ===============================================================================

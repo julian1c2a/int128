@@ -176,22 +176,6 @@ template <> struct common_type<uint8_t, int128_t> {
 };
 
 // =============================================================================
-// HASH - ESPECIALIZACIÓN
-// =============================================================================
-
-/**
- * @brief Especialización de nstd::hash para int128_base_t<S>
- * Compatible con std::unordered_set, std::unordered_map
- */
-template <signedness S> struct hash<int128_base_t<S>> {
-    size_t operator()(const int128_base_t<S>& value) const noexcept
-    {
-        std::hash<uint64_t> hasher;
-        return hasher(value.high()) ^ (hasher(value.low()) << 1);
-    }
-};
-
-// =============================================================================
 // VERIFICACIONES ESTÁTICAS
 // =============================================================================
 
