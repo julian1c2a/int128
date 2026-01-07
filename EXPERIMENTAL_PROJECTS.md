@@ -13,7 +13,7 @@ Los proyectos experimentales son ramas de desarrollo que:
 
 ```
 int128/                              # Proyecto principal
-├── experimental/                    # Raíz de proyectos experimentales
+├── int128_experimental/             # Raíz de proyectos experimentales
 │   ├── [nombre_experimento]/        # Cada experimento es una carpeta
 │   │   ├── include/                 # Headers modificados
 │   │   ├── include_new/             # Nuevos headers experimentales
@@ -35,7 +35,7 @@ int128/                              # Proyecto principal
 python scripts/create_experiment.py <nombre_experimento>
 
 # Esto crea:
-# - experimental/<nombre>/
+# - int128_experimental/<nombre>/
 # - Copia de archivos relevantes
 # - Rama git: experimental/<nombre>
 # - EXPERIMENT.md con plantilla
@@ -44,15 +44,15 @@ python scripts/create_experiment.py <nombre_experimento>
 ### 2. Desarrollar en el experimento
 
 ```bash
-cd experimental/<nombre>/
+cd int128_experimental/<nombre>/
 # Trabajar normalmente, siguiendo PROMPT.md
-# Los builds van a experimental/<nombre>/build/
+# Los builds van a int128_experimental/<nombre>/build/
 ```
 
 ### 3. Probar con todos los compiladores
 
 ```bash
-# Desde experimental/<nombre>/
+# Desde int128_experimental/<nombre>/
 python ../../scripts/test_experiment.py --all-compilers
 ```
 

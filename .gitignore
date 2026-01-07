@@ -170,4 +170,4 @@ build_wsl_log.txt
 # Temporary build files
 build_temp/
 scripts_temp/
-experimental/
+int128_experimental/

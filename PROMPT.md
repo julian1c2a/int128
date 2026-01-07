@@ -2,10 +2,20 @@ Seguiremos con haciendo pruebas extractadas por cada función de uint128_traits.
 
 Tengo cuatro terminales msys/bash abiertas, uno para cada compilador (gnu g++, llvm clang++, intel icpx/icx, msvc cl). En cada terminal navego a la raíz del proyecto y ejecuto el script de build (o la acción correspondiente).
 
-Las acciones que se hagan tienen una finalidad última entre dos: o testear o medir tiempos/ciclos de reloj (benchmarking). Por tanto, las acciones se dividen en dos grandes grupos: tests y benchmarks. A estas dos finalidades últimas corresponden dos valores de la variable [ultimate_target]:
-     - [ultimate_target]=["tests"|"benchs"]
+Las acciones que se hagan tienen una finalidad última entre tres: testear, medir tiempos/ciclos de reloj (benchmarking), o demostrar funcionalidades. Por tanto, las acciones se dividen en tres grandes grupos: tests, benchmarks y demos. A estas tres finalidades últimas corresponden tres valores de la variable [ultimate_target]:
+     - [ultimate_target]=["tests"|"benchs"|"demos"]
      - "tests"  ->  testear las funcionalidades del proyecto
      - "benchs" ->  medir tiempos y ciclos de reloj de las funcionalidades del proyecto
+     - "demos"  ->  demostrar funcionalidades del proyecto con ejemplos interactivos
+
+Para demos, existe una estructura adicional de categorías:
+     - [demo_category]=[tutorials|examples|showcase|general|comparison|performance|integration]
+     - root_project/demos/[demo_category]/[demo_name].cpp
+
+Los scripts de demos siguen el patrón:
+     - scripts/build_demo.bash [demo_category] [demo_name] [compiler] [mode]
+     - scripts/run_demo.bash [demo_category] [demo_name] [compiler] [mode]
+     - make demo CATEGORY=[demo_category] DEMO=[demo_name] COMPILER=[compiler] MODE=[mode]
 
 Los archivos header están en el directorio:
     - root_project/include [directorio de headers del proyecto]
@@ -51,10 +61,38 @@ Los nombres y rutas de los scripts de ejecución de tests serán:
 Y los nombres y rutas de los scripts de ejecución de benchmarks serán:
      - root_project/scripts/run_[type_base]_[feature]_extracted_benchs.bash
 
-Compilo mediante dos scripts: scripts/build_[type base]_[feature]_extracted_[ultimate_target == "tests"].bash y scripts/build_[type_base]_[feature]_extracted_[ultimate_target == "benchs].bash, que se encuentran en la raíz del proyecto. El actual scripts se llama scripts/build_[type_base]_[feature]_extracted_[ultimate_target].bash. Hay que pasarle un argumento (no vale uno por defecto) que es el compilador a usar: intel, msvc, gcc, clang u all. Hay que pasarle obligatoriamente un segundo argumento que es el modo de compilación: debug, release u all, al que llamamos mode. Si se pasa all como segundo argumento, compila en ambos modos. Además hay un tercer argumento opcional "print" que si se pasa hace que se impriman en un archivo de texto los resultados de los tests. La estructura de los argumentos es:
+Compilo mediante dos scripts: scripts/build_[type base]_[feature]_extracted_[ultimate_target == "tests"].bash y scripts/build_[type_base]_[feature]_extracted_[ultimate_target == "benchs].bash, que se encuentran en la raíz del proyecto. El actual scripts se llama scripts/build_[type_base]_[feature]_extracted_[ultimate_target].bash. Hay que pasarle un argumento (no vale uno por defecto) que es el compilador a usar: intel, msvc, gcc, clang u all. Hay que pasarle obligatoriamente un segundo argumento que es el modo de compilación (ver tabla abajo). Si se pasa all como segundo argumento, compila en ambos modos básicos (debug y release). Además hay un tercer argumento opcional "print" que si se pasa hace que se impriman en un archivo de texto los resultados de los tests. La estructura de los argumentos es:
     - [compiler]=[intel|msvc|gcc|clang|all].
-    - [mode]=[debug|release|all].
+    - [mode]=[debug|release|release-O0|release-O1|release-O2|release-O3|all].
     - ["print"|""]
+
+     Modos de Compilación y Flags de Optimización
+     =============================================
+     
+     | Modo        | GCC/Clang (MSYS2/WSL) | MSVC (Windows)      | Intel icx (Windows) | Intel icpx (Linux) |
+     |-------------|----------------------|---------------------|-------------|---------------------|
+     | debug       | -O0 -g               | /Od /Zi             | /Od /Zi             | -O0 -g              |
+     | release     | -O2                  | /O2                 | /O2                 | -O2                 |
+     | release-O0  | -O0                  | /Od                 | /Od                 | -O0                 |
+     | release-O1  | -O1                  | /O1                 | /O1                 | -O1                 |
+     | release-O2  | -O2                  | /O2                 | /O2                 | -O2                 |
+     | release-O3  | -O3                  | /Ox                 | /O3                 | -O3                 |
+     
+     Flags adicionales para benchmarks (GCC/Clang):
+     - -faggressive-loop-optimizations (solo GCC, incluido en -O3)
+     - -fexpensive-optimizations (solo GCC, incluido en -O2/-O3)
+     - -march=native (optimizar para CPU actual)
+     - -mtune=native (ajustar para CPU actual)
+     
+     Flags adicionales para benchmarks (MSVC):
+     - /GL (optimización global, whole program optimization)
+     - /Ot (favorecer velocidad)
+     - /Oi (generar intrínsecos)
+     
+     Flags adicionales para benchmarks (Intel):
+     - -xHost / /QxHost (optimizar para CPU actual)
+     - -ipo / /Qipo (optimización interprocedural)
+
 La llamada queda como:
      - scripts/build_[type_base]_[feature]_extracted_[ultimate_target].bash [compiler] [mode] ["print"|""]
 
@@ -69,7 +107,7 @@ Para correr los tests y benchmarks uso dos scripts: scripts/check_[type_base]_[f
     - [type_base]=[uint128|int128].
     - [feature]=[t|traits|limits|concepts|algorithms|iostreams|bits|cmath|numeric|ranges|format|safe|thread_safety].
     - [compiler]=[intel|msvc|gcc|clang|all].
-    - [mode]=[debug|release|all].
+    - [mode]=[debug|release|release-O0|release-O1|release-O2|release-O3|all].
     - ["print"|""]
 La llamada queda como:
      - scripts/[action]_[type_base]_[feature]_extracted_[ultimate_target].bash [compiler] [mode] ["print"|""]
