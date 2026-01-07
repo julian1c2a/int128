@@ -24,6 +24,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
+ */
+
 #ifndef UINT128_ALGORITHM_HPP
 #define UINT128_ALGORITHM_HPP
 
