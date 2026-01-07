@@ -64,6 +64,18 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [23:30] 2026-01-07 - FEATURES concepts, bits, numeric, algorithm COMPLETOS
+
+- ✅ **FEATURE concepts**: `int128_base_concepts.hpp` creado (59/59 tests OK)
+- ✅ **FEATURE bits**: `int128_base_bits.hpp` creado (77/77 tests OK)
+- ✅ **FEATURE numeric**: `int128_base_numeric.hpp` creado (87/87 tests OK)
+- ✅ **FEATURE algorithm**: `int128_base_algorithm.hpp` creado (47/47 tests OK)
+- ✅ Renombrado `uint128_traits_specializations.hpp` → `int128_base_traits_specializations.hpp`
+- ✅ Actualizada documentación (TODO.md, CHANGELOG.md)
+- 📋 **Total Fase 1.5:** 8/13 headers completados, 336 tests pasando
+
+**Próximos headers:** cmath, iostreams, format, safe, thread_safety
+
 #### [19:00] 2026-01-07 - Migracion FEATURE limits y nomenclatura
 
 - ✅ Creada normativa actualizacion horaria CHANGELOG
@@ -90,19 +102,19 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 | Feature | En `include/` | En `include_new/` | Estado |
 |---------|---------------|-------------------|--------|
-| Core (`_t.hpp`) | ✅ uint128 + int128 | ✅ Template unificado | ✅ Listo |
+| Core (`_tt.hpp`) | ✅ uint128 + int128 | ✅ Template unificado | ✅ Listo |
 | `_limits.hpp` | ✅ | ✅ `int128_base_limits.hpp` | ✅ **COMPLETO** |
-| `_algorithm.hpp` | ✅ | ❌ | 📋 Pendiente |
-| `_bits.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_traits.hpp` | ✅ | ✅ `int128_base_traits*.hpp` | ✅ **COMPLETO** |
+| `_concepts.hpp` | ✅ | ✅ `int128_base_concepts.hpp` | ✅ **COMPLETO** |
+| `_bits.hpp` | ✅ | ✅ `int128_base_bits.hpp` | ✅ **COMPLETO** |
+| `_numeric.hpp` | ✅ | ✅ `int128_base_numeric.hpp` | ✅ **COMPLETO** |
+| `_algorithm.hpp` | ✅ | ✅ `int128_base_algorithm.hpp` | ✅ **COMPLETO** |
 | `_cmath.hpp` | ✅ | ❌ | 📋 Pendiente |
-| `_concepts.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_iostreams.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_format.hpp` | ✅ | ❌ | 📋 Pendiente |
-| `_iostreams.hpp` | ✅ | ✅ Parcial | 🔄 En progreso |
-| `_numeric.hpp` | ✅ | ❌ | 📋 Pendiente |
-| `_ranges.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_safe.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_thread_safety.hpp` | ✅ | ❌ | 📋 Pendiente |
-| `_traits.hpp` | ✅ | ⚠️ Desactualizado | 📋 Pendiente |
+| `_ranges.hpp` | ✅ | ❌ | 📋 Pendiente (bajo prioridad) |
 
 ---
 

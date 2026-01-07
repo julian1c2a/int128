@@ -210,10 +210,59 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 
 ---
 
-## 🚀 PRÓXIMO PASO: FASE 1.5 - Unificación Template Signed/Unsigned
+## 🚀 FASE 1.5 - Unificación Template Signed/Unsigned
 
-**Estado:** 🟢 **LISTO PARA EMPEZAR (2 enero 2026)**  
+**Estado:** 🟡 **EN PROGRESO (7 enero 2026)**  
 **Pre-requisitos:** ✅ Todos completados
+
+### Progreso Actual
+
+#### ✅ Headers Completados (8/13)
+
+| Header | Estado | Tests | Descripción |
+|--------|--------|-------|-------------|
+| `int128_base_tt.hpp` | ✅ | 29/29 | Template principal `int128_base_t<S>` |
+| `int128_base_limits.hpp` | ✅ | 22/22 | `std::numeric_limits` especializado |
+| `int128_base_traits_specializations.hpp` | ✅ | 15/15 | Type traits (is_integral, make_signed, hash) |
+| `int128_base_traits.hpp` | ✅ | - | common_type y verificaciones |
+| `int128_base_concepts.hpp` | ✅ | 59/59 | Conceptos C++20 |
+| `int128_base_bits.hpp` | ✅ | 77/77 | Manipulación de bits |
+| `int128_base_numeric.hpp` | ✅ | 87/87 | Funciones numéricas (gcd, lcm, sqrt, etc.) |
+| `int128_base_algorithm.hpp` | ✅ | 47/47 | Algoritmos (search, sort, transform) |
+
+**Total tests pasados: 336/336 (100%)**
+
+#### 📋 Headers Pendientes (5/13)
+
+| Header | Estado | Prioridad |
+|--------|--------|-----------|
+| `int128_base_cmath.hpp` | 📋 Pendiente | Alta |
+| `int128_base_iostreams.hpp` | 📋 Pendiente | Alta |
+| `int128_base_format.hpp` | 📋 Pendiente | Media |
+| `int128_base_safe.hpp` | 📋 Pendiente | Media |
+| `int128_base_thread_safety.hpp` | 📋 Pendiente | Baja |
+
+### Estructura de Archivos
+
+```
+include_new/
+├── int128_base_tt.hpp                    # Template principal (2573 líneas)
+├── int128_base_limits.hpp                # numeric_limits
+├── int128_base_traits_specializations.hpp # Type traits básicos
+├── int128_base_traits.hpp                # common_type y extras
+├── int128_base_concepts.hpp              # Conceptos C++20
+├── int128_base_bits.hpp                  # Operaciones de bits
+├── int128_base_numeric.hpp               # Funciones numéricas
+├── int128_base_algorithm.hpp             # Algoritmos STL-like
+├── type_traits.hpp                       # integral_builtin concept
+├── intrinsics/                           # Operaciones de bajo nivel
+│   ├── arithmetic_operations.hpp
+│   └── bit_operations.hpp
+└── specializations/                      # Optimizaciones modulares
+    ├── uint128_div_const.hpp
+    ├── uint128_divisibility.hpp
+    └── ...
+```
 
 ### Objetivo
 
