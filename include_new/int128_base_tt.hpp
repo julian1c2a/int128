@@ -1649,6 +1649,20 @@ template <signedness S> class int128_base_t
     // HELPERS
     // ============================================================================
 
+    /**
+     * @brief Verifica si el valor es cero
+     * @return true si ambas partes son 0
+     */
+    constexpr bool is_zero() const noexcept
+    {
+        return (data[0] == 0) && (data[1] == 0);
+    }
+
+    /**
+     * @brief Verifica si el valor es negativo (solo para tipos signed)
+     * @return true si el bit de signo está establecido (solo para signed), siempre false para
+     * unsigned
+     */
     constexpr bool is_negative() const noexcept
     {
         if constexpr (!is_signed) {
