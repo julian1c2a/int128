@@ -166,3 +166,7 @@ benchmarks_results/*/*/*/*/*/*/*.json
 temp_preprocessed.txt
 scripts/env_setup/__pycache__/compiler_env.cpython-314.pyc
 build_wsl_log.txt
+
+# Temporary build files
+build_temp/
+scripts_temp/
