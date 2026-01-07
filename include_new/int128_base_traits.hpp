@@ -28,13 +28,13 @@
  * @file int128_base_traits.hpp
  * @brief Type traits adicionales para int128_base_t<S> unificado
  *
- * Proporciona especializaciones adicionales a las de uint128_traits_specializations.hpp:
+ * Proporciona especializaciones adicionales a las de int128_base_traits_specializations.hpp:
  * - common_type entre int128 y tipos estándar
  * - hash para contenedores unordered
  *
  * @note Fase 1.5: Template unificado para signed/unsigned
  * @note Los traits básicos (is_integral, is_signed, etc.) están en
- * uint128_traits_specializations.hpp
+ * int128_base_traits_specializations.hpp
  */
 
 #ifndef INT128_BASE_TRAITS_HPP
@@ -179,7 +179,7 @@ template <> struct common_type<uint8_t, int128_t> {
 // VERIFICACIONES ESTÁTICAS
 // =============================================================================
 
-// Verificar que los traits básicos funcionan (definidos en uint128_traits_specializations.hpp)
+// Verificar que los traits básicos funcionan (definidos en int128_base_traits_specializations.hpp)
 static_assert(is_integral_v<uint128_t>, "uint128_t debe ser integral");
 static_assert(is_integral_v<int128_t>, "int128_t debe ser integral");
 static_assert(is_unsigned_v<uint128_t>, "uint128_t debe ser unsigned");

@@ -54,7 +54,7 @@
 #define INT128_BASE_TT_HPP
 
 #include "type_traits.hpp"
-// NOTA: uint128_traits_specializations.hpp se incluye al FINAL del archivo,
+// NOTA: int128_base_traits_specializations.hpp se incluye al FINAL del archivo,
 // después de las definiciones de uint128_t e int128_t (type aliases).
 #include <algorithm> // Para std::reverse
 #include <climits>   // Para CHAR_BIT
@@ -2415,6 +2415,6 @@ inline constexpr int128_t make_int128_signed(const char* str) noexcept
 // ============================================================================
 // NOTA: Este archivo debe incluirse DESPUÉS de las definiciones de los type aliases
 // para que std::type_traits vea correctamente uint128_t e int128_t.
-#include "uint128_traits_specializations.hpp"
+#include "int128_base_traits_specializations.hpp"
 
 #endif // INT128_BASE_TT_HPP

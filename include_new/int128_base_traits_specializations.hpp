@@ -24,11 +24,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef UINT128_TRAITS_SPECIALIZATIONS_HPP
-#define UINT128_TRAITS_SPECIALIZATIONS_HPP
+#ifndef INT128_BASE_TRAITS_SPECIALIZATIONS_HPP
+#define INT128_BASE_TRAITS_SPECIALIZATIONS_HPP
 
 /**
- * @file uint128_traits_specializations.hpp
+ * @file int128_base_traits_specializations.hpp
  * @brief Forward declarations for nstd::uint128_t type traits specializations
  *
  * ⚠️ CRITICAL: This header MUST be included BEFORE <type_traits> is included
@@ -316,4 +316,4 @@ template <typename T> using make_unsigned_t = typename make_unsigned<T>::type;
 #endif // !UINT128_USING_LIBCPP
 
 } // namespace nstd
-#endif // UINT128_TRAITS_SPECIALIZATIONS_HPP
+#endif // INT128_BASE_TRAITS_SPECIALIZATIONS_HPP
