@@ -64,25 +64,40 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
-#### [17:00] 2026-01-07 - Auditoría y Normativa
+#### [19:00] 2026-01-07 - Migracion FEATURE limits y nomenclatura
 
-- Auditoría completa de `include_new/` vs `include/`
-- Creación de normativa de actualización horaria del CHANGELOG
-- Sistema de interconexión de documentos *.md
+- ✅ Creada normativa actualizacion horaria CHANGELOG
+- ✅ Sistema de interconexion documentos *.md implementado
+- ✅ Actualizado PROMPT.md con seccion Fase 1.5 y sanitizadores
+- ✅ Nueva nomenclatura: headers ahora son `int128_base_[feature].hpp`
+- ✅ **FEATURE limits**: `int128_base_limits.hpp` creado y testeado (10/10 OK)
+- 📋 Proxima: FEATURE cmath
+
+**Nomenclatura actualizada:**
+
+- `[type_base]` -> `[signedness]` (unsigned/signed)
+- Futuro: `[limbs]` (2/4/8 para 128/256/512 bits)
+- Headers: `int128_base_[feature].hpp`
+
+#### [17:00] 2026-01-07 - Auditoria y Normativa
+
+- Auditoria completa de `include_new/` vs `include/`
+- Creacion de normativa de actualizacion horaria del CHANGELOG
+- Sistema de interconexion de documentos *.md
 - Estado: Template `int128_base_tt.hpp` tiene core completo, faltan features modulares
 
-#### Estado de Migración de Features
+#### Estado de Migracion de Features
 
 | Feature | En `include/` | En `include_new/` | Estado |
 |---------|---------------|-------------------|--------|
 | Core (`_t.hpp`) | ✅ uint128 + int128 | ✅ Template unificado | ✅ Listo |
+| `_limits.hpp` | ✅ | ✅ `int128_base_limits.hpp` | ✅ **COMPLETO** |
 | `_algorithm.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_bits.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_cmath.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_concepts.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_format.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_iostreams.hpp` | ✅ | ✅ Parcial | 🔄 En progreso |
-| `_limits.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_numeric.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_ranges.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_safe.hpp` | ✅ | ❌ | 📋 Pendiente |
