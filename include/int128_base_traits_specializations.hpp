@@ -24,11 +24,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef UINT128_TRAITS_SPECIALIZATIONS_HPP
-#define UINT128_TRAITS_SPECIALIZATIONS_HPP
+#ifndef INT128_BASE_TRAITS_SPECIALIZATIONS_HPP
+#define INT128_BASE_TRAITS_SPECIALIZATIONS_HPP
 
 /**
- * @file uint128_traits_specializations.hpp
+ * @file int128_base_traits_specializations.hpp
  * @brief Forward declarations for nstd::uint128_t type traits specializations
  *
  * ⚠️ CRITICAL: This header MUST be included BEFORE <type_traits> is included
@@ -37,6 +37,10 @@
  * This header only contains forward declarations and specializations for
  * std::type_traits. It does NOT include nstd::uint128_t.hpp to avoid circular
  * dependencies and ensure traits are available when type_traits is first included.
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 // Detectar si las especializaciones de traits están disponibles
@@ -59,9 +63,12 @@
 
 namespace nstd
 {
-// Forward declare nstd::uint128_t (do NOT include uint128_t.hpp here!)
-class uint128_t;
-class int128_t;
+// NOTE: En Phase 1.5, uint128_t e int128_t son type aliases del template int128_base_t<signedness>,
+// NO son clases separadas. Las forward declarations ya no son necesarias aquí.
+// Las definiciones reales están en int128_base.hpp (líneas 479-480).
+//
+// class uint128_t;  // ← Ya no válido (ahora es type alias)
+// class int128_t;   // ← Ya no válido (ahora es type alias)
 
 // ===============================================================================
 // TYPE TRAITS FUNDAMENTALES (1 PARÁMETRO)
@@ -207,19 +214,54 @@ template <> struct is_trivially_assignable<int128_t&, int128_t&> : std::true_typ
 // ===============================================================================
 
 // Templates base para make_signed/make_unsigned
-template <typename T> struct make_signed : std::make_signed<T> {
+// NOTA: No heredamos de std:: porque no existe para int128_base_t
+template <typename T> struct make_signed {
+    using type = std::make_signed_t<T>;
 };
 
-template <typename T> struct make_unsigned : std::make_unsigned<T> {
+template <typename T> struct make_unsigned {
+    using type = std::make_unsigned_t<T>;
 };
 
-// Especializaciones
+// Especializaciones para nuestros tipos
 template <> struct make_signed<uint128_t> {
+    using type = int128_t;
+};
+
+template <> struct make_signed<int128_t> {
     using type = int128_t;
 };
 
 template <> struct make_unsigned<int128_t> {
     using type = uint128_t;
+};
+
+template <> struct make_unsigned<uint128_t> {
+    using type = uint128_t;
+};
+
+// ===============================================================================
+// HASH
+// ===============================================================================
+
+// Template base para hash
+template <typename T> struct hash;
+
+// Especializaciones para int128_base_t<S>
+template <> struct hash<uint128_t> {
+    size_t operator()(const uint128_t& value) const noexcept
+    {
+        std::hash<uint64_t> hasher;
+        return hasher(value.high()) ^ (hasher(value.low()) << 1);
+    }
+};
+
+template <> struct hash<int128_t> {
+    size_t operator()(const int128_t& value) const noexcept
+    {
+        std::hash<uint64_t> hasher;
+        return hasher(value.high()) ^ (hasher(value.low()) << 1);
+    }
 };
 
 // ===============================================================================
@@ -274,4 +316,4 @@ template <typename T> using make_unsigned_t = typename make_unsigned<T>::type;
 #endif // !UINT128_USING_LIBCPP
 
 } // namespace nstd
-#endif // UINT128_TRAITS_SPECIALIZATIONS_HPP
+#endif // INT128_BASE_TRAITS_SPECIALIZATIONS_HPP

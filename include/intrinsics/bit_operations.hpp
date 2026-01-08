@@ -12,6 +12,11 @@
  * - ARM: NEON intrínsecos cuando disponible
  * - RISCV: Extensión B (bit manipulation) cuando disponible
  * - Fallback: Implementación C++ puro portable
+ * 
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INTRINSICS_BIT_OPERATIONS_HPP

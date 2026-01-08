@@ -11,6 +11,11 @@
  * - GCC/Clang/Intel: __builtin_* cuando disponible
  * - MSVC: intrínsecos _addcarry_u64, _subborrow_u64
  * - Fallback: Implementación C++ puro portable
+ * 
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INTRINSICS_ARITHMETIC_OPERATIONS_HPP
@@ -70,10 +75,14 @@ inline constexpr unsigned char addcarry_u64(unsigned char carry_in, uint64_t a, 
         return (sum < a) || (sum_with_carry < sum) ? 1 : 0;
     }
 #if (defined(__GNUC__) && __GNUC__ >= 5) || (defined(__clang__) && __clang_major__ >= 3)
-    unsigned long long r;
-    unsigned char carry_out = __builtin_addcll(a, b, carry_in, &r);
-    *result = r;
-    return carry_out;
+    // GCC/Clang: usar __builtin_uaddll_overflow para detección de overflow
+    // Necesitamos manejar carry_in manualmente ya que __builtin_uaddll_overflow no lo soporta
+    unsigned long long temp_sum;
+    unsigned char overflow1 = __builtin_uaddll_overflow(a, b, &temp_sum);
+    unsigned long long final_result;
+    unsigned char overflow2 = __builtin_uaddll_overflow(temp_sum, carry_in, &final_result);
+    *result = static_cast<uint64_t>(final_result);
+    return overflow1 | overflow2;
 #else
     // Fallback para versiones antiguas
     uint64_t sum = a + b;
@@ -152,39 +161,21 @@ inline constexpr unsigned char subborrow_u64(unsigned char borrow_in, uint64_t a
         return _subborrow_u64(borrow_in, a, b, reinterpret_cast<unsigned long long*>(result));
     }
 #elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG
-    // GCC/Clang: usar __builtin_subcll desde GCC 5 / Clang 3.8
-    if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
-        // Versión constexpr portable
-        uint64_t diff = a - b;
-        uint64_t diff_with_borrow = diff - borrow_in;
-        *result = diff_with_borrow;
-        return (diff > a) || (diff_with_borrow > diff) ? 1 : 0;
-    }
-#if (defined(__GNUC__) && __GNUC__ >= 5) || (defined(__clang__) && __clang_major__ >= 3)
-    unsigned long long r;
-    unsigned char borrow_out = __builtin_subcll(a, b, borrow_in, &r);
-    *result = r;
-    return borrow_out;
-#else
-    // Fallback para versiones antiguas
+    // GCC/Clang: usar implementación portable
+    // NOTA: __builtin_subcll tiene comportamiento incorrecto en algunas versiones de GCC
+    // Por eso usamos la versión portable que siempre funciona correctamente
     uint64_t diff = a - b;
     uint64_t diff_with_borrow = diff - borrow_in;
     *result = diff_with_borrow;
     return (diff > a) || (diff_with_borrow > diff) ? 1 : 0;
-#endif
 #elif INTRINSICS_COMPILER_INTEL
-    // Intel: soporta __builtin_subcll
-    if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
-        // Versión constexpr portable
-        uint64_t diff = a - b;
-        uint64_t diff_with_borrow = diff - borrow_in;
-        *result = diff_with_borrow;
-        return (diff > a) || (diff_with_borrow > diff) ? 1 : 0;
-    }
-    unsigned long long r;
-    unsigned char borrow_out = __builtin_subcll(a, b, borrow_in, &r);
-    *result = r;
-    return borrow_out;
+    // Intel: usar implementación portable
+    // NOTA: __builtin_subcll tiene comportamiento incorrecto
+    // Por eso usamos la versión portable que siempre funciona correctamente
+    uint64_t diff = a - b;
+    uint64_t diff_with_borrow = diff - borrow_in;
+    *result = diff_with_borrow;
+    return (diff > a) || (diff_with_borrow > diff) ? 1 : 0;
 #else
     // Fallback portable
     uint64_t diff = a - b;

@@ -9,6 +9,11 @@
  * Este header proporciona implementaciones completamente portables de
  * operaciones de bits usando solo C++ estándar, sin depender de intrínsecos
  * específicos del compilador. Son más lentas pero funcionan en cualquier plataforma.
+ *
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INTRINSICS_FALLBACK_PORTABLE_HPP

@@ -3,8 +3,10 @@
  * @brief Type traits y concepts personalizados para el proyecto int128
  * @details Define traits y concepts auxiliares usados en todo el proyecto
  *
- * @author Julián
- * @date 2025-12-30
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef NSTD_TYPE_TRAITS_HPP
@@ -139,6 +141,91 @@ concept integral_builtin_unsigned = integral_builtin<T> && std::unsigned_integra
  */
 template <typename T>
 concept integral_builtin_signed = integral_builtin<T> && std::signed_integral<T>;
+
+// ============================================================================
+// TRAIT: is_arithmetic_builtin
+// ============================================================================
+
+/**
+ * @brief Type trait para detectar tipos aritméticos built-in (menores que 128 bits)
+ * @tparam T Tipo a verificar
+ *
+ * @details Un tipo es arithmetic_builtin si:
+ * - Es un tipo aritmético estándar (std::is_arithmetic_v<T> == true)
+ * - Su tamaño es menor que 16 bytes (sizeof(T) < 16)
+ *
+ * Esto incluye:
+ * - Todos los tipos integral_builtin (enteros)
+ * - Todos los tipos floating point: float, double, long double
+ *
+ * Excluye: __int128, __uint128_t, __float128, y tipos personalizados
+ *
+ * @note Útil para conversiones y operaciones que aceptan tanto enteros como flotantes
+ */
+template <typename T>
+struct is_arithmetic_builtin : std::bool_constant<std::is_arithmetic_v<T> && (sizeof(T) < 16)> {
+};
+
+/**
+ * @brief Variable template helper para is_arithmetic_builtin
+ * @tparam T Tipo a verificar
+ */
+template <typename T>
+inline constexpr bool is_arithmetic_builtin_v = is_arithmetic_builtin<T>::value;
+
+// ============================================================================
+// CONCEPT: arithmetic_builtin
+// ============================================================================
+
+/**
+ * @brief Concept para tipos aritméticos built-in (menores que 128 bits)
+ * @tparam T Tipo a verificar
+ */
+template <typename T>
+concept arithmetic_builtin = std::is_arithmetic_v<T> && (sizeof(T) < 16);
+
+// ============================================================================
+// TRAIT: is_floating_point_builtin
+// ============================================================================
+
+/**
+ * @brief Type trait para detectar tipos floating point built-in
+ * @tparam T Tipo a verificar
+ *
+ * @details Un tipo es floating_point_builtin si:
+ * - Es un tipo floating point estándar (std::is_floating_point_v<T> == true)
+ * - Su tamaño es menor que 16 bytes (sizeof(T) < 16)
+ *
+ * Esto incluye: float, double, long double
+ *
+ * Excluye: __float128, __float80 (extended), y tipos personalizados
+ *
+ * @note En la práctica, todos los tipos floating point estándar son < 16 bytes,
+ *       pero mantenemos la consistencia con otros traits por si en el futuro
+ *       aparecen extensiones de compilador
+ */
+template <typename T>
+struct is_floating_point_builtin
+    : std::bool_constant<std::is_floating_point_v<T> && (sizeof(T) < 16)> {
+};
+
+/**
+ * @brief Variable template helper para is_floating_point_builtin
+ * @tparam T Tipo a verificar
+ */
+template <typename T>
+inline constexpr bool is_floating_point_builtin_v = is_floating_point_builtin<T>::value;
+
+// ============================================================================
+// CONCEPT: floating_point_builtin
+// ============================================================================
+
+/**
+ * @brief Concept para tipos floating point built-in
+ * @tparam T Tipo a verificar
+ */
+template <typename T>
+concept floating_point_builtin = std::floating_point<T> && (sizeof(T) < 16);
 
 } // namespace nstd
 

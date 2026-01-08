@@ -8,6 +8,11 @@
  *
  * Proporciona implementaciones optimizadas de operaciones sobre bytes
  * para todos los compiladores y arquitecturas soportados.
+ * 
+ * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
+ * @version 1.0.0
+ * @date 2026-01-05
+ * @copyright Boost Software License 1.0
  */
 
 #ifndef INTRINSICS_BYTE_OPERATIONS_HPP
