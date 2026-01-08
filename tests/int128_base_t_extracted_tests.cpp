@@ -313,7 +313,10 @@ void test_shift_left() {
 
 void test_shift_right() {
   uint128_t a(1ULL << 63, 0);
-  TEST("uint128_t >> 63", (a >> 63).low() == 1 && (a >> 63).high() == 1);
+  // a = 0x8000000000000000'0000000000000000
+  // a >> 63 shifts bit 127 to bit 64
+  // Result: high = 1 (bit 64), low = 0
+  TEST("uint128_t >> 63", (a >> 63).low() == 0 && (a >> 63).high() == 1);
 
   // Arithmetic shift for signed
   int128_t neg(-1);
