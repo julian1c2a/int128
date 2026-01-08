@@ -72,7 +72,6 @@
 // Incluir intrínsecos
 #include "intrinsics/arithmetic_operations.hpp"
 #include "intrinsics/bit_operations.hpp"
-#include "intrinsics/divrem_helpers.hpp"
 
 namespace nstd
 {
@@ -2200,7 +2199,7 @@ template <signedness S> class int128_base_t
         // 1. OPTIMIZACIÓN: División por potencias de 2 (usar shift)
         if (v_in.is_power_of_2()) {
             const int shift_amount = count_trailing_zeros_knuth(v_in);
-            const int128_base_t quotient = this->shift_right(shift_amount);
+            const int128_base_t quotient = *this >> shift_amount;
             const int128_base_t mask = v_in - int128_base_t(1ull);
             const int128_base_t remainder = *this & mask;
             return {quotient, remainder};
@@ -2285,8 +2284,8 @@ template <signedness S> class int128_base_t
         // D1. Normalización
         // Desplazamos u y v para que el MSB de v sea 1.
         const int s = v_in.leading_zeros() > 0 ? v_in.leading_zeros() - 64 : 0;
-        [[maybe_unused]] const int128_base_t v = v_in.shift_left(s);
-        [[maybe_unused]] const int128_base_t u_shifted = this->shift_left(s);
+        [[maybe_unused]] const int128_base_t v = v_in << s;
+        [[maybe_unused]] const int128_base_t u_shifted = *this << s;
 
         // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
         [[maybe_unused]] uint64_t u_extension = 0;
