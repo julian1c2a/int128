@@ -137,6 +137,17 @@ template <typename T>
 concept int128_convertible = std::integral<T> || int128_type<T>;
 
 /**
+ * @brief Concept para tipos integrales incluyendo int128_base_t
+ *
+ * @tparam T Tipo a verificar
+ *
+ * Extiende std::integral para incluir uint128_t e int128_t.
+ * Usar en lugar de std::integral cuando se necesita soporte 128-bit.
+ */
+template <typename T>
+concept integral = std::integral<T> || int128_type<T>;
+
+/**
  * @brief Concept para tipos que son compatibles con operaciones de int128_base_t
  *
  * @tparam T Tipo a verificar
