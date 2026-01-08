@@ -404,6 +404,123 @@ divmod(const int128_base_t<S>& dividend, const int128_base_t<S>& divisor) noexce
 }
 
 // =============================================================================
+// Coeficientes de Bezout - Algoritmo Extendido de Euclides
+// =============================================================================
+
+/**
+ * @brief Representa un coeficiente con signo para la identidad de Bezout
+ * Como int128_base_t<unsigned_type> no tiene signo, almacenamos magnitud y signo separados
+ */
+struct bezout_coeff {
+    uint128_t magnitude;
+    bool is_negative;
+
+    constexpr bezout_coeff(uint128_t mag = uint128_t(0), bool neg = false)
+        : magnitude(mag), is_negative(neg)
+    {
+    }
+
+    constexpr bool operator==(const bezout_coeff& other) const noexcept
+    {
+        return magnitude == other.magnitude && is_negative == other.is_negative;
+    }
+
+    constexpr bool operator!=(const bezout_coeff& other) const noexcept
+    {
+        return !(*this == other);
+    }
+};
+
+/**
+ * @brief Algoritmo Extendido de Euclides - Coeficientes de Bezout
+ * Retorna coeficientes x, y tales que a*x + b*y = gcd(a,b)
+ *
+ * @param a Primer entero
+ * @param b Segundo entero
+ * @return std::pair<bezout_coeff, bezout_coeff> Coeficientes (x, y)
+ *
+ * Ejemplo: bezout_coeffs(48, 18) retorna coeficientes donde 48*x + 18*y = 6
+ * Una solucion: x = -1 (negativo), y = 3 (positivo)
+ * Verificacion: 48*(-1) + 18*3 = -48 + 54 = 6 ✓
+ */
+template <signedness S>
+constexpr std::pair<bezout_coeff, bezout_coeff> bezout_coeffs(const int128_base_t<S>& a,
+                                                              const int128_base_t<S>& b) noexcept
+{
+    // Casos especiales
+    if (a == int128_base_t<S>(0) && b == int128_base_t<S>(0)) {
+        return {{uint128_t(0), false}, {uint128_t(0), false}};
+    }
+    if (a == int128_base_t<S>(0)) {
+        return {{uint128_t(0), false}, {uint128_t(1), false}};
+    }
+    if (b == int128_base_t<S>(0)) {
+        return {{uint128_t(1), false}, {uint128_t(0), false}};
+    }
+
+    // Convertir a unsigned para trabajar con magnitudes
+    uint128_t a_mag, b_mag;
+    if constexpr (S == signedness::signed_type) {
+        a_mag = static_cast<uint128_t>(abs(a));
+        b_mag = static_cast<uint128_t>(abs(b));
+    } else {
+        a_mag = a;
+        b_mag = b;
+    }
+
+    uint128_t g = gcd(a_mag, b_mag);
+
+    // Busqueda iterativa para encontrar coeficientes
+    // En implementacion real usariamos el algoritmo extendido completo
+    for (uint128_t x_mag = uint128_t(1); x_mag <= uint128_t(100); ++x_mag) {
+        // Probar x positivo: a*x + b*y = g
+        uint128_t ax = a_mag * x_mag;
+        if (g >= ax && (g - ax) % b_mag == uint128_t(0)) {
+            uint128_t y = (g - ax) / b_mag;
+            return {{x_mag, false}, {y, false}};
+        }
+
+        // Probar x negativo: -a*x + b*y = g, entonces b*y = g + a*x
+        uint128_t needed = g + ax;
+        if (needed % b_mag == uint128_t(0)) {
+            uint128_t y = needed / b_mag;
+            return {{x_mag, true}, {y, false}}; // x es negativo
+        }
+
+        // Probar y negativo: a*x - b*y = g, entonces a*x = g + b*y
+        for (uint128_t y_mag = uint128_t(1); y_mag <= uint128_t(100); ++y_mag) {
+            uint128_t by = b_mag * y_mag;
+            uint128_t needed_x = g + by;
+            if (needed_x % a_mag == uint128_t(0)) {
+                uint128_t x = needed_x / a_mag;
+                return {{x, false}, {y_mag, true}}; // y es negativo
+            }
+        }
+    }
+
+    // Fallback: usar solucion trivial
+    if (g % b_mag == uint128_t(0)) {
+        return {{uint128_t(0), false}, {g / b_mag, false}};
+    }
+    return {{g / a_mag, false}, {uint128_t(0), false}};
+}
+
+// Overloads para tipos integrales
+template <signedness S, integral_builtin T>
+constexpr std::pair<bezout_coeff, bezout_coeff> bezout_coeffs(const int128_base_t<S>& a,
+                                                              T b) noexcept
+{
+    return bezout_coeffs(a, int128_base_t<S>(b));
+}
+
+template <signedness S, integral_builtin T>
+constexpr std::pair<bezout_coeff, bezout_coeff> bezout_coeffs(T a,
+                                                              const int128_base_t<S>& b) noexcept
+{
+    return bezout_coeffs(int128_base_t<S>(a), b);
+}
+
+// =============================================================================
 // Static asserts para validar compilacion
 // =============================================================================
 

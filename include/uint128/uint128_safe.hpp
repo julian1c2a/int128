@@ -55,7 +55,8 @@ template <typename T> struct safe_result {
 /**
  * @brief Safe conversion from uint128_t to integral types
  */
-template <typename T> constexpr safe_result<T> safe_cast(const uint128_t& value) noexcept
+template <typename T> constexpr 
+safe_result<T> safe_cast(const uint128_t& value) noexcept
 {
     static_assert(std::is_integral_v<T>, "Target type must be integral");
 
@@ -102,16 +103,15 @@ template <typename T> constexpr safe_result<T> safe_cast(const uint128_t& value)
 /**
  * @brief Safe conversion to floating point types
  */
-template <typename T> constexpr safe_result<T> safe_cast_float(const uint128_t& value) noexcept
+template <floating_point_builtin T> constexpr 
+safe_result<T> safe_cast_float(const uint128_t& value) noexcept
 {
-    static_assert(std::is_floating_point_v<T>, "Target type must be floating point");
-
     // Convert high and low parts separately to avoid precision loss
-    T high_part = static_cast<T>(value.high());
-    T low_part = static_cast<T>(value.low());
+    const T high_part = static_cast<T>(value.high());
+    const T low_part = static_cast<T>(value.low());
 
     // Combine: high * 2^64 + low
-    T result = high_part * static_cast<T>(18446744073709551616.0) + low_part;
+    const T result = high_part * static_cast<T>(18446744073709551616.0) + low_part;
 
     // Check for infinity (overflow)
     if (!std::isfinite(result)) {
@@ -127,13 +127,13 @@ template <typename T> constexpr safe_result<T> safe_cast_float(const uint128_t& 
 template <typename T> constexpr T checked_cast(const uint128_t& value)
 {
     if constexpr (std::is_floating_point_v<T>) {
-        auto result = safe_cast_float<T>(value);
+        const auto result = safe_cast_float<T>(value);
         if (!result.is_valid()) {
             throw std::overflow_error("uint128_t value too large for target floating point type");
         }
         return result.value;
     } else {
-        auto result = safe_cast<T>(value);
+        const auto result = safe_cast<T>(value);
         if (result.status == conversion_result::overflow) {
             throw std::overflow_error("uint128_t value too large for target type");
         }
@@ -147,10 +147,10 @@ template <typename T> constexpr T checked_cast(const uint128_t& value)
 template <typename T> constexpr std::optional<T> try_cast(const uint128_t& value) noexcept
 {
     if constexpr (std::is_floating_point_v<T>) {
-        auto result = safe_cast_float<T>(value);
+        const auto result = safe_cast_float<T>(value);
         return result.is_valid() ? std::make_optional(result.value) : std::nullopt;
     } else {
-        auto result = safe_cast<T>(value);
+        const auto result = safe_cast<T>(value);
         return result.is_valid() ? std::make_optional(result.value) : std::nullopt;
     }
 }
@@ -193,7 +193,7 @@ template <typename T> constexpr safe_result<uint128_t> safe_make_uint128_float(T
 
     // Maximum value representable in uint128_t
     constexpr T max_uint128 = static_cast<T>(std::numeric_limits<uint64_t>::max()) *
-                                  static_cast<T>(18446744073709551616.0) +
+                                  static_cast<T>(18446744073709551616.0L) +
                               static_cast<T>(std::numeric_limits<uint64_t>::max());
 
     if (value > max_uint128) {
@@ -201,8 +201,8 @@ template <typename T> constexpr safe_result<uint128_t> safe_make_uint128_float(T
     }
 
     // Extract high and low parts
-    T high_part = std::floor(value / static_cast<T>(18446744073709551616.0));
-    T low_part = value - high_part * static_cast<T>(18446744073709551616.0);
+    T high_part = std::floor(value / static_cast<T>(18446744073709551616.0L));
+    T low_part = value - high_part * static_cast<T>(18446744073709551616.0L);
 
     uint64_t high_int = static_cast<uint64_t>(high_part);
     uint64_t low_int = static_cast<uint64_t>(low_part);

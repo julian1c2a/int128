@@ -136,6 +136,65 @@ int main()
         ok ? ++passed : ++failed;
     }
 
+    // Test 16: bezout_coeffs basico
+    {
+        auto [x, y] = bezout_coeffs(uint128_t(48), uint128_t(18));
+        // Verificar: 48*x + 18*y = gcd(48,18) = 6
+        // Reconstruir el resultado
+        uint128_t ax = uint128_t(48) * x.magnitude;
+        uint128_t by = uint128_t(18) * y.magnitude;
+
+        uint128_t result;
+        if (!x.is_negative && !y.is_negative) {
+            result = ax + by;
+        } else if (x.is_negative && !y.is_negative) {
+            result = by - ax; // -ax + by
+        } else if (!x.is_negative && y.is_negative) {
+            result = ax - by; // ax - by
+        } else {
+            result = uint128_t(0); // Ambos negativos no deberia ocurrir
+        }
+
+        bool ok = (result == uint128_t(6));
+        std::cout << "[" << (ok ? "OK" : "FAIL")
+                  << "] bezout_coeffs(48, 18): " << (x.is_negative ? "-" : "") << x.magnitude
+                  << ", " << (y.is_negative ? "-" : "") << y.magnitude << " -> result=" << result
+                  << "\n";
+        ok ? ++passed : ++failed;
+    }
+
+    // Test 17: bezout_coeffs con cero
+    {
+        auto [x, y] = bezout_coeffs(uint128_t(0), uint128_t(5));
+        bool ok = (x.magnitude == uint128_t(0) && y.magnitude == uint128_t(1));
+        std::cout << "[" << (ok ? "OK" : "FAIL") << "] bezout_coeffs(0, 5) == (0, 1)\n";
+        ok ? ++passed : ++failed;
+    }
+
+    // Test 18: bezout_coeffs con primos
+    {
+        auto [x, y] = bezout_coeffs(uint128_t(17), uint128_t(13));
+        // gcd(17, 13) = 1
+        uint128_t ax = uint128_t(17) * x.magnitude;
+        uint128_t by = uint128_t(13) * y.magnitude;
+
+        uint128_t result;
+        if (!x.is_negative && !y.is_negative) {
+            result = ax + by;
+        } else if (x.is_negative && !y.is_negative) {
+            result = by - ax;
+        } else if (!x.is_negative && y.is_negative) {
+            result = ax - by;
+        } else {
+            result = uint128_t(0);
+        }
+
+        bool ok = (result == uint128_t(1));
+        std::cout << "[" << (ok ? "OK" : "FAIL") << "] bezout_coeffs(17, 13): result=" << result
+                  << "\n";
+        ok ? ++passed : ++failed;
+    }
+
     std::cout << "\n=== RESULTADO: " << passed << "/" << (passed + failed)
               << " tests pasaron ===\n";
 

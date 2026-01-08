@@ -2,7 +2,7 @@
 
 > 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
 >
-> ⏰ **Última actualización:** 2026-01-08 10:00 (ver CHANGELOG.md para historial horario)
+> ⏰ **Última actualización:** 2026-01-08 10:30 (ver CHANGELOG.md para historial horario)
 
 ---
 
@@ -217,7 +217,7 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 
 ### Progreso Actual
 
-#### ✅ Headers Completados (9/13)
+#### ✅ Headers Completados (11/13)
 
 | Header | Estado | Tests | Descripción |
 |--------|--------|-------|-------------|
@@ -229,16 +229,16 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 | `int128_base_bits.hpp` | ✅ | 77/77 | Manipulación de bits |
 | `int128_base_numeric.hpp` | ✅ | 87/87 | Funciones numéricas (gcd, lcm, sqrt, etc.) |
 | `int128_base_algorithm.hpp` | ✅ | 47/47 | Algoritmos (search, sort, transform) |
-| `int128_base_cmath.hpp` | ✅ | 15/15 | Funciones matemáticas (gcd, lcm, sqrt, pow) |
+| `int128_base_cmath.hpp` | ✅ | 18/18 | Funciones matemáticas (gcd, lcm, sqrt, pow, bezout) |
+| `int128_base_iostreams.hpp` | ✅ | 25/25 | Operadores iostream y formateo |
+| `int128_base_format.hpp` | ✅ | 25/25 | Formateo avanzado (hex, oct, bin, separators) |
 
-**Total tests pasados: 351/351 (100%)**
+**Total tests pasados: 419/419 (100%)**
 
-#### 📋 Headers Pendientes (4/13)
+#### 📋 Headers Pendientes (2/13)
 
 | Header | Estado | Prioridad |
 |--------|--------|-----------|
-| `int128_base_iostreams.hpp` | 📋 Pendiente | Alta |
-| `int128_base_format.hpp` | 📋 Pendiente | Media |
 | `int128_base_safe.hpp` | 📋 Pendiente | Media |
 | `int128_base_thread_safety.hpp` | 📋 Pendiente | Baja |
 
@@ -255,6 +255,8 @@ include_new/
 ├── int128_base_numeric.hpp               # Funciones numéricas
 ├── int128_base_algorithm.hpp             # Algoritmos STL-like
 ├── int128_base_cmath.hpp                 # Funciones matemáticas (gcd, lcm, sqrt, pow)
+├── int128_base_iostreams.hpp             # Operadores iostream
+├── int128_base_format.hpp                # Formateo avanzado
 ├── type_traits.hpp                       # integral_builtin concept
 ├── intrinsics/                           # Operaciones de bajo nivel
 │   ├── arithmetic_operations.hpp

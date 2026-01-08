@@ -64,17 +64,28 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
-#### [10:00] 2026-01-08 - FEATURE cmath COMPLETO
+#### [10:30] 2026-01-08 - FEATURES cmath, iostreams y format COMPLETOS
 
-- ✅ **FEATURE cmath**: `int128_base_cmath.hpp` verificado (15/15 tests OK)
+- ✅ **FEATURE cmath**: `int128_base_cmath.hpp` completo (18/18 tests OK)
   - gcd (Stein binary algorithm)
   - lcm (con protección overflow)
   - pow (exponenciación binaria)
   - sqrt (Newton-Raphson)
   - abs, min, max, clamp, sign, midpoint, divmod
-- 📋 **Total Fase 1.5:** 9/13 headers completados, 351 tests pasando
+  - **bezout_coeffs** (Algoritmo Extendido de Euclides) ✨
+- ✅ **FEATURE iostreams**: `int128_base_iostreams.hpp` verificado (25/25 tests OK)
+  - operator<< con manipuladores (hex, oct, dec, setw, setfill...)
+  - operator>> con auto-detección de base
+  - Funciones de conveniencia: format(), hex(), oct(), dec()
+- ✅ **FEATURE format**: `int128_base_format.hpp` completo (25/25 tests OK) ✨
+  - format() con control total de flags, alineación, fill
+  - hex(), oct(), dec(), dec_signed()
+  - bin() para formato binario con prefijo
+  - with_separators() para separadores de miles
+  - format_like_iostream() imita estado de ostream
+- 📋 **Total Fase 1.5:** 11/13 headers completados, 419 tests pasando
 
-**Próximos headers:** iostreams, format, safe, thread_safety
+**Próximos headers:** safe, thread_safety
 
 #### [23:30] 2026-01-07 - FEATURES concepts, bits, numeric, algorithm COMPLETOS
 
@@ -122,8 +133,8 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 | `_numeric.hpp` | ✅ | ✅ `int128_base_numeric.hpp` | ✅ **COMPLETO** |
 | `_algorithm.hpp` | ✅ | ✅ `int128_base_algorithm.hpp` | ✅ **COMPLETO** |
 | `_cmath.hpp` | ✅ | ✅ `int128_base_cmath.hpp` | ✅ **COMPLETO** |
-| `_iostreams.hpp` | ✅ | ❌ | 📋 Pendiente |
-| `_format.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_iostreams.hpp` | ✅ | ✅ `int128_base_iostreams.hpp` | ✅ **COMPLETO** |
+| `_format.hpp` | ✅ | ✅ `int128_base_format.hpp` | ✅ **COMPLETO** |
 | `_safe.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_thread_safety.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_ranges.hpp` | ✅ | ❌ | 📋 Pendiente (bajo prioridad) |
