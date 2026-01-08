@@ -72,6 +72,7 @@
 // Incluir intrínsecos
 #include "intrinsics/arithmetic_operations.hpp"
 #include "intrinsics/bit_operations.hpp"
+#include "intrinsics/divrem_helpers.hpp"
 
 namespace nstd
 {
