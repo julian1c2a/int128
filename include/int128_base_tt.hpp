@@ -72,6 +72,7 @@
 // Incluir intrínsecos
 #include "intrinsics/arithmetic_operations.hpp"
 #include "intrinsics/bit_operations.hpp"
+#include "intrinsics/divrem_helpers.hpp"
 
 namespace nstd
 {
@@ -1756,8 +1757,53 @@ template <signedness S> class int128_base_t
     }
 
     /**
-     * @brief División y módulo general con múltiples optimizaciones
+     * @brief División y módulo principal con manejo correcto de signos
      * @param divisor El divisor (debe ser != 0)
+     * @return std::pair<cociente, resto>
+     *
+     * @details Para tipos signed:
+     * - Cociente: negativo si signos diferentes
+     * - Resto: mismo signo que el dividendo (C++ truncated division)
+     *
+     * Para tipos unsigned: delega directamente a big_bin_divrem()
+     *
+     * @warning Si divisor == 0, comportamiento indefinido
+     */
+    constexpr std::pair<int128_base_t, int128_base_t>
+    divrem(const int128_base_t& divisor) const noexcept
+    {
+        if constexpr (is_signed) {
+            // Manejo de signos para tipos signed
+            const bool dividend_negative = is_negative();
+            const bool divisor_negative = divisor.is_negative();
+
+            // Convertir a valores absolutos
+            int128_base_t abs_dividend = dividend_negative ? (-*this) : *this;
+            int128_base_t abs_divisor = divisor_negative ? (-divisor) : divisor;
+
+            // Hacer división unsigned
+            auto [quotient, remainder] = abs_dividend.big_bin_divrem(abs_divisor);
+
+            // Ajustar signo del cociente: negativo si signos diferentes
+            if (dividend_negative != divisor_negative) {
+                quotient = -quotient;
+            }
+
+            // Ajustar signo del resto: mismo signo que dividendo
+            if (dividend_negative && !(remainder.data[LSULL] == 0 && remainder.data[MSULL] == 0)) {
+                remainder = -remainder;
+            }
+
+            return {quotient, remainder};
+        } else {
+            // Para unsigned, usar directamente big_bin_divrem
+            return big_bin_divrem(divisor);
+        }
+    }
+
+    /**
+     * @brief División binaria larga con múltiples optimizaciones (UNSIGNED ONLY)
+     * @param divisor El divisor (debe ser != 0, tratado como unsigned)
      * @return std::pair<cociente, resto> donde 0 <= resto < divisor
      *
      * @details Optimizaciones implementadas (orden de evaluación [1]→[3]→[2]→[0]):
@@ -1777,12 +1823,12 @@ template <signedness S> class int128_base_t
      * **[0] Caso general:**
      * - División binaria larga (128 bits / 128 bits) O(128)
      *
-     * @note Algoritmo de división binaria (escolar) O(128) como fallback
+     * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
+     * @note Expuesto públicamente para benchmarks
      * @warning Si divisor == 0, comportamiento indefinido
-     * (en esta implementación retorna {0,0} como placeholder)
      */
     constexpr std::pair<int128_base_t, int128_base_t>
-    divrem(const int128_base_t& divisor) const noexcept
+    big_bin_divrem(const int128_base_t& divisor) const noexcept
     {
         // [0.a] Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
         if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0) {
@@ -1800,8 +1846,13 @@ template <signedness S> class int128_base_t
             return {zero, zero};
         }
 
-        // [0.c] Fast path: divisor > dividendo
-        if (*this < divisor) {
+        // [0.c] Fast path: divisor > dividendo (comparación UNSIGNED)
+        // Nota: big_bin_divrem trata todos los valores como unsigned
+        // Para comparación unsigned usamos comparación de datos directa
+        const bool divisor_greater =
+            (divisor.data[MSULL] > data[MSULL]) ||
+            (divisor.data[MSULL] == data[MSULL] && divisor.data[LSULL] > data[LSULL]);
+        if (divisor_greater) {
             int128_base_t zero;
             zero.data[LSULL] = 0;
             zero.data[MSULL] = 0;
@@ -1970,8 +2021,8 @@ template <signedness S> class int128_base_t
             int128_base_t n_reduced = *this >> common_tz;
             int128_base_t m_reduced = divisor >> common_tz;
 
-            // Hacer la división con los valores reducidos
-            auto [q_reduced, r_reduced] = n_reduced.divrem(m_reduced);
+            // Hacer la división con los valores reducidos (recursión)
+            auto [q_reduced, r_reduced] = n_reduced.big_bin_divrem(m_reduced);
 
             // El cociente es el mismo, el resto se multiplica por 2^common_tz
             return {q_reduced, r_reduced << common_tz};
@@ -2010,21 +2061,254 @@ template <signedness S> class int128_base_t
         return {quotient, remainder};
     }
 
+    // ============================================================================
+    // HELPERS PRIVADOS PARA KNUTH_D_DIVREM
+    // ============================================================================
+
     /**
-     * @brief División y módulo usando el algoritmo D de Knuth
-     * @param divisor El divisor (debe ser != 0)
-     * @return std::pair<cociente, resto> donde 0 <= resto < divisor
-     * @note Algoritmo de Knuth (The Art of Computer Programming, Vol. 2, Sec. 4.3.1)
-     * @note Más eficiente que divrem() para divisores grandes (> 64 bits)
-     * @warning Si divisor == 0, comportamiento indefinido
-     * @todo Implementar en el futuro para mejor performance con divisores grandes
+     * @brief Helper para división cuando el divisor cabe en 64 bits.
+     * @details Encapsula la lógica del preprocesador para elegir entre:
+     *   - intrinsics::div128_64 (disponible en GCC/Clang/Intel en Linux con __uint128_t)
+     *   - Fallback a big_bin_divrem() genérico (MSVC, Intel en Windows, sin __uint128_t)
+     * @param divisor El divisor (garantizado que divisor.data[MSULL] == 0)
+     * @return Par {cociente, resto} de la división
+     * @property Es constexpr y noexcept.
      */
     constexpr std::pair<int128_base_t, int128_base_t>
-    divrem_knuth_D(const int128_base_t& divisor) const noexcept
+    divrem_64bit_divisor(const int128_base_t& divisor) const noexcept
     {
-        // Por ahora, delegar a divrem() (división binaria)
-        // En el futuro, implementar el algoritmo D de Knuth completo
-        return divrem(divisor);
+        // Lógica de selección de implementación según plataforma
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+        // GCC/Clang/Intel icpx en Linux: usar intrinsic div128_64 optimizado
+        uint64_t r = 0;
+        const uint64_t q_lo =
+            intrinsics::div128_64(data[MSULL], data[LSULL], divisor.data[LSULL], &r);
+        int128_base_t quotient;
+        quotient.data[LSULL] = q_lo;
+        quotient.data[MSULL] = 0;
+        int128_base_t remainder;
+        remainder.data[LSULL] = r;
+        remainder.data[MSULL] = 0;
+        return {quotient, remainder};
+#else
+        // Fallback portable para compiladores sin __uint128_t o Intel ICX en Windows
+        return big_bin_divrem(divisor);
+#endif
+    }
+
+    /**
+     * @brief Helper para el algoritmo D de Knuth completo.
+     * @details Encapsula la lógica del preprocesador para elegir entre:
+     *   - intrinsics::knuth_division_step (disponible con __uint128_t)
+     *   - Fallback a big_bin_divrem() genérico (sin __uint128_t)
+     * @param u_extension Dígito extra del dividendo (bits que se salieron del shift)
+     * @param u_shifted Dividendo normalizado (desplazado)
+     * @param v Divisor normalizado (desplazado)
+     * @param s Cantidad de desplazamiento aplicado (normalización)
+     * @param original_divisor Divisor original (sin normalizar)
+     * @return Par {cociente, resto} de la división
+     * @property Es constexpr y noexcept.
+     */
+    constexpr std::pair<int128_base_t, int128_base_t>
+    knuth_D_algorithm(uint64_t u_extension, const int128_base_t& u_shifted, const int128_base_t& v,
+                      int s, const int128_base_t& original_divisor) const noexcept
+    {
+        // Lógica de selección de implementación según plataforma
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+        // GCC/Clang/Intel icpx en Linux: usar algoritmo D de Knuth optimizado
+        uint64_t remainder_hi, remainder_lo;
+        const uint64_t q = intrinsics::knuth_division_step(
+            u_extension, u_shifted.data[MSULL], u_shifted.data[LSULL], v.data[MSULL], v.data[LSULL],
+            s, &remainder_hi, &remainder_lo);
+
+        int128_base_t quotient;
+        quotient.data[LSULL] = q;
+        quotient.data[MSULL] = 0;
+        int128_base_t remainder;
+        remainder.data[LSULL] = remainder_lo;
+        remainder.data[MSULL] = remainder_hi;
+        return {quotient, remainder};
+#else
+        // Fallback portable sin __uint128_t - usar algoritmo binario
+        (void)u_extension; // Evitar warning de parámetro no usado
+        (void)u_shifted;
+        (void)v;
+        (void)s;
+        return big_bin_divrem(original_divisor);
+#endif
+    }
+
+    /**
+     * @brief Helpers para optimizaciones de Knuth
+     */
+    static constexpr int count_trailing_zeros_knuth(const int128_base_t& n) noexcept
+    {
+        return n.trailing_zeros();
+    }
+
+    static constexpr bool fits_in_64_bits_knuth(const int128_base_t& n) noexcept
+    {
+        return n.data[MSULL] == 0;
+    }
+
+    // ============================================================================
+    // KNUTH_D_DIVREM (Algoritmo D de Knuth con optimizaciones)
+    // ============================================================================
+
+  public:
+    /**
+     * @brief División avanzada de 128 bits usando el Algoritmo D de Knuth con optimizaciones.
+     * @details Implementa una división precisa de 128 por 128 bits. Incluye múltiples rutas
+     * rápidas para casos comunes:
+     * - División por cero.
+     * - Divisor mayor que dividendo.
+     * - Divisor es potencia de 2.
+     * - Ambos operandos caben en 64 bits.
+     * - Divisor cabe en 64 bits (usando `__uint128_t` nativo si está disponible).
+     * Si ninguna optimización aplica, recurre al Algoritmo D completo.
+     *
+     * @param divisor El divisor de 128 bits (tratado como UNSIGNED)
+     * @return std::pair{cociente, resto}
+     *
+     * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
+     * @note Expuesto públicamente para benchmarks comparativos con big_bin_divrem
+     * @warning Si divisor == 0, retorna {0, 0} (undefined behavior evitado)
+     */
+    constexpr std::pair<int128_base_t, int128_base_t>
+    knuth_D_divrem(const int128_base_t& v_in) const noexcept
+    {
+        // 0. Casos triviales
+        int128_base_t zero;
+        zero.data[LSULL] = 0;
+        zero.data[MSULL] = 0;
+
+        if (v_in.data[LSULL] == 0 && v_in.data[MSULL] == 0) {
+            return {zero, zero}; // División por cero
+        }
+
+        // Comparación unsigned: *this < v_in
+        const bool this_less_than_divisor =
+            (data[MSULL] < v_in.data[MSULL]) ||
+            (data[MSULL] == v_in.data[MSULL] && data[LSULL] < v_in.data[LSULL]);
+
+        if (this_less_than_divisor) {
+            return {zero, *this};
+        }
+
+        // === OPTIMIZACIONES RÁPIDAS ===
+
+        // 1. OPTIMIZACIÓN: División por potencias de 2 (usar shift)
+        if (v_in.is_power_of_2()) {
+            const int shift_amount = count_trailing_zeros_knuth(v_in);
+            const int128_base_t quotient = this->shift_right(shift_amount);
+            const int128_base_t mask = v_in - int128_base_t(1ull);
+            const int128_base_t remainder = *this & mask;
+            return {quotient, remainder};
+        }
+
+        // 2. OPTIMIZACIÓN: Ambos números caben efectivamente en 64 bits
+        if (fits_in_64_bits_knuth(*this) && fits_in_64_bits_knuth(v_in)) {
+            const uint64_t dividend_64 = data[LSULL];
+            const uint64_t divisor_64 = v_in.data[LSULL];
+            const uint64_t q_64 = dividend_64 / divisor_64;
+            const uint64_t r_64 = dividend_64 % divisor_64;
+            int128_base_t quotient, remainder;
+            quotient.data[LSULL] = q_64;
+            quotient.data[MSULL] = 0;
+            remainder.data[LSULL] = r_64;
+            remainder.data[MSULL] = 0;
+            return {quotient, remainder};
+        }
+
+        // === RUTAS ESTÁNDAR ===
+
+        // Si el divisor cabe en 64 bits (data[MSULL] == 0), usamos una ruta rápida.
+        if (v_in.data[MSULL] == 0) {
+            return divrem_64bit_divisor(v_in);
+        }
+
+        // 3. OPTIMIZACIÓN: V0 = 0 Y U0 = 0 (caso degenerado muy raro)
+        // Tanto dividendo como divisor son múltiplos de 2^64
+        if (v_in.data[LSULL] == 0 && data[LSULL] == 0) {
+            const uint64_t q = data[MSULL] / v_in.data[MSULL];
+            const uint64_t r = data[MSULL] % v_in.data[MSULL];
+            int128_base_t quotient, remainder;
+            quotient.data[LSULL] = q;
+            quotient.data[MSULL] = 0;
+            remainder.data[LSULL] = 0;
+            remainder.data[MSULL] = r;
+            return {quotient, remainder};
+        }
+
+        // 4. OPTIMIZACIÓN: V0 = 0 (divisor es múltiplo de 2^64)
+        if (v_in.data[LSULL] == 0) {
+            const uint64_t divisor_high = v_in.data[MSULL];
+
+            // Caso especial: dividendo cabe en parte alta
+            if (data[LSULL] == 0) {
+                const uint64_t q = data[MSULL] / divisor_high;
+                const uint64_t r = data[MSULL] % divisor_high;
+                int128_base_t quotient, remainder;
+                quotient.data[LSULL] = q;
+                quotient.data[MSULL] = 0;
+                remainder.data[LSULL] = 0;
+                remainder.data[MSULL] = r;
+                return {quotient, remainder};
+            }
+
+            // Caso general: u = u1 * 2^64 + u0, v = v1 * 2^64
+            uint64_t q = data[MSULL] / divisor_high;
+
+            // Calcular resto: r = u - q * v
+            int128_base_t remainder(*this);
+            int128_base_t product;
+            product.data[LSULL] = 0;
+            product.data[MSULL] = q * divisor_high;
+
+            // Ajustar si el producto es mayor que el dividendo
+            while ((product.data[MSULL] > remainder.data[MSULL]) ||
+                   (product.data[MSULL] == remainder.data[MSULL] &&
+                    product.data[LSULL] > remainder.data[LSULL])) {
+                --q;
+                product.data[MSULL] = q * divisor_high;
+            }
+
+            remainder -= product;
+            int128_base_t quotient;
+            quotient.data[LSULL] = q;
+            quotient.data[MSULL] = 0;
+            return {quotient, remainder};
+        }
+
+        // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
+
+        // D1. Normalización
+        // Desplazamos u y v para que el MSB de v sea 1.
+        const int s = v_in.leading_zeros() > 0 ? v_in.leading_zeros() - 64 : 0;
+        [[maybe_unused]] const int128_base_t v = v_in.shift_left(s);
+        [[maybe_unused]] const int128_base_t u_shifted = this->shift_left(s);
+
+        // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
+        [[maybe_unused]] uint64_t u_extension = 0;
+        if (s > 0) {
+            u_extension = data[MSULL] >> (64 - s);
+        }
+
+        // D3-D8. Algoritmo completo de Knuth: estimar, multiplicar, restar, corregir y
+        // desnormalizar
+        return knuth_D_algorithm(u_extension, u_shifted, v, s, v_in);
+    }
+
+    /**
+     * @brief Sobrecarga de knuth_D_divrem para tipos integrales.
+     * @tparam T Tipo integral del divisor.
+     * @param divisor El valor integral a usar como divisor.
+     * @return El resultado de llamar a knuth_D_divrem con el divisor convertido
+     */
+    template <integral_builtin T>
+    constexpr std::pair<int128_base_t, int128_base_t> knuth_D_divrem(T divisor) const noexcept
+    {
+        return knuth_D_divrem(int128_base_t(divisor));
     }
 
     // ============================================================================
