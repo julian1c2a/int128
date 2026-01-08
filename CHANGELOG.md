@@ -64,6 +64,18 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [10:00] 2026-01-08 - FEATURE cmath COMPLETO
+
+- ✅ **FEATURE cmath**: `int128_base_cmath.hpp` verificado (15/15 tests OK)
+  - gcd (Stein binary algorithm)
+  - lcm (con protección overflow)
+  - pow (exponenciación binaria)
+  - sqrt (Newton-Raphson)
+  - abs, min, max, clamp, sign, midpoint, divmod
+- 📋 **Total Fase 1.5:** 9/13 headers completados, 351 tests pasando
+
+**Próximos headers:** iostreams, format, safe, thread_safety
+
 #### [23:30] 2026-01-07 - FEATURES concepts, bits, numeric, algorithm COMPLETOS
 
 - ✅ **FEATURE concepts**: `int128_base_concepts.hpp` creado (59/59 tests OK)
@@ -109,7 +121,7 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 | `_bits.hpp` | ✅ | ✅ `int128_base_bits.hpp` | ✅ **COMPLETO** |
 | `_numeric.hpp` | ✅ | ✅ `int128_base_numeric.hpp` | ✅ **COMPLETO** |
 | `_algorithm.hpp` | ✅ | ✅ `int128_base_algorithm.hpp` | ✅ **COMPLETO** |
-| `_cmath.hpp` | ✅ | ❌ | 📋 Pendiente |
+| `_cmath.hpp` | ✅ | ✅ `int128_base_cmath.hpp` | ✅ **COMPLETO** |
 | `_iostreams.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_format.hpp` | ✅ | ❌ | 📋 Pendiente |
 | `_safe.hpp` | ✅ | ❌ | 📋 Pendiente |

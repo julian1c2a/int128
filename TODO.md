@@ -2,7 +2,7 @@
 
 > 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
 >
-> ⏰ **Última actualización:** 2026-01-07 23:30 (ver CHANGELOG.md para historial horario)
+> ⏰ **Última actualización:** 2026-01-08 10:00 (ver CHANGELOG.md para historial horario)
 
 ---
 
@@ -217,7 +217,7 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 
 ### Progreso Actual
 
-#### ✅ Headers Completados (8/13)
+#### ✅ Headers Completados (9/13)
 
 | Header | Estado | Tests | Descripción |
 |--------|--------|-------|-------------|
@@ -229,14 +229,14 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 | `int128_base_bits.hpp` | ✅ | 77/77 | Manipulación de bits |
 | `int128_base_numeric.hpp` | ✅ | 87/87 | Funciones numéricas (gcd, lcm, sqrt, etc.) |
 | `int128_base_algorithm.hpp` | ✅ | 47/47 | Algoritmos (search, sort, transform) |
+| `int128_base_cmath.hpp` | ✅ | 15/15 | Funciones matemáticas (gcd, lcm, sqrt, pow) |
 
-**Total tests pasados: 336/336 (100%)**
+**Total tests pasados: 351/351 (100%)**
 
-#### 📋 Headers Pendientes (5/13)
+#### 📋 Headers Pendientes (4/13)
 
 | Header | Estado | Prioridad |
 |--------|--------|-----------|
-| `int128_base_cmath.hpp` | 📋 Pendiente | Alta |
 | `int128_base_iostreams.hpp` | 📋 Pendiente | Alta |
 | `int128_base_format.hpp` | 📋 Pendiente | Media |
 | `int128_base_safe.hpp` | 📋 Pendiente | Media |
@@ -246,7 +246,7 @@ Con estas optimizaciones validadas y documentadas, el código está listo para:
 
 ```
 include_new/
-├── int128_base_tt.hpp                    # Template principal (2573 líneas)
+├── int128_base_tt.hpp                    # Template principal (2420 líneas)
 ├── int128_base_limits.hpp                # numeric_limits
 ├── int128_base_traits_specializations.hpp # Type traits básicos
 ├── int128_base_traits.hpp                # common_type y extras
@@ -254,6 +254,7 @@ include_new/
 ├── int128_base_bits.hpp                  # Operaciones de bits
 ├── int128_base_numeric.hpp               # Funciones numéricas
 ├── int128_base_algorithm.hpp             # Algoritmos STL-like
+├── int128_base_cmath.hpp                 # Funciones matemáticas (gcd, lcm, sqrt, pow)
 ├── type_traits.hpp                       # integral_builtin concept
 ├── intrinsics/                           # Operaciones de bajo nivel
 │   ├── arithmetic_operations.hpp

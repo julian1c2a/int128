@@ -144,13 +144,17 @@ template <signedness S> class int128_base_t
     static constexpr uint64_t UI64_MAX = std::numeric_limits<uint64_t>::max();
 
     /// Máximo valor de int64_t: 2^63 - 1 = 9223372036854775807
-    static constexpr uint64_t UI_I64_MAX =
-        static_cast<uint64_t>(std::numeric_limits<int64_t>::max());
+    static constexpr int64_t I64_MAX = std::numeric_limits<int64_t>::max();
+
+    /// Máximo valor de int64_t: 2^63 - 1 CON tipo uint64_t para operaciones sin signo
+    static constexpr uint64_t UI_I64_MAX = static_cast<uint64_t>(I64_MAX);
+
+    /// Máximo valor de int64_t: -2^63 = -9223372036854775808
+    static constexpr int64_t I64_MIN = std::numeric_limits<int64_t>::min();
 
     /// Mínimo valor de int64_t representado como uint64_t: 2^63 = 9223372036854775808
     /// (es el bit de signo = 0x8000000000000000)
-    static constexpr uint64_t UI_I64_MIN =
-        static_cast<uint64_t>(std::numeric_limits<int64_t>::min());
+    static constexpr uint64_t UI_I64_MIN = static_cast<uint64_t>(I64_MIN);
 
   private:
     // ============================================================================
@@ -2241,29 +2245,245 @@ template <signedness S> class int128_base_t
     // OPERADORES DE STREAM (FRIEND FUNCTIONS)
     // ============================================================================
 
-    // Operador de inserción en stream (salida)
-    // Convierte el valor a string en base 10 y lo escribe al stream
-    // Ejemplo: std::cout << value;
+    /**
+     * @brief Operador de insercion en stream con soporte completo de iomanip
+     *
+     * Soporta los siguientes manipuladores:
+     * - Bases: std::hex, std::oct, std::dec
+     * - Ancho: std::setw()
+     * - Relleno: std::setfill()
+     * - Alineacion: std::left, std::right, std::internal
+     * - Prefijos: std::showbase
+     * - Signo: std::showpos (solo para tipos signed)
+     * - Mayusculas: std::uppercase
+     *
+     * @param os Stream de salida
+     * @param value Valor a escribir
+     * @return Referencia al stream
+     */
     friend std::ostream& operator<<(std::ostream& os, const int128_base_t& value)
     {
-        return os << value.to_string();
+        const auto flags = os.flags();
+        const int base_flag = (flags & std::ios_base::basefield);
+        const bool show_base = (flags & std::ios_base::showbase);
+        const bool show_pos = (flags & std::ios_base::showpos);
+        const bool uppercase = (flags & std::ios_base::uppercase);
+        const auto width = os.width();
+        const auto fill_char = os.fill();
+        const auto alignment = (flags & std::ios_base::adjustfield);
+
+        std::string result;
+        bool is_negative = false;
+
+        // Detectar signo (solo para signed)
+        if constexpr (S == signedness::signed_type) {
+            is_negative = value.is_negative();
+        }
+
+        // Determinar base y generar string
+        int base = 10;
+        switch (base_flag) {
+        case std::ios_base::hex:
+            base = 16;
+            break;
+        case std::ios_base::oct:
+            base = 8;
+            break;
+        default:
+            base = 10;
+            break;
+        }
+
+        // Para bases no decimales con signed negativo, usar complemento a 2
+        if constexpr (S == signedness::signed_type) {
+            if ((base == 16 || base == 8) && is_negative) {
+                // Mostrar como unsigned (complemento a 2)
+                int128_base_t<signedness::unsigned_type> uval(value);
+                result = uval.to_string(base);
+            } else {
+                result = value.to_string(base);
+            }
+        } else {
+            result = value.to_string(base);
+        }
+
+        // Convertir a mayusculas/minusculas para hex
+        if (base == 16) {
+            if (uppercase) {
+                for (char& c : result) {
+                    if (c >= 'a' && c <= 'f') {
+                        c = c - 'a' + 'A';
+                    }
+                }
+            } else {
+                for (char& c : result) {
+                    if (c >= 'A' && c <= 'F') {
+                        c = c - 'A' + 'a';
+                    }
+                }
+            }
+        }
+
+        // Agregar prefijo de base
+        std::string prefix;
+        if (show_base && result != "0") {
+            if (base == 16) {
+                prefix = uppercase ? "0X" : "0x";
+            } else if (base == 8) {
+                prefix = "0";
+            }
+        }
+
+        // Agregar signo
+        std::string sign_str;
+        if (base == 10) {
+            if constexpr (S == signedness::signed_type) {
+                if (is_negative) {
+                    // El signo '-' ya esta en result
+                } else if (show_pos && value != int128_base_t(0)) {
+                    sign_str = "+";
+                }
+            } else {
+                if (show_pos && value != int128_base_t(0)) {
+                    sign_str = "+";
+                }
+            }
+        }
+
+        // Construir resultado con prefijo y signo
+        result = sign_str + prefix + result;
+
+        // Aplicar ancho y alineacion
+        if (width > 0 && static_cast<std::streamsize>(result.length()) < width) {
+            const auto padding =
+                static_cast<size_t>(width - static_cast<std::streamsize>(result.length()));
+
+            switch (alignment) {
+            case std::ios_base::left:
+                result += std::string(padding, fill_char);
+                break;
+
+            case std::ios_base::internal: {
+                // Relleno despues del signo/prefijo
+                size_t insert_pos = sign_str.length() + prefix.length();
+                if constexpr (S == signedness::signed_type) {
+                    if (is_negative && base == 10) {
+                        insert_pos = 1; // Despues del '-'
+                    }
+                }
+                result = result.substr(0, insert_pos) + std::string(padding, fill_char) +
+                         result.substr(insert_pos);
+                break;
+            }
+
+            default: // std::ios_base::right
+                result = std::string(padding, fill_char) + result;
+                break;
+            }
+        }
+
+        // Resetear width (comportamiento estandar)
+        os.width(0);
+
+        // Escribir resultado directamente sin usar operator<< de string
+        // para evitar recursion infinita
+        for (char c : result) {
+            os.put(c);
+        }
+        return os;
     }
 
-    // Operador de extracción desde stream (entrada)
-    // Lee un string del stream y lo convierte al tipo int128_base_t
-    // Ejemplo: std::cin >> value;
-    // Si el parsing falla, establece el failbit del stream
+    /**
+     * @brief Operador de extraccion desde stream con auto-deteccion de base
+     *
+     * Lee un string del stream y lo convierte al tipo int128_base_t.
+     * Respeta los manipuladores std::hex, std::oct, std::dec.
+     * Si no hay manipulador, auto-detecta la base:
+     * - "0x" o "0X" -> hexadecimal
+     * - "0" inicial -> octal
+     * - Otro -> decimal
+     *
+     * @param is Stream de entrada
+     * @param value Variable donde almacenar el valor leido
+     * @return Referencia al stream
+     */
     friend std::istream& operator>>(std::istream& is, int128_base_t& value)
     {
-        std::string str;
-        is >> str; // Lee string hasta el primer whitespace
+        const auto flags = is.flags();
+        const int base_flags = (flags & std::ios_base::basefield);
 
-        if (is) { // Si la lectura fue exitosa
-            try {
-                value = int128_base_t(str.c_str());
-            } catch (const std::invalid_argument&) {
-                // Si el parsing falla, establecer failbit
+        std::string str;
+        is >> str;
+
+        if (str.empty()) {
+            is.setstate(std::ios::failbit);
+            return is;
+        }
+
+        if (is) {
+            int input_base = 10;
+            bool has_sign = false;
+            bool negative = false;
+            size_t start_pos = 0;
+
+            // Detectar signo
+            if (str[0] == '-') {
+                has_sign = true;
+                negative = true;
+                start_pos = 1;
+            } else if (str[0] == '+') {
+                has_sign = true;
+                start_pos = 1;
+            }
+
+            // Determinar base segun manipulador
+            switch (base_flags) {
+            case std::ios_base::hex:
+                input_base = 16;
+                // Saltar prefijo 0x si existe
+                if (str.length() > start_pos + 1 &&
+                    (str.substr(start_pos, 2) == "0x" || str.substr(start_pos, 2) == "0X")) {
+                    start_pos += 2;
+                }
+                break;
+            case std::ios_base::oct:
+                input_base = 8;
+                // Saltar prefijo 0 si existe
+                if (str.length() > start_pos && str[start_pos] == '0') {
+                    start_pos += 1;
+                }
+                break;
+            default:
+                // Auto-detectar
+                if (str.length() > start_pos + 1 &&
+                    (str.substr(start_pos, 2) == "0x" || str.substr(start_pos, 2) == "0X")) {
+                    input_base = 16;
+                    start_pos += 2;
+                } else if (str.length() > start_pos && str[start_pos] == '0' &&
+                           str.length() > start_pos + 1) {
+                    input_base = 8;
+                    start_pos += 1;
+                }
+                break;
+            }
+
+            // Parsear
+            auto [error, parsed] = int128_base_t::parse_base(str.c_str() + start_pos, input_base);
+
+            if (error != parse_error::success) {
                 is.setstate(std::ios::failbit);
+                return is;
+            }
+
+            // Aplicar signo
+            if constexpr (S == signedness::signed_type) {
+                value = negative ? -parsed : parsed;
+            } else {
+                if (negative) {
+                    is.setstate(std::ios::failbit);
+                    return is;
+                }
+                value = parsed;
             }
         }
 
