@@ -1072,7 +1072,7 @@ python make.py test gcc release
 
 ### Salida de Ejemplo
 
-```
+```bash_output
 $ python make.py test gcc release
 
 ============================================================

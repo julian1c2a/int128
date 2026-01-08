@@ -30,24 +30,8 @@
 /**
  * @file int128_base_safe.hpp
  * @brief Operaciones seguras con deteccion de overflow/underflow para int128_base_t<S>
- *
- * Este header proporciona:
- * - safe_result<T>: Tipo de resultado con estado de conversion
- * - safe_cast<T>(): Conversion segura a tipos mas pequenos
- * - safe_add/sub/mul/div/mod(): Aritmetica con deteccion de overflow
- * - saturating_add/sub/mul(): Aritmetica con saturacion
- * - checked_cast<T>(): Conversion que lanza excepcion
- * - try_cast<T>(): Conversion con std::optional
- *
- * @note Fase 1.5: Template unificado para signed/unsigned
- *
- * @author Julian Calderon Almendros <julian.calderon.almendros@gmail.com>
- * @version 1.0.0
- * @date 2026-01-08
- * @copyright Boost Software License 1.0
  */
 
-// Feature test macro
 #define INT128_BASE_SAFE_AVAILABLE 1
 
 #include "int128_base_tt.hpp"
@@ -67,19 +51,8 @@ namespace int128_safe
 // Result types
 // =============================================================================
 
-/**
- * @brief Resultado de conversion/operacion segura
- */
-enum class conversion_result {
-    success,      ///< Operacion exitosa
-    overflow,     ///< Valor demasiado grande
-    underflow,    ///< Valor demasiado pequeno (o negativo para unsigned)
-    invalid_input ///< Entrada invalida (NaN, Inf, division por cero)
-};
+enum class conversion_result { success, overflow, underflow, invalid_input };
 
-/**
- * @brief Resultado seguro con valor y estado
- */
 template <typename T> struct safe_result {
     T value;
     conversion_result status;
@@ -88,12 +61,10 @@ template <typename T> struct safe_result {
     {
         return status == conversion_result::success;
     }
-
     constexpr explicit operator bool() const noexcept
     {
         return is_valid();
     }
-
     constexpr T value_or(const T& default_value) const noexcept
     {
         return is_valid() ? value : default_value;
@@ -104,25 +75,19 @@ template <typename T> struct safe_result {
 // Safe conversions FROM int128_base_t<S> to other types
 // =============================================================================
 
-/**
- * @brief Conversion segura de int128_base_t<S> a tipos integrales
- */
 template <signedness S, typename T>
 constexpr safe_result<T> safe_cast(const int128_base_t<S>& value) noexcept
 {
     static_assert(std::is_integral_v<T>, "Target type must be integral");
 
     if constexpr (S == signedness::unsigned_type) {
-        // Conversion desde unsigned
         if constexpr (std::is_signed_v<T>) {
-            // A signed: verificar que cabe en el rango positivo
             constexpr auto max_val = static_cast<uint64_t>(std::numeric_limits<T>::max());
             if (value.high() > 0 || value.low() > max_val) {
                 return {T(0), conversion_result::overflow};
             }
             return {static_cast<T>(value.low()), conversion_result::success};
         } else {
-            // A unsigned
             if constexpr (sizeof(T) >= 8) {
                 if (value.high() > 0) {
                     return {T(0), conversion_result::overflow};
@@ -137,12 +102,10 @@ constexpr safe_result<T> safe_cast(const int128_base_t<S>& value) noexcept
             }
         }
     } else {
-        // Conversion desde signed
         bool is_negative = value.is_negative();
         auto abs_value = value.abs();
 
         if constexpr (std::is_signed_v<T>) {
-            // A signed
             constexpr auto min_val = static_cast<int64_t>(std::numeric_limits<T>::min());
             constexpr auto max_val = static_cast<int64_t>(std::numeric_limits<T>::max());
 
@@ -154,24 +117,19 @@ constexpr safe_result<T> safe_cast(const int128_base_t<S>& value) noexcept
             int64_t int64_val = is_negative ? -static_cast<int64_t>(abs_value.low())
                                             : static_cast<int64_t>(abs_value.low());
 
-            if (int64_val < min_val) {
+            if (int64_val < min_val)
                 return {T(0), conversion_result::underflow};
-            }
-            if (int64_val > max_val) {
+            if (int64_val > max_val)
                 return {T(0), conversion_result::overflow};
-            }
 
             return {static_cast<T>(int64_val), conversion_result::success};
         } else {
-            // A unsigned: negativos causan underflow
-            if (is_negative) {
+            if (is_negative)
                 return {T(0), conversion_result::underflow};
-            }
 
             if constexpr (sizeof(T) >= 8) {
-                if (abs_value.high() > 0) {
+                if (abs_value.high() > 0)
                     return {T(0), conversion_result::overflow};
-                }
                 return {static_cast<T>(abs_value.low()), conversion_result::success};
             } else {
                 constexpr auto max_val = static_cast<uint64_t>(std::numeric_limits<T>::max());
@@ -184,43 +142,29 @@ constexpr safe_result<T> safe_cast(const int128_base_t<S>& value) noexcept
     }
 }
 
-/**
- * @brief Conversion segura a tipos de punto flotante
- */
 template <signedness S, typename T>
 constexpr safe_result<T> safe_cast_float(const int128_base_t<S>& value) noexcept
 {
     static_assert(std::is_floating_point_v<T>, "Target type must be floating point");
 
     T result;
-
     if constexpr (S == signedness::unsigned_type) {
-        T high_part = static_cast<T>(value.high());
-        T low_part = static_cast<T>(value.low());
-        result = high_part * static_cast<T>(18446744073709551616.0) + low_part;
+        result = static_cast<T>(value.high()) * static_cast<T>(18446744073709551616.0) +
+                 static_cast<T>(value.low());
     } else {
         bool is_negative = value.is_negative();
         auto abs_value = value.abs();
-
-        T high_part = static_cast<T>(abs_value.high());
-        T low_part = static_cast<T>(abs_value.low());
-        result = high_part * static_cast<T>(18446744073709551616.0) + low_part;
-
-        if (is_negative) {
+        result = static_cast<T>(abs_value.high()) * static_cast<T>(18446744073709551616.0) +
+                 static_cast<T>(abs_value.low());
+        if (is_negative)
             result = -result;
-        }
     }
 
-    if (!std::isfinite(result)) {
+    if (!std::isfinite(result))
         return {T(0), conversion_result::overflow};
-    }
-
     return {result, conversion_result::success};
 }
 
-/**
- * @brief Conversion que lanza excepcion en caso de fallo
- */
 template <signedness S, typename T> constexpr T checked_cast(const int128_base_t<S>& value)
 {
     if constexpr (std::is_floating_point_v<T>) {
@@ -240,9 +184,6 @@ template <signedness S, typename T> constexpr T checked_cast(const int128_base_t
     }
 }
 
-/**
- * @brief Conversion basada en std::optional
- */
 template <signedness S, typename T>
 constexpr std::optional<T> try_cast(const int128_base_t<S>& value) noexcept
 {
@@ -259,9 +200,6 @@ constexpr std::optional<T> try_cast(const int128_base_t<S>& value) noexcept
 // Safe arithmetic operations
 // =============================================================================
 
-/**
- * @brief Suma segura con deteccion de overflow
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_add(const int128_base_t<S>& a,
                                                  const int128_base_t<S>& b) noexcept
@@ -269,20 +207,21 @@ constexpr safe_result<int128_base_t<S>> safe_add(const int128_base_t<S>& a,
     int128_base_t<S> result = a + b;
 
     if constexpr (S == signedness::unsigned_type) {
-        // Unsigned: overflow si result < a
+        // Overflow si result < a (wrap-around)
         if (result < a) {
             return {int128_base_t<S>(0), conversion_result::overflow};
         }
     } else {
-        // Signed: overflow si signos iguales pero resultado tiene signo diferente
-        bool a_positive = !a.is_negative();
-        bool b_positive = !b.is_negative();
-        bool result_positive = !result.is_negative();
+        bool a_neg = a.is_negative();
+        bool b_neg = b.is_negative();
+        bool r_neg = result.is_negative();
 
-        if (a_positive && b_positive && !result_positive) {
+        // Positivo + Positivo = Negativo -> Overflow
+        if (!a_neg && !b_neg && r_neg) {
             return {int128_base_t<S>(0), conversion_result::overflow};
         }
-        if (!a_positive && !b_positive && result_positive) {
+        // Negativo + Negativo = Positivo -> Underflow
+        if (a_neg && b_neg && !r_neg) {
             return {int128_base_t<S>(0), conversion_result::underflow};
         }
     }
@@ -290,9 +229,6 @@ constexpr safe_result<int128_base_t<S>> safe_add(const int128_base_t<S>& a,
     return {result, conversion_result::success};
 }
 
-/**
- * @brief Resta segura con deteccion de underflow
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_sub(const int128_base_t<S>& a,
                                                  const int128_base_t<S>& b) noexcept
@@ -304,15 +240,16 @@ constexpr safe_result<int128_base_t<S>> safe_sub(const int128_base_t<S>& a,
         return {a - b, conversion_result::success};
     } else {
         int128_base_t<S> result = a - b;
+        bool a_neg = a.is_negative();
+        bool b_neg = b.is_negative();
+        bool r_neg = result.is_negative();
 
-        bool a_positive = !a.is_negative();
-        bool b_positive = !b.is_negative();
-        bool result_positive = !result.is_negative();
-
-        if (a_positive && !b_positive && !result_positive) {
+        // Positivo - Negativo = Negativo -> Overflow
+        if (!a_neg && b_neg && r_neg) {
             return {int128_base_t<S>(0), conversion_result::overflow};
         }
-        if (!a_positive && b_positive && result_positive) {
+        // Negativo - Positivo = Positivo -> Underflow
+        if (a_neg && !b_neg && !r_neg) {
             return {int128_base_t<S>(0), conversion_result::underflow};
         }
 
@@ -320,9 +257,6 @@ constexpr safe_result<int128_base_t<S>> safe_sub(const int128_base_t<S>& a,
     }
 }
 
-/**
- * @brief Multiplicacion segura con deteccion de overflow
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_mul(const int128_base_t<S>& a,
                                                  const int128_base_t<S>& b) noexcept
@@ -331,37 +265,53 @@ constexpr safe_result<int128_base_t<S>> safe_mul(const int128_base_t<S>& a,
         return {int128_base_t<S>(0), conversion_result::success};
     }
 
-    // Check preliminar: ambas partes altas no-cero = overflow seguro
-    if (a.high() != 0 && b.high() != 0) {
-        if constexpr (S == signedness::unsigned_type) {
+    if constexpr (S == signedness::unsigned_type) {
+        if (a.high() != 0 && b.high() != 0) {
             return {int128_base_t<S>(0), conversion_result::overflow};
-        } else {
-            // Para signed, determinar signo del resultado
-            bool should_be_positive = (a.is_negative() == b.is_negative());
-            return {int128_base_t<S>(0), should_be_positive ? conversion_result::overflow
-                                                            : conversion_result::underflow};
         }
-    }
 
-    int128_base_t<S> result = a * b;
-
-    // Verificar dividiendo de vuelta
-    if (result / a != b) {
-        if constexpr (S == signedness::unsigned_type) {
+        int128_base_t<S> result = a * b;
+        if (result / a != b) {
             return {int128_base_t<S>(0), conversion_result::overflow};
-        } else {
-            bool should_be_positive = (a.is_negative() == b.is_negative());
-            return {int128_base_t<S>(0), should_be_positive ? conversion_result::overflow
-                                                            : conversion_result::underflow};
         }
-    }
+        return {result, conversion_result::success};
+    } else {
+        // Trabajar con valores absolutos para verificacion de overflow
+        bool a_neg = a.is_negative();
+        bool b_neg = b.is_negative();
+        bool result_neg = (a_neg != b_neg);
 
-    return {result, conversion_result::success};
+        uint128_t abs_a = a.abs();
+        uint128_t abs_b = b.abs();
+
+        if (abs_a.high() != 0 && abs_b.high() != 0) {
+            return {int128_base_t<S>(0),
+                    result_neg ? conversion_result::underflow : conversion_result::overflow};
+        }
+
+        uint128_t abs_result = abs_a * abs_b;
+        if (abs_result / abs_a != abs_b) {
+            return {int128_base_t<S>(0),
+                    result_neg ? conversion_result::underflow : conversion_result::overflow};
+        }
+
+        // Verificar que cabe en int128_t
+        constexpr uint64_t max_high_positive = 0x7FFFFFFFFFFFFFFFULL;
+        if (!result_neg && abs_result.high() > max_high_positive) {
+            return {int128_base_t<S>(0), conversion_result::overflow};
+        }
+        if (result_neg && abs_result.high() > max_high_positive + 1) {
+            return {int128_base_t<S>(0), conversion_result::underflow};
+        }
+
+        int128_base_t<S> result(abs_result.high(), abs_result.low());
+        if (result_neg)
+            result = -result;
+
+        return {result, conversion_result::success};
+    }
 }
 
-/**
- * @brief Division segura con deteccion de division por cero
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_div(const int128_base_t<S>& a,
                                                  const int128_base_t<S>& b) noexcept
@@ -370,7 +320,6 @@ constexpr safe_result<int128_base_t<S>> safe_div(const int128_base_t<S>& a,
         return {int128_base_t<S>(0), conversion_result::invalid_input};
     }
 
-    // Caso especial signed: min() / -1 = overflow
     if constexpr (S == signedness::signed_type) {
         if (a == std::numeric_limits<int128_t>::min() && b == int128_base_t<S>(-1)) {
             return {int128_base_t<S>(0), conversion_result::overflow};
@@ -380,9 +329,6 @@ constexpr safe_result<int128_base_t<S>> safe_div(const int128_base_t<S>& a,
     return {a / b, conversion_result::success};
 }
 
-/**
- * @brief Modulo seguro con deteccion de division por cero
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_mod(const int128_base_t<S>& a,
                                                  const int128_base_t<S>& b) noexcept
@@ -391,7 +337,6 @@ constexpr safe_result<int128_base_t<S>> safe_mod(const int128_base_t<S>& a,
         return {int128_base_t<S>(0), conversion_result::invalid_input};
     }
 
-    // Caso especial signed: min() % -1 = 0 (no overflow, resultado valido)
     if constexpr (S == signedness::signed_type) {
         if (a == std::numeric_limits<int128_t>::min() && b == int128_base_t<S>(-1)) {
             return {int128_base_t<S>(0), conversion_result::success};
@@ -401,9 +346,6 @@ constexpr safe_result<int128_base_t<S>> safe_mod(const int128_base_t<S>& a,
     return {a % b, conversion_result::success};
 }
 
-/**
- * @brief Shift izquierdo seguro
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_shl(const int128_base_t<S>& value, int shift) noexcept
 {
@@ -411,13 +353,10 @@ constexpr safe_result<int128_base_t<S>> safe_shl(const int128_base_t<S>& value, 
         return {int128_base_t<S>(0), conversion_result::invalid_input};
     }
 
-    if (shift == 0) {
+    if (shift == 0)
         return {value, conversion_result::success};
-    }
 
     int128_base_t<S> result = value << shift;
-
-    // Verificar que no se perdieron bits
     if ((result >> shift) != value) {
         if constexpr (S == signedness::unsigned_type) {
             return {int128_base_t<S>(0), conversion_result::overflow};
@@ -430,16 +369,12 @@ constexpr safe_result<int128_base_t<S>> safe_shl(const int128_base_t<S>& value, 
     return {result, conversion_result::success};
 }
 
-/**
- * @brief Shift derecho seguro
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_shr(const int128_base_t<S>& value, int shift) noexcept
 {
     if (shift < 0 || shift >= 128) {
         return {int128_base_t<S>(0), conversion_result::invalid_input};
     }
-
     return {value >> shift, conversion_result::success};
 }
 
@@ -447,17 +382,13 @@ constexpr safe_result<int128_base_t<S>> safe_shr(const int128_base_t<S>& value, 
 // Saturating arithmetic
 // =============================================================================
 
-/**
- * @brief Suma con saturacion (clamp en max/min en overflow)
- */
 template <signedness S>
 constexpr int128_base_t<S> saturating_add(const int128_base_t<S>& a,
                                           const int128_base_t<S>& b) noexcept
 {
     auto result = safe_add(a, b);
-    if (result.is_valid()) {
+    if (result.is_valid())
         return result.value;
-    }
 
     if constexpr (S == signedness::unsigned_type) {
         return std::numeric_limits<uint128_t>::max();
@@ -468,17 +399,13 @@ constexpr int128_base_t<S> saturating_add(const int128_base_t<S>& a,
     }
 }
 
-/**
- * @brief Resta con saturacion
- */
 template <signedness S>
 constexpr int128_base_t<S> saturating_sub(const int128_base_t<S>& a,
                                           const int128_base_t<S>& b) noexcept
 {
     auto result = safe_sub(a, b);
-    if (result.is_valid()) {
+    if (result.is_valid())
         return result.value;
-    }
 
     if constexpr (S == signedness::unsigned_type) {
         return int128_base_t<S>(0);
@@ -489,17 +416,13 @@ constexpr int128_base_t<S> saturating_sub(const int128_base_t<S>& a,
     }
 }
 
-/**
- * @brief Multiplicacion con saturacion
- */
 template <signedness S>
 constexpr int128_base_t<S> saturating_mul(const int128_base_t<S>& a,
                                           const int128_base_t<S>& b) noexcept
 {
     auto result = safe_mul(a, b);
-    if (result.is_valid()) {
+    if (result.is_valid())
         return result.value;
-    }
 
     if constexpr (S == signedness::unsigned_type) {
         return std::numeric_limits<uint128_t>::max();
@@ -511,27 +434,19 @@ constexpr int128_base_t<S> saturating_mul(const int128_base_t<S>& a,
 }
 
 // =============================================================================
-// Additional safe operations (signed only)
+// Safe abs (signed only)
 // =============================================================================
 
-/**
- * @brief Valor absoluto seguro (solo para signed)
- */
 template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_abs(const int128_base_t<S>& value) noexcept
     requires(S == signedness::signed_type)
 {
-    // abs(min()) overflow porque -(-2^127) = 2^127 no cabe en int128_t
     if (value == std::numeric_limits<int128_t>::min()) {
         return {int128_base_t<S>(0), conversion_result::overflow};
     }
-
     return {value.abs(), conversion_result::success};
 }
 
-/**
- * @brief Valor absoluto con saturacion (solo para signed)
- */
 template <signedness S>
 constexpr int128_base_t<S> saturating_abs(const int128_base_t<S>& value) noexcept
     requires(S == signedness::signed_type)
@@ -541,12 +456,9 @@ constexpr int128_base_t<S> saturating_abs(const int128_base_t<S>& value) noexcep
 }
 
 // =============================================================================
-// Range checking utilities
+// Range utilities
 // =============================================================================
 
-/**
- * @brief Verifica si el valor esta en el rango [min, max]
- */
 template <signedness S>
 constexpr bool in_range(const int128_base_t<S>& value, const int128_base_t<S>& min_val,
                         const int128_base_t<S>& max_val) noexcept
@@ -554,9 +466,6 @@ constexpr bool in_range(const int128_base_t<S>& value, const int128_base_t<S>& m
     return value >= min_val && value <= max_val;
 }
 
-/**
- * @brief Clamp al rango [min, max]
- */
 template <signedness S>
 constexpr int128_base_t<S> clamp(const int128_base_t<S>& value, const int128_base_t<S>& min_val,
                                  const int128_base_t<S>& max_val) noexcept
