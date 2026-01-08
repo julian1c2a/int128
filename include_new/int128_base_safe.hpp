@@ -41,6 +41,7 @@
 #define INT128_BASE_SAFE_AVAILABLE 1
 
 #include "int128_base_concepts.hpp"
+#include "int128_base_limits.hpp"
 #include "int128_base_tt.hpp"
 #include <cmath>
 #include <concepts>
@@ -215,8 +216,8 @@ constexpr safe_result<int128_base_t<S>> safe_add(const int128_base_t<S>& a,
     const int128_base_t<S> result = a + b;
 
     if constexpr (S == signedness::unsigned_type) {
-        // Overflow si result < a (wrap-around)
-        if (result < a) {
+        // Overflow si result < a O result < b (wrap-around detectado por ambos)
+        if (result < a || result < b) {
             return {int128_base_t<S>(0), conversion_result::overflow};
         }
     } else {
@@ -332,7 +333,7 @@ constexpr safe_result<int128_base_t<S>> safe_div(const int128_base_t<S>& a,
     }
 
     if constexpr (S == signedness::signed_type) {
-        if (a == std::numeric_limits<int128_t>::min() && b == int128_base_t<S>(-1)) {
+        if (a == nstd::numeric_limits<int128_t>::min() && b == int128_base_t<S>(-1)) {
             return {int128_base_t<S>(0), conversion_result::overflow};
         }
     }
@@ -349,7 +350,7 @@ constexpr safe_result<int128_base_t<S>> safe_mod(const int128_base_t<S>& a,
     }
 
     if constexpr (S == signedness::signed_type) {
-        if (a == std::numeric_limits<int128_t>::min() && b == int128_base_t<S>(-1)) {
+        if (a == nstd::numeric_limits<int128_t>::min() && b == int128_base_t<S>(-1)) {
             return {int128_base_t<S>(0), conversion_result::success};
         }
     }
@@ -402,11 +403,11 @@ constexpr int128_base_t<S> saturating_add(const int128_base_t<S>& a,
         return result.value;
 
     if constexpr (S == signedness::unsigned_type) {
-        return std::numeric_limits<uint128_t>::max();
+        return nstd::numeric_limits<uint128_t>::max();
     } else {
         return (result.status == conversion_result::overflow)
-                   ? std::numeric_limits<int128_t>::max()
-                   : std::numeric_limits<int128_t>::min();
+                   ? nstd::numeric_limits<int128_t>::max()
+                   : nstd::numeric_limits<int128_t>::min();
     }
 }
 
@@ -422,8 +423,8 @@ constexpr int128_base_t<S> saturating_sub(const int128_base_t<S>& a,
         return int128_base_t<S>(0);
     } else {
         return (result.status == conversion_result::overflow)
-                   ? std::numeric_limits<int128_t>::max()
-                   : std::numeric_limits<int128_t>::min();
+                   ? nstd::numeric_limits<int128_t>::max()
+                   : nstd::numeric_limits<int128_t>::min();
     }
 }
 
@@ -436,11 +437,11 @@ constexpr int128_base_t<S> saturating_mul(const int128_base_t<S>& a,
         return result.value;
 
     if constexpr (S == signedness::unsigned_type) {
-        return std::numeric_limits<uint128_t>::max();
+        return nstd::numeric_limits<uint128_t>::max();
     } else {
         return (result.status == conversion_result::overflow)
-                   ? std::numeric_limits<int128_t>::max()
-                   : std::numeric_limits<int128_t>::min();
+                   ? nstd::numeric_limits<int128_t>::max()
+                   : nstd::numeric_limits<int128_t>::min();
     }
 }
 
@@ -452,7 +453,7 @@ template <signedness S>
 constexpr safe_result<int128_base_t<S>> safe_abs(const int128_base_t<S>& value) noexcept
     requires(S == signedness::signed_type)
 {
-    if (value == std::numeric_limits<int128_t>::min()) {
+    if (value == nstd::numeric_limits<int128_t>::min()) {
         return {int128_base_t<S>(0), conversion_result::overflow};
     }
     return {value.abs(), conversion_result::success};
@@ -463,7 +464,7 @@ constexpr int128_base_t<S> saturating_abs(const int128_base_t<S>& value) noexcep
     requires(S == signedness::signed_type)
 {
     const auto result = safe_abs<S>(value);
-    return result.is_valid() ? result.value : std::numeric_limits<int128_t>::max();
+    return result.is_valid() ? result.value : nstd::numeric_limits<int128_t>::max();
 }
 
 // =============================================================================
@@ -488,8 +489,8 @@ constexpr int128_base_t<S> clamp(const int128_base_t<S>& value, const int128_bas
     return value;
 }
 
-} // local close of namespace int128_safe
+} // namespace int128_safe
 
-} // local close of namespace nstd
+} // namespace nstd
 
 #endif // INT128_BASE_SAFE_HPP

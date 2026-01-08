@@ -47,11 +47,20 @@
 namespace nstd
 {
 
-// Forward declaration del template base
-template <typename T> class numeric_limits;
+/**
+ * @brief Template base de numeric_limits que hereda de std::numeric_limits
+ *
+ * Esto permite que nstd::numeric_limits<T> funcione para cualquier tipo T
+ * que tenga especialización en std::numeric_limits (int, double, etc.)
+ *
+ * Solo especializamos para int128_base_t<S>.
+ */
+template <typename T> class numeric_limits : public std::numeric_limits<T>
+{
+};
 
 /**
- * @brief Especialización genérica de nstd::numeric_limits para int128_base_t<S>
+ * @brief Especialización de nstd::numeric_limits para int128_base_t<S>
  *
  * Este template especializado maneja automáticamente las diferencias entre
  * tipos signed y unsigned usando `if constexpr`.

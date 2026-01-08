@@ -140,7 +140,7 @@ void test_safe_add_unsigned()
     auto result = safe_add(a, b);
     TEST("safe_add unsigned (normal)", result.is_valid() && result.value == uint128_t(300ULL));
 
-    uint128_t max = std::numeric_limits<uint128_t>::max();
+    uint128_t max = nstd::numeric_limits<uint128_t>::max();
     auto result2 = safe_add(max, uint128_t(1ULL));
     TEST("safe_add unsigned (overflow)", result2.status == conversion_result::overflow);
 }
@@ -195,7 +195,7 @@ void test_safe_add_signed()
     auto result2 = safe_add(neg_a, neg_b);
     TEST("safe_add signed (negative)", result2.is_valid() && result2.value == int128_t(-150LL));
 
-    int128_t max = std::numeric_limits<int128_t>::max();
+    int128_t max = nstd::numeric_limits<int128_t>::max();
     auto result3 = safe_add(max, int128_t(1LL));
     TEST("safe_add signed (overflow)", result3.status == conversion_result::overflow);
 }
@@ -219,11 +219,11 @@ void test_safe_mul_signed()
 
 void test_saturating_add()
 {
-    uint128_t max = std::numeric_limits<uint128_t>::max();
+    uint128_t max = nstd::numeric_limits<uint128_t>::max();
     auto sat_result = saturating_add(max, uint128_t(100ULL));
     TEST("saturating_add unsigned (saturates to max)", sat_result == max);
 
-    int128_t int_max = std::numeric_limits<int128_t>::max();
+    int128_t int_max = nstd::numeric_limits<int128_t>::max();
     auto sat_result2 = saturating_add(int_max, int128_t(1LL));
     TEST("saturating_add signed (saturates to max)", sat_result2 == int_max);
 }
@@ -235,7 +235,7 @@ void test_saturating_sub()
     auto sat_result = saturating_sub(a, b);
     TEST("saturating_sub unsigned (saturates to 0)", sat_result == uint128_t(0ULL));
 
-    int128_t int_min = std::numeric_limits<int128_t>::min();
+    int128_t int_min = nstd::numeric_limits<int128_t>::min();
     auto sat_result2 = saturating_sub(int_min, int128_t(1LL));
     TEST("saturating_sub signed (saturates to min)", sat_result2 == int_min);
 }
@@ -250,12 +250,12 @@ void test_safe_abs()
     auto result = safe_abs<signedness::signed_type>(neg);
     TEST("safe_abs (normal)", result.is_valid() && result.value == int128_t(12345LL));
 
-    int128_t min = std::numeric_limits<int128_t>::min();
+    int128_t min = nstd::numeric_limits<int128_t>::min();
     auto result2 = safe_abs<signedness::signed_type>(min);
     TEST("safe_abs (min overflow)", result2.status == conversion_result::overflow);
 
     auto sat = saturating_abs<signedness::signed_type>(min);
-    TEST("saturating_abs (min -> max)", sat == std::numeric_limits<int128_t>::max());
+    TEST("saturating_abs (min -> max)", sat == nstd::numeric_limits<int128_t>::max());
 }
 
 // =============================================================================
