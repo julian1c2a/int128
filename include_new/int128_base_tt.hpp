@@ -1756,8 +1756,53 @@ template <signedness S> class int128_base_t
     }
 
     /**
-     * @brief División y módulo general con múltiples optimizaciones
+     * @brief División y módulo principal con manejo correcto de signos
      * @param divisor El divisor (debe ser != 0)
+     * @return std::pair<cociente, resto>
+     *
+     * @details Para tipos signed:
+     * - Cociente: negativo si signos diferentes
+     * - Resto: mismo signo que el dividendo (C++ truncated division)
+     *
+     * Para tipos unsigned: delega directamente a big_bin_divrem()
+     *
+     * @warning Si divisor == 0, comportamiento indefinido
+     */
+    constexpr std::pair<int128_base_t, int128_base_t>
+    divrem(const int128_base_t& divisor) const noexcept
+    {
+        if constexpr (is_signed) {
+            // Manejo de signos para tipos signed
+            const bool dividend_negative = is_negative();
+            const bool divisor_negative = divisor.is_negative();
+
+            // Convertir a valores absolutos
+            int128_base_t abs_dividend = dividend_negative ? (-*this) : *this;
+            int128_base_t abs_divisor = divisor_negative ? (-divisor) : divisor;
+
+            // Hacer división unsigned
+            auto [quotient, remainder] = abs_dividend.big_bin_divrem(abs_divisor);
+
+            // Ajustar signo del cociente: negativo si signos diferentes
+            if (dividend_negative != divisor_negative) {
+                quotient = -quotient;
+            }
+
+            // Ajustar signo del resto: mismo signo que dividendo
+            if (dividend_negative && !(remainder.data[LSULL] == 0 && remainder.data[MSULL] == 0)) {
+                remainder = -remainder;
+            }
+
+            return {quotient, remainder};
+        } else {
+            // Para unsigned, usar directamente big_bin_divrem
+            return big_bin_divrem(divisor);
+        }
+    }
+
+    /**
+     * @brief División binaria larga con múltiples optimizaciones (UNSIGNED ONLY)
+     * @param divisor El divisor (debe ser != 0, tratado como unsigned)
      * @return std::pair<cociente, resto> donde 0 <= resto < divisor
      *
      * @details Optimizaciones implementadas (orden de evaluación [1]→[3]→[2]→[0]):
@@ -1777,12 +1822,12 @@ template <signedness S> class int128_base_t
      * **[0] Caso general:**
      * - División binaria larga (128 bits / 128 bits) O(128)
      *
-     * @note Algoritmo de división binaria (escolar) O(128) como fallback
+     * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
+     * @note Expuesto públicamente para benchmarks
      * @warning Si divisor == 0, comportamiento indefinido
-     * (en esta implementación retorna {0,0} como placeholder)
      */
     constexpr std::pair<int128_base_t, int128_base_t>
-    divrem(const int128_base_t& divisor) const noexcept
+    big_bin_divrem(const int128_base_t& divisor) const noexcept
     {
         // [0.a] Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
         if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0) {
@@ -1800,38 +1845,13 @@ template <signedness S> class int128_base_t
             return {zero, zero};
         }
 
-        // ========================================================================
-        // [SIGNED] Manejo de signos para tipos signed
-        // Reglas de C++ para división entera:
-        //   - Cociente: negativo si signos diferentes
-        //   - Resto: mismo signo que el dividendo
-        // ========================================================================
-        if constexpr (is_signed) {
-            const bool dividend_negative = is_negative();
-            const bool divisor_negative = divisor.is_negative();
-
-            // Convertir a valores absolutos
-            int128_base_t abs_dividend = dividend_negative ? (-*this) : *this;
-            int128_base_t abs_divisor = divisor_negative ? (-divisor) : divisor;
-
-            // Hacer división unsigned (recursión con valores positivos)
-            auto [quotient, remainder] = abs_dividend.divrem_unsigned(abs_divisor);
-
-            // Ajustar signo del cociente: negativo si signos diferentes
-            if (dividend_negative != divisor_negative) {
-                quotient = -quotient;
-            }
-
-            // Ajustar signo del resto: mismo signo que dividendo
-            if (dividend_negative) {
-                remainder = -remainder;
-            }
-
-            return {quotient, remainder};
-        }
-
-        // [0.c] Fast path: divisor > dividendo
-        if (*this < divisor) {
+        // [0.c] Fast path: divisor > dividendo (comparación UNSIGNED)
+        // Nota: big_bin_divrem trata todos los valores como unsigned
+        // Para comparación unsigned usamos comparación de datos directa
+        const bool divisor_greater =
+            (divisor.data[MSULL] > data[MSULL]) ||
+            (divisor.data[MSULL] == data[MSULL] && divisor.data[LSULL] > data[LSULL]);
+        if (divisor_greater) {
             int128_base_t zero;
             zero.data[LSULL] = 0;
             zero.data[MSULL] = 0;
