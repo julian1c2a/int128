@@ -1800,6 +1800,36 @@ template <signedness S> class int128_base_t
             return {zero, zero};
         }
 
+        // ========================================================================
+        // [SIGNED] Manejo de signos para tipos signed
+        // Reglas de C++ para división entera:
+        //   - Cociente: negativo si signos diferentes
+        //   - Resto: mismo signo que el dividendo
+        // ========================================================================
+        if constexpr (is_signed) {
+            const bool dividend_negative = is_negative();
+            const bool divisor_negative = divisor.is_negative();
+
+            // Convertir a valores absolutos
+            int128_base_t abs_dividend = dividend_negative ? (-*this) : *this;
+            int128_base_t abs_divisor = divisor_negative ? (-divisor) : divisor;
+
+            // Hacer división unsigned (recursión con valores positivos)
+            auto [quotient, remainder] = abs_dividend.divrem_unsigned(abs_divisor);
+
+            // Ajustar signo del cociente: negativo si signos diferentes
+            if (dividend_negative != divisor_negative) {
+                quotient = -quotient;
+            }
+
+            // Ajustar signo del resto: mismo signo que dividendo
+            if (dividend_negative) {
+                remainder = -remainder;
+            }
+
+            return {quotient, remainder};
+        }
+
         // [0.c] Fast path: divisor > dividendo
         if (*this < divisor) {
             int128_base_t zero;
