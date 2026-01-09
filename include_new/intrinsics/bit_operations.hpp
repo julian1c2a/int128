@@ -12,7 +12,7 @@
  * - ARM: NEON intrínsecos cuando disponible
  * - RISCV: Extensión B (bit manipulation) cuando disponible
  * - Fallback: Implementación C++ puro portable
- * 
+ *
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
  * @version 1.0.0
  * @date 2026-01-05
@@ -43,17 +43,15 @@ namespace intrinsics
  */
 inline constexpr int popcount64(uint64_t x) noexcept
 {
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows: usar intrínsecos de MSVC
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return fallback::popcount64_portable(x);
     } else {
         return static_cast<int>(__popcnt64(x));
     }
-#elif INTRINSICS_COMPILER_INTEL
-    // Intel icpx soporta __builtin_popcountll
-    return __builtin_popcountll(x);
-#elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
-    // GCC/Clang: constexpr desde GCC 5 / Clang 3.4
+#elif INTRINSICS_USES_GNU_ABI
+    // GCC/Clang/Intel(Linux): __builtin_popcountll
     return __builtin_popcountll(x);
 #else
     // Fallback: C++ puro portable
@@ -75,7 +73,8 @@ inline constexpr int popcount64(uint64_t x) noexcept
  */
 inline constexpr int clz64(uint64_t x) noexcept
 {
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows: usar _BitScanReverse64
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return fallback::clz64_portable(x);
     } else {
@@ -83,20 +82,9 @@ inline constexpr int clz64(uint64_t x) noexcept
         _BitScanReverse64(&index, x);
         return 63 - static_cast<int>(index);
     }
-#elif INTRINSICS_COMPILER_INTEL
-    // Intel icpx soporta __builtin_clzll
+#elif INTRINSICS_USES_GNU_ABI
+    // GCC/Clang/Intel(Linux): __builtin_clzll
     return __builtin_clzll(x);
-#elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
-// GCC/Clang: __builtin_clzll
-#if INTRINSICS_ARCH_ARM64 || INTRINSICS_ARCH_ARM32
-    // ARM: podría usar CLZ instruction directamente
-    return __builtin_clzll(x);
-#elif INTRINSICS_ARCH_RISCV64 || INTRINSICS_ARCH_RISCV32
-    // RISC-V: extensión B (Zbb) tiene clz
-    return __builtin_clzll(x);
-#else
-    return __builtin_clzll(x);
-#endif
 #else
     // Fallback: C++ puro portable
     return fallback::clz64_portable(x);
@@ -117,7 +105,8 @@ inline constexpr int clz64(uint64_t x) noexcept
  */
 inline constexpr int ctz64(uint64_t x) noexcept
 {
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows: usar _BitScanForward64
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return fallback::ctz64_portable(x);
     } else {
@@ -125,20 +114,9 @@ inline constexpr int ctz64(uint64_t x) noexcept
         _BitScanForward64(&index, x);
         return static_cast<int>(index);
     }
-#elif INTRINSICS_COMPILER_INTEL
-    // Intel icpx soporta __builtin_ctzll
+#elif INTRINSICS_USES_GNU_ABI
+    // GCC/Clang/Intel(Linux): __builtin_ctzll
     return __builtin_ctzll(x);
-#elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
-// GCC/Clang: __builtin_ctzll
-#if INTRINSICS_ARCH_ARM64 || INTRINSICS_ARCH_ARM32
-    // ARM: podría usar RBIT + CLZ para simular CTZ
-    return __builtin_ctzll(x);
-#elif INTRINSICS_ARCH_RISCV64 || INTRINSICS_ARCH_RISCV32
-    // RISC-V: extensión B (Zbb) tiene ctz
-    return __builtin_ctzll(x);
-#else
-    return __builtin_ctzll(x);
-#endif
 #else
     // Fallback: C++ puro portable
     return fallback::ctz64_portable(x);
@@ -174,7 +152,7 @@ inline constexpr int ffs64(uint64_t x) noexcept
  */
 inline constexpr int parity64(uint64_t x) noexcept
 {
-#if INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#if INTRINSICS_USES_GNU_ABI
     return __builtin_parityll(x);
 #else
     // Fallback: popcount % 2

@@ -8,7 +8,7 @@
  *
  * Proporciona implementaciones optimizadas de operaciones sobre bytes
  * para todos los compiladores y arquitecturas soportados.
- * 
+ *
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
  * @version 1.0.0
  * @date 2026-01-05
@@ -39,15 +39,13 @@ namespace intrinsics
  */
 inline constexpr uint64_t bswap64(uint64_t x) noexcept
 {
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows: usar intrínsecos de MSVC
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return fallback::bswap64_portable(x);
     } else {
         return _byteswap_uint64(x);
     }
-#elif INTRINSICS_COMPILER_INTEL
-    // Intel icpx soporta __builtin_bswap64
-    return __builtin_bswap64(x);
 #elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
     // GCC/Clang: __builtin_bswap64
 #if INTRINSICS_ARCH_ARM64 || INTRINSICS_ARCH_ARM32
@@ -70,14 +68,15 @@ inline constexpr uint64_t bswap64(uint64_t x) noexcept
  */
 inline constexpr uint32_t bswap32(uint32_t x) noexcept
 {
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return ((x & 0xFF000000) >> 24) | ((x & 0x00FF0000) >> 8) | ((x & 0x0000FF00) << 8) |
                ((x & 0x000000FF) << 24);
     } else {
         return _byteswap_ulong(x);
     }
-#elif INTRINSICS_COMPILER_INTEL || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
+#elif INTRINSICS_USES_GNU_ABI
     return __builtin_bswap32(x);
 #else
     return ((x & 0xFF000000) >> 24) | ((x & 0x00FF0000) >> 8) | ((x & 0x0000FF00) << 8) |
@@ -90,13 +89,14 @@ inline constexpr uint32_t bswap32(uint32_t x) noexcept
  */
 inline constexpr uint16_t bswap16(uint16_t x) noexcept
 {
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return static_cast<uint16_t>((x >> 8) | (x << 8));
     } else {
         return _byteswap_ushort(x);
     }
-#elif INTRINSICS_COMPILER_INTEL || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
+#elif INTRINSICS_USES_GNU_ABI
     return __builtin_bswap16(x);
 #else
     return static_cast<uint16_t>((x >> 8) | (x << 8));
@@ -120,21 +120,15 @@ inline constexpr uint64_t rotl64(uint64_t x, int s) noexcept
     if (s == 0)
         return x;
 
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows: usar _rotl64
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return (x << s) | (x >> (64 - s));
     } else {
         return _rotl64(x, s);
     }
-#elif INTRINSICS_COMPILER_INTEL
-// Intel: podría tener _rotl64 también
-#if defined(_rotl64)
-    return _rotl64(x, s);
-#else
-    return (x << s) | (x >> (64 - s));
-#endif
-#elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
-    // GCC/Clang: el compilador optimiza esto a ROL instruction
+#elif INTRINSICS_USES_GNU_ABI
+    // GCC/Clang/Intel(Linux): el compilador optimiza esto a ROL instruction
     return (x << s) | (x >> (64 - s));
 #else
     return fallback::rotl64_portable(x, s);
@@ -154,21 +148,15 @@ inline constexpr uint64_t rotr64(uint64_t x, int s) noexcept
     if (s == 0)
         return x;
 
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows: usar _rotr64
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return (x >> s) | (x << (64 - s));
     } else {
         return _rotr64(x, s);
     }
-#elif INTRINSICS_COMPILER_INTEL
-// Intel: podría tener _rotr64 también
-#if defined(_rotr64)
-    return _rotr64(x, s);
-#else
-    return (x >> s) | (x << (64 - s));
-#endif
-#elif INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_GCC
-    // GCC/Clang: el compilador optimiza esto a ROR instruction
+#elif INTRINSICS_USES_GNU_ABI
+    // GCC/Clang/Intel(Linux): el compilador optimiza esto a ROR instruction
     return (x >> s) | (x << (64 - s));
 #else
     return fallback::rotr64_portable(x, s);
@@ -184,7 +172,8 @@ inline constexpr uint32_t rotl32(uint32_t x, int s) noexcept
     if (s == 0)
         return x;
 
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return (x << s) | (x >> (32 - s));
     } else {
@@ -204,7 +193,8 @@ inline constexpr uint32_t rotr32(uint32_t x, int s) noexcept
     if (s == 0)
         return x;
 
-#if INTRINSICS_COMPILER_MSVC
+#if INTRINSICS_USES_MSVC_ABI
+    // MSVC y Intel ICX en Windows
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return (x >> s) | (x << (32 - s));
     } else {
