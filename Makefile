@@ -26,7 +26,7 @@ VALID_TYPES := uint128 int128
 VALID_FEATURES := t traits limits concepts algorithms iostreams bits cmath numeric ranges format safe thread_safety comparison_boost interop
 VALID_CATEGORIES := general tutorials examples showcase comparison performance integration
 VALID_COMPILERS := gcc clang intel msvc all
-VALID_MODES := debug release all
+VALID_MODES := debug release release-O1 release-O2 release-O3 release-Ofast all
 
 # =============================================================================
 # VALIDACIÓN

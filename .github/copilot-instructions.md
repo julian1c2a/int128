@@ -1,655 +1,587 @@
 # AI Agent Instructions for int128 Project
 
-## ⚠️ CRITICAL RULES (HIGH PRIORITY)
+## ⚠️ CRITICAL RULES
 
-### 1. PROMPT.md is MANDATORY
-**PROMPT.md must be followed for ALL actions.** It defines:
-- Build scripts naming conventions
-- Directory structure for outputs
-- Compiler configurations
-- Test/benchmark execution patterns
+### 1. Keep Root Directory CLEAN
+**NEVER create in project root:** `*.exe`, `*.obj`, `*.pdb`, `*.o`  
+**Use instead:** `build_temp/`, `build/build_[tests|benchs]/[compiler]/[mode]/`
 
-### 2. Keep Root Directory CLEAN
-**NEVER create these files in the project root:**
-- `*.exe` - Executables
-- `*.obj` - Object files  
-- `*.pdb` - Debug symbols
-- `*.o` - Object files (Linux)
+### 2. ASCII-Only Console Output
+All C++ console output must use ASCII only:
+- NO Unicode box drawing → Use `+=-|`
+- NO Unicode checkmarks → Use `[OK]` and `[FAIL]`
+- Run `python fix_unicode_chars.py` to clean files
 
-**Use these directories instead:**
-- `build_temp/` - For non-normalized executables and temporary builds
-- `scripts_temp/` - For non-normalized/experimental scripts
-- `build/build_[tests|benchs]/[compiler]/[mode]/` - For normalized builds (per PROMPT.md)
+### 3. Documentation Updates
+- **CHANGELOG.md**: Update hourly during active development
+- **PROMPT.md**: Reference for all build conventions and naming patterns
 
-### 3. ASCII-Only Output in Code
-**All console output in C++ code must use ASCII characters only:**
-- NO Unicode box drawing (╔═║╚) → Use `+=-|` instead
-- NO Unicode checkmarks (✓✗) → Use `[OK]` and `[FAIL]` instead
-- NO Spanish accents in strings (á é í ó ú ñ) → Use unaccented equivalents
-- Run `python fix_unicode_chars.py` to clean existing files
+---
 
-### 4. Report Status Every 5 Minutes
-During long tasks, provide brief status updates every ~5 minutes to maintain user awareness.
+## Coding Standards
 
-### 5. Update CHANGELOG.md Every Hour ⏰ NEW
-**CHANGELOG.md MUST be updated every hour during active development.**
-- Format: `### [HH:MM] YYYY-MM-DD - Brief summary`
-- Include: Changes made, files modified, tests run
-- Cross-reference: Update related docs (TODO.md, README.md) as needed
-- See CHANGELOG.md header for document interconnection rules
+### 1. Const Correctness (MANDATORY)
+**Every variable that CAN be const MUST be declared const:**
+```cpp
+// CORRECT
+const uint64_t mask = 0xFFFFFFFFFFFFFFFFull;
+const auto result = compute_value();
+for (const auto& item : container) { ... }
+
+// WRONG - missing const
+uint64_t mask = 0xFFFFFFFFFFFFFFFFull;  // Should be const
+auto result = compute_value();           // Should be const
+for (auto& item : container) { ... }     // Should be const& if not modified
+```
+
+### 2. Initialize Variables at Declaration
+**Variables MUST be initialized when declared using brace initialization `{}`:**
+```cpp
+// CORRECT - initialize at declaration with braces
+const uint64_t value{compute_something()};
+const auto result{(condition) ? option_a : option_b};
+const int128_t x{42};
+
+// WRONG - declare then assign
+uint64_t value;       // Uninitialized!
+value = compute_something();
+
+// WRONG - parentheses instead of braces
+const uint64_t value(42);  // Use braces: {42}
+const auto result = 42;    // Use braces: {42}
+```
+
+### 3. Constexpr/Consteval Everywhere
+**All functions/methods should be `constexpr` when possible, `consteval` when appropriate:**
+```cpp
+// CORRECT
+template <integral_builtin T>
+constexpr uint64_t high() const noexcept { return data[1]; }
+
+static consteval int128_base_t max() noexcept { ... }
+```
+
+### 4. No Exceptions - Use Return Types
+**NEVER use `throw`. Use `std::optional<T>` or `std::pair<T, error_enum>`:**
+```cpp
+// CORRECT
+enum class parse_error : uint8_t { success = 0, invalid_char, overflow };
+static constexpr std::pair<parse_error, int128_base_t> parse(const char* str) noexcept;
+
+// WRONG
+static int128_base_t parse(const char* str) { throw std::invalid_argument(...); }
+```
+
+### 5. Always Use Braces
+**Every `if`, `else if`, `else` MUST have braces, even for single statements:**
+```cpp
+// CORRECT
+if (value < 0) {
+    return -value;
+}
+
+// WRONG
+if (value < 0)
+    return -value;
+```
+
+### 6. Template Declaration Layout
+**`template<...>` on its own line, then signature:**
+```cpp
+// CORRECT
+template <integral_builtin T>
+constexpr int128_base_t& operator+=(T other) noexcept {
+
+// WRONG (all on one line)
+template <integral_builtin T> constexpr int128_base_t& operator+=(T other) noexcept {
+```
+
+### 7. K&R Brace Style (Compact)
+**Opening brace on same line as statement/signature:**
+```cpp
+// CORRECT
+if (condition) {
+    ...
+} else if (other) {
+    ...
+} else {
+    ...
+}
+
+constexpr uint64_t high() const noexcept {
+    return data[1];
+}
+
+// WRONG (Allman style - too vertical)
+if (condition)
+{
+    ...
+}
+```
+
+### 8. Noexcept Everywhere
+**All functions that don't throw must be marked `noexcept`:**
+```cpp
+constexpr uint64_t low() const noexcept { return data[0]; }
+```
+
+### 9. Naming Conventions
+**Consistent naming across the codebase:**
+
+| Element | Style | Examples |
+|---------|-------|----------|
+| **Types/Classes** | `snake_case_t` | `uint128_t`, `int128_base_t`, `parse_error` |
+| **Template params** | `PascalCase` or `UPPER` | `S`, `T`, `T1`, `T2` |
+| **Template types** | `snake_case_tt` | `int128_base_tt.hpp` (template type file) |
+| **Enums (enum class)** | `snake_case_ec_t` | `signedness_ec_t`, `parse_error_ec_t` |
+| **Enum values** | `snake_case` | `unsigned_type`, `signed_type`, `success` |
+| **Functions/Methods** | `snake_case` | `to_string()`, `leading_zeros()`, `is_negative()` |
+| **Variables** | `snake_case` | `const uint64_t carry`, `const auto result` |
+| **Static constants** | `UPPER_SNAKE` | `BITS`, `BYTES`, `LIMBS`, `MSULL`, `LSULL` |
+| **Numeric limits** | `UI64_MAX` pattern | `UI64_MAX`, `I64_MIN`, `UI_I64_MAX` |
+| **Namespaces** | `snake_case` | `nstd`, `intrinsics` |
+| **Files** | `snake_case.hpp` | `int128_base_tt.hpp`, `type_traits.hpp` |
+| **Macros** (avoid) | `UPPER_SNAKE` | `INT128_BASE_TT_HPP` (include guards only) |
+
+**Special patterns:**
+- Type aliases end with `_t`: `uint128_t`, `int128_t`
+- Template types end with `_tt`: `int128_base_tt` (parametrized types)
+- Enum classes end with `_ec_t`: `parse_error_ec_t`, `signedness_ec_t`
+- Boolean methods start with `is_`: `is_zero()`, `is_negative()`, `is_power_of_2()`
+- Conversion methods: `to_string()`, `to_uint128()`
+- Parse/factory methods: `from_string()`, `from_bytes()`
+- Index constants: `MSULL` (Most Significant ULongLong), `LSULL` (Least Significant)
+
+**Why snake_case for classes?**
+Classes use `snake_case_t` (not `PascalCase`) to match C++ standard library style (`std::string`, `std::vector`). This makes `uint128_t` feel like a native type.
+
+### 10. Builtin-Like Behavior
+**Types must feel like native integers:**
+- Implicit conversions where standard integers allow them
+- Same overflow behavior (wrap-around for unsigned, two's complement for signed)
+- Compatible with STL algorithms, `std::numeric_limits`, type traits
+- Operator symmetry: `uint128_t + int` AND `int + uint128_t` must both work
+
+### 11. Explicit Conversions and Constructors
+**All conversions and eligible constructors MUST be explicit:**
+```cpp
+// CORRECT - explicit constructor
+template <integral_builtin T>
+explicit constexpr int128_base_t(T value) noexcept;
+
+// CORRECT - explicit conversion operator
+explicit constexpr operator bool() const noexcept;
+explicit constexpr operator uint64_t() const noexcept;
+
+// WRONG - implicit conversion (avoid)
+constexpr int128_base_t(int value) noexcept;  // Missing explicit!
+constexpr operator double() const noexcept;   // Missing explicit!
+```
+
+**Exceptions (implicit allowed):**
+- Copy constructor: `int128_base_t(const int128_base_t&)`
+- Move constructor: `int128_base_t(int128_base_t&&)`
+
+### 12. Prefer Immutability
+**If avoiding a mutable variable is easy, do it:**
+```cpp
+// CORRECT - const + early return, no mutation
+const int64_t result{42};
+// ... operations ...
+if (result < 0) {
+    return -result;
+} else {
+    return result;
+}
+
+// CORRECT - compute directly with ternary
+const auto result{(condition) ? value_a : value_b};
+
+// WRONG - unnecessary mutation
+int64_t result{42};      // Not const!
+// ...
+if (result < 0) {
+    result = -result;    // Mutation!
+}
+return result;
+
+// WRONG - mutable then conditional assign
+auto result{value_a};    // Not const!
+if (!condition) {
+    result = value_b;    // Mutation!
+}
+```
+
+### 13. Explicit Casts Only
+**All type conversions MUST use C++ style casts, never C-style:**
+```cpp
+// CORRECT - explicit C++ casts
+const uint64_t high{static_cast<uint64_t>(value)};
+const auto ptr{reinterpret_cast<char*>(buffer)};
+const auto& ref{const_cast<int128_t&>(cref)};
+
+// WRONG - C-style cast (forbidden)
+const uint64_t high{(uint64_t)value};      // Use static_cast!
+const auto ptr{(char*)buffer};              // Use reinterpret_cast!
+```
+
+### 14. Explicit std:: Namespace
+**Always use explicit `std::` prefix, except for arithmetic types imported via `using`:**
+```cpp
+// At file scope - import arithmetic types
+using std::uint64_t;
+using std::int64_t;
+using std::size_t;
+
+// CORRECT - explicit std:: for everything else
+std::string result{};
+std::vector<uint64_t> data{};
+std::cout << value << std::endl;
+const auto it{std::find(v.begin(), v.end(), x)};
+
+// WRONG - using namespace (forbidden)
+using namespace std;           // Never!
+using std::string;             // Only for arithmetic types!
+cout << value;                 // Missing std::!
+```
 
 ---
 
 ## Project Overview
 
-Header-only C++20 library implementing 128-bit integers (`uint128_t` and `int128_t`) with full STL integration, optimized for cross-compiler support (GCC, Clang, Intel, MSVC) on Windows/MSYS2.
+Header-only C++20 library implementing 128-bit integers (`uint128_t` and `int128_t`) with full STL integration. Cross-compiler support: GCC, Clang, Intel, MSVC on Windows/MSYS2.
 
-**Status**: Production-ready (14/14 features complete for both types)  
-**Next Phase**: Template unification (`int128_base_t<signedness S>`) - see TODO.md Phase 1.5
+**Current Phase**: 1.66 (branch `phase-1.66`)  
+**Previous**: 1.5 (template unification base) | **Next**: 1.75  
+**Namespace**: `nstd` | **Storage**: `uint64_t data[2]` (little-endian: `data[0]` = low)
 
-## Core Architecture
+## Architecture
 
-### Namespace & Types
-- **Namespace**: `nstd` (everything lives here)
-- **Main types**: `nstd::uint128_t` (unsigned), `nstd::int128_t` (signed, two's complement)
-- **Storage**: `uint64_t data[2]` (little-endian: `data[0]` = low, `data[1]` = high)
-- **Design**: Intentional signed overflow wrap-around (not UB), mimics two's complement
-
-### Critical Header Organization
+### Header Organization (Phase 1.66 - Unified Template)
 ```
 include/
-├── int128.hpp                    # Single-include header (includes both types)
-├── uint128/
-│   ├── uint128_t.hpp            # Core implementation (2573 lines)
-│   ├── uint128_traits_specializations.hpp  # ⚠️ MUST be first (before stdlib)
-│   └── uint128_[feature].hpp    # Modular extensions
-├── int128/
-│   ├── int128_t.hpp             # Signed implementation (wraps uint128_t)
-│   └── int128_[feature].hpp
-└── intrinsics/
-    ├── compiler_detection.hpp   # Cross-compiler intrinsics
-    └── arithmetic_operations.hpp
+├── int128_base_tt.hpp                    # ⭐ Unified template: int128_base_t<signedness S>
+├── int128_base_[feature].hpp             # Feature modules (11 complete)
+├── int128_base_traits_specializations.hpp # ⚠️ Include FIRST (before stdlib)
+├── type_traits.hpp                       # integral_builtin concept
+├── intrinsics/                           # Cross-compiler low-level ops
+│   ├── arithmetic_operations.hpp
+│   ├── bit_operations.hpp
+│   └── compiler_detection.hpp
+└── specializations/                      # Optimized algorithms
 ```
 
-**⚠️ CRITICAL**: `uint128_traits_specializations.hpp` **must** be included before standard headers to properly specialize `std::is_integral<uint128_t>` and related traits.
+**Type Aliases (defined in int128_base_tt.hpp):**
+```cpp
+using uint128_t = int128_base_t<signedness::unsigned_type>;
+using int128_t = int128_base_t<signedness::signed_type>;
+```
 
-### Feature Modules
-Both types follow pattern: `[type]_[feature].hpp` (14 features total)
-- `t` - Core type definition
-- `traits` - Type traits & `std::hash`
-- `limits` - `std::numeric_limits` specialization
-- `concepts` - C++20 concepts
-- `algorithm` - STL-compatible algorithms
-- `iostreams` - Stream operators
-- `cmath` - Math functions (sqrt, pow, gcd, lcm)
-- `numeric` - Numeric operations
-- `ranges` - Range adapters
-- `format` - Formatting (hex, oct, bin, custom)
-- `safe` - Overflow-checked operations
-- `thread_safety` - Atomic wrappers (requires `-pthread -latomic`)
-- `comparison_boost` - Benchmarks vs Boost.Multiprecision (uint128 only)
-- `interop` - Interoperability tests/benchmarks (uint128 ↔ int128)
+### Feature Modules (14 total)
+`t`, `traits`, `limits`, `concepts`, `algorithm`, `iostreams`, `cmath`, `numeric`, `ranges`, `format`, `safe`, `thread_safety`, `comparison_boost`, `interop`
 
-## Build System (4 Approaches)
+## Build System
 
-### 1. make.py - Python Build System (Recommended for CI/CD)
+### Recommended: make.py (Isolated Environments)
 ```bash
-# Unified Python interface with isolated compiler environments
-python make.py init                                    # Detect & configure compilers (first time)
-python make.py build uint128 bits tests gcc release
+python make.py init                                    # First time: detect compilers
+python make.py build uint128 bits tests gcc release    # Build specific test
 python make.py check uint128 bits                      # Run tests
 python make.py run uint128 algorithm benchs            # Run benchmarks
-python make.py test                                    # Run ALL tests
-python make.py bench                                   # Run ALL benchmarks
-python make.py all                                     # Build everything
-
-# Demos
-python make.py build demos tutorials 01_basic_operations gcc release
-python make.py demo tutorials 01_basic_operations      # Compile + run
+python make.py test                                    # ALL tests
+python make.py demo tutorials 01_basic_operations      # Compile + run demo
 ```
 
-**Key advantage**: Isolated compiler environments (no global contamination)
+### Optimization Levels (Release Modes)
+**All release builds MUST test multiple optimization levels:**
 
-### 2. Makefile (Quick commands)
+| Mode | GCC/Clang | MSVC | Intel | Purpose |
+|------|-----------|------|-------|---------|
+| `release-O1` | `-O1` | `/O1` | `-O1` | Size optimization |
+| `release-O2` | `-O2` | `/O2` | `-O2` | Standard optimization |
+| `release-O3` | `-O3` | `/Ox` | `-O3` | Aggressive optimization |
+| `release-Ofast` | `-Ofast -fexpensive-optimizations` | `/Ox /fp:fast` | `-Ofast` | Maximum speed (may break IEEE) |
+
+**GCC aggressive flags (release-O3 and release-Ofast):**
 ```bash
-# Pattern: make [action] TYPE=[uint128|int128] FEATURE=[feature] COMPILER=[gcc|clang|intel|msvc|all] MODE=[debug|release|all]
+-O3 -fexpensive-optimizations -funroll-loops -ftree-vectorize -march=native
+```
+
+### Benchmark Comparisons
+**Benchmarks MUST compare against:**
+
+1. **Builtin integer types:**
+   - `int8_t`, `int16_t`, `int32_t`, `int64_t`
+   - `uint8_t`, `uint16_t`, `uint32_t`, `uint64_t`
+
+2. **Compiler extensions (when available):**
+   - `__int128` (GCC/Clang signed)
+   - `unsigned __int128` (GCC/Clang unsigned)
+
+3. **Boost.Multiprecision backends:**
+   - `cpp_int` (pure C++, header-only)
+   - `gmp_int` (GNU MP backend, fastest)
+   - `tommath_int` (libtommath backend)
+   - `checked_uint128_t` (overflow-checked)
+
+```cpp
+// Benchmark types to compare
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/gmp.hpp>
+#include <boost/multiprecision/tommath.hpp>
+
+using boost_cpp_uint128 = boost::multiprecision::uint128_t;      // cpp_int backend
+using boost_gmp_uint128 = boost::multiprecision::number<
+    boost::multiprecision::gmp_int, 
+    boost::multiprecision::et_off>;
+using boost_tom_uint128 = boost::multiprecision::tom_int;
+
+#ifdef __SIZEOF_INT128__
+using builtin_uint128 = unsigned __int128;
+using builtin_int128 = __int128;
+#endif
+```
+
+### Demo Development
+**All demos MUST be built and enriched creatively:**
+- Build all demos with every compiler
+- Add new demos showcasing real-world use cases
+- Categories: `tutorials`, `examples`, `showcase`, `comparison`, `performance`, `integration`
+
+```bash
+# Build ALL demos
+python make.py build demos all gcc release-O2
+python make.py build demos all clang release-O3
+
+# List available demos
+python make.py list demos
+```
+
+### Alternative: Makefile
+```bash
 make build_tests TYPE=uint128 FEATURE=cmath COMPILER=gcc MODE=release
 make check TYPE=int128 FEATURE=traits COMPILER=all MODE=all
-make run TYPE=uint128 FEATURE=numeric COMPILER=clang MODE=debug
-
-# Demos use CATEGORY instead of TYPE
-make build_demo CATEGORY=tutorials DEMO=01_basic_operations COMPILER=gcc MODE=release
-make demo CATEGORY=tutorials DEMO=01_basic_operations           # Compile + run shortcut
+make demo CATEGORY=tutorials DEMO=01_basic_operations
 ```
 
-### 3. Generic Scripts (Bash - portable)
+### Generic Bash Scripts
 ```bash
-# scripts/build_generic.bash <type> <feature> <target> [compiler] [mode] [print]
 scripts/build_generic.bash uint128 cmath tests gcc release
 scripts/check_generic.bash int128 traits all all
-scripts/run_generic.bash uint128 numeric gcc debug
-
-# Demos
-scripts/build_generic.bash demos tutorials 01_basic_operations gcc release
-scripts/run_generic.bash demos examples ipv6_address
-
-# Output paths: 
-build/build_[tests|benchs]/[compiler]/[mode]/[type]_[feature]_[target]_[compiler].exe
+scripts/run_generic.bash demos tutorials 01_basic_operations gcc release
 ```
 
-### 4. Direct Compilation
+### Direct Compilation
 ```bash
-/ucrt64/bin/g++ -std=c++20 -Iinclude tests/uint128_cmath_extracted_tests.cpp -o build/test
+g++ -std=c++20 -Iinclude tests/uint128_cmath_extracted_tests.cpp -o build/test
 
-# ⚠️ Thread safety requires extra flags:
-g++ -std=c++20 -Iinclude -pthread tests/uint128_thread_safety_tests.cpp -latomic -o build/test
+# Thread safety requires extra flags:
+g++ -std=c++20 -Iinclude -pthread tests/uint128_thread_safety_extracted_tests.cpp -latomic -o build/test
 ```
-
-## Recent Project Changes (Phase 0.5 - Dec 2025)
-
-### ✅ Operator Multiplication Optimization
-**Completed Dec 31, 2025** - See TODO.md Phase 0.5
-
-#### `operator*=(T other)` - Multiplication with assignment
-**Two-level adaptive strategy:**
-
-1. **Fast path** (`data[1] == 0`): Multiplicand fits in 64 bits
-   - Algorithm: Single `umul128(data[0], b, &data[1])`
-   - Improvement: 75% faster (1 vs 4 multiplications)
-   - Use case: ~70-80% of operations in typical code
-
-2. **General case** (`data[1] != 0`): 128×64 bit multiplication
-   - Algorithm: `umul128` + cross-product
-   - Improvement: 50% faster (2 vs 4 multiplications)
-
-3. **Sign extension**: Automatic for signed types
-   - Detection: `if constexpr (std::is_signed_v<T>)`
-   - Correction: `if (other < 0) { high_part -= data[0]; }`
-
-**Measured impact:**
-- ✅ Fast path: 75% faster, General case: 50% faster
-- ✅ No regressions in tests
-- ✅ Correct sign extension for signed types
-
-### 📋 Next Step: Phase 1.5 - Template Unification (Starting Jan 2026)
-**Goal**: Unify `int128_t` and `uint128_t` into template `int128_base_t<signedness S>`
-
-**Why unify first before expanding to N-width?**
-1. ✅ Avoid duplicating effort (refactor once instead of twice)
-2. ✅ Controlled scope (128 bits is known, tests validate everything)
-3. ✅ Solid base (expanding N later will be mechanical: change `2` → `N`)
-4. ✅ Reduce maintenance (4500 lines → 2500 lines, 45% less code)
-
-**Expected benefits:**
-- ✅ 45% less code (~2500 vs 4500 lines)
-- ✅ Single point for bugs/features
-- ✅ Foundation for N-width expansion (256/512 bits)
-- ✅ Automatic consistency between types
-
-**Implementation Plan:**
-```bash
-# 1. Create branch
-git checkout -b unified-signedness
-
-# 2. Create new file: include/wide_int_base.hpp
-# - enum class signedness { unsigned_type, signed_type }
-# - template<signedness S> class int128_base_t { uint64_t data[2]; }
-
-# 3. Modify current headers to use type aliases
-# include/uint128/uint128_t.hpp → using uint128_t = int128_base_t<signedness::unsigned_type>;
-# include/int128/int128_t.hpp   → using int128_t = int128_base_t<signedness::signed_type>;
-
-# 4. Validate exhaustively with all existing tests
-```
-
-**Operations requiring `if constexpr (is_signed)`:**
-| Operation | Reason |
-|-----------|--------|
-| `operator-()` | Solo para signed |
-| `operator>>=` | Arithmetic shift (signed) vs logical (unsigned) |
-| `abs()` | Solo para signed |
-| Constructor `int64_t` | Sign extension |
-| `from_string("-123")` | Parsing negativos |
-| `operator/`, `%` | División con signos |
-
-**Operations identical (no `if constexpr` needed):**
-- `+`, `-`, `*`, `&`, `|`, `^`, `~`, `<<` (same bit operations)
-- `==`, `!=`, `<`, `>`, `<=`, `>=` (comparisons between same type)
-- `high()`, `low()`, `set_high()`, `set_low()` (accessors)
-
-**Patterns validated in Phase 0.5:**
-1. **Value-based optimization** (`if (data[1] == 0)`) - works for both signed/unsigned
-2. **Conditional branching** (`if constexpr (std::is_signed_v<T>)`) - zero overhead
-3. **Intrinsic selection by case** (umul128 vs mul128) - choose algorithm by characteristics
-4. **Uniform sign extension handling** - same logic in all paths
-
-**Success Criteria:**
-- ✅ All uint128 + int128 tests pass
-- ✅ Benchmarks show equal or better performance
-- ✅ Compiles with gcc, clang, msvc, intel
-- ✅ Comprehensible error messages
-- ✅ Acceptable compilation time
-
-See TODO.md for complete detailed plan.
-
-## Compiler-Specific Considerations
-
-### Intel OneAPI (Most Complex)
-```bash
-# MUST source Intel environment first in MSYS2:
-source scripts/setup_intel_combined.bash x64
-
-# Uses MSVC STL but Intel compiler (icpx/icx)
-# Critical env vars: INCLUDE, LIB, LIBPATH (see DEV_ENV_VARS.md)
-```
-
-### Intrinsics Detection
-Uses `include/intrinsics/compiler_detection.hpp` to select:
-- **MSVC**: `_umul128()`, `_udiv128()`, `_BitScanReverse64()`
-- **GCC/Clang**: `__builtin_clzll()`, `__builtin_ctzll()`, `__uint128_t` (optional)
-- **Fallback**: Portable C++20 implementations
 
 ## File Naming Conventions
 
 ### Tests & Benchmarks
 ```
-[tests|benchs]/[type]_[feature]_extracted_[tests|benchs].cpp
-scripts/build_[type]_[feature]_extracted_[tests|benchs].bash  # Legacy (use build_generic.bash)
-scripts/check_[type]_[feature]_extracted_tests.bash           # Legacy (use check_generic.bash)
-scripts/run_[type]_[feature]_extracted_benchs.bash            # Legacy (use run_generic.bash)
+tests/[type]_[feature]_extracted_tests.cpp
+benchs/[type]_[feature]_extracted_benchs.cpp
+→ build/build_[tests|benchs]/[compiler]/[mode]/[type]_[feature]_[target]_[compiler].exe
 ```
 
-### Demos
+### Demos (35+ in 7 categories)
 ```
-demos/
-├── tutorials/         # 01-13 basic tutorials
-├── showcase/          # Interactive demos (cryptography, scientific, performance)
-├── examples/          # Real-world use cases (IPv6, UUID, prime factorization)
-└── [category]/[demo_name].cpp
-```
-
-## Testing & Validation
-
-### Running All Tests
-```bash
-# Test single feature across all compilers
-make check TYPE=uint128 FEATURE=cmath COMPILER=all MODE=all
-
-# Test all features for a type
-for f in t traits limits concepts algorithm iostreams cmath numeric ranges format safe thread_safety; do
-    make check TYPE=uint128 FEATURE=$f COMPILER=gcc MODE=release
-done
+demos/tutorials/01_basic_operations.cpp    # Sequential learning
+demos/examples/ipv6_address.cpp            # Real-world use cases
+demos/showcase/showcase_cryptography.cpp   # Advanced demonstrations
+→ build/build_demos/[compiler]/[mode]/[demo_name].exe
 ```
 
-### Benchmarks Report Format
-Benchmarks output **both**:
-- Wall-clock time (nanoseconds)
-- CPU cycles (via `__rdtsc()` intrinsic)
+## Key Code Patterns
 
-Output saved to: `build/build_benchs_results/[compiler]/[mode]/[type]_[feature]_results_[timestamp].txt`
-
-## Common Patterns to Maintain
-
-### 1. Trait Specializations Before Stdlib
+### 1. Trait Specializations MUST Come First
 ```cpp
-// ALWAYS include traits FIRST in any uint128_t header
-#include "uint128_traits_specializations.hpp"
-#include <iostream>  // stdlib headers come after
+#include "int128_base_traits_specializations.hpp"  // BEFORE any stdlib
+#include <iostream>
 ```
 
 ### 2. Constexpr + Noexcept Everywhere
 ```cpp
 constexpr uint64_t high() const noexcept { return data[1]; }
-constexpr uint64_t low() const noexcept { return data[0]; }
 ```
 
-### 3. Template Conversions with Integral Check
+### 3. Sign Extension Pattern (unified template)
 ```cpp
-template <typename T>
-constexpr void set_high(T value) noexcept {
-    static_assert(std::is_integral<T>::value, "T must be integral");
-    data[1] = static_cast<uint64_t>(value);
-}
-```
-
-### 4. Friend Operators for Symmetry
-```cpp
-// Allows: uint64_t + uint128_t (not just uint128_t + uint64_t)
-friend constexpr uint128_t operator+(const uint128_t& lhs, const uint128_t& rhs) noexcept;
-```
-
-### 5. Sign Extension Pattern (int128_t)
-```cpp
-// Constructor with automatic sign extension
 template <integral_builtin T>
-constexpr uint128_t(T value) noexcept : data{static_cast<uint64_t>(value), 0ull} {
-    if constexpr (std::is_signed_v<T>) {
-        if (value < 0) {
-            data[1] = ~0ull; // Extend sign for negatives
-        }
+constexpr int128_base_t(T value) noexcept : data{static_cast<uint64_t>(value), 0ull} {
+    if constexpr (is_signed && std::is_signed_v<T>) {
+        if (value < 0) data[1] = ~0ull;  // Extend sign
     }
 }
 ```
 
-### 6. Operator Copy-Modify-Return Pattern
+### 4. Operations Requiring `if constexpr (is_signed)`
+- `operator-()` - negation (signed only)
+- `operator>>=` - arithmetic vs logical shift
+- `abs()`, `from_string("-123")` - signed only
+- `operator/`, `%` - signed division
+
+### 5. Friend Operators for Symmetry
 ```cpp
-// Non-modifying operator delegates to modifying version
-template <integral_builtin T>
-constexpr uint128_t operator*(T other) const noexcept {
-    uint128_t result(*this);
-    result *= other;  // Preserves type T for correct template resolution
-    return result;
-}
+// Enables: 50u + uint128_t (not just uint128_t + 50u)
+friend constexpr int128_base_t operator+(const int128_base_t& lhs, const int128_base_t& rhs) noexcept;
 ```
 
-### 7. Adaptive Algorithm Selection
-```cpp
-// Choose algorithm based on runtime value
-constexpr uint128_t& operator*=(T other) noexcept {
-    const uint64_t b = static_cast<uint64_t>(other);
-    
-    // Fast path: value fits in 64 bits
-    if (data[1] == 0) {
-        // Use simple umul128 (1 multiplication)
-        return *this;
-    }
-    
-    // General case: full 128-bit value
-    // Use umul128 + cross-product (2 multiplications)
-    return *this;
-}
-```
+## Compiler-Specific Notes
 
-### 8. Compile-Time Modulo Optimization
-```cpp
-// Template specialization avoids runtime division for common moduli
-template <uint64_t Rad>
-    requires(Rad > 1 && Rad < 64)
-constexpr uint128_t mod() const noexcept {
-    // Power of 2: use bitmask (0 divisions)
-    if constexpr (uint128_mod_details::is_power_of_2(Rad)) {
-        constexpr uint64_t mask = Rad - 1;
-        return uint128_t(0, low() & mask);
-    }
-    // Power of 3 (3, 9, 27): specialized algorithm
-    else if constexpr (uint128_mod_details::is_power_of_3(Rad)) {
-        return uint128_t(0, mod_power_of_3_helper<Rad>());
-    }
-    // Other cases: optimized generic helper
-    else {
-        return uint128_t(0, modM_generic_helper<Rad>());
-    }
-}
-```
-
-**Benefit**: Eliminates expensive 128-bit division when modulus known at compile-time.  
-**Special cases**: mod3(), mod5(), mod7(), mod10() for ultra-common values.
-
-### 9. Buffer Rotation for Thread Safety
-```cpp
-const char* to_cstr_base(int base) const {
-    // Rotating buffer prevents aliasing in single-threaded code
-    static thread_local char buffers[4][64];
-    static thread_local int current_buffer = 0;
-    
-    current_buffer = (current_buffer + 1) % 4;
-    char* buffer = buffers[current_buffer];
-    // ... conversion logic ...
-    return buffer;
-}
-```
-
-**Pattern**: Allows up to 4 concurrent `to_cstr()` calls in same expression without stomping.  
-**Example**: `printf("%s %s %s", a.to_cstr(), b.to_cstr(), c.to_cstr())` works correctly.
-
-## Compiler-Specific Considerations
-
-### Intel OneAPI (Most Complex)
+### Intel OneAPI (Complex Setup)
 ```bash
-# MUST source Intel environment first in MSYS2:
-source scripts/setup_intel_combined.bash x64
-
-# Uses MSVC STL but Intel compiler (icpx/icx)
-# Critical env vars: INCLUDE, LIB, LIBPATH (see DEV_ENV_VARS.md)
+source scripts/setup_intel_combined.bash x64  # MUST run first in MSYS2
 ```
 
-### Intrinsics Detection
-Uses `include/intrinsics/compiler_detection.hpp` to select:
+### Thread Safety Flags
+**Always required for thread_safety feature:**
+```bash
+-pthread -latomic
+```
+Scripts auto-detect `<thread>`, `<atomic>`, `thread_safety.hpp` and add flags.
+
+### Intrinsics Selection
+`include/intrinsics/compiler_detection.hpp` auto-selects:
 - **MSVC**: `_umul128()`, `_udiv128()`, `_BitScanReverse64()`
-- **GCC/Clang**: `__builtin_clzll()`, `__builtin_ctzll()`, `__uint128_t` (optional)
+- **GCC/Clang**: `__builtin_clzll()`, `__builtin_ctzll()`, `__uint128_t`
 - **Fallback**: Portable C++20 implementations
 
-## Known Issues & Gotchas
+---
 
-1. **Intel linking**: Extremely finicky in MSYS2 environment. Always check `scripts/setup_intel_combined.bash` is sourced.
+## ⚠️ MANDATORY: Sanitizers & Static Analysis
 
-2. **Thread safety**: `-pthread -latomic` flags are **mandatory** for:
-   - `uint128_thread_safety.hpp`
-   - Any demo/test using atomic 128-bit operations
-   - Auto-detected by build scripts when `<thread>` or `<atomic>` present
+### Build Requirements
+**Every compilation MUST:**
+1. Compile with ALL 4 compilers: GCC, Clang, MSVC (cl), Intel (icx/icpx)
+2. Pass ALL tests with ALL 4 compilers
+3. Run static analysis tools
 
-3. **MSVC vs GCC differences**:
-   - MSVC: `_MSC_VER` macro, uses `<intrin.h>`
-   - GCC/Clang: `__GNUC__`/`__clang__`, uses `<immintrin.h>` + `<x86intrin.h>`
+### Sanitizers by Compiler
 
-4. **Signed integer overflow**: Intentionally uses wrap-around (two's complement), not UB.
-
-5. **Generic scripts**: Always prefer `build_generic.bash` over individual `build_[type]_[feature]_extracted_*.bash` scripts (128 legacy scripts deprecated).
-
-6. **Output paths inconsistency**: Legacy scripts may use different naming patterns:
-   - **Modern (preferred)**: `[type]_[feature]_[target]_[compiler].exe`
-   - **Legacy (deprecated)**: `[type]_[feature]_extracted_[target]_[compiler].exe`
-   - Always use generic scripts (`build_generic.bash`, `check_generic.bash`, `run_generic.bash`) for consistency
-
-7. **make.py vs Makefile**: Both work identically, but `make.py` provides isolated compiler environments.
-   - Use `make.py` for CI/CD and when compiler environment contamination is a concern
-   - Use `Makefile` for quick local development with traditional make syntax
-
-## Demos System (35+ Demos in 7 Categories)
-
-### Demo Structure
-```
-demos/
-├── general/          # 6 demos - Ad-hoc features & experiments
-├── tutorials/        # 16 demos - Sequential learning (01-13 + extras)
-├── examples/         # 9 demos - Real-world use cases
-├── showcase/         # 4 demos - Advanced demonstrations
-├── comparison/       # Comparisons with other libraries
-├── performance/      # Performance analysis
-└── integration/      # Integration examples
-```
-
-**Total**: ~4878 lines of demo code
-
-### Demo Naming Patterns
-- **Tutorial demos**: `01_basic_operations.cpp`, `02_bitwise_operations.cpp`, etc.
-- **Example demos**: `ipv6_address.cpp`, `uuid_generation.cpp`, `big_integer_calculator.cpp`
-- **Showcase demos**: `main.cpp`, `showcase_cryptography.cpp`, `showcase_scientific.cpp`
-
-### Building Demos
+**GCC/Clang (MSYS2 & WSL):**
 ```bash
-# Single demo (3 ways - all equivalent)
-bash scripts/build_demo.bash tutorials 01_basic_operations gcc release
-bash scripts/build_generic.bash demos tutorials 01_basic_operations gcc release
-python make.py build demos tutorials 01_basic_operations gcc release
+# AddressSanitizer - buffer overflow, use-after-free
+-fsanitize=address -fno-omit-frame-pointer
 
-# All demos in category
-bash scripts/build_all_demos.bash tutorials gcc release
+# UndefinedBehaviorSanitizer - undefined behavior
+-fsanitize=undefined
 
-# Run demo
-bash scripts/run_demo.bash tutorials 01_basic_operations
-make demo CATEGORY=tutorials DEMO=01_basic_operations
-python make.py demo tutorials 01_basic_operations
+# ThreadSanitizer - data races (incompatible with ASan)
+-fsanitize=thread
+
+# Combined (recommended for debug builds)
+-fsanitize=address,undefined -fno-omit-frame-pointer
 ```
 
-### Demo Patterns
-
-#### 1. **Threading Demos** (Automatic flag detection)
-Scripts auto-detect `<thread>`, `<atomic>`, `thread_safety.hpp` and add `-pthread -latomic`:
-- `demos/examples/demo_int128_thread_safety.cpp`
-- `demos/examples/example_thread_safety.cpp`
-
-#### 2. **Interactive Demos** (REPL pattern)
-Main loop pattern for interactive exploration:
-- `demos/examples/big_integer_calculator.cpp` - Math REPL
-- `demos/showcase/main.cpp` - 7 interactive sections
-
-#### 3. **Scientific Computing**
-Demos using high-precision arithmetic:
-- `demos/showcase/showcase_scientific.cpp` - Factorials, Fibonacci, π approximation
-- `demos/examples/mersenne_primes.cpp` - Prime search
-- `demos/examples/prime_factorization.cpp` - Pollard's Rho
-
-#### 4. **Networking/Identifiers**
-Real-world data structure demos:
-- `demos/examples/ipv6_address.cpp` - Full IPv6 class with parsing
-- `demos/examples/uuid_generation.cpp` - RFC 4122 UUID v4
-
-### Demo Verification
+**MSVC (cl.exe):**
 ```bash
-# Check all demos compile (generates matrix report)
-python make.py check demos all gcc release
-bash scripts/test_demos.bash
+# AddressSanitizer
+/fsanitize=address
+
+# Runtime checks (debug only)
+/RTC1
 ```
 
-Output example: "35/35 demos compiled successfully (100%)"
-
-## File Naming Conventions
-
-### Nomenclature System
-**Variables used throughout:**
-- `[action]` = `build` | `check` | `run` - Action to perform on executables
-- `[type_base]` = `uint128` | `int128` - Type being compiled
-- `[feature]` = `t` | `traits` | `limits` | `concepts` | `algorithm` | `iostreams` | `bits` | `cmath` | `numeric` | `ranges` | `format` | `safe` | `thread_safety` | `comparison_boost` | `interop`
-- `[ultimate_target]` = `tests` | `benchs` - Final executable type
-- `[compiler]` = `gcc` | `clang` | `intel` | `msvc` | `all` - Compiler to use
-- `[mode]` = `debug` | `release` | `all` - Compilation mode
-- `[print]` = `yes` | `no` | `` (optional) - Print compilation commands
-
-**Script argument pattern (constructors of executables):**
+**Intel (icx/icpx):**
 ```bash
-# Pattern: [action] [type_base] [feature] [ultimate_target] [compiler] [mode] [print]
-scripts/build_generic.bash uint128 cmath tests gcc release yes
-scripts/check_generic.bash int128 traits tests all all
-scripts/run_generic.bash uint128 algorithm benchs gcc release
+# AddressSanitizer
+-fsanitize=address
+
+# UndefinedBehaviorSanitizer  
+-fsanitize=undefined
 ```
 
-### Tests & Benchmarks
-```
-tests/[type_base]_[feature]_extracted_tests.cpp
-benchs/[type_base]_[feature]_extracted_benchs.cpp
+### Static Analysis Tools
 
-scripts/build_[type_base]_[feature]_extracted_[ultimate_target].bash  # Legacy
-scripts/check_[type_base]_[feature]_extracted_tests.bash               # Legacy
-scripts/run_[type_base]_[feature]_extracted_benchs.bash                # Legacy
-
-# Output paths:
-build/build_[ultimate_target]/[compiler]/[mode]/[type_base]_[feature]_[ultimate_target]_[compiler].exe
+**cppcheck (run on every build):**
+```bash
+cppcheck --enable=all --std=c++20 --error-exitcode=1 \
+    --suppress=missingIncludeSystem \
+    -I include/ tests/*.cpp
 ```
 
-### Demos
-```
-demos/[category]/[demo_name].cpp
-
-# Output paths:
-build/build_demos/[compiler]/[mode]/[demo_name].exe
+**Infer (Facebook static analyzer):**
+```bash
+infer run -- g++ -std=c++20 -Iinclude tests/uint128_t_extracted_tests.cpp
+infer report
 ```
 
-### Build Logs
+**PVS-Studio (commercial, free for OSS):**
+```bash
+# First time setup (get free OSS license at pvs-studio.com)
+pvs-studio-analyzer credentials PVS-Studio Free FREE-FREE-FREE-FREE
+
+# Analyze
+pvs-studio-analyzer analyze -o report.log -j4
+plog-converter -a GA:1,2 -t fullhtml report.log -o pvs-report
 ```
-# Compilation logs (stdout/stderr):
-build_log/[ultimate_target]/[type_base]_[feature]_[compiler]_[mode]_extracted_[ultimate_target]_build_log_[timestamp].txt
 
-# Execution results:
-build/build_[ultimate_target]_results/[compiler]/[mode]/[type_base]_[feature]_extracted_[ultimate_target]_results_[timestamp].txt
+### WSL Compilation (Ubuntu 25.04)
+
+**Required compilers in WSL:**
+- GCC: 13, 14, 15
+- Clang: 18, 19, 20, 21
+- Intel: icpx (oneAPI)
+
+**WSL build command:**
+```bash
+# From Windows, run in WSL
+wsl -d Ubuntu-25.04 bash -c "cd /mnt/c/path/to/project && make test COMPILER=all"
 ```
 
-## Documentation
+### CI/CD Validation Matrix
 
-- **Main README**: [README.md](../README.md) - Full usage guide (~1800 lines)
-- **Architecture**: In-depth comments in [uint128_t.hpp](../include/uint128/uint128_t.hpp)
-- **Portability**: [PORTABILITY_GUIDE.md](../PORTABILITY_GUIDE.md) - Cross-platform considerations
-- **Build Conventions**: [PROMPT.md](../PROMPT.md) - Original design spec (1000+ lines)
-- **Roadmap**: [TODO.md](../TODO.md) - Phase 1.5 template unification plan
-- **Implementation**: [IMPLEMENTATION_SUMMARY.md](../IMPLEMENTATION_SUMMARY.md) - Technical details
-- **Demos**: [DEMOS_CATALOG.md](../DEMOS_CATALOG.md) - All 35 demos catalogued
+| Platform | Compilers | Sanitizers | Static Analysis |
+|----------|-----------|------------|-----------------|
+| **MSYS2 (Windows)** | GCC 15, Clang 19, MSVC, Intel ICX | ASan, UBSan | cppcheck |
+| **WSL (Ubuntu 25.04)** | GCC 13-15, Clang 18-21, icpx | ASan, UBSan, TSan | cppcheck, Infer |
 
-## Quick Start for New Features
+### Build Modes with Sanitizers
 
-1. Create header: `include/uint128/uint128_[feature].hpp`
-2. Create test: `tests/uint128_[feature]_extracted_tests.cpp`
-3. Create benchmark: `benchs/uint128_[feature]_extracted_benchs.cpp`
-4. Build & validate:
+```bash
+# Debug + Sanitizers (development)
+python make.py build uint128 t tests gcc debug-asan
+python make.py build uint128 t tests gcc debug-ubsan
+
+# Release (production)
+python make.py build uint128 t tests gcc release
+
+# Full validation (all compilers, all tests)
+python make.py test all all
+```
+
+## Quick Start: Adding a New Feature
+
+1. Create: `include/int128_base_[feature].hpp`
+2. Create: `tests/uint128_[feature]_extracted_tests.cpp`
+3. Create: `benchs/uint128_[feature]_extracted_benchs.cpp`
+4. Add to `Makefile` `VALID_FEATURES` list
+5. Build & validate:
    ```bash
    make build_tests TYPE=uint128 FEATURE=[feature] COMPILER=all MODE=all
    make check TYPE=uint128 FEATURE=[feature] COMPILER=all MODE=all
-   make run TYPE=uint128 FEATURE=[feature] COMPILER=gcc MODE=release
    ```
-5. Add demo to `demos/examples/` or `demos/showcase/` (optional)
-6. Update Makefile's `VALID_FEATURES` list if new feature
-7. Replicate for int128_t: `include/int128/int128_[feature].hpp` with signed adaptations
 
-## Environment Setup
+## Key Documentation
 
-```bash
-# GCC (UCRT64) - Default in MSYS2
-export PATH="/ucrt64/bin:$PATH"
+| Document | Purpose |
+|----------|---------|
+| [PROMPT.md](../PROMPT.md) | Build conventions, naming patterns (1000+ lines) |
+| [TODO.md](../TODO.md) | Current phase progress, roadmap |
+| [CHANGELOG.md](../CHANGELOG.md) | Hourly development log |
+| [DEV_ENV_VARS.md](../DEV_ENV_VARS.md) | Compiler environment setup |
+| [API_INT128_BASE_TT.md](../API_INT128_BASE_TT.md) | Complete API reference |
 
-# Clang (CLANG64)
-export PATH="/clang64/bin:$PATH"
+## Known Issues & Gotchas
 
-# Intel OneAPI
-source scripts/setup_intel_combined.bash x64
+1. **Intel linking in MSYS2**: Always `source scripts/setup_intel_combined.bash x64` first
+2. **Thread safety flags**: `-pthread -latomic` mandatory for thread_safety feature (auto-detected by scripts)
+3. **Signed overflow**: Intentionally wraps around (two's complement), not UB
+4. **Legacy scripts**: Prefer `build_generic.bash` over 128 individual legacy scripts in `scripts/individualized/`
+5. **`to_cstr()` buffer rotation**: Allows 4 concurrent calls without stomping (e.g., `printf("%s %s", a.to_cstr(), b.to_cstr())`)
 
-# MSVC (from MSYS2 bash)
-# Use scripts/build_generic.bash with COMPILER=msvc (auto-detects vcvars64.bat)
-```
-
-For detailed compiler setup: [DEV_ENV_VARS.md](../DEV_ENV_VARS.md)
-
-## Scripts Organization
-
-### Directory Structure
-```
-scripts/
-├── build_generic.bash/.py       # Main build scripts (recommended)
-├── check_generic.bash/.py       # Main test runners
-├── run_generic.bash/.py         # Main benchmark/demo runners
-├── build_demo.bash              # Specific demo builder
-├── build_all_demos.bash         # Build all demos in category
-├── run_demo.bash                # Run specific demo
-├── test_demos.bash              # Verify all demos compile
-├── catalog_demos.bash           # Generate DEMOS_CATALOG.md
-├── init_project.py              # Detect and configure compilers
-├── generate_docs.bash           # Generate Doxygen docs
-├── env_setup/                   # Compiler environment scripts
-│   ├── compiler_env.py          # Python compiler environment manager
-│   ├── setup_gcc_env.bash
-│   ├── setup_clang_env.bash
-│   ├── setup_intel_env.bash
-│   └── setup_msvc_env.bash
-└── individualized/              # 128 legacy scripts (deprecated)
-```
-
-### Key Scripts Usage Patterns
-
-**Generic scripts accept unified syntax:**
-```bash
-# Tests/Benchs: <type> <feature> <target> [compiler] [mode]
-scripts/build_generic.bash uint128 cmath tests gcc release
-
-# Demos: demos <category> <demo_name> [compiler] [mode]
-scripts/build_generic.bash demos tutorials 01_basic_operations gcc release
-```
-
-**Python equivalent with isolated environments:**
-```bash
-python scripts/build_generic.py uint128 cmath tests gcc release
-python scripts/build_generic.py demos tutorials 01_basic_operations gcc release
-```
-
-**Makefile shortcuts:**
-```bash
-make build_tests TYPE=uint128 FEATURE=cmath COMPILER=gcc MODE=release
-make demo CATEGORY=tutorials DEMO=01_basic_operations
-```

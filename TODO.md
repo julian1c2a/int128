@@ -674,6 +674,16 @@ static_assert(std::regular<int128_t>);                  // ✅ true
 
 ### 🎯 Mejoras Futuras (Prioridad BAJA - Opcional)
 
+#### Refactorización: Renombrar Enums según Convención `_ec_t`
+
+- 📅 **Prioridad**: Media
+- 🔧 **Alcance**: Renombrar enum classes para seguir convención de nombres
+- 📋 **Cambios requeridos**:
+  - `signedness` → `signedness_ec_t`
+  - `parse_error` → `parse_error_ec_t`
+- 🎯 **Beneficio**: Consistencia con convenciones de naming definidas en `.github/copilot-instructions.md`
+- ⚠️ **Impacto**: Breaking change - requiere actualizar código cliente
+
 #### CI/CD con GitHub Actions ⚠️ PARCIALMENTE IMPLEMENTADO
 
 - ✅ **Implementado**: CI/CD para Windows (GCC, Clang, MSVC)

@@ -575,7 +575,7 @@ Ejemplos:
     build_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | <category> (si demos)')
     build_parser.add_argument('target', nargs='?', help='tests | benchs | <demo_name> (si demos)')
     build_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
-    build_parser.add_argument('mode', nargs='?', help='debug | release | all')
+    build_parser.add_argument('mode', nargs='?', help='debug | release | release-O1 | release-O2 | release-O3 | release-Ofast | all')
     build_parser.add_argument('-v', '--verbose', action='store_true', help='Modo verbose')
     
     # check
@@ -583,14 +583,14 @@ Ejemplos:
     check_parser.add_argument('type', nargs='?', help='uint128 | int128 | demos')
     check_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | <category> (si demos)')
     check_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
-    check_parser.add_argument('mode', nargs='?', help='debug | release | all')
+    check_parser.add_argument('mode', nargs='?', help='debug | release | release-O1 | release-O2 | release-O3 | release-Ofast | all')
     
     # run
     run_parser = subparsers.add_parser('run', help='Ejecuta benchmarks o demos')
     run_parser.add_argument('type', nargs='?', help='uint128 | int128 | demos')
     run_parser.add_argument('feature', nargs='?', help='bits | numeric | algorithm | <category> (si demos)')
     run_parser.add_argument('compiler', nargs='?', help='gcc | clang | intel | msvc | all')
-    run_parser.add_argument('mode', nargs='?', help='debug | release | all')
+    run_parser.add_argument('mode', nargs='?', help='debug | release | release-O1 | release-O2 | release-O3 | release-Ofast | all')
     run_parser.add_argument('extra_args', nargs='*', help='<demo_name> y args adicionales (solo demos)')
     
     # clean

@@ -90,7 +90,7 @@ if [[ ! " ${VALID_COMPILERS[*]} " =~ " ${COMPILER} " ]]; then
     exit 1
 fi
 
-VALID_MODES=("debug" "release" "all")
+VALID_MODES=("debug" "release" "release-O1" "release-O2" "release-O3" "release-Ofast" "all")
 if [[ ! " ${VALID_MODES[*]} " =~ " ${MODE} " ]]; then
     echo "Error: MODE debe ser uno de: ${VALID_MODES[*]}"
     exit 1
@@ -164,7 +164,7 @@ compile_with() {
     # Define modes to compile
     local modes_to_compile=()
     if [[ "$MODE" == "all" ]]; then
-        modes_to_compile=("debug" "release")
+        modes_to_compile=("debug" "release" "release-O1" "release-O2" "release-O3" "release-Ofast")
     else
         modes_to_compile=("$MODE")
     fi
@@ -202,7 +202,16 @@ compile_with() {
         
         if [[ "$mode" == "debug" ]]; then
             mode_flags="-O0 -g3 -DDEBUG"
+        elif [[ "$mode" == "release-O1" ]]; then
+            mode_flags="-O1 -DNDEBUG"
+        elif [[ "$mode" == "release-O2" ]]; then
+            mode_flags="-O2 -DNDEBUG"
+        elif [[ "$mode" == "release-O3" ]]; then
+            mode_flags="-O3 -fexpensive-optimizations -funroll-loops -ftree-vectorize -march=native -DNDEBUG"
+        elif [[ "$mode" == "release-Ofast" ]]; then
+            mode_flags="-Ofast -fexpensive-optimizations -funroll-loops -ftree-vectorize -ffast-math -march=native -DNDEBUG"
         else
+            # Default release
             mode_flags="-O3 -march=native -DNDEBUG"
         fi
         
