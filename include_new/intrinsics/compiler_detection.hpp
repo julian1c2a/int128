@@ -306,6 +306,23 @@
  * - INTRINSICS_COMPILER_GCC: GNU Compiler Collection
  * - INTRINSICS_COMPILER_UNKNOWN: Compilador no reconocido
  *
+ * ## Sistemas Operativos Detectados
+ * - INTRINSICS_OS_WINDOWS: Windows (32/64-bit)
+ * - INTRINSICS_OS_LINUX: Linux
+ * - INTRINSICS_OS_MACOS: macOS (Darwin)
+ * - INTRINSICS_OS_BSD: FreeBSD, NetBSD, OpenBSD
+ * - INTRINSICS_OS_UNIX: Otros sistemas Unix-like
+ * - INTRINSICS_OS_UNKNOWN: Sistema operativo no reconocido
+ *
+ * ## Detección de ABI
+ * - INTRINSICS_USES_MSVC_ABI: Compilador usa ABI/bibliotecas de MSVC
+ *   - MSVC
+ *   - Intel ICX en Windows
+ * - INTRINSICS_USES_GNU_ABI: Compilador usa ABI/bibliotecas de GCC
+ *   - GCC
+ *   - Clang
+ *   - Intel ICX en Linux/macOS
+ *
  * ## Arquitecturas Soportadas
  * - INTRINSICS_ARCH_X86_64: x86-64 (AMD64, x64)
  * - INTRINSICS_ARCH_X86_32: x86 32-bit (i386, i686)
@@ -323,14 +340,24 @@
  * - INTRINSICS_HAS_BUILTIN_BSWAP: __builtin_bswap64
  * - INTRINSICS_HAS_BUILTIN_ADDC: __builtin_addcll
  *
- * ## Uso
+ * ## Uso Recomendado
  * @code
- * #if INTRINSICS_COMPILER_MSVC
- *     // Código específico de MSVC
- * #elif INTRINSICS_COMPILER_INTEL
- *     // Código específico de Intel
+ * // Para elegir intrínsecos según ABI (RECOMENDADO):
+ * #if INTRINSICS_USES_MSVC_ABI
+ *     // Código usando intrínsecos MSVC: _addcarry_u64, _umul128, etc.
+ * #elif INTRINSICS_USES_GNU_ABI
+ *     // Código usando builtins GCC: __builtin_addcll, __uint128_t, etc.
  * #else
  *     // Fallback genérico
+ * #endif
+ *
+ * // Para casos muy específicos por compilador:
+ * #if INTRINSICS_COMPILER_MSVC
+ *     // Código específico de MSVC
+ * #elif INTRINSICS_COMPILER_INTEL && INTRINSICS_OS_WINDOWS
+ *     // Intel ICX en Windows (usa MSVC ABI)
+ * #elif INTRINSICS_COMPILER_INTEL && !INTRINSICS_OS_WINDOWS
+ *     // Intel ICX en Linux/macOS (usa GNU ABI)
  * #endif
  * @endcode
  */
