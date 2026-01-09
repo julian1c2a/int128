@@ -171,3 +171,4 @@ build_wsl_log.txt
 build_temp/
 scripts_temp/
 int128_experimental/
+output.txt
