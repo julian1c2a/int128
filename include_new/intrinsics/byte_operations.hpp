@@ -22,6 +22,11 @@
 #include "fallback_portable.hpp"
 #include <cstdint>
 
+// Incluir headers de intrínsecos según ABI
+#if INTRINSICS_USES_MSVC_ABI
+#include <intrin.h>
+#endif
+
 namespace intrinsics
 {
 
