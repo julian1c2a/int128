@@ -177,17 +177,18 @@
 // DETECCIÓN DE CAPACIDADES (BUILTINS)
 // ============================================================================
 
-// GCC/Clang/Intel tienen __has_builtin
+// GCC/Clang/Intel (en Linux/macOS) tienen __has_builtin
 #ifdef __has_builtin
 #define INTRINSICS_HAS_BUILTIN(x) __has_builtin(x)
 #else
 #define INTRINSICS_HAS_BUILTIN(x) 0
 #endif
 
-// Detectar builtins específicos
+// Detectar builtins específicos - SOLO para compiladores con GNU ABI
+// Intel ICX en Windows NO tiene estos builtins
 #if INTRINSICS_HAS_BUILTIN(__builtin_popcountll)
 #define INTRINSICS_HAS_BUILTIN_POPCOUNT 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_POPCOUNT 1
 #else
 #define INTRINSICS_HAS_BUILTIN_POPCOUNT 0
@@ -195,7 +196,7 @@
 
 #if INTRINSICS_HAS_BUILTIN(__builtin_clzll)
 #define INTRINSICS_HAS_BUILTIN_CLZ 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_CLZ 1
 #else
 #define INTRINSICS_HAS_BUILTIN_CLZ 0
@@ -203,7 +204,7 @@
 
 #if INTRINSICS_HAS_BUILTIN(__builtin_ctzll)
 #define INTRINSICS_HAS_BUILTIN_CTZ 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_CTZ 1
 #else
 #define INTRINSICS_HAS_BUILTIN_CTZ 0
@@ -211,14 +212,14 @@
 
 #if INTRINSICS_HAS_BUILTIN(__builtin_bswap64)
 #define INTRINSICS_HAS_BUILTIN_BSWAP 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_BSWAP 1
 #else
 #define INTRINSICS_HAS_BUILTIN_BSWAP 0
 #endif
 
-// Detectar __builtin_addcll / __builtin_subcll (GCC/Clang x86-64)
-#if INTRINSICS_HAS_BUILTIN(__builtin_addcll) && INTRINSICS_ARCH_X86_64
+// Detectar __builtin_addcll / __builtin_subcll (GCC/Clang x86-64, NO Intel Windows)
+#if INTRINSICS_HAS_BUILTIN(__builtin_addcll) && INTRINSICS_ARCH_X86_64 && !INTRINSICS_USES_MSVC_ABI
 #define INTRINSICS_HAS_BUILTIN_ADDC 1
 #else
 #define INTRINSICS_HAS_BUILTIN_ADDC 0
@@ -228,7 +229,8 @@
 // DETECCIÓN DE HEADERS INTRÍNSECOS
 // ============================================================================
 
-#if INTRINSICS_COMPILER_MSVC
+// Usar <intrin.h> para MSVC y también para Intel ICX en Windows (MSVC ABI)
+#if INTRINSICS_USES_MSVC_ABI
 #define INTRINSICS_HAS_INTRIN_H 1
 #define INTRINSICS_HAS_X86INTRIN_H 0
 #define INTRINSICS_HAS_ARM_NEON_H 0
