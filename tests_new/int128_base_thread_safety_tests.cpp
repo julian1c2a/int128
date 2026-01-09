@@ -200,7 +200,7 @@ void test_threadsafeatomic_basic()
 
 void test_threadsafeatomic_exchange()
 {
-#ifdef SKIP_ATOMIC_EXCHANGE_TEST
+#ifdef SKIP_ATOMIC_EXCHANGE_TESTS
     std::cout << "[SKIP] ThreadSafeAtomic exchange (disabled for this compiler)" << std::endl;
 #else
     ThreadSafeUint128Atomic counter(uint128_t(100));
@@ -217,7 +217,7 @@ void test_threadsafeatomic_exchange()
 
 void test_threadsafeatomic_compare_exchange()
 {
-#ifdef SKIP_ATOMIC_EXCHANGE_TEST
+#ifdef SKIP_ATOMIC_EXCHANGE_TESTS
     std::cout << "[SKIP] ThreadSafeAtomic compare_exchange (disabled for this compiler)"
               << std::endl;
 #else
