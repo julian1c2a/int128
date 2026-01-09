@@ -8,7 +8,7 @@
  *
  * Este header proporciona macros para detectar el compilador en uso,
  * la arquitectura objetivo y las capacidades disponibles.
- * 
+ *
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
  * @version 1.0.0
  * @date 2026-01-05
@@ -50,6 +50,77 @@
 #endif
 #ifndef INTRINSICS_COMPILER_UNKNOWN
 #define INTRINSICS_COMPILER_UNKNOWN 0
+#endif
+
+// ============================================================================
+// DETECCIÓN DE SISTEMA OPERATIVO
+// ============================================================================
+
+#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)
+#define INTRINSICS_OS_WINDOWS 1
+#elif defined(__linux__) || defined(__linux) || defined(linux)
+#define INTRINSICS_OS_LINUX 1
+#elif defined(__APPLE__) && defined(__MACH__)
+#define INTRINSICS_OS_MACOS 1
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#define INTRINSICS_OS_BSD 1
+#elif defined(__unix__) || defined(__unix)
+#define INTRINSICS_OS_UNIX 1
+#else
+#define INTRINSICS_OS_UNKNOWN 1
+#endif
+
+// Definir 0 para sistemas operativos no detectados
+#ifndef INTRINSICS_OS_WINDOWS
+#define INTRINSICS_OS_WINDOWS 0
+#endif
+#ifndef INTRINSICS_OS_LINUX
+#define INTRINSICS_OS_LINUX 0
+#endif
+#ifndef INTRINSICS_OS_MACOS
+#define INTRINSICS_OS_MACOS 0
+#endif
+#ifndef INTRINSICS_OS_BSD
+#define INTRINSICS_OS_BSD 0
+#endif
+#ifndef INTRINSICS_OS_UNIX
+#define INTRINSICS_OS_UNIX 0
+#endif
+#ifndef INTRINSICS_OS_UNKNOWN
+#define INTRINSICS_OS_UNKNOWN 0
+#endif
+
+// ============================================================================
+// DETECCIÓN DE ABI (Application Binary Interface)
+// ============================================================================
+
+/**
+ * @brief Detecta si el compilador usa ABI de MSVC
+ *
+ * Intel ICX en Windows usa el ABI y las bibliotecas de MSVC, por lo que
+ * debe usar los intrínsecos de MSVC (_addcarry_u64, etc.) en lugar de
+ * los builtins de GCC (__builtin_addcll, etc.).
+ *
+ * Esta macro es true cuando:
+ * - Compilador es MSVC
+ * - Compilador es Intel en Windows (usa MSVC ABI)
+ */
+#if INTRINSICS_COMPILER_MSVC || (INTRINSICS_COMPILER_INTEL && INTRINSICS_OS_WINDOWS)
+#define INTRINSICS_USES_MSVC_ABI 1
+#else
+#define INTRINSICS_USES_MSVC_ABI 0
+#endif
+
+/**
+ * @brief Detecta si el compilador usa ABI de GCC/Clang
+ *
+ * GCC, Clang, y Intel ICX en Linux/macOS usan builtins estilo GCC.
+ */
+#if (INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG ||                                       \
+     (INTRINSICS_COMPILER_INTEL && !INTRINSICS_OS_WINDOWS))
+#define INTRINSICS_USES_GNU_ABI 1
+#else
+#define INTRINSICS_USES_GNU_ABI 0
 #endif
 
 // ============================================================================
