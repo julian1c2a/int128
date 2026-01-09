@@ -228,6 +228,6 @@ Esta implementación de `uint128_t` representa un **estándar de oro** para arit
 
 ---
 
-*Implementación completada: Diciembre 2024*  
+*Implementación completada: Diciembre 2025*  
 *Estándares: C++20, compatible con C++17*  
 *Compiladores soportados: GCC 9+, Clang 10+, MSVC 2019+*
