@@ -1,0 +1,678 @@
+﻿2025-12-27T19:09:25.3063108Z Current runner version: '2.330.0'
+2025-12-27T19:09:25.3092941Z ##[group]Runner Image Provisioner
+2025-12-27T19:09:25.3093674Z Hosted Compute Agent
+2025-12-27T19:09:25.3094213Z Version: 20251211.462
+2025-12-27T19:09:25.3094734Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:09:25.3095477Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:09:25.3096236Z Worker ID: {de458f3b-bd11-4159-ab00-21193591c497}
+2025-12-27T19:09:25.3096818Z ##[endgroup]
+2025-12-27T19:09:25.3097348Z ##[group]Operating System
+2025-12-27T19:09:25.3097865Z Microsoft Windows Server 2025
+2025-12-27T19:09:25.3098381Z 10.0.26100
+2025-12-27T19:09:25.3099132Z Datacenter
+2025-12-27T19:09:25.3099582Z ##[endgroup]
+2025-12-27T19:09:25.3100030Z ##[group]Runner Image
+2025-12-27T19:09:25.3100737Z Image: windows-2025
+2025-12-27T19:09:25.3101212Z Version: 20251216.149.1
+2025-12-27T19:09:25.3102667Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T19:09:25.3104120Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T19:09:25.3104956Z ##[endgroup]
+2025-12-27T19:09:25.3106012Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:09:25.3108062Z Contents: read
+2025-12-27T19:09:25.3108573Z Metadata: read
+2025-12-27T19:09:25.3109039Z Packages: read
+2025-12-27T19:09:25.3109456Z ##[endgroup]
+2025-12-27T19:09:25.3111644Z Secret source: Actions
+2025-12-27T19:09:25.3112322Z Prepare workflow directory
+2025-12-27T19:09:25.3525178Z Prepare all required actions
+2025-12-27T19:09:25.3563390Z Getting action download info
+2025-12-27T19:09:25.6043912Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:09:25.7353387Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T19:09:26.0079825Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:09:26.3585699Z Complete job name: MSVC - release
+2025-12-27T19:09:26.5029072Z ##[group]Run actions/checkout@v4
+2025-12-27T19:09:26.5030057Z with:
+2025-12-27T19:09:26.5030430Z   repository: julian1c2a/int128
+2025-12-27T19:09:26.5031052Z   token: ***
+2025-12-27T19:09:26.5031395Z   ssh-strict: true
+2025-12-27T19:09:26.5031761Z   ssh-user: git
+2025-12-27T19:09:26.5032136Z   persist-credentials: true
+2025-12-27T19:09:26.5032538Z   clean: true
+2025-12-27T19:09:26.5032904Z   sparse-checkout-cone-mode: true
+2025-12-27T19:09:26.5033351Z   fetch-depth: 1
+2025-12-27T19:09:26.5033697Z   fetch-tags: false
+2025-12-27T19:09:26.5034064Z   show-progress: true
+2025-12-27T19:09:26.5034423Z   lfs: false
+2025-12-27T19:09:26.5035046Z   submodules: false
+2025-12-27T19:09:26.5035426Z   set-safe-directory: true
+2025-12-27T19:09:26.5036091Z ##[endgroup]
+2025-12-27T19:09:26.6812140Z Syncing repository: julian1c2a/int128
+2025-12-27T19:09:26.6813891Z ##[group]Getting Git version info
+2025-12-27T19:09:26.6814449Z Working directory is 'D:\a\int128\int128'
+2025-12-27T19:09:26.7873878Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:09:27.2175345Z git version 2.52.0.windows.1
+2025-12-27T19:09:27.2234020Z ##[endgroup]
+2025-12-27T19:09:27.2255475Z Temporarily overriding HOME='D:\a\_temp\06c68b80-7b6d-4a6b-8fbb-6ce77a9e3021' before making global git config changes
+2025-12-27T19:09:27.2257328Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:09:27.2266711Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:09:27.2937943Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T19:09:27.2945507Z ##[group]Initializing the repository
+2025-12-27T19:09:27.2955076Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T19:09:27.3975834Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T19:09:27.4024209Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:09:27.4645386Z ##[endgroup]
+2025-12-27T19:09:27.4646672Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:09:27.4655156Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T19:09:27.4977209Z ##[endgroup]
+2025-12-27T19:09:27.4978748Z ##[group]Setting up auth
+2025-12-27T19:09:27.4991341Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:09:27.5310188Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:09:29.0950367Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:09:29.1254129Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:09:29.6462746Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:09:29.6768453Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:09:30.2213140Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T19:09:30.2520950Z ##[endgroup]
+2025-12-27T19:09:30.2521405Z ##[group]Fetching the repository
+2025-12-27T19:09:30.2535826Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +39d93c977a61e5f47f43734a1976191f532e9f79:refs/remotes/origin/main
+2025-12-27T19:09:31.2125026Z From https://github.com/julian1c2a/int128
+2025-12-27T19:09:31.2128294Z  * [new ref]         39d93c977a61e5f47f43734a1976191f532e9f79 -> origin/main
+2025-12-27T19:09:31.2423752Z ##[endgroup]
+2025-12-27T19:09:31.2424147Z ##[group]Determining the checkout info
+2025-12-27T19:09:31.2428073Z ##[endgroup]
+2025-12-27T19:09:31.2444028Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T19:09:31.3014100Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:09:31.3361969Z ##[group]Checking out the ref
+2025-12-27T19:09:31.3378116Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:09:31.5954554Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:09:31.5962540Z Switched to a new branch 'main'
+2025-12-27T19:09:31.6005764Z ##[endgroup]
+2025-12-27T19:09:31.6388491Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T19:09:31.6665598Z 39d93c977a61e5f47f43734a1976191f532e9f79
+2025-12-27T19:09:31.7042984Z ##[group]Run microsoft/setup-msbuild@v2
+2025-12-27T19:09:31.7043336Z with:
+2025-12-27T19:09:31.7043517Z   msbuild-architecture: x86
+2025-12-27T19:09:31.7043718Z ##[endgroup]
+2025-12-27T19:09:31.9034043Z [command]C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
+2025-12-27T19:09:32.4457579Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2025-12-27T19:09:32.4928302Z ##[group]Run # Obtener vcvarsall.bat path
+2025-12-27T19:09:32.4928925Z [36;1m# Obtener vcvarsall.bat path[0m
+2025-12-27T19:09:32.4929439Z [36;1m$vcvarsPath = & python scripts/vcvars.py[0m
+2025-12-27T19:09:32.4929879Z [36;1mif ($vcvarsPath) {[0m
+2025-12-27T19:09:32.4930591Z [36;1m  Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"[0m
+2025-12-27T19:09:32.4931150Z [36;1m  echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV[0m
+2025-12-27T19:09:32.4931602Z [36;1m} else {[0m
+2025-12-27T19:09:32.4932009Z [36;1m  Write-Host "⚠ vcvarsall.bat not found, using default path"[0m
+2025-12-27T19:09:32.4933447Z [36;1m}[0m
+2025-12-27T19:09:32.6084998Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2025-12-27T19:09:32.6085569Z ##[endgroup]
+2025-12-27T19:09:39.4096826Z ✓ Found vcvarsall.bat at: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:09:39.8604894Z ##[group]Run call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+2025-12-27T19:09:39.8605637Z [36;1mcall "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"[0m
+2025-12-27T19:09:39.8606278Z [36;1mbash -c "chmod +x scripts/build_extracted_tests.bash && ./scripts/build_extracted_tests.bash msvc release"[0m
+2025-12-27T19:09:39.8639194Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2025-12-27T19:09:39.8639509Z env:
+2025-12-27T19:09:39.8639852Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:09:39.8640268Z ##[endgroup]
+2025-12-27T19:09:40.1923498Z **********************************************************************
+2025-12-27T19:09:40.1924114Z ** Visual Studio 2022 Developer Command Prompt v17.14.22
+2025-12-27T19:09:40.1924652Z ** Copyright (c) 2025 Microsoft Corporation
+2025-12-27T19:09:40.1925200Z **********************************************************************
+2025-12-27T19:09:42.4897894Z [vcvarsall.bat] Environment initialized for: 'x64'
+2025-12-27T19:09:42.7581062Z ================================
+2025-12-27T19:09:42.7581410Z Building Extracted Tests
+2025-12-27T19:09:42.7581645Z Compiler: msvc
+2025-12-27T19:09:42.7581849Z Build Type: release
+2025-12-27T19:09:42.7582060Z ================================
+2025-12-27T19:09:42.8647774Z Using compiler: cl
+2025-12-27T19:09:42.8648627Z Optimization flags: /O2 /DNDEBUG
+2025-12-27T19:09:42.8648916Z 
+2025-12-27T19:09:42.8652797Z Found 27 test files
+2025-12-27T19:09:42.8653117Z 
+2025-12-27T19:09:42.8870564Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T19:09:45.0006891Z   [FAIL] Failed
+2025-12-27T19:09:45.0007463Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:45.0367986Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:45.0368757Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:45.0369151Z 
+2025-12-27T19:09:45.0369616Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:45.0372200Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:45.0374036Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:45.0378309Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:45.0380239Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:45.0381032Z int128_algorithm_extracted_tests.cpp
+2025-12-27T19:09:45.0382010Z tests/int128_algorithm_extracted_tests.cpp(6): fatal error C1083: Cannot open include file: 'int128/int128_algorithm.hpp': No such file or directory
+2025-12-27T19:09:45.0383361Z   ===================================
+2025-12-27T19:09:45.0576985Z Compiling: int128_bits_extracted_tests...
+2025-12-27T19:09:45.0989628Z   [FAIL] Failed
+2025-12-27T19:09:45.0989962Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:45.1176226Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:45.1177100Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:45.1177725Z 
+2025-12-27T19:09:45.1179125Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:45.1181453Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:45.1186445Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:45.1187620Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:45.1191387Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:45.1192273Z int128_bits_extracted_tests.cpp
+2025-12-27T19:09:45.1192787Z tests/int128_bits_extracted_tests.cpp(6): fatal error C1083: Cannot open include file: 'int128/int128_bits.hpp': No such file or directory
+2025-12-27T19:09:45.1193298Z   ===================================
+2025-12-27T19:09:45.1394856Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T19:09:45.1844159Z   [FAIL] Failed
+2025-12-27T19:09:45.1844856Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:45.2048147Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:45.2048829Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:45.2049229Z 
+2025-12-27T19:09:45.2049717Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:45.2050880Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:45.2051965Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:45.2053074Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:45.2054222Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:45.2055306Z int128_cmath_extracted_tests.cpp
+2025-12-27T19:09:45.2056226Z tests/int128_cmath_extracted_tests.cpp(5): fatal error C1083: Cannot open include file: 'int128/int128_cmath.hpp': No such file or directory
+2025-12-27T19:09:45.2057172Z   ===================================
+2025-12-27T19:09:45.2279349Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T19:09:48.6532021Z   [FAIL] Failed
+2025-12-27T19:09:48.6532479Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:48.6718203Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:48.6718926Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:48.6719308Z 
+2025-12-27T19:09:48.6719799Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:48.6720907Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:48.6721967Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:48.6723087Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:48.6724227Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:48.6725079Z int128_concepts_extracted_tests.cpp
+2025-12-27T19:09:48.6726025Z tests/int128_concepts_extracted_tests.cpp(395): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:09:48.6727039Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:09:48.6727600Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:48.6727967Z 
+2025-12-27T19:09:48.6728259Z /out:build/build_tests/msvc/release/int128_concepts_extracted_tests.exe 
+2025-12-27T19:09:48.6728838Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:09:48.6729174Z "C:/Program Files/Git/W4" 
+2025-12-27T19:09:48.6729490Z "C:/Program Files/Git/O2" 
+2025-12-27T19:09:48.6730104Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:09:48.6730455Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:09:48.6730814Z int128_concepts_extracted_tests.obj 
+2025-12-27T19:09:48.6731382Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:09:48.6731979Z   ===================================
+2025-12-27T19:09:48.6910909Z Compiling: int128_format_extracted_tests...
+2025-12-27T19:09:48.7316672Z   [FAIL] Failed
+2025-12-27T19:09:48.7317037Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:48.7495734Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:48.7496422Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:48.7496801Z 
+2025-12-27T19:09:48.7497274Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:48.7498355Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:48.7499448Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:48.7500797Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:48.7501966Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:48.7502732Z int128_format_extracted_tests.cpp
+2025-12-27T19:09:48.7503620Z tests/int128_format_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'int128/int128_format.hpp': No such file or directory
+2025-12-27T19:09:48.7504797Z   ===================================
+2025-12-27T19:09:48.7687503Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T19:09:48.8107624Z   [FAIL] Failed
+2025-12-27T19:09:48.8107973Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:48.8290688Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:48.8291413Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:48.8291807Z 
+2025-12-27T19:09:48.8292302Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:48.8293420Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:48.8294676Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:48.8297266Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:48.8298507Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:48.8299640Z int128_iostreams_extracted_tests.cpp
+2025-12-27T19:09:48.8300617Z tests/int128_iostreams_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'int128/int128_iostreams.hpp': No such file or directory
+2025-12-27T19:09:48.8301932Z   ===================================
+2025-12-27T19:09:48.8491880Z Compiling: int128_limits_extracted_tests...
+2025-12-27T19:09:49.6279965Z   [FAIL] Failed
+2025-12-27T19:09:49.6280310Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:49.6473465Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:49.6474157Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:49.6474548Z 
+2025-12-27T19:09:49.6475035Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:49.6476119Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:49.6477156Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:49.6480025Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:49.6481178Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:49.6481930Z int128_limits_extracted_tests.cpp
+2025-12-27T19:09:49.6482813Z D:\a\int128\int128\tests\test_iostream_helpers.hpp(8): fatal error C1083: Cannot open include file: 'uint128/uint128_t.hpp': No such file or directory
+2025-12-27T19:09:49.6483443Z   ===================================
+2025-12-27T19:09:49.6669156Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T19:09:50.5297049Z   [FAIL] Failed
+2025-12-27T19:09:50.5297420Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:50.5478065Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:50.5478999Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:50.5479350Z 
+2025-12-27T19:09:50.5480035Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:50.5482802Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:50.5483943Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:50.5485045Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:50.5486876Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:50.5487930Z int128_numeric_extracted_tests.cpp
+2025-12-27T19:09:50.5488724Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(111): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:09:50.5489961Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(114): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:09:50.5491504Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(135): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:09:50.5492212Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(137): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:09:50.5492891Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(165): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:09:50.5493531Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(167): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:09:50.5500759Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(273): error C3615: constexpr function 'std::gcd' cannot result in a constant expression
+2025-12-27T19:09:50.5502340Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(276): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:09:50.5503673Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(276): note: see usage of 'std::abs'
+2025-12-27T19:09:50.5504982Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(277): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:09:50.5506281Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(277): note: see usage of 'std::abs'
+2025-12-27T19:09:50.5507518Z D:\a\int128\int128\tests\test_iostream_helpers.hpp(8): fatal error C1083: Cannot open include file: 'uint128/uint128_t.hpp': No such file or directory
+2025-12-27T19:09:50.5508421Z   ===================================
+2025-12-27T19:09:50.5678837Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T19:09:50.6097331Z   [FAIL] Failed
+2025-12-27T19:09:50.6097681Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:50.6276464Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:50.6277166Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:50.6277887Z 
+2025-12-27T19:09:50.6278403Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:50.6279286Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:50.6280342Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:50.6281489Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:50.6282682Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:50.6283250Z int128_ranges_extracted_tests.cpp
+2025-12-27T19:09:50.6284352Z tests/int128_ranges_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'int128/int128_ranges.hpp': No such file or directory
+2025-12-27T19:09:50.6285122Z   ===================================
+2025-12-27T19:09:50.6477131Z Compiling: int128_safe_extracted_tests...
+2025-12-27T19:09:50.6886426Z   [FAIL] Failed
+2025-12-27T19:09:50.6886807Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:50.7059743Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:50.7060473Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:50.7060843Z 
+2025-12-27T19:09:50.7061326Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:50.7062499Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:50.7063618Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:50.7064759Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:50.7065531Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:50.7066188Z int128_safe_extracted_tests.cpp
+2025-12-27T19:09:50.7067052Z tests/int128_safe_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'int128/int128_safe.hpp': No such file or directory
+2025-12-27T19:09:50.7068000Z   ===================================
+2025-12-27T19:09:50.7252510Z Compiling: int128_t_extracted_tests...
+2025-12-27T19:09:51.4857422Z   [FAIL] Failed
+2025-12-27T19:09:51.4857800Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:51.5058592Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:51.5059318Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:51.5059697Z 
+2025-12-27T19:09:51.5060130Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:51.5061425Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:51.5063329Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:51.5065087Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:51.5066273Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:51.5067062Z int128_t_extracted_tests.cpp
+2025-12-27T19:09:51.5067927Z D:\a\int128\int128\tests\test_iostream_helpers.hpp(8): fatal error C1083: Cannot open include file: 'uint128/uint128_t.hpp': No such file or directory
+2025-12-27T19:09:51.5068887Z   ===================================
+2025-12-27T19:09:51.5256717Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T19:09:53.5716942Z   [FAIL] Failed
+2025-12-27T19:09:53.5717345Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:53.5897577Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:53.5898288Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:53.5898706Z 
+2025-12-27T19:09:53.5899210Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:53.5901461Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:53.5902647Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:53.5903771Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:53.5904907Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:53.5905706Z int128_thread_safety_extracted_tests.cpp
+2025-12-27T19:09:53.5906930Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\chrono(2359): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:09:53.5908196Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:09:53.5908781Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:53.5909161Z 
+2025-12-27T19:09:53.5909357Z /out:build/build_tests/msvc/release/int128_thread_safety_extracted_tests.exe 
+2025-12-27T19:09:53.5909724Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:09:53.5909922Z "C:/Program Files/Git/W4" 
+2025-12-27T19:09:53.5910106Z "C:/Program Files/Git/O2" 
+2025-12-27T19:09:53.5910286Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:09:53.5910495Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:09:53.5910725Z int128_thread_safety_extracted_tests.obj 
+2025-12-27T19:09:53.5911080Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:09:53.5911429Z   ===================================
+2025-12-27T19:09:53.6092107Z Compiling: int128_traits_extracted_tests...
+2025-12-27T19:09:54.7379822Z   [FAIL] Failed
+2025-12-27T19:09:54.7380223Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:54.7560074Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:54.7561066Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:54.7561450Z 
+2025-12-27T19:09:54.7561923Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:54.7563012Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:54.7564087Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:54.7564897Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:54.7566110Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:54.7566905Z int128_traits_extracted_tests.cpp
+2025-12-27T19:09:54.7567755Z tests/int128_traits_extracted_tests.cpp(402): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:09:54.7568459Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:09:54.7569225Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:54.7569594Z 
+2025-12-27T19:09:54.7569868Z /out:build/build_tests/msvc/release/int128_traits_extracted_tests.exe 
+2025-12-27T19:09:54.7570210Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:09:54.7570415Z "C:/Program Files/Git/W4" 
+2025-12-27T19:09:54.7570616Z "C:/Program Files/Git/O2" 
+2025-12-27T19:09:54.7570804Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:09:54.7571011Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:09:54.7571478Z int128_traits_extracted_tests.obj 
+2025-12-27T19:09:54.7571810Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:09:54.7572367Z   ===================================
+2025-12-27T19:09:54.7761314Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T19:09:55.9664607Z   [FAIL] Failed
+2025-12-27T19:09:55.9665256Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:55.9847612Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:55.9848169Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:55.9848577Z 
+2025-12-27T19:09:55.9848861Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:55.9849746Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:55.9851339Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:55.9852995Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:55.9854132Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:55.9855561Z uint128_algorithm_extracted_tests.cpp
+2025-12-27T19:09:55.9856880Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_ostream.hpp(781): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:09:55.9859253Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_ostream.hpp(781): note: the template instantiation context (the oldest one first) is
+2025-12-27T19:09:55.9860673Z tests/uint128_algorithm_extracted_tests.cpp(21): note: see reference to function template instantiation 'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)' being compiled
+2025-12-27T19:09:55.9861632Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:09:55.9861957Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:55.9862177Z 
+2025-12-27T19:09:55.9862369Z /out:build/build_tests/msvc/release/uint128_algorithm_extracted_tests.exe 
+2025-12-27T19:09:55.9862705Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:09:55.9862906Z "C:/Program Files/Git/W4" 
+2025-12-27T19:09:55.9863083Z "C:/Program Files/Git/O2" 
+2025-12-27T19:09:55.9863268Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:09:55.9863466Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:09:55.9863678Z uint128_algorithm_extracted_tests.obj 
+2025-12-27T19:09:55.9864179Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:09:55.9864522Z   ===================================
+2025-12-27T19:09:56.0043125Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T19:09:56.0454020Z   [FAIL] Failed
+2025-12-27T19:09:56.0454607Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:56.0636717Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:56.0637141Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:56.0637362Z 
+2025-12-27T19:09:56.0638144Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:56.0639055Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:56.0640663Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:56.0641875Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:56.0643040Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:56.0645220Z uint128_bits_extracted_tests.cpp
+2025-12-27T19:09:56.0645922Z tests/uint128_bits_extracted_tests.cpp(6): fatal error C1083: Cannot open include file: 'uint128/uint128_bits.hpp': No such file or directory
+2025-12-27T19:09:56.0646458Z   ===================================
+2025-12-27T19:09:56.0844770Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T19:09:57.2819943Z   [FAIL] Failed
+2025-12-27T19:09:57.2820282Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:57.3027602Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:57.3028301Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:57.3028724Z 
+2025-12-27T19:09:57.3029200Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:57.3030317Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:57.3032065Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:57.3034416Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:57.3036015Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:57.3036818Z uint128_cmath_extracted_tests.cpp
+2025-12-27T19:09:57.3038008Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_ostream.hpp(781): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:09:57.3039715Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_ostream.hpp(781): note: the template instantiation context (the oldest one first) is
+2025-12-27T19:09:57.3041173Z tests/uint128_cmath_extracted_tests.cpp(40): note: see reference to function template instantiation 'std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)' being compiled
+2025-12-27T19:09:57.3042345Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:09:57.3042900Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:57.3043171Z 
+2025-12-27T19:09:57.3043335Z /out:build/build_tests/msvc/release/uint128_cmath_extracted_tests.exe 
+2025-12-27T19:09:57.3043650Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:09:57.3043857Z "C:/Program Files/Git/W4" 
+2025-12-27T19:09:57.3044051Z "C:/Program Files/Git/O2" 
+2025-12-27T19:09:57.3044239Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:09:57.3044443Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:09:57.3044646Z uint128_cmath_extracted_tests.obj 
+2025-12-27T19:09:57.3044973Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:09:57.3045317Z   ===================================
+2025-12-27T19:09:57.3248013Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T19:09:58.6064451Z   [FAIL] Failed
+2025-12-27T19:09:58.6064817Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:58.6259245Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:58.6260041Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:58.6260424Z 
+2025-12-27T19:09:58.6260928Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:58.6262444Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:58.6264224Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:58.6265377Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:58.6267300Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:58.6268083Z uint128_concepts_extracted_tests.cpp
+2025-12-27T19:09:58.6269237Z tests/uint128_concepts_extracted_tests.cpp(324): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:09:58.6270254Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:09:58.6270806Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:58.6271168Z 
+2025-12-27T19:09:58.6271490Z /out:build/build_tests/msvc/release/uint128_concepts_extracted_tests.exe 
+2025-12-27T19:09:58.6272031Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:09:58.6272244Z "C:/Program Files/Git/W4" 
+2025-12-27T19:09:58.6272423Z "C:/Program Files/Git/O2" 
+2025-12-27T19:09:58.6272609Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:09:58.6272802Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:09:58.6273019Z uint128_concepts_extracted_tests.obj 
+2025-12-27T19:09:58.6273347Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:09:58.6273684Z   ===================================
+2025-12-27T19:09:58.6567317Z Compiling: uint128_format_extracted_tests...
+2025-12-27T19:09:58.6996853Z   [FAIL] Failed
+2025-12-27T19:09:58.6997550Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:58.7187657Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:58.7188329Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:58.7188717Z 
+2025-12-27T19:09:58.7189179Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:58.7190231Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:58.7191930Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:58.7194265Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:58.7195514Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:58.7196250Z uint128_format_extracted_tests.cpp
+2025-12-27T19:09:58.7196777Z tests/uint128_format_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'uint128/uint128_format.hpp': No such file or directory
+2025-12-27T19:09:58.7197303Z   ===================================
+2025-12-27T19:09:58.7395503Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T19:09:58.7816216Z   [FAIL] Failed
+2025-12-27T19:09:58.7816589Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:58.8005450Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:58.8006838Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:58.8007280Z 
+2025-12-27T19:09:58.8007779Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:58.8008848Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:58.8009965Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:58.8011080Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:58.8012218Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:58.8013652Z uint128_interop_extracted_tests.cpp
+2025-12-27T19:09:58.8015002Z tests/uint128_interop_extracted_tests.cpp(17): fatal error C1083: Cannot open include file: 'int128/int128_numeric.hpp': No such file or directory
+2025-12-27T19:09:58.8017192Z   ===================================
+2025-12-27T19:09:58.8214451Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T19:09:58.8656116Z   [FAIL] Failed
+2025-12-27T19:09:58.8656557Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:58.8863735Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:58.8865595Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:58.8866049Z 
+2025-12-27T19:09:58.8866790Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:58.8867913Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:58.8868996Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:58.8870758Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:58.8872595Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:58.8873401Z uint128_iostreams_extracted_tests.cpp
+2025-12-27T19:09:58.8874383Z tests/uint128_iostreams_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'uint128/uint128_iostreams.hpp': No such file or directory
+2025-12-27T19:09:58.8875345Z   ===================================
+2025-12-27T19:09:58.9063459Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T19:09:59.7052085Z   [FAIL] Failed
+2025-12-27T19:09:59.7052806Z   === Error log (first 30 lines) ===
+2025-12-27T19:09:59.7259191Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:09:59.7260189Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:09:59.7260811Z 
+2025-12-27T19:09:59.7261564Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:09:59.7264569Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:09:59.7271408Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:09:59.7272582Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:09:59.7274161Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:09:59.7274932Z uint128_limits_extracted_tests.cpp
+2025-12-27T19:09:59.7275862Z D:\a\int128\int128\tests\test_iostream_helpers.hpp(8): fatal error C1083: Cannot open include file: 'uint128/uint128_t.hpp': No such file or directory
+2025-12-27T19:09:59.7276884Z   ===================================
+2025-12-27T19:09:59.7520793Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T19:10:00.6747124Z   [FAIL] Failed
+2025-12-27T19:10:00.6747488Z   === Error log (first 30 lines) ===
+2025-12-27T19:10:00.6924522Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:10:00.6925003Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:00.6925244Z 
+2025-12-27T19:10:00.6925572Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:10:00.6926833Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:10:00.6927736Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:10:00.6928527Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:10:00.6929743Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:10:00.6930883Z uint128_numeric_extracted_tests.cpp
+2025-12-27T19:10:00.6931486Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(100): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:10:00.6932992Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(103): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:10:00.6933895Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(121): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:10:00.6934573Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(123): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:10:00.6935220Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(151): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:10:00.6936111Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(153): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:10:00.6937320Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(277): error C3861: '__builtin_bswap64': identifier not found
+2025-12-27T19:10:00.6938003Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(278): error C3861: '__builtin_bswap64': identifier not found
+2025-12-27T19:10:00.6938740Z D:\a\int128\int128\tests\test_iostream_helpers.hpp(8): fatal error C1083: Cannot open include file: 'uint128/uint128_t.hpp': No such file or directory
+2025-12-27T19:10:00.6939257Z   ===================================
+2025-12-27T19:10:00.7125070Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T19:10:00.7541886Z   [FAIL] Failed
+2025-12-27T19:10:00.7542233Z   === Error log (first 30 lines) ===
+2025-12-27T19:10:00.7719700Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:10:00.7720586Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:00.7720821Z 
+2025-12-27T19:10:00.7721182Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:10:00.7722134Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:10:00.7723477Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:10:00.7724605Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:10:00.7725744Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:10:00.7726525Z uint128_ranges_extracted_tests.cpp
+2025-12-27T19:10:00.7727534Z tests/uint128_ranges_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'uint128/uint128_ranges.hpp': No such file or directory
+2025-12-27T19:10:00.7728094Z   ===================================
+2025-12-27T19:10:00.7918277Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T19:10:00.8327102Z   [FAIL] Failed
+2025-12-27T19:10:00.8327466Z   === Error log (first 30 lines) ===
+2025-12-27T19:10:00.8508532Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:10:00.8509567Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:00.8510353Z 
+2025-12-27T19:10:00.8511612Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:10:00.8516512Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:10:00.8517763Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:10:00.8519262Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:10:00.8520444Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:10:00.8521967Z uint128_safe_extracted_tests.cpp
+2025-12-27T19:10:00.8522971Z tests/uint128_safe_extracted_tests.cpp(1): fatal error C1083: Cannot open include file: 'uint128/uint128_safe.hpp': No such file or directory
+2025-12-27T19:10:00.8523959Z   ===================================
+2025-12-27T19:10:00.8711628Z Compiling: uint128_t_extracted_tests...
+2025-12-27T19:10:02.2889554Z   [FAIL] Failed
+2025-12-27T19:10:02.2889997Z   === Error log (first 30 lines) ===
+2025-12-27T19:10:02.3070289Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:10:02.3071197Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:02.3071606Z 
+2025-12-27T19:10:02.3072102Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:10:02.3073496Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:10:02.3074598Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:10:02.3075736Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:10:02.3076891Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:10:02.3077649Z uint128_t_extracted_tests.cpp
+2025-12-27T19:10:02.3078639Z D:\a\int128\int128\tests\../include/uint128/uint128_iostreams.hpp(173): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:10:02.3079748Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:10:02.3080309Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:02.3080675Z 
+2025-12-27T19:10:02.3080939Z /out:build/build_tests/msvc/release/uint128_t_extracted_tests.exe 
+2025-12-27T19:10:02.3081458Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:10:02.3081793Z "C:/Program Files/Git/W4" 
+2025-12-27T19:10:02.3082104Z "C:/Program Files/Git/O2" 
+2025-12-27T19:10:02.3082443Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:10:02.3082654Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:10:02.3082864Z uint128_t_extracted_tests.obj 
+2025-12-27T19:10:02.3083191Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:10:02.3083541Z   ===================================
+2025-12-27T19:10:02.3279136Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T19:10:04.0883150Z   [FAIL] Failed
+2025-12-27T19:10:04.0883523Z   === Error log (first 30 lines) ===
+2025-12-27T19:10:04.1063003Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:10:04.1063754Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:04.1064130Z 
+2025-12-27T19:10:04.1064450Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:10:04.1065265Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:10:04.1066578Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:10:04.1068566Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:10:04.1070854Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:10:04.1071635Z uint128_thread_safety_extracted_tests.cpp
+2025-12-27T19:10:04.1072406Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\chrono(2359): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:10:04.1073124Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:10:04.1073445Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:04.1074059Z 
+2025-12-27T19:10:04.1074446Z /out:build/build_tests/msvc/release/uint128_thread_safety_extracted_tests.exe 
+2025-12-27T19:10:04.1075071Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:10:04.1075293Z "C:/Program Files/Git/W4" 
+2025-12-27T19:10:04.1075530Z "C:/Program Files/Git/O2" 
+2025-12-27T19:10:04.1076511Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:10:04.1076909Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:10:04.1077164Z uint128_thread_safety_extracted_tests.obj 
+2025-12-27T19:10:04.1077524Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:10:04.1077864Z   ===================================
+2025-12-27T19:10:04.1263408Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T19:10:05.2056312Z   [FAIL] Failed
+2025-12-27T19:10:05.2056792Z   === Error log (first 30 lines) ===
+2025-12-27T19:10:05.2236742Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:10:05.2237472Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:05.2237851Z 
+2025-12-27T19:10:05.2238325Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/EHsc', object file assumed
+2025-12-27T19:10:05.2239398Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/W4', object file assumed
+2025-12-27T19:10:05.2240983Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/O2', object file assumed
+2025-12-27T19:10:05.2242622Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/DNDEBUG', object file assumed
+2025-12-27T19:10:05.2243580Z cl : Command line warning D9024 : unrecognized source file type 'C:/Program Files/Git/Iinclude', object file assumed
+2025-12-27T19:10:05.2244341Z uint128_traits_extracted_tests.cpp
+2025-12-27T19:10:05.2245211Z tests/uint128_traits_extracted_tests.cpp(387): warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+2025-12-27T19:10:05.2246207Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:10:05.2246762Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:10:05.2247133Z 
+2025-12-27T19:10:05.2247425Z /out:build/build_tests/msvc/release/uint128_traits_extracted_tests.exe 
+2025-12-27T19:10:05.2249180Z "C:/Program Files/Git/EHsc" 
+2025-12-27T19:10:05.2249561Z "C:/Program Files/Git/W4" 
+2025-12-27T19:10:05.2249882Z "C:/Program Files/Git/O2" 
+2025-12-27T19:10:05.2250090Z "C:/Program Files/Git/DNDEBUG" 
+2025-12-27T19:10:05.2250478Z "C:/Program Files/Git/Iinclude" 
+2025-12-27T19:10:05.2250686Z uint128_traits_extracted_tests.obj 
+2025-12-27T19:10:05.2251052Z LINK : fatal error LNK1181: cannot open input file 'C:\Program Files\Git\EHsc.obj'
+2025-12-27T19:10:05.2251673Z   ===================================
+2025-12-27T19:10:05.2251913Z 
+2025-12-27T19:10:05.2252004Z ================================
+2025-12-27T19:10:05.2252319Z Build Summary
+2025-12-27T19:10:05.2252483Z   Compiled: 0
+2025-12-27T19:10:05.2252620Z   Failed: 27
+2025-12-27T19:10:05.2252753Z ================================
+2025-12-27T19:10:05.2252944Z [FAIL] Some tests failed to compile
+2025-12-27T19:10:05.2331873Z ##[error]Process completed with exit code 1.
+2025-12-27T19:10:05.2522420Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:10:05.2522797Z with:
+2025-12-27T19:10:05.2522964Z   name: msvc-release-binaries
+2025-12-27T19:10:05.2523186Z   path: build/build_tests/msvc/release/
+2025-12-27T19:10:05.2523407Z   retention-days: 7
+2025-12-27T19:10:05.2523584Z   if-no-files-found: warn
+2025-12-27T19:10:05.2523764Z   compression-level: 6
+2025-12-27T19:10:05.2523937Z   overwrite: false
+2025-12-27T19:10:05.2524110Z   include-hidden-files: false
+2025-12-27T19:10:05.2524293Z env:
+2025-12-27T19:10:05.2524628Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:10:05.2525014Z ##[endgroup]
+2025-12-27T19:10:05.5602280Z With the provided path, there will be 27 files uploaded
+2025-12-27T19:10:05.5608777Z Artifact name is valid!
+2025-12-27T19:10:05.5611828Z Root directory input is valid!
+2025-12-27T19:10:05.6687574Z Beginning upload of artifact content to blob storage
+2025-12-27T19:10:05.7951937Z Uploaded bytes 15090
+2025-12-27T19:10:05.8163756Z Finished uploading artifact content to blob storage!
+2025-12-27T19:10:05.8167478Z SHA256 digest of uploaded artifact zip is bae049e0d7b3a284248d02a5b0742b576c387b40006d11108b62857b876df3e7
+2025-12-27T19:10:05.8169696Z Finalizing artifact upload
+2025-12-27T19:10:05.9318756Z Artifact msvc-release-binaries.zip successfully finalized. Artifact ID 4976020807
+2025-12-27T19:10:05.9319587Z Artifact msvc-release-binaries has been successfully uploaded! Final size is 15090 bytes. Artifact ID is 4976020807
+2025-12-27T19:10:05.9332543Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543191913/artifacts/4976020807
+2025-12-27T19:10:05.9641018Z Post job cleanup.
+2025-12-27T19:10:06.2031005Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:10:06.2300367Z git version 2.52.0.windows.1
+2025-12-27T19:10:06.2379816Z Temporarily overriding HOME='D:\a\_temp\150af326-60a5-4d29-9488-c460c17adfe1' before making global git config changes
+2025-12-27T19:10:06.2380480Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:10:06.2392061Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:10:06.2710558Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:10:06.3014376Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:10:06.8976300Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:10:06.9237724Z http.https://github.com/.extraheader
+2025-12-27T19:10:06.9292602Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T19:10:06.9617249Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:10:07.5271833Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:10:07.5575272Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:10:08.1154607Z Cleaning up orphan processes
+2025-12-27T19:10:08.1373326Z Terminate orphan process: pid (9024) (vctip)

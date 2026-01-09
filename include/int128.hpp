@@ -64,30 +64,17 @@
  */
 
 // =============================================================================
-// HEADERS FUNDAMENTALES (CORE)
+// FASE 1.75: PUENTE A HEADERS UNIFICADOS (include_new/)
 // =============================================================================
+// Este header ahora redirige a los headers unificados de Fase 1.5
+// La API se mantiene compatible con código existente
 
-// Tipos fundamentales
-#include "int128/int128_t.hpp"   // Tipo int128_t con propiedades optimales
-#include "uint128/uint128_t.hpp" // Tipo uint128_t con propiedades optimales
-
-// Traits para integración STL
-#include "int128/int128_traits.hpp"   // std::is_integral, is_trivially_copyable, etc.
-#include "uint128/uint128_traits.hpp" // std::is_integral, is_trivially_copyable, etc.
-
-// =============================================================================
-// EXTENSIONES CLAVE (BALANCE ÓPTIMO)
-// =============================================================================
-
-// Factory functions (estilo funcional)
-#include "int128/int128_factory.hpp" // make_uint128(), make_int128()
-
-// Assign functions (modificación in-place)
-#include "int128/int128_assign.hpp" // assign_uint128(), assign_int128()
-
-// Cross-type std::min/max (compatibilidad STL)
-#include "int128/int128_cmath.hpp"   // std::min/max(int128_t, IntegralType)
-#include "uint128/uint128_cmath.hpp" // std::min/max(uint128_t, IntegralType)
+// Headers unificados principales
+#include "../include_new/int128_base_cmath.hpp"                  // gcd, lcm, sqrt, pow
+#include "../include_new/int128_base_limits.hpp"                 // numeric_limits
+#include "../include_new/int128_base_traits.hpp"                 // common_type, etc.
+#include "../include_new/int128_base_traits_specializations.hpp" // Type traits STL
+#include "../include_new/int128_base_tt.hpp"                     // Tipos uint128_t, int128_t
 
 // =============================================================================
 // VERIFICACIONES DE PROPIEDADES

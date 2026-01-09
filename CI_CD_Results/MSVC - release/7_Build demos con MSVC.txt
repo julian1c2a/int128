@@ -1,0 +1,16 @@
+﻿2025-12-27T19:44:20.5829245Z ##[group]Run call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+2025-12-27T19:44:20.5830079Z [36;1mcall "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"[0m
+2025-12-27T19:44:20.5830658Z [36;1mcl /std:c++20 /EHsc /W4 demos\tutorials\tut_01_basic.cpp 2>nul || echo "Demo check completed"[0m
+2025-12-27T19:44:20.5865323Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2025-12-27T19:44:20.5865641Z env:
+2025-12-27T19:44:20.5866018Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:44:20.5866428Z ##[endgroup]
+2025-12-27T19:44:20.7593844Z **********************************************************************
+2025-12-27T19:44:20.7594504Z ** Visual Studio 2022 Developer Command Prompt v17.14.22
+2025-12-27T19:44:20.7595021Z ** Copyright (c) 2025 Microsoft Corporation
+2025-12-27T19:44:20.7595494Z **********************************************************************
+2025-12-27T19:44:21.8881465Z [vcvarsall.bat] Environment initialized for: 'x64'
+2025-12-27T19:44:21.9104281Z tut_01_basic.cpp
+2025-12-27T19:44:21.9355986Z c1xx: fatal error C1083: Cannot open source file: 'demos\tutorials\tut_01_basic.cpp': No such file or directory
+2025-12-27T19:44:22.0797633Z "Demo check completed"
+2025-12-27T19:44:22.0828465Z ##[error]Process completed with exit code 2.

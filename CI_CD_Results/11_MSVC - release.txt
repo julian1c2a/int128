@@ -1,0 +1,297 @@
+﻿2025-12-27T19:14:08.8319247Z Current runner version: '2.330.0'
+2025-12-27T19:14:08.8343281Z ##[group]Runner Image Provisioner
+2025-12-27T19:14:08.8344090Z Hosted Compute Agent
+2025-12-27T19:14:08.8344627Z Version: 20251211.462
+2025-12-27T19:14:08.8345168Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:14:08.8345889Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:14:08.8346596Z Worker ID: {2ae2263f-de2b-47d6-bdb7-7dc3d5b6cee9}
+2025-12-27T19:14:08.8347483Z ##[endgroup]
+2025-12-27T19:14:08.8347973Z ##[group]Operating System
+2025-12-27T19:14:08.8348589Z Microsoft Windows Server 2025
+2025-12-27T19:14:08.8349435Z 10.0.26100
+2025-12-27T19:14:08.8349909Z Datacenter
+2025-12-27T19:14:08.8350356Z ##[endgroup]
+2025-12-27T19:14:08.8350907Z ##[group]Runner Image
+2025-12-27T19:14:08.8351434Z Image: windows-2025
+2025-12-27T19:14:08.8351915Z Version: 20251216.149.1
+2025-12-27T19:14:08.8353281Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T19:14:08.8354677Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T19:14:08.8355562Z ##[endgroup]
+2025-12-27T19:14:08.8356571Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:14:08.8358512Z Contents: read
+2025-12-27T19:14:08.8359342Z Metadata: read
+2025-12-27T19:14:08.8359859Z Packages: read
+2025-12-27T19:14:08.8360369Z ##[endgroup]
+2025-12-27T19:14:08.8362355Z Secret source: Actions
+2025-12-27T19:14:08.8363133Z Prepare workflow directory
+2025-12-27T19:14:08.8721832Z Prepare all required actions
+2025-12-27T19:14:08.8780147Z Getting action download info
+2025-12-27T19:14:09.2836506Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:14:09.4200407Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T19:14:09.9645122Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:14:10.3418224Z Complete job name: MSVC - release
+2025-12-27T19:14:10.5478300Z ##[group]Run actions/checkout@v4
+2025-12-27T19:14:10.5479654Z with:
+2025-12-27T19:14:10.5480724Z   repository: julian1c2a/int128
+2025-12-27T19:14:10.5481805Z   token: ***
+2025-12-27T19:14:10.5482488Z   ssh-strict: true
+2025-12-27T19:14:10.5483171Z   ssh-user: git
+2025-12-27T19:14:10.5483879Z   persist-credentials: true
+2025-12-27T19:14:10.5484654Z   clean: true
+2025-12-27T19:14:10.5485341Z   sparse-checkout-cone-mode: true
+2025-12-27T19:14:10.5486176Z   fetch-depth: 1
+2025-12-27T19:14:10.5486855Z   fetch-tags: false
+2025-12-27T19:14:10.5487549Z   show-progress: true
+2025-12-27T19:14:10.5488244Z   lfs: false
+2025-12-27T19:14:10.5488878Z   submodules: false
+2025-12-27T19:14:10.5489580Z   set-safe-directory: true
+2025-12-27T19:14:10.5490617Z ##[endgroup]
+2025-12-27T19:14:10.7280164Z Syncing repository: julian1c2a/int128
+2025-12-27T19:14:10.7282496Z ##[group]Getting Git version info
+2025-12-27T19:14:10.7283476Z Working directory is 'D:\a\int128\int128'
+2025-12-27T19:14:10.8499117Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:14:11.4729611Z git version 2.52.0.windows.1
+2025-12-27T19:14:11.4795846Z ##[endgroup]
+2025-12-27T19:14:11.4821621Z Temporarily overriding HOME='D:\a\_temp\5c1c3ffd-9ffd-40a5-8212-a6a0bdd2c1f3' before making global git config changes
+2025-12-27T19:14:11.4825259Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:14:11.4834367Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:14:11.5758726Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T19:14:11.5766916Z ##[group]Initializing the repository
+2025-12-27T19:14:11.5779851Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T19:14:11.7388138Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T19:14:11.7436992Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:14:11.8112957Z ##[endgroup]
+2025-12-27T19:14:11.8114227Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:14:11.8126287Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T19:14:11.8619472Z ##[endgroup]
+2025-12-27T19:14:11.8620625Z ##[group]Setting up auth
+2025-12-27T19:14:11.8638933Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:14:11.8958617Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:14:14.0676860Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:14:14.0977809Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:14:14.6239254Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:14:14.6539254Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:14:15.1656934Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T19:14:15.1970522Z ##[endgroup]
+2025-12-27T19:14:15.1971549Z ##[group]Fetching the repository
+2025-12-27T19:14:15.1985008Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8ec4b137530be7168a2df1136e1154d302fe3e0f:refs/remotes/origin/main
+2025-12-27T19:14:16.8410159Z From https://github.com/julian1c2a/int128
+2025-12-27T19:14:16.8413509Z  * [new ref]         8ec4b137530be7168a2df1136e1154d302fe3e0f -> origin/main
+2025-12-27T19:14:16.8767645Z ##[endgroup]
+2025-12-27T19:14:16.8768951Z ##[group]Determining the checkout info
+2025-12-27T19:14:16.8770584Z ##[endgroup]
+2025-12-27T19:14:16.8780413Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T19:14:16.9352395Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:14:16.9645739Z ##[group]Checking out the ref
+2025-12-27T19:14:16.9655486Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:14:17.2464904Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:14:17.2473274Z Switched to a new branch 'main'
+2025-12-27T19:14:17.2517352Z ##[endgroup]
+2025-12-27T19:14:17.2998818Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T19:14:17.3269071Z 8ec4b137530be7168a2df1136e1154d302fe3e0f
+2025-12-27T19:14:17.3645075Z ##[group]Run microsoft/setup-msbuild@v2
+2025-12-27T19:14:17.3645418Z with:
+2025-12-27T19:14:17.3645608Z   msbuild-architecture: x86
+2025-12-27T19:14:17.3645813Z ##[endgroup]
+2025-12-27T19:14:17.5272640Z [command]C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
+2025-12-27T19:14:18.3571776Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2025-12-27T19:14:18.3862927Z ##[group]Run # Obtener vcvarsall.bat path
+2025-12-27T19:14:18.3863341Z [36;1m# Obtener vcvarsall.bat path[0m
+2025-12-27T19:14:18.3863688Z [36;1m$vcvarsPath = & python scripts/vcvars.py[0m
+2025-12-27T19:14:18.3863963Z [36;1mif ($vcvarsPath) {[0m
+2025-12-27T19:14:18.3864252Z [36;1m  Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"[0m
+2025-12-27T19:14:18.3865010Z [36;1m  echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV[0m
+2025-12-27T19:14:18.3865282Z [36;1m} else {[0m
+2025-12-27T19:14:18.3865546Z [36;1m  Write-Host "⚠ vcvarsall.bat not found, using default path"[0m
+2025-12-27T19:14:18.3866612Z [36;1m}[0m
+2025-12-27T19:14:18.7661769Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2025-12-27T19:14:18.7662309Z ##[endgroup]
+2025-12-27T19:14:29.0348552Z ✓ Found vcvarsall.bat at: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:14:29.7033459Z ##[group]Run call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+2025-12-27T19:14:29.7034194Z [36;1mcall "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"[0m
+2025-12-27T19:14:29.7034827Z [36;1mbash -c "chmod +x scripts/build_extracted_tests.bash && ./scripts/build_extracted_tests.bash msvc release"[0m
+2025-12-27T19:14:29.7068437Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2025-12-27T19:14:29.7068745Z env:
+2025-12-27T19:14:29.7069097Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:14:29.7069520Z ##[endgroup]
+2025-12-27T19:14:30.1084567Z **********************************************************************
+2025-12-27T19:14:30.1085180Z ** Visual Studio 2022 Developer Command Prompt v17.14.22
+2025-12-27T19:14:30.1085949Z ** Copyright (c) 2025 Microsoft Corporation
+2025-12-27T19:14:30.1086429Z **********************************************************************
+2025-12-27T19:14:32.8354260Z [vcvarsall.bat] Environment initialized for: 'x64'
+2025-12-27T19:14:33.2493648Z ================================
+2025-12-27T19:14:33.2494086Z Building Extracted Tests
+2025-12-27T19:14:33.2494399Z Compiler: msvc
+2025-12-27T19:14:33.2494657Z Build Type: release
+2025-12-27T19:14:33.2494893Z ================================
+2025-12-27T19:14:33.3516136Z Using compiler: cl
+2025-12-27T19:14:33.3516541Z Optimization flags: //O2 //DNDEBUG
+2025-12-27T19:14:33.3516825Z 
+2025-12-27T19:14:33.3520995Z Found 27 test files
+2025-12-27T19:14:33.3521222Z 
+2025-12-27T19:14:33.3751489Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T19:14:45.5221190Z   [OK] Success
+2025-12-27T19:14:45.5417528Z Compiling: int128_bits_extracted_tests...
+2025-12-27T19:14:47.3275564Z   [OK] Success
+2025-12-27T19:14:47.3467865Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T19:14:51.0601215Z   [OK] Success
+2025-12-27T19:14:51.0792920Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T19:14:52.5984869Z   [OK] Success
+2025-12-27T19:14:52.6178370Z Compiling: int128_format_extracted_tests...
+2025-12-27T19:14:54.6019274Z   [OK] Success
+2025-12-27T19:14:54.6270137Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T19:14:56.6932376Z   [OK] Success
+2025-12-27T19:14:56.7128438Z Compiling: int128_limits_extracted_tests...
+2025-12-27T19:14:58.2278946Z   [OK] Success
+2025-12-27T19:14:58.2491625Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T19:14:59.1637593Z   [FAIL] Failed
+2025-12-27T19:14:59.1637946Z   === Error log (first 30 lines) ===
+2025-12-27T19:14:59.2268249Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:14:59.2268919Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:14:59.2269283Z 
+2025-12-27T19:14:59.2269858Z cl : Command line warning D9002 : ignoring unknown option '//Fe:build/build_tests/msvc/release/int128_numeric_extracted_tests.exe'
+2025-12-27T19:14:59.2270713Z int128_numeric_extracted_tests.cpp
+2025-12-27T19:14:59.2271497Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(111): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:14:59.2272936Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(114): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:14:59.2273960Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(135): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:14:59.2275046Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(137): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:14:59.2276500Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(165): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:14:59.2277621Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(167): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:14:59.2287242Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(273): error C3615: constexpr function 'std::gcd' cannot result in a constant expression
+2025-12-27T19:14:59.2288829Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(276): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:14:59.2290115Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(276): note: see usage of 'std::abs'
+2025-12-27T19:14:59.2291323Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(277): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:14:59.2292588Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(277): note: see usage of 'std::abs'
+2025-12-27T19:14:59.2293248Z   ===================================
+2025-12-27T19:14:59.2471923Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T19:15:00.7023876Z   [OK] Success
+2025-12-27T19:15:00.7216259Z Compiling: int128_safe_extracted_tests...
+2025-12-27T19:15:02.1493378Z   [OK] Success
+2025-12-27T19:15:02.1698861Z Compiling: int128_t_extracted_tests...
+2025-12-27T19:15:04.0154840Z   [OK] Success
+2025-12-27T19:15:04.0357423Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T19:15:07.0229211Z   [OK] Success
+2025-12-27T19:15:07.0426835Z Compiling: int128_traits_extracted_tests...
+2025-12-27T19:15:08.6047525Z   [OK] Success
+2025-12-27T19:15:08.6242917Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T19:15:10.3362585Z   [OK] Success
+2025-12-27T19:15:10.3576785Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T19:15:12.0152431Z   [OK] Success
+2025-12-27T19:15:12.0343768Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T19:15:13.9561403Z   [OK] Success
+2025-12-27T19:15:13.9749657Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T19:15:15.3681536Z   [OK] Success
+2025-12-27T19:15:15.3872987Z Compiling: uint128_format_extracted_tests...
+2025-12-27T19:15:16.9126073Z   [OK] Success
+2025-12-27T19:15:16.9330004Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T19:15:17.9664137Z   [FAIL] Failed
+2025-12-27T19:15:17.9664496Z   === Error log (first 30 lines) ===
+2025-12-27T19:15:17.9845822Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:15:17.9846510Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:15:17.9846892Z 
+2025-12-27T19:15:17.9847454Z cl : Command line warning D9002 : ignoring unknown option '//Fe:build/build_tests/msvc/release/uint128_interop_extracted_tests.exe'
+2025-12-27T19:15:17.9848294Z uint128_interop_extracted_tests.cpp
+2025-12-27T19:15:17.9848894Z include\int128/int128_numeric.hpp(111): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:15:17.9849718Z include\int128/int128_numeric.hpp(114): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:15:17.9850572Z include\int128/int128_numeric.hpp(135): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:15:17.9851500Z include\int128/int128_numeric.hpp(137): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:15:17.9852407Z include\int128/int128_numeric.hpp(165): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:15:17.9853280Z include\int128/int128_numeric.hpp(167): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:15:17.9854360Z include\int128/int128_numeric.hpp(273): error C3615: constexpr function 'std::gcd' cannot result in a constant expression
+2025-12-27T19:15:17.9855581Z include\int128/int128_numeric.hpp(276): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:15:17.9856866Z include\int128/int128_numeric.hpp(276): note: see usage of 'std::abs'
+2025-12-27T19:15:17.9857708Z include\int128/int128_numeric.hpp(277): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:15:17.9858479Z include\int128/int128_numeric.hpp(277): note: see usage of 'std::abs'
+2025-12-27T19:15:17.9859780Z include\uint128/uint128_numeric.hpp(100): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:15:17.9860620Z include\uint128/uint128_numeric.hpp(103): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:15:17.9861151Z include\uint128/uint128_numeric.hpp(121): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:15:17.9861670Z include\uint128/uint128_numeric.hpp(123): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:15:17.9862376Z include\uint128/uint128_numeric.hpp(151): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:15:17.9862908Z include\uint128/uint128_numeric.hpp(153): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:15:17.9863439Z include\uint128/uint128_numeric.hpp(277): error C3861: '__builtin_bswap64': identifier not found
+2025-12-27T19:15:17.9863959Z include\uint128/uint128_numeric.hpp(278): error C3861: '__builtin_bswap64': identifier not found
+2025-12-27T19:15:17.9865034Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\type_traits(1085): error C2338: static_assert failed: 'make_unsigned<T> requires that T shall be a (possibly cv-qualified) integral type or enumeration but not a bool type.'
+2025-12-27T19:15:17.9866308Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\type_traits(1085): note: the template instantiation context (the oldest one first) is
+2025-12-27T19:15:17.9867365Z tests/uint128_interop_extracted_tests.cpp(458): note: see reference to alias template instantiation 'std::make_unsigned_t<int128_t>' being compiled
+2025-12-27T19:15:17.9869176Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\type_traits(1093): note: see reference to class template instantiation 'std::make_unsigned<int128_t>' being compiled
+2025-12-27T19:15:17.9871076Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xtr1common(118): error C2938: 'std::_Make_unsigned1' : Failed to specialize alias template
+2025-12-27T19:15:17.9872815Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xtr1common(118): note: the template instantiation context (the oldest one first) is
+2025-12-27T19:15:17.9873891Z   ===================================
+2025-12-27T19:15:18.0038764Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T19:15:19.5855609Z   [OK] Success
+2025-12-27T19:15:19.6044060Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T19:15:20.9855022Z   [OK] Success
+2025-12-27T19:15:21.0048399Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T19:15:21.8887664Z   [FAIL] Failed
+2025-12-27T19:15:21.8888228Z   === Error log (first 30 lines) ===
+2025-12-27T19:15:21.9065952Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:15:21.9066637Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:15:21.9067281Z 
+2025-12-27T19:15:21.9068573Z cl : Command line warning D9002 : ignoring unknown option '//Fe:build/build_tests/msvc/release/uint128_numeric_extracted_tests.exe'
+2025-12-27T19:15:21.9069806Z uint128_numeric_extracted_tests.cpp
+2025-12-27T19:15:21.9071136Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(100): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:15:21.9073015Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(103): error C3861: '__builtin_popcountll': identifier not found
+2025-12-27T19:15:21.9074308Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(121): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:15:21.9076843Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(123): error C3861: '__builtin_clzll': identifier not found
+2025-12-27T19:15:21.9078473Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(151): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:15:21.9080150Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(153): error C3861: '__builtin_ctzll': identifier not found
+2025-12-27T19:15:21.9081477Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(277): error C3861: '__builtin_bswap64': identifier not found
+2025-12-27T19:15:21.9082187Z D:\a\int128\int128\tests\../include/uint128/uint128_numeric.hpp(278): error C3861: '__builtin_bswap64': identifier not found
+2025-12-27T19:15:21.9082627Z   ===================================
+2025-12-27T19:15:21.9265620Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T19:15:23.2712754Z   [OK] Success
+2025-12-27T19:15:23.2908281Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T19:15:24.5141892Z   [OK] Success
+2025-12-27T19:15:24.5331634Z Compiling: uint128_t_extracted_tests...
+2025-12-27T19:15:27.1431526Z   [OK] Success
+2025-12-27T19:15:27.1621538Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T19:15:29.3826502Z   [OK] Success
+2025-12-27T19:15:29.4019174Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T19:15:30.8750366Z   [OK] Success
+2025-12-27T19:15:30.8750841Z 
+2025-12-27T19:15:30.8750965Z ================================
+2025-12-27T19:15:30.8751530Z Build Summary
+2025-12-27T19:15:30.8751802Z   Compiled: 24
+2025-12-27T19:15:30.8752292Z   Failed: 3
+2025-12-27T19:15:30.8752979Z ================================
+2025-12-27T19:15:30.8753402Z [FAIL] Some tests failed to compile
+2025-12-27T19:15:30.8826382Z ##[error]Process completed with exit code 1.
+2025-12-27T19:15:30.9014051Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:15:30.9014357Z with:
+2025-12-27T19:15:30.9014555Z   name: msvc-release-binaries
+2025-12-27T19:15:30.9014790Z   path: build/build_tests/msvc/release/
+2025-12-27T19:15:30.9015019Z   retention-days: 7
+2025-12-27T19:15:30.9015204Z   if-no-files-found: warn
+2025-12-27T19:15:30.9015397Z   compression-level: 6
+2025-12-27T19:15:30.9015583Z   overwrite: false
+2025-12-27T19:15:30.9015755Z   include-hidden-files: false
+2025-12-27T19:15:30.9015947Z env:
+2025-12-27T19:15:30.9016280Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:15:30.9016677Z ##[endgroup]
+2025-12-27T19:15:31.2191858Z With the provided path, there will be 27 files uploaded
+2025-12-27T19:15:31.2200536Z Artifact name is valid!
+2025-12-27T19:15:31.2203023Z Root directory input is valid!
+2025-12-27T19:15:31.5335242Z Beginning upload of artifact content to blob storage
+2025-12-27T19:15:31.8907250Z Uploaded bytes 13169
+2025-12-27T19:15:31.9697351Z Finished uploading artifact content to blob storage!
+2025-12-27T19:15:31.9701010Z SHA256 digest of uploaded artifact zip is e99a7ca6be3368e112502e69690d9ab6dfaf0874e3299c8704e2b76741c36c43
+2025-12-27T19:15:31.9703241Z Finalizing artifact upload
+2025-12-27T19:15:32.1093086Z Artifact msvc-release-binaries.zip successfully finalized. Artifact ID 4976033824
+2025-12-27T19:15:32.1094802Z Artifact msvc-release-binaries has been successfully uploaded! Final size is 13169 bytes. Artifact ID is 4976033824
+2025-12-27T19:15:32.1108391Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543242100/artifacts/4976033824
+2025-12-27T19:15:32.1394272Z Post job cleanup.
+2025-12-27T19:15:32.3686870Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:15:32.3955174Z git version 2.52.0.windows.1
+2025-12-27T19:15:32.4030861Z Temporarily overriding HOME='D:\a\_temp\ea601b36-42fd-4a2f-89d5-ec0f00847b39' before making global git config changes
+2025-12-27T19:15:32.4031544Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:15:32.4041684Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:15:32.4337655Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:15:32.4623362Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:15:32.9737594Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:15:32.9996045Z http.https://github.com/.extraheader
+2025-12-27T19:15:33.0054094Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T19:15:33.0367335Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:15:33.5219584Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:15:33.5505934Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:15:34.0926645Z Cleaning up orphan processes
+2025-12-27T19:15:34.1209910Z Terminate orphan process: pid (1420) (vctip)

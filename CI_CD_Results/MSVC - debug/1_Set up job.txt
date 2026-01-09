@@ -1,0 +1,32 @@
+﻿2025-12-27T19:42:55.2582350Z Current runner version: '2.330.0'
+2025-12-27T19:42:55.2624933Z ##[group]Runner Image Provisioner
+2025-12-27T19:42:55.2625710Z Hosted Compute Agent
+2025-12-27T19:42:55.2626230Z Version: 20251211.462
+2025-12-27T19:42:55.2626879Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:42:55.2627496Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:42:55.2628109Z Worker ID: {09495b6f-3e9e-4bf1-940c-f412ec2d5414}
+2025-12-27T19:42:55.2628756Z ##[endgroup]
+2025-12-27T19:42:55.2629236Z ##[group]Operating System
+2025-12-27T19:42:55.2629940Z Microsoft Windows Server 2025
+2025-12-27T19:42:55.2630858Z 10.0.26100
+2025-12-27T19:42:55.2631431Z Datacenter
+2025-12-27T19:42:55.2631818Z ##[endgroup]
+2025-12-27T19:42:55.2632275Z ##[group]Runner Image
+2025-12-27T19:42:55.2632752Z Image: windows-2025
+2025-12-27T19:42:55.2633209Z Version: 20251216.149.1
+2025-12-27T19:42:55.2634181Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T19:42:55.2636172Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T19:42:55.2636976Z ##[endgroup]
+2025-12-27T19:42:55.2637948Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:42:55.2639671Z Contents: read
+2025-12-27T19:42:55.2640219Z Metadata: read
+2025-12-27T19:42:55.2640636Z Packages: read
+2025-12-27T19:42:55.2641148Z ##[endgroup]
+2025-12-27T19:42:55.2642995Z Secret source: Actions
+2025-12-27T19:42:55.2643675Z Prepare workflow directory
+2025-12-27T19:42:55.2968609Z Prepare all required actions
+2025-12-27T19:42:55.3006631Z Getting action download info
+2025-12-27T19:42:55.7034517Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:42:55.8591096Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T19:42:56.3042677Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:42:56.7352722Z Complete job name: MSVC - debug

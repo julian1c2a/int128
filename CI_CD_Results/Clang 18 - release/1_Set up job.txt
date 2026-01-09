@@ -1,0 +1,31 @@
+﻿2025-12-27T19:42:48.3519479Z Current runner version: '2.330.0'
+2025-12-27T19:42:48.3543345Z ##[group]Runner Image Provisioner
+2025-12-27T19:42:48.3544129Z Hosted Compute Agent
+2025-12-27T19:42:48.3544627Z Version: 20251211.462
+2025-12-27T19:42:48.3545500Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:42:48.3546156Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:42:48.3546785Z Worker ID: {86d7262d-a914-47dd-9b57-0008c0f53da1}
+2025-12-27T19:42:48.3547513Z ##[endgroup]
+2025-12-27T19:42:48.3548037Z ##[group]Operating System
+2025-12-27T19:42:48.3548559Z Ubuntu
+2025-12-27T19:42:48.3549070Z 24.04.3
+2025-12-27T19:42:48.3549511Z LTS
+2025-12-27T19:42:48.3549915Z ##[endgroup]
+2025-12-27T19:42:48.3550475Z ##[group]Runner Image
+2025-12-27T19:42:48.3551236Z Image: ubuntu-24.04
+2025-12-27T19:42:48.3551783Z Version: 20251215.174.1
+2025-12-27T19:42:48.3552790Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T19:42:48.3554155Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T19:42:48.3555725Z ##[endgroup]
+2025-12-27T19:42:48.3556817Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:42:48.3558903Z Contents: read
+2025-12-27T19:42:48.3559447Z Metadata: read
+2025-12-27T19:42:48.3559949Z Packages: read
+2025-12-27T19:42:48.3560533Z ##[endgroup]
+2025-12-27T19:42:48.3562452Z Secret source: Actions
+2025-12-27T19:42:48.3563544Z Prepare workflow directory
+2025-12-27T19:42:48.3966099Z Prepare all required actions
+2025-12-27T19:42:48.4021031Z Getting action download info
+2025-12-27T19:42:48.7351690Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:42:48.8209733Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:42:49.0433454Z Complete job name: Clang 18 - release

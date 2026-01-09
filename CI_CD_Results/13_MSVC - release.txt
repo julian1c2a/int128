@@ -1,0 +1,254 @@
+﻿2025-12-27T19:38:36.9812862Z Current runner version: '2.330.0'
+2025-12-27T19:38:36.9841570Z ##[group]Runner Image Provisioner
+2025-12-27T19:38:36.9842324Z Hosted Compute Agent
+2025-12-27T19:38:36.9843578Z Version: 20251211.462
+2025-12-27T19:38:36.9844292Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:38:36.9844940Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:38:36.9845533Z Worker ID: {9fd3b166-8643-4339-b0fd-50561dfb838e}
+2025-12-27T19:38:36.9846826Z ##[endgroup]
+2025-12-27T19:38:36.9847807Z ##[group]Operating System
+2025-12-27T19:38:36.9848636Z Microsoft Windows Server 2025
+2025-12-27T19:38:36.9850063Z 10.0.26100
+2025-12-27T19:38:36.9850755Z Datacenter
+2025-12-27T19:38:36.9852233Z ##[endgroup]
+2025-12-27T19:38:36.9853025Z ##[group]Runner Image
+2025-12-27T19:38:36.9853832Z Image: windows-2025
+2025-12-27T19:38:36.9854676Z Version: 20251216.149.1
+2025-12-27T19:38:36.9857017Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T19:38:36.9859738Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T19:38:36.9861391Z ##[endgroup]
+2025-12-27T19:38:36.9863503Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:38:36.9865939Z Contents: read
+2025-12-27T19:38:36.9866761Z Metadata: read
+2025-12-27T19:38:36.9867491Z Packages: read
+2025-12-27T19:38:36.9868232Z ##[endgroup]
+2025-12-27T19:38:36.9871324Z Secret source: Actions
+2025-12-27T19:38:36.9872413Z Prepare workflow directory
+2025-12-27T19:38:37.0358822Z Prepare all required actions
+2025-12-27T19:38:37.0420789Z Getting action download info
+2025-12-27T19:38:37.2951639Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:38:37.4705691Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T19:38:37.9932220Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:38:38.5066524Z Complete job name: MSVC - release
+2025-12-27T19:38:38.8380004Z ##[group]Run actions/checkout@v4
+2025-12-27T19:38:38.8381018Z with:
+2025-12-27T19:38:38.8381357Z   repository: julian1c2a/int128
+2025-12-27T19:38:38.8381998Z   token: ***
+2025-12-27T19:38:38.8382310Z   ssh-strict: true
+2025-12-27T19:38:38.8382615Z   ssh-user: git
+2025-12-27T19:38:38.8382942Z   persist-credentials: true
+2025-12-27T19:38:38.8383283Z   clean: true
+2025-12-27T19:38:38.8383608Z   sparse-checkout-cone-mode: true
+2025-12-27T19:38:38.8383967Z   fetch-depth: 1
+2025-12-27T19:38:38.8384284Z   fetch-tags: false
+2025-12-27T19:38:38.8384611Z   show-progress: true
+2025-12-27T19:38:38.8385208Z   lfs: false
+2025-12-27T19:38:38.8385669Z   submodules: false
+2025-12-27T19:38:38.8386155Z   set-safe-directory: true
+2025-12-27T19:38:38.8387377Z ##[endgroup]
+2025-12-27T19:38:39.1168826Z Syncing repository: julian1c2a/int128
+2025-12-27T19:38:39.1171287Z ##[group]Getting Git version info
+2025-12-27T19:38:39.1172837Z Working directory is 'D:\a\int128\int128'
+2025-12-27T19:38:39.3174649Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:38:40.3594374Z git version 2.52.0.windows.1
+2025-12-27T19:38:40.3684280Z ##[endgroup]
+2025-12-27T19:38:40.3707653Z Temporarily overriding HOME='D:\a\_temp\f35997e8-85c3-46ce-a83f-0fb4fce6a856' before making global git config changes
+2025-12-27T19:38:40.3709987Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:38:40.3722273Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:38:40.5173619Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T19:38:40.5183704Z ##[group]Initializing the repository
+2025-12-27T19:38:40.5200662Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T19:38:40.8188300Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T19:38:40.8251697Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:38:40.9709780Z ##[endgroup]
+2025-12-27T19:38:40.9713670Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:38:40.9731040Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T19:38:41.0128084Z ##[endgroup]
+2025-12-27T19:38:41.0128716Z ##[group]Setting up auth
+2025-12-27T19:38:41.0150661Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:38:41.0558149Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:38:46.1458723Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:38:46.1773841Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:38:46.7112139Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:38:46.7422638Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:38:47.2908235Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T19:38:47.3235967Z ##[endgroup]
+2025-12-27T19:38:47.3236516Z ##[group]Fetching the repository
+2025-12-27T19:38:47.3248885Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fe557597747f7543dc68eb36af4b417ddafd4f07:refs/remotes/origin/main
+2025-12-27T19:38:49.6736268Z From https://github.com/julian1c2a/int128
+2025-12-27T19:38:49.6741530Z  * [new ref]         fe557597747f7543dc68eb36af4b417ddafd4f07 -> origin/main
+2025-12-27T19:38:49.7679892Z ##[endgroup]
+2025-12-27T19:38:49.7680861Z ##[group]Determining the checkout info
+2025-12-27T19:38:49.7683306Z ##[endgroup]
+2025-12-27T19:38:49.7699320Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T19:38:49.8438329Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:38:49.8745181Z ##[group]Checking out the ref
+2025-12-27T19:38:49.8760609Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:38:50.2271653Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:38:50.2280932Z Switched to a new branch 'main'
+2025-12-27T19:38:50.2322538Z ##[endgroup]
+2025-12-27T19:38:50.2806411Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T19:38:50.3208515Z fe557597747f7543dc68eb36af4b417ddafd4f07
+2025-12-27T19:38:50.3592633Z ##[group]Run microsoft/setup-msbuild@v2
+2025-12-27T19:38:50.3592940Z with:
+2025-12-27T19:38:50.3593122Z   msbuild-architecture: x86
+2025-12-27T19:38:50.3593324Z ##[endgroup]
+2025-12-27T19:38:50.5093625Z [command]C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
+2025-12-27T19:38:51.9831478Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2025-12-27T19:38:52.0135132Z ##[group]Run # Obtener vcvarsall.bat path
+2025-12-27T19:38:52.0135534Z [36;1m# Obtener vcvarsall.bat path[0m
+2025-12-27T19:38:52.0135810Z [36;1m$vcvarsPath = & python scripts/vcvars.py[0m
+2025-12-27T19:38:52.0136087Z [36;1mif ($vcvarsPath) {[0m
+2025-12-27T19:38:52.0136357Z [36;1m  Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"[0m
+2025-12-27T19:38:52.0136896Z [36;1m  echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV[0m
+2025-12-27T19:38:52.0137271Z [36;1m} else {[0m
+2025-12-27T19:38:52.0137521Z [36;1m  Write-Host "⚠ vcvarsall.bat not found, using default path"[0m
+2025-12-27T19:38:52.0138721Z [36;1m}[0m
+2025-12-27T19:38:52.5780024Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2025-12-27T19:38:52.5780403Z ##[endgroup]
+2025-12-27T19:39:04.6058214Z ✓ Found vcvarsall.bat at: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:39:05.1430793Z ##[group]Run call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+2025-12-27T19:39:05.1431547Z [36;1mcall "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"[0m
+2025-12-27T19:39:05.1432214Z [36;1mbash -c "chmod +x scripts/build_extracted_tests.bash && ./scripts/build_extracted_tests.bash msvc release"[0m
+2025-12-27T19:39:05.1464778Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2025-12-27T19:39:05.1465099Z env:
+2025-12-27T19:39:05.1465462Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:39:05.1465899Z ##[endgroup]
+2025-12-27T19:39:05.5494438Z **********************************************************************
+2025-12-27T19:39:05.5495540Z ** Visual Studio 2022 Developer Command Prompt v17.14.22
+2025-12-27T19:39:05.5496086Z ** Copyright (c) 2025 Microsoft Corporation
+2025-12-27T19:39:05.5496595Z **********************************************************************
+2025-12-27T19:39:08.5028545Z [vcvarsall.bat] Environment initialized for: 'x64'
+2025-12-27T19:39:08.9053549Z ================================
+2025-12-27T19:39:08.9054036Z Building Extracted Tests
+2025-12-27T19:39:08.9054335Z Compiler: msvc
+2025-12-27T19:39:08.9054600Z Build Type: release
+2025-12-27T19:39:08.9056623Z ================================
+2025-12-27T19:39:09.0062309Z Using compiler: cl
+2025-12-27T19:39:09.0063036Z Optimization flags: //O2 //DNDEBUG
+2025-12-27T19:39:09.0063345Z 
+2025-12-27T19:39:09.0066427Z Found 27 test files
+2025-12-27T19:39:09.0066652Z 
+2025-12-27T19:39:09.0262422Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T19:39:22.7253575Z   [OK] Success
+2025-12-27T19:39:22.7460145Z Compiling: int128_bits_extracted_tests...
+2025-12-27T19:39:24.7538321Z   [OK] Success
+2025-12-27T19:39:24.7790366Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T19:39:27.8159494Z   [OK] Success
+2025-12-27T19:39:27.8352282Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T19:39:29.3639668Z   [OK] Success
+2025-12-27T19:39:29.3833528Z Compiling: int128_format_extracted_tests...
+2025-12-27T19:39:31.1336017Z   [OK] Success
+2025-12-27T19:39:31.1529149Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T19:39:32.9398820Z   [OK] Success
+2025-12-27T19:39:32.9588721Z Compiling: int128_limits_extracted_tests...
+2025-12-27T19:39:34.7732640Z   [OK] Success
+2025-12-27T19:39:34.7932284Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T19:39:36.5213850Z   [FAIL] Failed
+2025-12-27T19:39:36.5217703Z   === Error log (first 30 lines) ===
+2025-12-27T19:39:36.7393781Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:39:36.7398471Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:39:36.7403083Z 
+2025-12-27T19:39:36.7412049Z cl /std:c++20 /EHsc /W4 /O2 /DNDEBUG /I"D:/a/int128/int128/include" "D:/a/int128/int128/tests\int128_numeric_extracted_tests.cpp" /Fe:"D:/a/int128/int128/build/build_tests/msvc/release\int128_numeric_extracted_tests.exe"
+2025-12-27T19:39:36.7415236Z 
+2025-12-27T19:39:36.7415896Z int128_numeric_extracted_tests.cpp
+2025-12-27T19:39:36.7424644Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(92): error C3615: constexpr function 'std::abs' cannot result in a constant expression
+2025-12-27T19:39:36.7427611Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(94): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:39:36.7430378Z D:\a\int128\int128\tests\../include/int128/int128_numeric.hpp(94): note: see usage of 'int128_t::abs'
+2025-12-27T19:39:36.7433662Z   ===================================
+2025-12-27T19:39:36.7630948Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T19:39:38.4889502Z   [OK] Success
+2025-12-27T19:39:38.5118852Z Compiling: int128_safe_extracted_tests...
+2025-12-27T19:39:40.7110508Z   [OK] Success
+2025-12-27T19:39:40.7359422Z Compiling: int128_t_extracted_tests...
+2025-12-27T19:39:44.6248620Z   [OK] Success
+2025-12-27T19:39:44.6455217Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T19:39:50.4395152Z   [OK] Success
+2025-12-27T19:39:50.4627702Z Compiling: int128_traits_extracted_tests...
+2025-12-27T19:39:52.2635297Z   [OK] Success
+2025-12-27T19:39:52.2850471Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T19:39:54.4699664Z   [OK] Success
+2025-12-27T19:39:54.4935610Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T19:39:56.5551544Z   [OK] Success
+2025-12-27T19:39:56.5763218Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T19:39:59.2694300Z   [OK] Success
+2025-12-27T19:39:59.2929770Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T19:40:01.0613555Z   [OK] Success
+2025-12-27T19:40:01.0850559Z Compiling: uint128_format_extracted_tests...
+2025-12-27T19:40:02.9195953Z   [OK] Success
+2025-12-27T19:40:02.9429065Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T19:40:04.2271385Z   [FAIL] Failed
+2025-12-27T19:40:04.2271774Z   === Error log (first 30 lines) ===
+2025-12-27T19:40:04.2489931Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:40:04.2490872Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:40:04.2491592Z 
+2025-12-27T19:40:04.2495502Z cl /std:c++20 /EHsc /W4 /O2 /DNDEBUG /I"D:/a/int128/int128/include" "D:/a/int128/int128/tests\uint128_interop_extracted_tests.cpp" /Fe:"D:/a/int128/int128/build/build_tests/msvc/release\uint128_interop_extracted_tests.exe"
+2025-12-27T19:40:04.2497438Z 
+2025-12-27T19:40:04.2497802Z uint128_interop_extracted_tests.cpp
+2025-12-27T19:40:04.2499009Z D:/a/int128/int128/include\int128/int128_numeric.hpp(92): error C3615: constexpr function 'std::abs' cannot result in a constant expression
+2025-12-27T19:40:04.2503159Z D:/a/int128/int128/include\int128/int128_numeric.hpp(94): note: failure was caused by call of undefined function or one not declared 'constexpr'
+2025-12-27T19:40:04.2504715Z D:/a/int128/int128/include\int128/int128_numeric.hpp(94): note: see usage of 'int128_t::abs'
+2025-12-27T19:40:04.2507214Z   ===================================
+2025-12-27T19:40:04.2726830Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T19:40:06.3447608Z   [OK] Success
+2025-12-27T19:40:06.3652034Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T19:40:08.2616647Z   [OK] Success
+2025-12-27T19:40:08.3738770Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T19:40:11.0485572Z   [OK] Success
+2025-12-27T19:40:11.0767948Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T19:40:12.8875223Z   [OK] Success
+2025-12-27T19:40:12.9123612Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T19:40:14.2885278Z   [OK] Success
+2025-12-27T19:40:14.3078782Z Compiling: uint128_t_extracted_tests...
+2025-12-27T19:40:17.0601329Z   [OK] Success
+2025-12-27T19:40:17.0799606Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T19:40:19.4292717Z   [OK] Success
+2025-12-27T19:40:19.4490783Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T19:40:21.0309260Z   [OK] Success
+2025-12-27T19:40:21.0309533Z 
+2025-12-27T19:40:21.0309650Z ================================
+2025-12-27T19:40:21.0309994Z Build Summary
+2025-12-27T19:40:21.0310325Z   Compiled: 25
+2025-12-27T19:40:21.0310985Z   Failed: 2
+2025-12-27T19:40:21.0312300Z ================================
+2025-12-27T19:40:21.0312692Z [FAIL] Some tests failed to compile
+2025-12-27T19:40:21.0389631Z ##[error]Process completed with exit code 1.
+2025-12-27T19:40:21.0585633Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:40:21.0586131Z with:
+2025-12-27T19:40:21.0586311Z   name: msvc-release-binaries
+2025-12-27T19:40:21.0586539Z   path: build/build_tests/msvc/release/
+2025-12-27T19:40:21.0586771Z   retention-days: 7
+2025-12-27T19:40:21.0586942Z   if-no-files-found: warn
+2025-12-27T19:40:21.0587134Z   compression-level: 6
+2025-12-27T19:40:21.0587309Z   overwrite: false
+2025-12-27T19:40:21.0587476Z   include-hidden-files: false
+2025-12-27T19:40:21.0587669Z env:
+2025-12-27T19:40:21.0588000Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:40:21.0588408Z ##[endgroup]
+2025-12-27T19:40:21.3900929Z With the provided path, there will be 79 files uploaded
+2025-12-27T19:40:21.3907571Z Artifact name is valid!
+2025-12-27T19:40:21.3910385Z Root directory input is valid!
+2025-12-27T19:40:21.5445887Z Beginning upload of artifact content to blob storage
+2025-12-27T19:40:22.2373583Z Uploaded bytes 3194206
+2025-12-27T19:40:22.2686475Z Finished uploading artifact content to blob storage!
+2025-12-27T19:40:22.2691326Z SHA256 digest of uploaded artifact zip is 2e5843fb1b75d1a526cdcdc201eeecaab8dbfaaec6325eaa1c721983c07e5dc1
+2025-12-27T19:40:22.2693465Z Finalizing artifact upload
+2025-12-27T19:40:22.3402783Z Artifact msvc-release-binaries.zip successfully finalized. Artifact ID 4976088991
+2025-12-27T19:40:22.3404297Z Artifact msvc-release-binaries has been successfully uploaded! Final size is 3194206 bytes. Artifact ID is 4976088991
+2025-12-27T19:40:22.3420733Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543497569/artifacts/4976088991
+2025-12-27T19:40:22.3756567Z Post job cleanup.
+2025-12-27T19:40:22.6435360Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:40:22.6767405Z git version 2.52.0.windows.1
+2025-12-27T19:40:22.6858010Z Temporarily overriding HOME='D:\a\_temp\41b6615c-68d1-4e83-aaab-682dcb985864' before making global git config changes
+2025-12-27T19:40:22.6859196Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:40:22.6873052Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:40:22.7226726Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:40:22.7553621Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:40:23.3142240Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:40:23.3450946Z http.https://github.com/.extraheader
+2025-12-27T19:40:23.3500397Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T19:40:23.3821484Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:40:23.9040453Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:40:23.9325513Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:40:24.4574763Z Cleaning up orphan processes
+2025-12-27T19:40:24.4962311Z Terminate orphan process: pid (8424) (vctip)

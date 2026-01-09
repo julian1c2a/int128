@@ -1,0 +1,482 @@
+﻿2025-12-27T14:39:33.8346754Z Current runner version: '2.330.0'
+2025-12-27T14:39:33.8378894Z ##[group]Runner Image Provisioner
+2025-12-27T14:39:33.8379632Z Hosted Compute Agent
+2025-12-27T14:39:33.8380093Z Version: 20251211.462
+2025-12-27T14:39:33.8380743Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T14:39:33.8381367Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T14:39:33.8381973Z Worker ID: {44fcb96d-1f88-4530-9425-0ae6eff777f4}
+2025-12-27T14:39:33.8382552Z ##[endgroup]
+2025-12-27T14:39:33.8383018Z ##[group]Operating System
+2025-12-27T14:39:33.8383544Z Microsoft Windows Server 2025
+2025-12-27T14:39:33.8384091Z 10.0.26100
+2025-12-27T14:39:33.8384497Z Datacenter
+2025-12-27T14:39:33.8384888Z ##[endgroup]
+2025-12-27T14:39:33.8385338Z ##[group]Runner Image
+2025-12-27T14:39:33.8385810Z Image: windows-2025
+2025-12-27T14:39:33.8386278Z Version: 20251216.149.1
+2025-12-27T14:39:33.8388223Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T14:39:33.8389793Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T14:39:33.8390739Z ##[endgroup]
+2025-12-27T14:39:33.8391738Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T14:39:33.8393873Z Contents: read
+2025-12-27T14:39:33.8394376Z Metadata: read
+2025-12-27T14:39:33.8394892Z Packages: read
+2025-12-27T14:39:33.8395299Z ##[endgroup]
+2025-12-27T14:39:33.8397316Z Secret source: Actions
+2025-12-27T14:39:33.8397975Z Prepare workflow directory
+2025-12-27T14:39:33.8874587Z Prepare all required actions
+2025-12-27T14:39:33.8912490Z Getting action download info
+2025-12-27T14:39:34.2100251Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T14:39:34.3868952Z Download action repository 'msys2/setup-msys2@v2' (SHA:4f806de0a5a7294ffabaff804b38a9b435a73bda)
+2025-12-27T14:39:34.6914928Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T14:39:34.9688324Z Download action repository 'rscohn2/setup-oneapi@v0' (SHA:0a10b1552c6bd797a5633ae2dd5ceb9bad1c78c2)
+2025-12-27T14:39:35.5048823Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T14:39:35.8872848Z Complete job name: Benchmark - intel
+2025-12-27T14:39:36.0332011Z ##[group]Run actions/checkout@v4
+2025-12-27T14:39:36.0333649Z with:
+2025-12-27T14:39:36.0334492Z   repository: julian1c2a/int128
+2025-12-27T14:39:36.0335690Z   token: ***
+2025-12-27T14:39:36.0336350Z   ssh-strict: true
+2025-12-27T14:39:36.0337045Z   ssh-user: git
+2025-12-27T14:39:36.0337754Z   persist-credentials: true
+2025-12-27T14:39:36.0338550Z   clean: true
+2025-12-27T14:39:36.0339290Z   sparse-checkout-cone-mode: true
+2025-12-27T14:39:36.0340185Z   fetch-depth: 1
+2025-12-27T14:39:36.0340862Z   fetch-tags: false
+2025-12-27T14:39:36.0341553Z   show-progress: true
+2025-12-27T14:39:36.0342271Z   lfs: false
+2025-12-27T14:39:36.0342930Z   submodules: false
+2025-12-27T14:39:36.0343690Z   set-safe-directory: true
+2025-12-27T14:39:36.0344652Z ##[endgroup]
+2025-12-27T14:39:36.2056435Z Syncing repository: julian1c2a/int128
+2025-12-27T14:39:36.2058763Z ##[group]Getting Git version info
+2025-12-27T14:39:36.2059883Z Working directory is 'D:\a\int128\int128'
+2025-12-27T14:39:36.3100339Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T14:39:36.7254922Z git version 2.52.0.windows.1
+2025-12-27T14:39:36.7314459Z ##[endgroup]
+2025-12-27T14:39:36.7337954Z Temporarily overriding HOME='D:\a\_temp\75c03547-5d62-4173-b0b6-61f751397fba' before making global git config changes
+2025-12-27T14:39:36.7341564Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T14:39:36.7349206Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T14:39:36.7995373Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T14:39:36.8002824Z ##[group]Initializing the repository
+2025-12-27T14:39:36.8013523Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T14:39:36.9102718Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T14:39:36.9152932Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T14:39:36.9732340Z ##[endgroup]
+2025-12-27T14:39:36.9733975Z ##[group]Disabling automatic garbage collection
+2025-12-27T14:39:36.9742889Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T14:39:37.0048010Z ##[endgroup]
+2025-12-27T14:39:37.0049282Z ##[group]Setting up auth
+2025-12-27T14:39:37.0062053Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T14:39:37.0359555Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T14:39:38.4886216Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T14:39:38.5181709Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T14:39:39.0384003Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T14:39:39.0684062Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T14:39:39.5965675Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T14:39:39.6275925Z ##[endgroup]
+2025-12-27T14:39:39.6276793Z ##[group]Fetching the repository
+2025-12-27T14:39:39.6289291Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6d1e300178fd4e2c6df18263e0394dae90cff673:refs/remotes/origin/main
+2025-12-27T14:39:40.8206343Z From https://github.com/julian1c2a/int128
+2025-12-27T14:39:40.8209764Z  * [new ref]         6d1e300178fd4e2c6df18263e0394dae90cff673 -> origin/main
+2025-12-27T14:39:40.8498997Z ##[endgroup]
+2025-12-27T14:39:40.8499373Z ##[group]Determining the checkout info
+2025-12-27T14:39:40.8502243Z ##[endgroup]
+2025-12-27T14:39:40.8518673Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T14:39:40.8998804Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T14:39:40.9311389Z ##[group]Checking out the ref
+2025-12-27T14:39:40.9321986Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T14:39:41.1800896Z branch 'main' set up to track 'origin/main'.
+2025-12-27T14:39:41.1807951Z Switched to a new branch 'main'
+2025-12-27T14:39:41.1848855Z ##[endgroup]
+2025-12-27T14:39:41.2841876Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T14:39:41.3390293Z 6d1e300178fd4e2c6df18263e0394dae90cff673
+2025-12-27T14:39:41.3797449Z ##[group]Run msys2/setup-msys2@v2
+2025-12-27T14:39:41.3797864Z with:
+2025-12-27T14:39:41.3798110Z   msystem: UCRT64
+2025-12-27T14:39:41.3798351Z   update: true
+2025-12-27T14:39:41.3798907Z   install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-clang mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja python
+2025-12-27T14:39:41.3799506Z   path-type: minimal
+2025-12-27T14:39:41.3799735Z   pacboy: false
+2025-12-27T14:39:41.3800023Z   release: true
+2025-12-27T14:39:41.3800262Z   location: RUNNER_TEMP
+2025-12-27T14:39:41.3800535Z   platform-check-severity: fatal
+2025-12-27T14:39:41.3800785Z   cache: true
+2025-12-27T14:39:41.3801054Z ##[endgroup]
+2025-12-27T14:39:41.5754034Z ##[group]Downloading MSYS2...
+2025-12-27T14:39:42.3006516Z ##[endgroup]
+2025-12-27T14:39:42.3007073Z ##[group]Extracting MSYS2...
+2025-12-27T14:39:42.3026202Z [command]C:\hostedtoolcache\windows\msys2-installer\0.0.20251213\x64\base.exe -y
+2025-12-27T14:39:42.5184984Z 
+2025-12-27T14:39:42.5186384Z 7-Zip SFX 25.01 ZS v1.5.7 (x64) : Copyright (c) 1999-2025 Igor Pavlov, 2016-2025 Tino Reichardt, 2022-2025 Sergey G. Brester : 2025-08-06
+2025-12-27T14:39:42.5187602Z 
+2025-12-27T14:39:42.5188089Z Extracting archive: C:\hostedtoolcache\windows\msys2-installer\0.0.20251213\x64\base.exe
+2025-12-27T14:39:42.5189064Z --
+2025-12-27T14:39:42.5189786Z Path = C:\hostedtoolcache\windows\msys2-installer\0.0.20251213\x64\base.exe
+2025-12-27T14:39:42.5191205Z Type = 7z
+2025-12-27T14:39:42.5191770Z 
+2025-12-27T14:39:42.7107308Z   0%
+2025-12-27T14:39:42.7108514Z     
+2025-12-27T14:39:42.9143742Z   0% 577 - msys64\usr\share\nano
+2025-12-27T14:39:42.9144365Z                                 
+2025-12-27T14:39:43.1168425Z   0% 1190 - msys64\usr\bin\repo-elephant
+2025-12-27T14:39:43.1169218Z                                         
+2025-12-27T14:39:43.3208697Z   5% 1614 - msys64\usr\lib\terminfo\61\altos2
+2025-12-27T14:39:43.3209398Z                                              
+2025-12-27T14:39:43.5232582Z   5% 2119 - msys64\usr\lib\terminfo\64\d460
+2025-12-27T14:39:43.5233428Z                                            
+2025-12-27T14:39:43.7509393Z   5% 2664 - msys64\usr\lib\terminfo\6a\jfbterm
+2025-12-27T14:39:43.7510306Z                                               
+2025-12-27T14:39:43.9448759Z   5% 3044 - msys64\usr\lib\terminfo\6f\ofcons
+2025-12-27T14:39:43.9449437Z                                              
+2025-12-27T14:39:44.1494053Z   6% 3565 - msys64\usr\lib\terminfo\74\tty5410
+2025-12-27T14:39:44.1494605Z                                               
+2025-12-27T14:39:44.3517659Z   6% 4088 - msys64\usr\lib\terminfo\77\wyse60-vb
+2025-12-27T14:39:44.3518229Z                                                 
+2025-12-27T14:39:44.5555544Z   6% 4583 - msys64\usr\share\bash-completion\completions\gccgo-5
+2025-12-27T14:39:44.5556403Z                                                                 
+2025-12-27T14:39:44.7596009Z   7% 5092 - msys64\usr\share\bash-completion\completions\tsig-keygen
+2025-12-27T14:39:44.7596854Z                                                                     
+2025-12-27T14:39:44.9608072Z   8% 5611 - msys64\usr\share\doc\libunistring\libunistring_6.html
+2025-12-27T14:39:44.9609738Z                                                                  
+2025-12-27T14:39:45.2084874Z  12% 6026 - msys64\usr\share\locale\ca@valencia\LC_MESSAGES\p11-kit.mo
+2025-12-27T14:39:45.2085667Z                                                                       
+2025-12-27T14:39:45.3987701Z  17% 6201 - msys64\usr\share\locale\eu\LC_MESSAGES\pacman-scripts.mo
+2025-12-27T14:39:45.3988262Z                                                                     
+2025-12-27T14:39:45.6015791Z  24% 6542 - msys64\usr\share\locale\pl\LC_MESSAGES\gdbm.mo
+2025-12-27T14:39:45.6016751Z                                                           
+2025-12-27T14:39:45.8056744Z  33% 6899 - msys64\usr\share\makepkg\lint_config\variable.sh
+2025-12-27T14:39:45.8060721Z                                                             
+2025-12-27T14:39:46.0081952Z  34% 7336 - msys64\usr\share\man\man1\openssl-nseq.1ssl.gz
+2025-12-27T14:39:46.0082614Z                                                           
+2025-12-27T14:39:46.2109716Z  34% 7777 - msys64\usr\share\man\man3\CURLMOPT_SOCKETDATA.3.gz
+2025-12-27T14:39:46.2110532Z                                                               
+2025-12-27T14:39:46.4135609Z  35% 8263 - msys64\usr\share\man\man3\cygwin_set_impersonation_token.3
+2025-12-27T14:39:46.4136505Z                                                                       
+2025-12-27T14:39:46.6172822Z  35% 8708 - msys64\usr\share\man\man3\libssh2_sftp_fstat_ex.3.gz
+2025-12-27T14:39:46.6173578Z                                                                 
+2025-12-27T14:39:46.8218538Z  35% 8945 - msys64\usr\share\man\man3\noraw.3x.gz
+2025-12-27T14:39:46.8219290Z                                                  
+2025-12-27T14:39:47.0244597Z  36% 9390 - msys64\usr\share\man\man8\repo-remove.8.gz
+2025-12-27T14:39:47.0245496Z                                                       
+2025-12-27T14:39:47.2272387Z  41% 9788 - msys64\usr\share\perl5\core_perl\IO\Compress\Bzip2.pm
+2025-12-27T14:39:47.2273129Z                                                                  
+2025-12-27T14:39:47.4303326Z  43% 10141 - msys64\usr\share\perl5\core_perl\Test2\Require\Threads.pm
+2025-12-27T14:39:47.4305431Z                                                                       
+2025-12-27T14:39:47.6330728Z  45% 10529 - msys64\usr\share\perl5\core_perl\unicore\lib\Jg\Alef.pl
+2025-12-27T14:39:47.6332015Z                                                                     
+2025-12-27T14:39:47.8950880Z  47% 10898 - msys64\usr\share\tabset\std
+2025-12-27T14:39:47.8997848Z                                         
+2025-12-27T14:39:48.0863447Z  47% 11343 - msys64\usr\share\terminfo\62\bq300-w
+2025-12-27T14:39:48.0863840Z                                                  
+2025-12-27T14:39:48.2888129Z  47% 11815 - msys64\usr\share\terminfo\66\f1720a
+2025-12-27T14:39:48.2889368Z                                                 
+2025-12-27T14:39:48.4923625Z  48% 12352 - msys64\usr\share\terminfo\6e\ncrvt100an
+2025-12-27T14:39:48.4924193Z                                                     
+2025-12-27T14:39:48.6954297Z  48% 12895 - msys64\usr\share\terminfo\74\t3700
+2025-12-27T14:39:48.6955320Z                                                
+2025-12-27T14:39:48.8983941Z  48% 13434 - msys64\usr\share\terminfo\77\wy60-AT
+2025-12-27T14:39:48.8984492Z                                                  
+2025-12-27T14:39:49.1028245Z  48% 13954 - msys64\usr\share\zoneinfo\America\Panama
+2025-12-27T14:39:49.1028664Z                                                      
+2025-12-27T14:39:49.3053241Z  48% 14515 - msys64\usr\share\zoneinfo\posix\America\Miquelon
+2025-12-27T14:39:49.3053593Z                                                              
+2025-12-27T14:39:49.5076987Z  48% 14843 - msys64\usr\share\zoneinfo\posix\Factory
+2025-12-27T14:39:49.5077401Z                                                     
+2025-12-27T14:39:49.7118396Z  49% 15245 - msys64\usr\share\zoneinfo\right\Asia\Makassar
+2025-12-27T14:39:49.7119901Z                                                           
+2025-12-27T14:39:49.9142960Z  49% 15776 - msys64\var\lib\pacman\local\libsqlite-3.51.1-1\mtree
+2025-12-27T14:39:49.9143613Z                                                                  
+2025-12-27T14:39:50.1192458Z  57% 16058 - msys64\usr\bin\infotocap.exe
+2025-12-27T14:39:50.1192930Z                                          
+2025-12-27T14:39:50.3208888Z  69% 16185 - msys64\usr\bin\msys-tasn1-6.dll
+2025-12-27T14:39:50.3209845Z                                             
+2025-12-27T14:39:50.4673989Z  92% 16303 - msys64\usr\bin\umount.exe
+2025-12-27T14:39:50.4676131Z                                       
+2025-12-27T14:39:50.4676785Z Everything is Ok
+2025-12-27T14:39:50.4700881Z ##[endgroup]
+2025-12-27T14:39:50.4702900Z ##[group]Disable Key Refresh...
+2025-12-27T14:39:50.4719850Z ##[endgroup]
+2025-12-27T14:39:50.4743344Z ##[group]Restoring package cache...
+2025-12-27T14:39:50.7888924Z Cache hit for restore-key: msys2-pkgs-upd:true-conf:137531ca-files:f92ce206bebb396969d6de43233fbc38339784ae8d986421d09f7d4a47ae1633
+2025-12-27T14:39:51.9553501Z Received 134217728 of 225502000 (59.5%), 123.3 MBs/sec
+2025-12-27T14:39:52.5206283Z Received 225502000 of 225502000 (100.0%), 134.1 MBs/sec
+2025-12-27T14:39:52.5213107Z Cache Size: ~215 MB (225502000 B)
+2025-12-27T14:39:52.5408753Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/457d060f-4761-417c-abef-bdc54769a2dd/cache.tzst -P -C D:/a/int128/int128 --force-local --use-compress-program "zstd -d"
+2025-12-27T14:39:53.0851597Z Cache restored successfully
+2025-12-27T14:39:53.0973992Z Cache restore for msys2-pkgs-upd:true-conf:137531ca, got msys2-pkgs-upd:true-conf:137531ca-files:f92ce206bebb396969d6de43233fbc38339784ae8d986421d09f7d4a47ae1633
+2025-12-27T14:39:53.0975930Z Cache restore for msys2-pkgs-upd:true-conf:137531ca, got msys2-pkgs-upd:true-conf:137531ca-files:f92ce206bebb396969d6de43233fbc38339784ae8d986421d09f7d4a47ae1633
+2025-12-27T14:39:53.0977290Z ##[endgroup]
+2025-12-27T14:39:53.0977639Z ##[group]Starting MSYS2 for the first time...
+2025-12-27T14:39:53.2418629Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'uname' '-a'"
+2025-12-27T14:39:53.3035986Z [1;32mMSYS2 is starting for the first time. Executing the initial setup.[1;0m
+2025-12-27T14:39:53.4128448Z Copying skeleton files.
+2025-12-27T14:39:53.4129314Z These files are for the users to personalise their msys2 experience.
+2025-12-27T14:39:53.4129763Z 
+2025-12-27T14:39:53.4129975Z They will never be overwritten nor automatically updated.
+2025-12-27T14:39:53.4130386Z 
+2025-12-27T14:39:53.4676444Z './.bashrc' -> '/home/runneradmin/.bashrc'
+2025-12-27T14:39:53.4841506Z './.bash_profile' -> '/home/runneradmin/.bash_profile'
+2025-12-27T14:39:53.5008817Z './.profile' -> '/home/runneradmin/.profile'
+2025-12-27T14:39:53.5589946Z 'C:\Windows\system32\drivers\etc\hosts' -> '/etc/hosts'
+2025-12-27T14:39:53.6116187Z 'C:\Windows\system32\drivers\etc\protocol' -> '/etc/protocols'
+2025-12-27T14:39:53.6622977Z 'C:\Windows\system32\drivers\etc\services' -> '/etc/services'
+2025-12-27T14:39:53.7128987Z 'C:\Windows\system32\drivers\etc\networks' -> '/etc/networks'
+2025-12-27T14:39:53.9135019Z gpg: /etc/pacman.d/gnupg/trustdb.gpg: trustdb created
+2025-12-27T14:39:53.9217123Z gpg: no ultimately trusted keys found
+2025-12-27T14:39:54.2088514Z gpg: starting migration from earlier GnuPG versions
+2025-12-27T14:39:54.2794023Z gpg: porting secret keys from '/etc/pacman.d/gnupg/secring.gpg' to gpg-agent
+2025-12-27T14:39:54.2797053Z gpg: migration succeeded
+2025-12-27T14:39:54.3016934Z ==> Generating pacman master key. This may take some time.
+2025-12-27T14:39:54.3205974Z gpg: Generating pacman keyring master key...
+2025-12-27T14:39:56.0699130Z gpg: directory '/etc/pacman.d/gnupg/openpgp-revocs.d' created
+2025-12-27T14:39:56.0956326Z gpg: revocation certificate stored as '/etc/pacman.d/gnupg/openpgp-revocs.d/6A056772E9095B8E306A64B28821509EE754A6EB.rev'
+2025-12-27T14:39:56.0957356Z gpg: Done
+2025-12-27T14:39:56.1133583Z ==> Updating trust database...
+2025-12-27T14:39:56.1541686Z gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+2025-12-27T14:39:56.1542493Z gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+2025-12-27T14:39:56.2827447Z ==> Appending keys from msys2.gpg...
+2025-12-27T14:39:56.8678367Z ==> Locally signing trusted keys in keyring...
+2025-12-27T14:39:57.4644976Z   -> Locally signed 5 keys.
+2025-12-27T14:39:57.4792715Z ==> Importing owner trust values...
+2025-12-27T14:39:57.4985459Z gpg: setting ownertrust to 4
+2025-12-27T14:39:57.4986066Z gpg: setting ownertrust to 4
+2025-12-27T14:39:57.4986394Z gpg: setting ownertrust to 4
+2025-12-27T14:39:57.4986662Z gpg: setting ownertrust to 4
+2025-12-27T14:39:57.4987385Z gpg: setting ownertrust to 4
+2025-12-27T14:39:57.5269317Z ==> Disabling revoked keys in keyring...
+2025-12-27T14:39:57.7932516Z   -> Disabled 4 keys.
+2025-12-27T14:39:57.8086346Z ==> Updating trust database...
+2025-12-27T14:39:57.8498790Z gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+2025-12-27T14:39:57.8529085Z gpg: depth: 0  valid:   1  signed:   5  trust: 0-, 0q, 0n, 0m, 0f, 1u
+2025-12-27T14:39:57.8569611Z gpg: depth: 1  valid:   5  signed:   7  trust: 0-, 0q, 0n, 5m, 0f, 0u
+2025-12-27T14:39:57.8584430Z gpg: depth: 2  valid:   4  signed:   2  trust: 4-, 0q, 0n, 0m, 0f, 0u
+2025-12-27T14:39:57.8587916Z gpg: next trustdb check due at 2026-04-10
+2025-12-27T14:39:57.8987012Z pacman-key (pacman) 6.1.0
+2025-12-27T14:39:57.8988702Z Copyright (c) 2010-2024 Pacman Development Team <pacman-dev@lists.archlinux.org>.
+2025-12-27T14:39:57.8990188Z 
+2025-12-27T14:39:57.9146817Z This is free software; see the source for copying conditions.
+2025-12-27T14:39:57.9147688Z There is NO WARRANTY, to the extent permitted by law.
+2025-12-27T14:39:58.1670027Z [1;32mInitial setup complete. MSYS2 is now ready to use.[1;0m
+2025-12-27T14:39:58.1851018Z MINGW64_NT-10.0-26100 runnervm2nm03 3.6.5-0eeda3e1.x86_64 2025-10-10 14:51 UTC x86_64 Msys
+2025-12-27T14:39:58.1899216Z ##[endgroup]
+2025-12-27T14:39:58.1900051Z ##[group]Disable CheckSpace...
+2025-12-27T14:39:58.2813909Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'sed' '-i' 's/^CheckSpace/#CheckSpace/g' '/etc/pacman.conf'"
+2025-12-27T14:39:58.5276569Z ##[endgroup]
+2025-12-27T14:39:58.5276945Z ##[group]Updating packages...
+2025-12-27T14:39:58.6152827Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Syuu' '--overwrite' '*'"
+2025-12-27T14:39:59.3804860Z :: Synchronizing package databases...
+2025-12-27T14:40:00.4638503Z  clangarm64 downloading...
+2025-12-27T14:40:00.4639027Z  mingw32 downloading...
+2025-12-27T14:40:00.4639448Z  mingw64 downloading...
+2025-12-27T14:40:00.4639858Z  ucrt64 downloading...
+2025-12-27T14:40:00.4640198Z  clang64 downloading...
+2025-12-27T14:40:00.4640582Z  msys downloading...
+2025-12-27T14:40:01.0467650Z :: Starting core system upgrade...
+2025-12-27T14:40:01.2373377Z warning: terminate other MSYS2 programs before proceeding
+2025-12-27T14:40:01.2373996Z resolving dependencies...
+2025-12-27T14:40:01.2494323Z looking for conflicting packages...
+2025-12-27T14:40:01.2507666Z 
+2025-12-27T14:40:01.2509330Z Packages (2) pacman-6.1.0-21  pacman-mirrors-20251220-2
+2025-12-27T14:40:01.2509998Z 
+2025-12-27T14:40:01.2510148Z Total Download Size:    5.45 MiB
+2025-12-27T14:40:01.2510517Z Total Installed Size:  35.23 MiB
+2025-12-27T14:40:01.2510869Z Net Upgrade Size:       0.00 MiB
+2025-12-27T14:40:01.2511151Z 
+2025-12-27T14:40:01.2511346Z :: Proceed with installation? [Y/n] 
+2025-12-27T14:40:01.2511739Z :: Retrieving packages...
+2025-12-27T14:40:02.0521880Z  pacman-6.1.0-21-x86_64 downloading...
+2025-12-27T14:40:02.0522409Z  pacman-mirrors-20251220-2-any downloading...
+2025-12-27T14:40:02.0522808Z checking keyring...
+2025-12-27T14:40:02.1115008Z checking package integrity...
+2025-12-27T14:40:02.5085850Z loading package files...
+2025-12-27T14:40:02.5129558Z checking for file conflicts...
+2025-12-27T14:40:02.5130092Z :: Processing package changes...
+2025-12-27T14:40:02.5130481Z upgrading pacman-mirrors...
+2025-12-27T14:40:02.5208186Z upgrading pacman...
+2025-12-27T14:40:02.9460547Z :: To complete this update all MSYS2 processes including this terminal will be closed. Confirm to proceed [Y/n] 
+2025-12-27T14:40:03.3148081Z ##[endgroup]
+2025-12-27T14:40:03.3149490Z ##[group]Killing remaining tasks...
+2025-12-27T14:40:03.4744969Z [command]C:\Windows\system32\taskkill.exe /F /FI "MODULES eq msys-2.0.dll"
+2025-12-27T14:40:03.7414364Z 
+2025-12-27T14:40:03.7414912Z INFO: No tasks running with the specified criteria.
+2025-12-27T14:40:03.7451015Z ##[endgroup]
+2025-12-27T14:40:03.7451628Z ##[group]Final system upgrade...
+2025-12-27T14:40:03.8550572Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Syuu' '--overwrite' '*'"
+2025-12-27T14:40:04.6822726Z :: Synchronizing package databases...
+2025-12-27T14:40:05.5171838Z  clangarm64 downloading...
+2025-12-27T14:40:05.5172348Z  mingw32 downloading...
+2025-12-27T14:40:05.5172751Z  mingw64 downloading...
+2025-12-27T14:40:05.5173085Z  ucrt64 downloading...
+2025-12-27T14:40:05.5173412Z  clang64 downloading...
+2025-12-27T14:40:05.5173739Z  msys downloading...
+2025-12-27T14:40:06.0311262Z :: Starting core system upgrade...
+2025-12-27T14:40:06.2213526Z  there is nothing to do
+2025-12-27T14:40:06.2213997Z :: Starting full system upgrade...
+2025-12-27T14:40:06.2493093Z resolving dependencies...
+2025-12-27T14:40:06.2603691Z looking for conflicting packages...
+2025-12-27T14:40:06.2635804Z 
+2025-12-27T14:40:06.2636518Z Packages (7) dash-0.5.13.1-1  libgpg-error-1.58-1  liblzma-5.8.2-1  libnghttp3-1.14.0-1  libngtcp2-1.19.0-1  tzcode-2025c-1  xz-5.8.2-1
+2025-12-27T14:40:06.2637275Z 
+2025-12-27T14:40:06.2637429Z Total Download Size:   0.29 MiB
+2025-12-27T14:40:06.2637815Z Total Installed Size:  7.32 MiB
+2025-12-27T14:40:06.2638205Z Net Upgrade Size:      0.21 MiB
+2025-12-27T14:40:06.2638457Z 
+2025-12-27T14:40:06.2645559Z :: Proceed with installation? [Y/n] 
+2025-12-27T14:40:06.2646003Z :: Retrieving packages...
+2025-12-27T14:40:06.9087906Z  libngtcp2-1.19.0-1-x86_64 downloading...
+2025-12-27T14:40:06.9088449Z  dash-0.5.13.1-1-x86_64 downloading...
+2025-12-27T14:40:06.9088830Z  libnghttp3-1.14.0-1-x86_64 downloading...
+2025-12-27T14:40:06.9089113Z checking keyring...
+2025-12-27T14:40:06.9629988Z checking package integrity...
+2025-12-27T14:40:07.7298327Z loading package files...
+2025-12-27T14:40:07.7509143Z checking for file conflicts...
+2025-12-27T14:40:07.7555032Z :: Processing package changes...
+2025-12-27T14:40:07.7555833Z upgrading dash...
+2025-12-27T14:40:07.8882804Z upgrading libgpg-error...
+2025-12-27T14:40:07.9319101Z upgrading liblzma...
+2025-12-27T14:40:07.9370802Z upgrading libnghttp3...
+2025-12-27T14:40:07.9440852Z upgrading libngtcp2...
+2025-12-27T14:40:07.9535321Z upgrading tzcode...
+2025-12-27T14:40:10.1451735Z upgrading xz...
+2025-12-27T14:40:10.5805735Z ##[endgroup]
+2025-12-27T14:40:10.5806170Z ##[group]Installing additional packages through pacman...
+2025-12-27T14:40:10.6768024Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-S' '--needed' '--overwrite' '*' 'mingw-w64-ucrt-x86_64-gcc' 'mingw-w64-ucrt-x86_64-clang' 'mingw-w64-ucrt-x86_64-cmake' 'mingw-w64-ucrt-x86_64-ninja' 'python'"
+2025-12-27T14:40:11.6571320Z resolving dependencies...
+2025-12-27T14:40:11.6724007Z looking for conflicting packages...
+2025-12-27T14:40:11.6808886Z 
+2025-12-27T14:40:11.6820897Z Packages (56) binutils-2.45.1-1  mingw-w64-ucrt-x86_64-binutils-2.45.1-1  mingw-w64-ucrt-x86_64-brotli-1.2.0-1  mingw-w64-ucrt-x86_64-bzip2-1.0.8-3  mingw-w64-ucrt-x86_64-c-ares-1.34.6-1  mingw-w64-ucrt-x86_64-ca-certificates-20250419-1  mingw-w64-ucrt-x86_64-clang-libs-21.1.8-1  mingw-w64-ucrt-x86_64-cppdap-1.65-1  mingw-w64-ucrt-x86_64-crt-13.0.0.r391.g848cce552-1  mingw-w64-ucrt-x86_64-curl-8.17.0-1  mingw-w64-ucrt-x86_64-expat-2.7.3-1  mingw-w64-ucrt-x86_64-gcc-libs-15.2.0-8  mingw-w64-ucrt-x86_64-gettext-runtime-0.26-2  mingw-w64-ucrt-x86_64-gmp-6.3.0-2  mingw-w64-ucrt-x86_64-gnutls-3.8.11-1  mingw-w64-ucrt-x86_64-headers-13.0.0.r391.g848cce552-1  mingw-w64-ucrt-x86_64-isl-0.27-1  mingw-w64-ucrt-x86_64-jsoncpp-1.9.6-3  mingw-w64-ucrt-x86_64-libarchive-3.8.4-1  mingw-w64-ucrt-x86_64-libb2-0.98.1-3  mingw-w64-ucrt-x86_64-libffi-3.5.2-1  mingw-w64-ucrt-x86_64-libiconv-1.18-1  mingw-w64-ucrt-x86_64-libidn2-2.3.8-4  mingw-w64-ucrt-x86_64-libpsl-0.21.5-3  mingw-w64-ucrt-x86_64-libssh2-1.11.1-1  mingw-w64-ucrt-x86_64-libsystre-1.0.2-2  mingw-w64-ucrt-x86_64-libtasn1-4.20.0-1  mingw-w64-ucrt-x86_64-libtre-0.9.0-2  mingw-w64-ucrt-x86_64-libunistring-1.3-1  mingw-w64-ucrt-x86_64-libuv-1.51.0-1  mingw-w64-ucrt-x86_64-libwinpthread-13.0.0.r391.g848cce552-1  mingw-w64-ucrt-x86_64-libxml2-2.15.1-2  mingw-w64-ucrt-x86_64-llvm-libs-21.1.8-1  mingw-w64-ucrt-x86_64-lz4-1.10.0-1  mingw-w64-ucrt-x86_64-mpc-1.3.1-2  mingw-w64-ucrt-x86_64-mpfr-4.2.2-1  mingw-w64-ucrt-x86_64-nettle-3.10.2-1  mingw-w64-ucrt-x86_64-nghttp2-1.68.0-1  mingw-w64-ucrt-x86_64-nghttp3-1.14.0-1  mingw-w64-ucrt-x86_64-ngtcp2-1.19.0-1  mingw-w64-ucrt-x86_64-openssl-3.6.0-1  mingw-w64-ucrt-x86_64-p11-kit-0.25.10-1  mingw-w64-ucrt-x86_64-pkgconf-1~2.5.1-1  mingw-w64-ucrt-x86_64-rhash-1.4.6-1  mingw-w64-ucrt-x86_64-tzdata-2025c-1  mingw-w64-ucrt-x86_64-windows-default-manifest-6.4-4  mingw-w64-ucrt-x86_64-winpthreads-13.0.0.r391.g848cce552-1  mingw-w64-ucrt-x86_64-xz-5.8.2-1  mingw-w64-ucrt-x86_64-zlib-1.3.1-1  mingw-w64-ucrt-x86_64-zstd-1.5.7-1  mpdecimal-4.0.1-1  mingw-w64-ucrt-x86_64-clang-21.1.8-1  mingw-w64-ucrt-x86_64-cmake-4.2.1-1  mingw-w64-ucrt-x86_64-gcc-15.2.0-8  mingw-w64-ucrt-x86_64-ninja-1.13.2-1  python-3.12.12-3
+2025-12-27T14:40:11.6832638Z 
+2025-12-27T14:40:11.6832802Z Total Download Size:     96.68 MiB
+2025-12-27T14:40:11.6833203Z Total Installed Size:  1514.63 MiB
+2025-12-27T14:40:11.6833480Z 
+2025-12-27T14:40:11.6900269Z :: Proceed with installation? [Y/n] 
+2025-12-27T14:40:11.6900737Z :: Retrieving packages...
+2025-12-27T14:40:14.8390280Z  mingw-w64-ucrt-x86_64-clang-21.1.8-1-any downloading...
+2025-12-27T14:40:14.8391020Z  mingw-w64-ucrt-x86_64-llvm-libs-21.1.8-1-any downloading...
+2025-12-27T14:40:14.8391685Z  mingw-w64-ucrt-x86_64-clang-libs-21.1.8-1-any downloading...
+2025-12-27T14:40:14.8392431Z  mingw-w64-ucrt-x86_64-headers-13.0.0.r391.g848cce552-1-any downloading...
+2025-12-27T14:40:14.8393182Z  mingw-w64-ucrt-x86_64-crt-13.0.0.r391.g848cce552-1-any downloading...
+2025-12-27T14:40:14.8393913Z  mingw-w64-ucrt-x86_64-ngtcp2-1.19.0-1-any downloading...
+2025-12-27T14:40:14.8394553Z  mingw-w64-ucrt-x86_64-nghttp3-1.14.0-1-any downloading...
+2025-12-27T14:40:14.8395275Z  mingw-w64-ucrt-x86_64-winpthreads-13.0.0.r391.g848cce552-1-any downloading...
+2025-12-27T14:40:14.8396020Z  mingw-w64-ucrt-x86_64-libwinpthread-13.0.0.r391.g848cce552-1-any downloading...
+2025-12-27T14:40:14.8396637Z checking keyring...
+2025-12-27T14:40:14.9038277Z checking package integrity...
+2025-12-27T14:40:27.1506028Z loading package files...
+2025-12-27T14:40:27.3876171Z checking for file conflicts...
+2025-12-27T14:40:28.8394856Z :: Processing package changes...
+2025-12-27T14:40:28.8395231Z installing mingw-w64-ucrt-x86_64-libwinpthread...
+2025-12-27T14:40:28.8450620Z installing mingw-w64-ucrt-x86_64-tzdata...
+2025-12-27T14:40:30.7264347Z installing mingw-w64-ucrt-x86_64-gcc-libs...
+2025-12-27T14:40:30.7440603Z installing mingw-w64-ucrt-x86_64-libiconv...
+2025-12-27T14:40:30.7713021Z installing mingw-w64-ucrt-x86_64-gettext-runtime...
+2025-12-27T14:40:30.9275751Z installing mingw-w64-ucrt-x86_64-zlib...
+2025-12-27T14:40:30.9370974Z installing mingw-w64-ucrt-x86_64-zstd...
+2025-12-27T14:40:30.9587503Z installing mingw-w64-ucrt-x86_64-binutils...
+2025-12-27T14:40:31.1991520Z installing mingw-w64-ucrt-x86_64-headers...
+2025-12-27T14:40:32.6069770Z installing mingw-w64-ucrt-x86_64-crt...
+2025-12-27T14:40:33.3253147Z installing mingw-w64-ucrt-x86_64-gmp...
+2025-12-27T14:40:33.3416109Z installing mingw-w64-ucrt-x86_64-isl...
+2025-12-27T14:40:33.4091085Z installing mingw-w64-ucrt-x86_64-mpfr...
+2025-12-27T14:40:33.4347085Z installing mingw-w64-ucrt-x86_64-mpc...
+2025-12-27T14:40:33.4420764Z installing mingw-w64-ucrt-x86_64-windows-default-manifest...
+2025-12-27T14:40:33.4454066Z installing mingw-w64-ucrt-x86_64-winpthreads...
+2025-12-27T14:40:33.4573098Z installing mingw-w64-ucrt-x86_64-gcc...
+2025-12-27T14:40:35.4903010Z installing mingw-w64-ucrt-x86_64-libffi...
+2025-12-27T14:40:35.5018481Z installing mingw-w64-ucrt-x86_64-libxml2...
+2025-12-27T14:40:35.7030047Z Optional dependencies for mingw-w64-ucrt-x86_64-libxml2
+2025-12-27T14:40:35.7030954Z     mingw-w64-ucrt-x86_64-python: Python bindings
+2025-12-27T14:40:35.7031576Z installing mingw-w64-ucrt-x86_64-llvm-libs...
+2025-12-27T14:40:35.9615065Z installing mingw-w64-ucrt-x86_64-clang-libs...
+2025-12-27T14:40:36.1445845Z installing mingw-w64-ucrt-x86_64-clang...
+2025-12-27T14:40:37.7337175Z Optional dependencies for mingw-w64-ucrt-x86_64-clang
+2025-12-27T14:40:37.7337579Z     mingw-w64-ucrt-x86_64-llvm=21.1.8
+2025-12-27T14:40:37.7337882Z installing mingw-w64-ucrt-x86_64-cppdap...
+2025-12-27T14:40:37.7639702Z installing mingw-w64-ucrt-x86_64-c-ares...
+2025-12-27T14:40:37.8951442Z installing mingw-w64-ucrt-x86_64-brotli...
+2025-12-27T14:40:37.9188527Z installing mingw-w64-ucrt-x86_64-libunistring...
+2025-12-27T14:40:37.9708234Z installing mingw-w64-ucrt-x86_64-libidn2...
+2025-12-27T14:40:38.0059915Z installing mingw-w64-ucrt-x86_64-libpsl...
+2025-12-27T14:40:38.0163647Z installing mingw-w64-ucrt-x86_64-libtasn1...
+2025-12-27T14:40:38.0618865Z installing mingw-w64-ucrt-x86_64-p11-kit...
+2025-12-27T14:40:38.0888194Z installing mingw-w64-ucrt-x86_64-ca-certificates...
+2025-12-27T14:40:38.7162919Z installing mingw-w64-ucrt-x86_64-openssl...
+2025-12-27T14:40:45.0171534Z Optional dependencies for mingw-w64-ucrt-x86_64-openssl
+2025-12-27T14:40:45.0171998Z     mingw-w64-ucrt-x86_64-ca-certificates [installed]
+2025-12-27T14:40:45.0172315Z installing mingw-w64-ucrt-x86_64-libssh2...
+2025-12-27T14:40:45.1715307Z installing mingw-w64-ucrt-x86_64-nghttp2...
+2025-12-27T14:40:45.1907562Z installing mingw-w64-ucrt-x86_64-nettle...
+2025-12-27T14:40:45.2585949Z installing mingw-w64-ucrt-x86_64-gnutls...
+2025-12-27T14:40:46.3088483Z installing mingw-w64-ucrt-x86_64-ngtcp2...
+2025-12-27T14:40:46.3336028Z installing mingw-w64-ucrt-x86_64-nghttp3...
+2025-12-27T14:40:46.3486894Z installing mingw-w64-ucrt-x86_64-curl...
+2025-12-27T14:40:46.7900522Z installing mingw-w64-ucrt-x86_64-expat...
+2025-12-27T14:40:46.8080028Z installing mingw-w64-ucrt-x86_64-jsoncpp...
+2025-12-27T14:40:46.8291306Z installing mingw-w64-ucrt-x86_64-bzip2...
+2025-12-27T14:40:46.8493022Z installing mingw-w64-ucrt-x86_64-libb2...
+2025-12-27T14:40:46.8570258Z installing mingw-w64-ucrt-x86_64-lz4...
+2025-12-27T14:40:46.8725636Z installing mingw-w64-ucrt-x86_64-libtre...
+2025-12-27T14:40:46.8868090Z installing mingw-w64-ucrt-x86_64-libsystre...
+2025-12-27T14:40:46.9066845Z installing mingw-w64-ucrt-x86_64-xz...
+2025-12-27T14:40:47.1604104Z installing mingw-w64-ucrt-x86_64-libarchive...
+2025-12-27T14:40:47.2125238Z installing mingw-w64-ucrt-x86_64-libuv...
+2025-12-27T14:40:47.2367872Z installing mingw-w64-ucrt-x86_64-ninja...
+2025-12-27T14:40:47.2428067Z installing mingw-w64-ucrt-x86_64-pkgconf...
+2025-12-27T14:40:47.2634063Z installing mingw-w64-ucrt-x86_64-rhash...
+2025-12-27T14:40:47.3107847Z installing mingw-w64-ucrt-x86_64-cmake...
+2025-12-27T14:40:50.8364939Z Optional dependencies for mingw-w64-ucrt-x86_64-cmake
+2025-12-27T14:40:50.8365448Z     mingw-w64-ucrt-x86_64-emacs: for cmake emacs mode
+2025-12-27T14:40:50.8365857Z installing mpdecimal...
+2025-12-27T14:40:50.8422895Z installing binutils...
+2025-12-27T14:40:51.1025698Z installing python...
+2025-12-27T14:40:58.7163724Z :: Running post-transaction hooks...
+2025-12-27T14:40:58.7164297Z (1/1) Updating the info directory file...
+2025-12-27T14:40:59.2643792Z ##[endgroup]
+2025-12-27T14:40:59.2644178Z ##[group]Saving package cache...
+2025-12-27T14:40:59.3552552Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'paccache' '-r' '-f' '-u' '-k0'"
+2025-12-27T14:41:00.2817683Z ==> no candidate packages found for pruning
+2025-12-27T14:41:00.3772807Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'paccache' '-r' '-f' '-k1'"
+2025-12-27T14:41:00.8502581Z 
+2025-12-27T14:41:00.8733326Z ==> finished: 9 packages removed (disk space saved: 96.69 MiB)
+2025-12-27T14:41:01.6295787Z [command]"C:\Program Files\Git\usr\bin\tar.exe" --posix -cf cache.tzst --exclude cache.tzst -P -C D:/a/int128/int128 --files-from manifest.txt --force-local --use-compress-program "zstd -T0"
+2025-12-27T14:41:02.3495413Z Failed to save: Unable to reserve cache with key msys2-pkgs-upd:true-conf:137531ca-files:321f811542867b0053fd481e395bc8da73bedb391ea1376c026c94be591a576c, another job may be creating this cache.
+2025-12-27T14:41:02.3628770Z Cache saved as ID -1 using key msys2-pkgs-upd:true-conf:137531ca-files:321f811542867b0053fd481e395bc8da73bedb391ea1376c026c94be591a576c
+2025-12-27T14:41:02.4550676Z [command]C:\Windows\system32\cmd.exe /D /S /C D:\a\_temp\setup-msys2\msys2.cmd -c "'pacman' '--noconfirm' '-Scc'"
+2025-12-27T14:41:03.2538540Z 
+2025-12-27T14:41:03.2539101Z Cache directory: /var/cache/pacman/pkg/
+2025-12-27T14:41:03.2836370Z :: Do you want to remove ALL files from cache? [Y/n] 
+2025-12-27T14:41:03.2836951Z removing all files from cache...
+2025-12-27T14:41:03.2838584Z 
+2025-12-27T14:41:03.2838748Z Database directory: /var/lib/pacman/
+2025-12-27T14:41:03.2857070Z :: Do you want to remove unused repositories? [Y/n] 
+2025-12-27T14:41:03.2857534Z removing unused sync repositories...
+2025-12-27T14:41:03.2915359Z ##[endgroup]
+2025-12-27T14:41:03.3210994Z ##[group]Run rscohn2/setup-oneapi@v0
+2025-12-27T14:41:03.3211316Z with:
+2025-12-27T14:41:03.3211518Z   components: icx
+dpcpp
+
+2025-12-27T14:41:03.3211726Z   cache: true
+2025-12-27T14:41:03.3211897Z   prune: true
+2025-12-27T14:41:03.3212050Z   list: false
+2025-12-27T14:41:03.3212210Z env:
+2025-12-27T14:41:03.3212367Z   MSYSTEM: UCRT64
+2025-12-27T14:41:03.3212531Z ##[endgroup]
+2025-12-27T14:41:03.5409108Z ##[error]Unknown oneapi component: dpcpp
+2025-12-27T14:41:03.5658810Z Post job cleanup.
+2025-12-27T14:41:03.7979954Z Post job cleanup.
+2025-12-27T14:41:04.0759283Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T14:41:04.1064337Z git version 2.52.0.windows.1
+2025-12-27T14:41:04.1173361Z Temporarily overriding HOME='D:\a\_temp\c73a9bd2-8968-4c76-93d3-061901f8635e' before making global git config changes
+2025-12-27T14:41:04.1174715Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T14:41:04.1188811Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T14:41:04.1589636Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T14:41:04.2009484Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T14:41:04.8199509Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T14:41:04.8528396Z http.https://github.com/.extraheader
+2025-12-27T14:41:04.8598497Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T14:41:04.8960618Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T14:41:05.5135244Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T14:41:05.5493937Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T14:41:06.1557604Z Cleaning up orphan processes

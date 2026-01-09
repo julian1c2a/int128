@@ -1,0 +1,70 @@
+﻿2025-12-27T19:42:50.5813847Z ##[group]Run sudo apt update
+2025-12-27T19:42:50.5814423Z [36;1msudo apt update[0m
+2025-12-27T19:42:50.5814912Z [36;1msudo apt install -y gcc-13 g++-13[0m
+2025-12-27T19:42:50.5815441Z [36;1mgcc-13 --version[0m
+2025-12-27T19:42:50.5850789Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:42:50.5851291Z ##[endgroup]
+2025-12-27T19:42:50.6027029Z 
+2025-12-27T19:42:50.6027823Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:42:50.6028756Z 
+2025-12-27T19:42:50.6574650Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T19:42:50.6918905Z Hit:6 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T19:42:50.6922509Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2025-12-27T19:42:50.8035627Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.4 kB]
+2025-12-27T19:42:50.8125406Z Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [58.9 kB]
+2025-12-27T19:42:50.8153707Z Get:10 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [77.4 kB]
+2025-12-27T19:42:50.8205884Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T19:42:50.8219308Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-12-27T19:42:50.8261157Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-12-27T19:42:50.8283890Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2025-12-27T19:42:50.9232298Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1684 kB]
+2025-12-27T19:42:50.9324322Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2025-12-27T19:42:50.9358513Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+2025-12-27T19:42:50.9380827Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [15.8 kB]
+2025-12-27T19:42:50.9395524Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1506 kB]
+2025-12-27T19:42:50.9474558Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [306 kB]
+2025-12-27T19:42:50.9504490Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [378 kB]
+2025-12-27T19:42:50.9540930Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.4 kB]
+2025-12-27T19:42:50.9559294Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2413 kB]
+2025-12-27T19:42:50.9697962Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [550 kB]
+2025-12-27T19:42:51.0187352Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+2025-12-27T19:42:51.0195506Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [516 B]
+2025-12-27T19:42:51.0208597Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [30.3 kB]
+2025-12-27T19:42:51.0222584Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6048 B]
+2025-12-27T19:42:51.0238018Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+2025-12-27T19:42:51.0251351Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [488 B]
+2025-12-27T19:42:51.0264869Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+2025-12-27T19:42:51.0280549Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7300 B]
+2025-12-27T19:42:51.0292997Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+2025-12-27T19:42:51.0308961Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [29.5 kB]
+2025-12-27T19:42:51.0323664Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [17.9 kB]
+2025-12-27T19:42:51.0342007Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+2025-12-27T19:42:51.0356477Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1444 B]
+2025-12-27T19:42:51.0367032Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-12-27T19:42:51.0818242Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-12-27T19:42:51.0839222Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [225 kB]
+2025-12-27T19:42:51.0862145Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+2025-12-27T19:42:51.0883580Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9504 B]
+2025-12-27T19:42:51.0911642Z Get:39 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [71.5 kB]
+2025-12-27T19:42:51.0928010Z Get:40 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+2025-12-27T19:42:51.0941391Z Get:41 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+2025-12-27T19:42:59.2010182Z Fetched 8375 kB in 1s (7408 kB/s)
+2025-12-27T19:42:59.9725217Z Reading package lists...
+2025-12-27T19:43:00.1452506Z Building dependency tree...
+2025-12-27T19:43:00.1460428Z Reading state information...
+2025-12-27T19:43:00.1599281Z 69 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-12-27T19:43:00.1711041Z 
+2025-12-27T19:43:00.1712020Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:43:00.1712789Z 
+2025-12-27T19:43:00.1843182Z Reading package lists...
+2025-12-27T19:43:00.3566058Z Building dependency tree...
+2025-12-27T19:43:00.3573193Z Reading state information...
+2025-12-27T19:43:00.5127575Z gcc-13 is already the newest version (13.3.0-6ubuntu2~24.04).
+2025-12-27T19:43:00.5128521Z gcc-13 set to manually installed.
+2025-12-27T19:43:00.5129291Z g++-13 is already the newest version (13.3.0-6ubuntu2~24.04).
+2025-12-27T19:43:00.5611775Z 0 upgraded, 0 newly installed, 0 to remove and 69 not upgraded.
+2025-12-27T19:43:00.6032248Z gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+2025-12-27T19:43:00.6033063Z Copyright (C) 2023 Free Software Foundation, Inc.
+2025-12-27T19:43:00.6033921Z This is free software; see the source for copying conditions.  There is NO
+2025-12-27T19:43:00.6035083Z warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+2025-12-27T19:43:00.6035641Z 

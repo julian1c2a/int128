@@ -1,0 +1,23 @@
+﻿2025-12-27T19:44:22.1007608Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:44:22.1007923Z with:
+2025-12-27T19:44:22.1008105Z   name: msvc-release-binaries
+2025-12-27T19:44:22.1008691Z   path: build/build_tests/msvc/release/
+2025-12-27T19:44:22.1008940Z   retention-days: 7
+2025-12-27T19:44:22.1009119Z   if-no-files-found: warn
+2025-12-27T19:44:22.1009317Z   compression-level: 6
+2025-12-27T19:44:22.1009498Z   overwrite: false
+2025-12-27T19:44:22.1009692Z   include-hidden-files: false
+2025-12-27T19:44:22.1009887Z env:
+2025-12-27T19:44:22.1010231Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:44:22.1010645Z ##[endgroup]
+2025-12-27T19:44:22.4272657Z With the provided path, there will be 108 files uploaded
+2025-12-27T19:44:22.4279159Z Artifact name is valid!
+2025-12-27T19:44:22.4282788Z Root directory input is valid!
+2025-12-27T19:44:22.7476596Z Beginning upload of artifact content to blob storage
+2025-12-27T19:44:24.2675400Z Uploaded bytes 3486475
+2025-12-27T19:44:24.3515342Z Finished uploading artifact content to blob storage!
+2025-12-27T19:44:24.3519264Z SHA256 digest of uploaded artifact zip is b33997ad549e02d1ffbe78443752c13a0f977b26e2d69cd0766bda6f72c13301
+2025-12-27T19:44:24.3521644Z Finalizing artifact upload
+2025-12-27T19:44:24.4953563Z Artifact msvc-release-binaries.zip successfully finalized. Artifact ID 4976098595
+2025-12-27T19:44:24.4955425Z Artifact msvc-release-binaries has been successfully uploaded! Final size is 3486475 bytes. Artifact ID is 4976098595
+2025-12-27T19:44:24.4970275Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543541965/artifacts/4976098595

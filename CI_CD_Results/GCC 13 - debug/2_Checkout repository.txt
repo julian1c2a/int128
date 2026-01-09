@@ -1,0 +1,72 @@
+﻿2025-12-27T19:42:49.8008037Z ##[group]Run actions/checkout@v4
+2025-12-27T19:42:49.8008843Z with:
+2025-12-27T19:42:49.8009246Z   repository: julian1c2a/int128
+2025-12-27T19:42:49.8009883Z   token: ***
+2025-12-27T19:42:49.8010259Z   ssh-strict: true
+2025-12-27T19:42:49.8010645Z   ssh-user: git
+2025-12-27T19:42:49.8011036Z   persist-credentials: true
+2025-12-27T19:42:49.8011469Z   clean: true
+2025-12-27T19:42:49.8011856Z   sparse-checkout-cone-mode: true
+2025-12-27T19:42:49.8012327Z   fetch-depth: 1
+2025-12-27T19:42:49.8012700Z   fetch-tags: false
+2025-12-27T19:42:49.8013089Z   show-progress: true
+2025-12-27T19:42:49.8013694Z   lfs: false
+2025-12-27T19:42:49.8014050Z   submodules: false
+2025-12-27T19:42:49.8014441Z   set-safe-directory: true
+2025-12-27T19:42:49.8015166Z ##[endgroup]
+2025-12-27T19:42:49.9070112Z Syncing repository: julian1c2a/int128
+2025-12-27T19:42:49.9071790Z ##[group]Getting Git version info
+2025-12-27T19:42:49.9072527Z Working directory is '/home/runner/work/int128/int128'
+2025-12-27T19:42:49.9073788Z [command]/usr/bin/git version
+2025-12-27T19:42:49.9139428Z git version 2.52.0
+2025-12-27T19:42:49.9165584Z ##[endgroup]
+2025-12-27T19:42:49.9181333Z Temporarily overriding HOME='/home/runner/work/_temp/9b326da0-b78b-4447-8711-eabae231861b' before making global git config changes
+2025-12-27T19:42:49.9184099Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:42:49.9196453Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T19:42:49.9239303Z Deleting the contents of '/home/runner/work/int128/int128'
+2025-12-27T19:42:49.9243607Z ##[group]Initializing the repository
+2025-12-27T19:42:49.9249135Z [command]/usr/bin/git init /home/runner/work/int128/int128
+2025-12-27T19:42:49.9358040Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-27T19:42:49.9359434Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-27T19:42:49.9360942Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-27T19:42:49.9362121Z hint: call:
+2025-12-27T19:42:49.9362689Z hint:
+2025-12-27T19:42:49.9364077Z hint: 	git config --global init.defaultBranch <name>
+2025-12-27T19:42:49.9364678Z hint:
+2025-12-27T19:42:49.9365210Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-27T19:42:49.9366081Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-27T19:42:49.9366774Z hint:
+2025-12-27T19:42:49.9367133Z hint: 	git branch -m <name>
+2025-12-27T19:42:49.9367564Z hint:
+2025-12-27T19:42:49.9368371Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-27T19:42:49.9369592Z Initialized empty Git repository in /home/runner/work/int128/int128/.git/
+2025-12-27T19:42:49.9374146Z [command]/usr/bin/git remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:42:49.9406096Z ##[endgroup]
+2025-12-27T19:42:49.9406824Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:42:49.9409790Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-27T19:42:49.9437646Z ##[endgroup]
+2025-12-27T19:42:49.9438336Z ##[group]Setting up auth
+2025-12-27T19:42:49.9444423Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:42:49.9473630Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T19:42:49.9840406Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:42:49.9869703Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T19:42:50.0091366Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:42:50.0125971Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T19:42:50.0384838Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-27T19:42:50.0424547Z ##[endgroup]
+2025-12-27T19:42:50.0425259Z ##[group]Fetching the repository
+2025-12-27T19:42:50.0437256Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +15def10209903058b943d852f9b5fb7973371f24:refs/remotes/origin/main
+2025-12-27T19:42:50.4970630Z From https://github.com/julian1c2a/int128
+2025-12-27T19:42:50.4971497Z  * [new ref]         15def10209903058b943d852f9b5fb7973371f24 -> origin/main
+2025-12-27T19:42:50.5002131Z ##[endgroup]
+2025-12-27T19:42:50.5003181Z ##[group]Determining the checkout info
+2025-12-27T19:42:50.5004557Z ##[endgroup]
+2025-12-27T19:42:50.5009412Z [command]/usr/bin/git sparse-checkout disable
+2025-12-27T19:42:50.5049225Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:42:50.5076087Z ##[group]Checking out the ref
+2025-12-27T19:42:50.5079666Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:42:50.5555846Z Switched to a new branch 'main'
+2025-12-27T19:42:50.5558409Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:42:50.5567284Z ##[endgroup]
+2025-12-27T19:42:50.5604743Z [command]/usr/bin/git log -1 --format=%H
+2025-12-27T19:42:50.5626447Z 15def10209903058b943d852f9b5fb7973371f24

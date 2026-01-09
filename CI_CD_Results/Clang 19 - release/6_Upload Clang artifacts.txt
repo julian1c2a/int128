@@ -1,0 +1,21 @@
+﻿2025-12-27T19:43:58.1867024Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:43:58.1867292Z with:
+2025-12-27T19:43:58.1867473Z   name: clang-19-release-binaries
+2025-12-27T19:43:58.1867715Z   path: build/build_tests/clang/release/
+2025-12-27T19:43:58.1867947Z   retention-days: 7
+2025-12-27T19:43:58.1868136Z   if-no-files-found: warn
+2025-12-27T19:43:58.1868601Z   compression-level: 6
+2025-12-27T19:43:58.1868785Z   overwrite: false
+2025-12-27T19:43:58.1868962Z   include-hidden-files: false
+2025-12-27T19:43:58.1869183Z ##[endgroup]
+2025-12-27T19:43:58.4156383Z With the provided path, there will be 81 files uploaded
+2025-12-27T19:43:58.4161719Z Artifact name is valid!
+2025-12-27T19:43:58.4163054Z Root directory input is valid!
+2025-12-27T19:43:58.5616471Z Beginning upload of artifact content to blob storage
+2025-12-27T19:43:58.9726307Z Uploaded bytes 331162
+2025-12-27T19:43:59.0129751Z Finished uploading artifact content to blob storage!
+2025-12-27T19:43:59.0133168Z SHA256 digest of uploaded artifact zip is 68ab86d876ff8b07764b66726c78526ca871065a97bf7827533eb6f10e1b7d13
+2025-12-27T19:43:59.0135318Z Finalizing artifact upload
+2025-12-27T19:43:59.1059590Z Artifact clang-19-release-binaries.zip successfully finalized. Artifact ID 4976097668
+2025-12-27T19:43:59.1061207Z Artifact clang-19-release-binaries has been successfully uploaded! Final size is 331162 bytes. Artifact ID is 4976097668
+2025-12-27T19:43:59.1068739Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543541965/artifacts/4976097668

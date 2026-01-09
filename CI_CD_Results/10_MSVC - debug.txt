@@ -1,0 +1,137 @@
+﻿2025-12-27T15:29:48.1594547Z Current runner version: '2.330.0'
+2025-12-27T15:29:48.1618754Z ##[group]Runner Image Provisioner
+2025-12-27T15:29:48.1619593Z Hosted Compute Agent
+2025-12-27T15:29:48.1620139Z Version: 20251211.462
+2025-12-27T15:29:48.1620662Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T15:29:48.1621309Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T15:29:48.1621909Z Worker ID: {e3c116f4-265f-49cd-a42e-ae730851ef15}
+2025-12-27T15:29:48.1622769Z ##[endgroup]
+2025-12-27T15:29:48.1623256Z ##[group]Operating System
+2025-12-27T15:29:48.1624052Z Microsoft Windows Server 2025
+2025-12-27T15:29:48.1624588Z 10.0.26100
+2025-12-27T15:29:48.1624985Z Datacenter
+2025-12-27T15:29:48.1625426Z ##[endgroup]
+2025-12-27T15:29:48.1625829Z ##[group]Runner Image
+2025-12-27T15:29:48.1626307Z Image: windows-2025
+2025-12-27T15:29:48.1626742Z Version: 20251216.149.1
+2025-12-27T15:29:48.1628051Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T15:29:48.1629447Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T15:29:48.1630268Z ##[endgroup]
+2025-12-27T15:29:48.1631239Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T15:29:48.1632952Z Contents: read
+2025-12-27T15:29:48.1633447Z Metadata: read
+2025-12-27T15:29:48.1633949Z Packages: read
+2025-12-27T15:29:48.1634390Z ##[endgroup]
+2025-12-27T15:29:48.1636311Z Secret source: Actions
+2025-12-27T15:29:48.1636991Z Prepare workflow directory
+2025-12-27T15:29:48.1968206Z Prepare all required actions
+2025-12-27T15:29:48.2006495Z Getting action download info
+2025-12-27T15:29:48.5970511Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T15:29:48.7359913Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T15:29:49.3203382Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T15:29:49.6817498Z Complete job name: MSVC - debug
+2025-12-27T15:29:49.8373983Z ##[group]Run actions/checkout@v4
+2025-12-27T15:29:49.8375316Z with:
+2025-12-27T15:29:49.8375981Z   repository: julian1c2a/int128
+2025-12-27T15:29:49.8377585Z   token: ***
+2025-12-27T15:29:49.8378250Z   ssh-strict: true
+2025-12-27T15:29:49.8378933Z   ssh-user: git
+2025-12-27T15:29:49.8379622Z   persist-credentials: true
+2025-12-27T15:29:49.8380389Z   clean: true
+2025-12-27T15:29:49.8381084Z   sparse-checkout-cone-mode: true
+2025-12-27T15:29:49.8382125Z   fetch-depth: 1
+2025-12-27T15:29:49.8382801Z   fetch-tags: false
+2025-12-27T15:29:49.8383499Z   show-progress: true
+2025-12-27T15:29:49.8384190Z   lfs: false
+2025-12-27T15:29:49.8384829Z   submodules: false
+2025-12-27T15:29:49.8385539Z   set-safe-directory: true
+2025-12-27T15:29:49.8386568Z ##[endgroup]
+2025-12-27T15:29:50.0135300Z Syncing repository: julian1c2a/int128
+2025-12-27T15:29:50.0138068Z ##[group]Getting Git version info
+2025-12-27T15:29:50.0139046Z Working directory is 'D:\a\int128\int128'
+2025-12-27T15:29:50.1112476Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T15:29:50.4860613Z git version 2.52.0.windows.1
+2025-12-27T15:29:50.4931176Z ##[endgroup]
+2025-12-27T15:29:50.4956125Z Temporarily overriding HOME='D:\a\_temp\53f95110-4198-42c3-b9ec-415dd0c75e79' before making global git config changes
+2025-12-27T15:29:50.4960346Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T15:29:50.4967971Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T15:29:50.5554692Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T15:29:50.5561760Z ##[group]Initializing the repository
+2025-12-27T15:29:50.5571878Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T15:29:50.6476257Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T15:29:50.6529175Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T15:29:50.7102252Z ##[endgroup]
+2025-12-27T15:29:50.7103528Z ##[group]Disabling automatic garbage collection
+2025-12-27T15:29:50.7113344Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T15:29:50.7422249Z ##[endgroup]
+2025-12-27T15:29:50.7423413Z ##[group]Setting up auth
+2025-12-27T15:29:50.7435599Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T15:29:50.7754547Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T15:29:52.3482788Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T15:29:52.3799419Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T15:29:52.9225511Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T15:29:52.9543319Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T15:29:53.5015242Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T15:29:53.5334732Z ##[endgroup]
+2025-12-27T15:29:53.5335167Z ##[group]Fetching the repository
+2025-12-27T15:29:53.5354727Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +42a6c0a43b80b32dbd6bce5a6676be3ecd5eaa26:refs/remotes/origin/main
+2025-12-27T15:29:54.7623195Z From https://github.com/julian1c2a/int128
+2025-12-27T15:29:54.7627211Z  * [new ref]         42a6c0a43b80b32dbd6bce5a6676be3ecd5eaa26 -> origin/main
+2025-12-27T15:29:54.7940385Z ##[endgroup]
+2025-12-27T15:29:54.7940845Z ##[group]Determining the checkout info
+2025-12-27T15:29:54.7945852Z ##[endgroup]
+2025-12-27T15:29:54.7959731Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T15:29:54.8426565Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T15:29:54.8748674Z ##[group]Checking out the ref
+2025-12-27T15:29:54.8759106Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T15:29:55.1479772Z branch 'main' set up to track 'origin/main'.
+2025-12-27T15:29:55.1489541Z Switched to a new branch 'main'
+2025-12-27T15:29:55.1936609Z ##[endgroup]
+2025-12-27T15:29:55.1945434Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T15:29:55.2234231Z 42a6c0a43b80b32dbd6bce5a6676be3ecd5eaa26
+2025-12-27T15:29:55.2631364Z ##[group]Run microsoft/setup-msbuild@v2
+2025-12-27T15:29:55.2631729Z with:
+2025-12-27T15:29:55.2631922Z   msbuild-architecture: x86
+2025-12-27T15:29:55.2632125Z ##[endgroup]
+2025-12-27T15:29:55.4262039Z [command]C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
+2025-12-27T15:29:55.8874840Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2025-12-27T15:29:55.9180296Z ##[group]Run # Obtener vcvarsall.bat path
+2025-12-27T15:29:55.9180728Z [36;1m# Obtener vcvarsall.bat path[0m
+2025-12-27T15:29:55.9181077Z [36;1m$vcvarsPath = & python scripts/vcvars.py[0m
+2025-12-27T15:29:55.9181350Z [36;1mif ($vcvarsPath) {[0m
+2025-12-27T15:29:55.9181631Z [36;1m  Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"[0m
+2025-12-27T15:29:55.9181971Z [36;1m  echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV[0m
+2025-12-27T15:29:55.9182230Z [36;1m} else {[0m
+2025-12-27T15:29:55.9182488Z [36;1m  Write-Host "⚠ vcvarsall.bat not found, using default path"[0m
+2025-12-27T15:29:55.9183545Z [36;1m}[0m
+2025-12-27T15:29:56.0204906Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2025-12-27T15:29:56.0205289Z ##[endgroup]
+2025-12-27T15:30:01.8775837Z C:\hostedtoolcache\windows\Python\3.9.13\x64\python.exe: can't open file 'D:\a\int128\int128\scripts\vcvars.py': [Errno 2] No such file or directory
+2025-12-27T15:30:02.3830551Z ⚠ vcvarsall.bat not found, using default path
+2025-12-27T15:30:02.7917868Z ##[error]Process completed with exit code 1.
+2025-12-27T15:30:02.8209270Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T15:30:02.8210022Z with:
+2025-12-27T15:30:02.8210290Z   name: msvc-debug-binaries
+2025-12-27T15:30:02.8210661Z   path: build/build_tests/msvc/debug/
+2025-12-27T15:30:02.8210914Z   retention-days: 7
+2025-12-27T15:30:02.8211096Z   if-no-files-found: warn
+2025-12-27T15:30:02.8211286Z   compression-level: 6
+2025-12-27T15:30:02.8211468Z   overwrite: false
+2025-12-27T15:30:02.8211668Z   include-hidden-files: false
+2025-12-27T15:30:02.8211869Z ##[endgroup]
+2025-12-27T15:30:03.1286082Z ##[warning]No files were found with the provided path: build/build_tests/msvc/debug/. No artifacts will be uploaded.
+2025-12-27T15:30:03.1566335Z Post job cleanup.
+2025-12-27T15:30:03.3878541Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T15:30:03.4162590Z git version 2.52.0.windows.1
+2025-12-27T15:30:03.4246640Z Temporarily overriding HOME='D:\a\_temp\91e5c6e9-aacd-4f4b-a484-d10a6f522489' before making global git config changes
+2025-12-27T15:30:03.4247312Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T15:30:03.4258198Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T15:30:03.4627398Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T15:30:03.4998793Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T15:30:04.1508798Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T15:30:04.1799715Z http.https://github.com/.extraheader
+2025-12-27T15:30:04.1856243Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T15:30:04.2231349Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T15:30:04.8530291Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T15:30:04.8870762Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T15:30:05.5285662Z Cleaning up orphan processes

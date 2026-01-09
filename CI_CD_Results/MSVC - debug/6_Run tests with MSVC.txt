@@ -1,0 +1,140 @@
+﻿2025-12-27T19:44:28.4275299Z ##[group]Run call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+2025-12-27T19:44:28.4276175Z [36;1mcall "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"[0m
+2025-12-27T19:44:28.4276874Z [36;1mbash -c "chmod +x scripts/run_uint128_extracted_tests.bash && ./scripts/run_uint128_extracted_tests.bash msvc debug"[0m
+2025-12-27T19:44:28.4309599Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2025-12-27T19:44:28.4309932Z env:
+2025-12-27T19:44:28.4310288Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:44:28.4310708Z ##[endgroup]
+2025-12-27T19:44:28.6094720Z **********************************************************************
+2025-12-27T19:44:28.6095572Z ** Visual Studio 2022 Developer Command Prompt v17.14.22
+2025-12-27T19:44:28.6096027Z ** Copyright (c) 2025 Microsoft Corporation
+2025-12-27T19:44:28.6096437Z **********************************************************************
+2025-12-27T19:44:29.7674355Z [vcvarsall.bat] Environment initialized for: 'x64'
+2025-12-27T19:44:29.8853138Z ================================
+2025-12-27T19:44:29.8853643Z Running Extracted Tests
+2025-12-27T19:44:29.8853952Z Compiler: msvc
+2025-12-27T19:44:29.8854524Z Build Type: debug
+2025-12-27T19:44:29.8854816Z ================================
+2025-12-27T19:44:29.9342336Z Found 27 test binaries
+2025-12-27T19:44:29.9342679Z 
+2025-12-27T19:44:29.9552895Z Running: int128_algorithm_extracted_tests.exe...
+2025-12-27T19:44:29.9787066Z   [OK] Passed
+2025-12-27T19:44:30.0008048Z Running: int128_bits_extracted_tests.exe...
+2025-12-27T19:44:30.0222811Z   [OK] Passed
+2025-12-27T19:44:30.0404898Z Running: int128_cmath_extracted_tests.exe...
+2025-12-27T19:44:30.0624824Z   [OK] Passed
+2025-12-27T19:44:30.0807392Z Running: int128_concepts_extracted_tests.exe...
+2025-12-27T19:44:30.1019085Z   [OK] Passed
+2025-12-27T19:44:30.1198121Z Running: int128_format_extracted_tests.exe...
+2025-12-27T19:44:30.1407641Z   [OK] Passed
+2025-12-27T19:44:30.1588860Z Running: int128_iostreams_extracted_tests.exe...
+2025-12-27T19:44:30.1799408Z   [OK] Passed
+2025-12-27T19:44:30.1984587Z Running: int128_limits_extracted_tests.exe...
+2025-12-27T19:44:30.2197771Z   [OK] Passed
+2025-12-27T19:44:30.2378660Z Running: int128_numeric_extracted_tests.exe...
+2025-12-27T19:44:30.2597864Z   [OK] Passed
+2025-12-27T19:44:30.2787486Z Running: int128_ranges_extracted_tests.exe...
+2025-12-27T19:44:30.3006869Z   [OK] Passed
+2025-12-27T19:44:30.3187201Z Running: int128_safe_extracted_tests.exe...
+2025-12-27T19:44:30.3394696Z   [OK] Passed
+2025-12-27T19:44:30.3583657Z Running: int128_t_extracted_tests.exe...
+2025-12-27T19:44:30.3821303Z   [OK] Passed
+2025-12-27T19:44:30.4005272Z Running: int128_thread_safety_extracted_tests.exe...
+2025-12-27T19:44:30.4423504Z   [OK] Passed
+2025-12-27T19:44:30.4608282Z Running: int128_traits_extracted_tests.exe...
+2025-12-27T19:44:30.4820172Z   [OK] Passed
+2025-12-27T19:44:30.4996033Z Running: uint128_algorithm_extracted_tests.exe...
+2025-12-27T19:44:30.5203663Z   [OK] Passed
+2025-12-27T19:44:30.5382717Z Running: uint128_bits_extracted_tests.exe...
+2025-12-27T19:44:30.5598121Z   [OK] Passed
+2025-12-27T19:44:30.5779677Z Running: uint128_cmath_extracted_tests.exe...
+2025-12-27T19:44:30.5993472Z   [OK] Passed
+2025-12-27T19:44:30.6181420Z Running: uint128_concepts_extracted_tests.exe...
+2025-12-27T19:44:30.6390705Z   [OK] Passed
+2025-12-27T19:44:30.6574964Z Running: uint128_format_extracted_tests.exe...
+2025-12-27T19:44:31.0772196Z   [FAIL] Failed (exit code: 127)
+2025-12-27T19:44:31.0772975Z   Output:
+2025-12-27T19:44:31.1324654Z === uint128_t format tests ===
+2025-12-27T19:44:31.1325143Z test_format_decimal: passed
+2025-12-27T19:44:31.1325526Z test_format_hexadecimal: passed
+2025-12-27T19:44:31.1325922Z test_format_octal: passed
+2025-12-27T19:44:31.1326296Z test_format_with_width: passed
+2025-12-27T19:44:31.1326682Z test_format_internal_align: passed
+2025-12-27T19:44:31.1329605Z Assertion failed: result == "0XFF", file D:/a/int128/int128/tests\uint128_format_extracted_tests.cpp, line 81
+2025-12-27T19:44:31.1578665Z Running: uint128_interop_extracted_tests.exe...
+2025-12-27T19:44:31.1796608Z   [OK] Passed
+2025-12-27T19:44:31.1977620Z Running: uint128_iostreams_extracted_tests.exe...
+2025-12-27T19:44:31.2192791Z   [OK] Passed
+2025-12-27T19:44:31.2375534Z Running: uint128_limits_extracted_tests.exe...
+2025-12-27T19:44:31.2594181Z   [OK] Passed
+2025-12-27T19:44:31.2775773Z Running: uint128_numeric_extracted_tests.exe...
+2025-12-27T19:44:31.2989070Z   [OK] Passed
+2025-12-27T19:44:31.3171960Z Running: uint128_ranges_extracted_tests.exe...
+2025-12-27T19:44:31.3379354Z   [OK] Passed
+2025-12-27T19:44:31.3558490Z Running: uint128_safe_extracted_tests.exe...
+2025-12-27T19:44:31.3768186Z   [OK] Passed
+2025-12-27T19:44:31.3979081Z Running: uint128_t_extracted_tests.exe...
+2025-12-27T19:44:31.6237958Z   [FAIL] Failed (exit code: 127)
+2025-12-27T19:44:31.6239040Z   Output:
+2025-12-27T19:44:31.6595594Z Running comprehensive tests for uint128_t (66 original + 18 additional)...
+2025-12-27T19:44:31.6596125Z 
+2025-12-27T19:44:31.6596596Z test_sizeof_is_16_bytes passed
+2025-12-27T19:44:31.6596975Z test_bits_is_128 passed
+2025-12-27T19:44:31.6597296Z test_sizeof_high_is_8_bytes passed
+2025-12-27T19:44:31.6597705Z test_self_div_2_64_equ_high passed
+2025-12-27T19:44:31.6598092Z test_sizeof_low_is_8_bytes passed
+2025-12-27T19:44:31.6598476Z test_self_rem_2_64_equ_low passed
+2025-12-27T19:44:31.6599146Z test_set_high passed
+2025-12-27T19:44:31.6599430Z test_set_low passed
+2025-12-27T19:44:31.6599690Z test_default_constructor passed
+2025-12-27T19:44:31.6599918Z test_integral_constructor passed
+2025-12-27T19:44:31.6600141Z test_integral_assignment passed
+2025-12-27T19:44:31.6600353Z test_high_low_constructor passed
+2025-12-27T19:44:31.6600572Z test_cstr_constructor passed
+2025-12-27T19:44:31.6600768Z test_cstr_assignment passed
+2025-12-27T19:44:31.6600981Z test_bool_conversion passed
+2025-12-27T19:44:31.6601172Z test_integral_conversion passed
+2025-12-27T19:44:31.6601384Z test___uint128_conversion skipped
+2025-12-27T19:44:31.6601598Z test___int128_conversion skipped
+2025-12-27T19:44:31.6601797Z test_addition_assignment passed
+2025-12-27T19:44:31.6602099Z test_subtraction_assignment passed
+2025-12-27T19:44:31.6602352Z test_add_operator passed
+2025-12-27T19:44:31.6602546Z test_sub_operator passed
+2025-12-27T19:44:31.6603831Z test_pre_increment passed
+2025-12-27T19:44:31.6604046Z test_post_increment passed
+2025-12-27T19:44:31.6604254Z test_pre_decrement passed
+2025-12-27T19:44:31.6604441Z test_post_decrement passed
+2025-12-27T19:44:31.6604635Z test_leading_zeros passed
+2025-12-27T19:44:31.6604818Z test_trailing_zeros passed
+2025-12-27T19:44:31.6605024Z test_bitwise_operators passed
+2025-12-27T19:44:31.6605243Z test_bitwise_assignment_operators passed
+2025-12-27T19:44:31.6605477Z test_shift_left passed
+2025-12-27T19:44:31.6605659Z test_shift_right passed
+2025-12-27T19:44:31.6605849Z test_effective_length passed
+2025-12-27T19:44:31.6606040Z test_is_power_of_2 passed
+2025-12-27T19:44:31.6606255Z test_comparison_operators passed
+2025-12-27T19:44:31.6606528Z test_divrem: test_divrem_basic ......
+2025-12-27T19:44:31.6606753Z test_divrem: test_divrem_basic passed
+2025-12-27T19:44:31.6606989Z test_divrem: test_divrem_zero ......
+2025-12-27T19:44:31.6607205Z test_divrem: test_divrem_zero passed
+2025-12-27T19:44:31.6607427Z test_divrem: test_divrem_large ......
+2025-12-27T19:44:31.6607639Z test_divrem: test_divrem_large passed
+2025-12-27T19:44:31.6607897Z test_divrem: test_divrem_zero_integral_divisor ......
+2025-12-27T19:44:31.6608192Z test_divrem: test_divrem_zero_integral_divisor passed
+2025-12-27T19:44:31.6608485Z test_divrem: test_divrem_basic_integral_divisor ......
+2025-12-27T19:44:31.6608781Z test_divrem: test_divrem_basic_integral_divisor passed
+2025-12-27T19:44:31.6609064Z test_divrem: test_divrem_large_integral_divisor ......
+2025-12-27T19:44:31.6609951Z test_divrem: test_divrem_large_integral_divisor passed
+2025-12-27T19:44:31.6610233Z test_divrem: test_divrem_random ......
+2025-12-27T19:44:31.6858012Z Running: uint128_thread_safety_extracted_tests.exe...
+2025-12-27T19:44:31.7204625Z   [OK] Passed
+2025-12-27T19:44:31.7434641Z Running: uint128_traits_extracted_tests.exe...
+2025-12-27T19:44:31.7772911Z   [OK] Passed
+2025-12-27T19:44:31.7773158Z 
+2025-12-27T19:44:31.7773795Z ================================
+2025-12-27T19:44:31.7774579Z Test Results
+2025-12-27T19:44:31.7774832Z   Passed: 25
+2025-12-27T19:44:31.7774989Z   Failed: 2
+2025-12-27T19:44:31.7775147Z ================================
+2025-12-27T19:44:31.7775352Z [FAIL] Some tests failed
+2025-12-27T19:44:31.7858367Z ##[error]Process completed with exit code 1.

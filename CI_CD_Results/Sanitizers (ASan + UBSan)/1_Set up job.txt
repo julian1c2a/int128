@@ -1,0 +1,30 @@
+﻿2025-12-27T19:42:48.5442747Z Current runner version: '2.330.0'
+2025-12-27T19:42:48.5467542Z ##[group]Runner Image Provisioner
+2025-12-27T19:42:48.5468434Z Hosted Compute Agent
+2025-12-27T19:42:48.5468947Z Version: 20251211.462
+2025-12-27T19:42:48.5469628Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:42:48.5470386Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:42:48.5471002Z Worker ID: {4aaefd78-ac25-417a-ba05-d475b1f8dcf0}
+2025-12-27T19:42:48.5471714Z ##[endgroup]
+2025-12-27T19:42:48.5472233Z ##[group]Operating System
+2025-12-27T19:42:48.5472800Z Ubuntu
+2025-12-27T19:42:48.5473219Z 24.04.3
+2025-12-27T19:42:48.5473778Z LTS
+2025-12-27T19:42:48.5474203Z ##[endgroup]
+2025-12-27T19:42:48.5474684Z ##[group]Runner Image
+2025-12-27T19:42:48.5475613Z Image: ubuntu-24.04
+2025-12-27T19:42:48.5476113Z Version: 20251215.174.1
+2025-12-27T19:42:48.5477185Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T19:42:48.5478587Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T19:42:48.5479802Z ##[endgroup]
+2025-12-27T19:42:48.5480871Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:42:48.5482758Z Contents: read
+2025-12-27T19:42:48.5483478Z Metadata: read
+2025-12-27T19:42:48.5483953Z Packages: read
+2025-12-27T19:42:48.5484488Z ##[endgroup]
+2025-12-27T19:42:48.5487219Z Secret source: Actions
+2025-12-27T19:42:48.5487951Z Prepare workflow directory
+2025-12-27T19:42:48.5819601Z Prepare all required actions
+2025-12-27T19:42:48.5857620Z Getting action download info
+2025-12-27T19:42:48.8551143Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:42:49.0453236Z Complete job name: Sanitizers (ASan + UBSan)

@@ -1,0 +1,59 @@
+﻿2025-12-27T19:42:50.7037724Z ##[group]Run actions/checkout@v4
+2025-12-27T19:42:50.7039095Z with:
+2025-12-27T19:42:50.7039785Z   repository: julian1c2a/int128
+2025-12-27T19:42:50.7040869Z   token: ***
+2025-12-27T19:42:50.7041546Z   ssh-strict: true
+2025-12-27T19:42:50.7042240Z   ssh-user: git
+2025-12-27T19:42:50.7042948Z   persist-credentials: true
+2025-12-27T19:42:50.7043745Z   clean: true
+2025-12-27T19:42:50.7044439Z   sparse-checkout-cone-mode: true
+2025-12-27T19:42:50.7045317Z   fetch-depth: 1
+2025-12-27T19:42:50.7045996Z   fetch-tags: false
+2025-12-27T19:42:50.7046722Z   show-progress: true
+2025-12-27T19:42:50.7047790Z   lfs: false
+2025-12-27T19:42:50.7048452Z   submodules: false
+2025-12-27T19:42:50.7049181Z   set-safe-directory: true
+2025-12-27T19:42:50.7050235Z ##[endgroup]
+2025-12-27T19:42:50.8708530Z Syncing repository: julian1c2a/int128
+2025-12-27T19:42:50.8710869Z ##[group]Getting Git version info
+2025-12-27T19:42:50.8712394Z Working directory is 'D:\a\int128\int128'
+2025-12-27T19:42:50.9707121Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:42:51.3065322Z git version 2.52.0.windows.1
+2025-12-27T19:42:51.3119159Z ##[endgroup]
+2025-12-27T19:42:51.3139178Z Temporarily overriding HOME='D:\a\_temp\42a1f079-5039-438a-ab6f-09e5d77dfca8' before making global git config changes
+2025-12-27T19:42:51.3150182Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:42:51.3152127Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:42:51.3730944Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T19:42:51.3737926Z ##[group]Initializing the repository
+2025-12-27T19:42:51.3747065Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T19:42:51.4585550Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T19:42:51.4633936Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:42:51.5167806Z ##[endgroup]
+2025-12-27T19:42:51.5169171Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:42:51.5178069Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T19:42:51.5476968Z ##[endgroup]
+2025-12-27T19:42:51.5478190Z ##[group]Setting up auth
+2025-12-27T19:42:51.5490030Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:42:51.5792184Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:42:52.8853981Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:42:52.9148060Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:42:53.4250206Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:42:53.4543801Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:42:53.9957175Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T19:42:54.0269872Z ##[endgroup]
+2025-12-27T19:42:54.0270651Z ##[group]Fetching the repository
+2025-12-27T19:42:54.0285180Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +15def10209903058b943d852f9b5fb7973371f24:refs/remotes/origin/main
+2025-12-27T19:42:55.0546933Z From https://github.com/julian1c2a/int128
+2025-12-27T19:42:55.0547838Z  * [new ref]         15def10209903058b943d852f9b5fb7973371f24 -> origin/main
+2025-12-27T19:42:55.0817078Z ##[endgroup]
+2025-12-27T19:42:55.0817747Z ##[group]Determining the checkout info
+2025-12-27T19:42:55.0820970Z ##[endgroup]
+2025-12-27T19:42:55.0836506Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T19:42:55.1292531Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:42:55.1594730Z ##[group]Checking out the ref
+2025-12-27T19:42:55.1604425Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:42:55.4120231Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:42:55.4129565Z Switched to a new branch 'main'
+2025-12-27T19:42:55.4173360Z ##[endgroup]
+2025-12-27T19:42:55.4540258Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T19:42:55.4814049Z 15def10209903058b943d852f9b5fb7973371f24

@@ -1,0 +1,179 @@
+﻿2025-12-27T14:41:15.8088567Z Current runner version: '2.330.0'
+2025-12-27T14:41:15.8111263Z ##[group]Runner Image Provisioner
+2025-12-27T14:41:15.8112061Z Hosted Compute Agent
+2025-12-27T14:41:15.8112549Z Version: 20251211.462
+2025-12-27T14:41:15.8113244Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T14:41:15.8113892Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T14:41:15.8114528Z Worker ID: {0288fb98-f752-40dd-8013-5b1d252cf551}
+2025-12-27T14:41:15.8115293Z ##[endgroup]
+2025-12-27T14:41:15.8115771Z ##[group]Operating System
+2025-12-27T14:41:15.8116316Z Ubuntu
+2025-12-27T14:41:15.8116810Z 24.04.3
+2025-12-27T14:41:15.8117254Z LTS
+2025-12-27T14:41:15.8117669Z ##[endgroup]
+2025-12-27T14:41:15.8118226Z ##[group]Runner Image
+2025-12-27T14:41:15.8118716Z Image: ubuntu-24.04
+2025-12-27T14:41:15.8119207Z Version: 20251215.174.1
+2025-12-27T14:41:15.8120412Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T14:41:15.8121907Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T14:41:15.8122925Z ##[endgroup]
+2025-12-27T14:41:15.8123934Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T14:41:15.8125975Z Contents: read
+2025-12-27T14:41:15.8126526Z Metadata: read
+2025-12-27T14:41:15.8126978Z Packages: read
+2025-12-27T14:41:15.8127501Z ##[endgroup]
+2025-12-27T14:41:15.8130066Z Secret source: Actions
+2025-12-27T14:41:15.8130867Z Prepare workflow directory
+2025-12-27T14:41:15.8464039Z Prepare all required actions
+2025-12-27T14:41:15.8503454Z Getting action download info
+2025-12-27T14:41:16.2197437Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T14:41:16.3153958Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2025-12-27T14:41:16.5823897Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T14:41:16.6919096Z Download action repository 'actions/github-script@v7' (SHA:f28e40c7f34bde8b3046d885e986cb6290c5673b)
+2025-12-27T14:41:16.9914441Z Complete job name: Generate Benchmark Report
+2025-12-27T14:41:17.0606640Z ##[group]Run actions/checkout@v4
+2025-12-27T14:41:17.0607514Z with:
+2025-12-27T14:41:17.0607935Z   repository: julian1c2a/int128
+2025-12-27T14:41:17.0608618Z   token: ***
+2025-12-27T14:41:17.0609034Z   ssh-strict: true
+2025-12-27T14:41:17.0609450Z   ssh-user: git
+2025-12-27T14:41:17.0610252Z   persist-credentials: true
+2025-12-27T14:41:17.0610752Z   clean: true
+2025-12-27T14:41:17.0611182Z   sparse-checkout-cone-mode: true
+2025-12-27T14:41:17.0611692Z   fetch-depth: 1
+2025-12-27T14:41:17.0612122Z   fetch-tags: false
+2025-12-27T14:41:17.0612541Z   show-progress: true
+2025-12-27T14:41:17.0612979Z   lfs: false
+2025-12-27T14:41:17.0613383Z   submodules: false
+2025-12-27T14:41:17.0613865Z   set-safe-directory: true
+2025-12-27T14:41:17.0614636Z ##[endgroup]
+2025-12-27T14:41:17.1716849Z Syncing repository: julian1c2a/int128
+2025-12-27T14:41:17.1720033Z ##[group]Getting Git version info
+2025-12-27T14:41:17.1721367Z Working directory is '/home/runner/work/int128/int128'
+2025-12-27T14:41:17.1722734Z [command]/usr/bin/git version
+2025-12-27T14:41:17.1778653Z git version 2.52.0
+2025-12-27T14:41:17.1805736Z ##[endgroup]
+2025-12-27T14:41:17.1821785Z Temporarily overriding HOME='/home/runner/work/_temp/ee3ba8ef-82b0-466b-ab12-915979e41329' before making global git config changes
+2025-12-27T14:41:17.1824489Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T14:41:17.1835293Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T14:41:17.1875163Z Deleting the contents of '/home/runner/work/int128/int128'
+2025-12-27T14:41:17.1879419Z ##[group]Initializing the repository
+2025-12-27T14:41:17.1884316Z [command]/usr/bin/git init /home/runner/work/int128/int128
+2025-12-27T14:41:17.1984388Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-27T14:41:17.1985961Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-27T14:41:17.1987260Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-27T14:41:17.1988372Z hint: call:
+2025-12-27T14:41:17.1988821Z hint:
+2025-12-27T14:41:17.1990172Z hint: 	git config --global init.defaultBranch <name>
+2025-12-27T14:41:17.1991393Z hint:
+2025-12-27T14:41:17.1992528Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-27T14:41:17.1994405Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-27T14:41:17.1995889Z hint:
+2025-12-27T14:41:17.1996618Z hint: 	git branch -m <name>
+2025-12-27T14:41:17.1997467Z hint:
+2025-12-27T14:41:17.1998605Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-27T14:41:17.2000800Z Initialized empty Git repository in /home/runner/work/int128/int128/.git/
+2025-12-27T14:41:17.2003863Z [command]/usr/bin/git remote add origin https://github.com/julian1c2a/int128
+2025-12-27T14:41:17.2035325Z ##[endgroup]
+2025-12-27T14:41:17.2036759Z ##[group]Disabling automatic garbage collection
+2025-12-27T14:41:17.2040377Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-27T14:41:17.2068486Z ##[endgroup]
+2025-12-27T14:41:17.2070084Z ##[group]Setting up auth
+2025-12-27T14:41:17.2076166Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T14:41:17.2106329Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T14:41:17.2433538Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T14:41:17.2463581Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T14:41:17.2678988Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T14:41:17.2709091Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T14:41:17.2935042Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-27T14:41:17.2967855Z ##[endgroup]
+2025-12-27T14:41:17.2969259Z ##[group]Fetching the repository
+2025-12-27T14:41:17.2977835Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6d1e300178fd4e2c6df18263e0394dae90cff673:refs/remotes/origin/main
+2025-12-27T14:41:17.6542295Z From https://github.com/julian1c2a/int128
+2025-12-27T14:41:17.6544105Z  * [new ref]         6d1e300178fd4e2c6df18263e0394dae90cff673 -> origin/main
+2025-12-27T14:41:17.6573724Z ##[endgroup]
+2025-12-27T14:41:17.6574774Z ##[group]Determining the checkout info
+2025-12-27T14:41:17.6576216Z ##[endgroup]
+2025-12-27T14:41:17.6580453Z [command]/usr/bin/git sparse-checkout disable
+2025-12-27T14:41:17.6618278Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-27T14:41:17.6646413Z ##[group]Checking out the ref
+2025-12-27T14:41:17.6648436Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T14:41:17.7126655Z Switched to a new branch 'main'
+2025-12-27T14:41:17.7128707Z branch 'main' set up to track 'origin/main'.
+2025-12-27T14:41:17.7138228Z ##[endgroup]
+2025-12-27T14:41:17.7170865Z [command]/usr/bin/git log -1 --format=%H
+2025-12-27T14:41:17.7191759Z 6d1e300178fd4e2c6df18263e0394dae90cff673
+2025-12-27T14:41:17.7456969Z ##[group]Run actions/download-artifact@v4
+2025-12-27T14:41:17.7458176Z with:
+2025-12-27T14:41:17.7458962Z   path: all-benchmarks/
+2025-12-27T14:41:17.7460060Z   merge-multiple: false
+2025-12-27T14:41:17.7461026Z   repository: julian1c2a/int128
+2025-12-27T14:41:17.7462049Z   run-id: 20540387181
+2025-12-27T14:41:17.7463118Z ##[endgroup]
+2025-12-27T14:41:18.0521023Z Found 0 artifact(s)
+2025-12-27T14:41:18.0523222Z No input name, artifact-ids or pattern filtered specified, downloading all artifacts
+2025-12-27T14:41:18.0525318Z An extra directory with the artifact name will be created for each download
+2025-12-27T14:41:18.0526879Z Total of 0 artifact(s) downloaded
+2025-12-27T14:41:18.0528648Z Download artifact has finished successfully
+2025-12-27T14:41:18.0681379Z ##[group]Run echo "# 📊 Benchmark Comparison Report" > benchmark-report.md
+2025-12-27T14:41:18.0683339Z [36;1mecho "# 📊 Benchmark Comparison Report" > benchmark-report.md[0m
+2025-12-27T14:41:18.0684832Z [36;1mecho "" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0686099Z [36;1mecho "**Date:** $(date)" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0687973Z [36;1mecho "**Commit:** 6d1e300178fd4e2c6df18263e0394dae90cff673" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0689930Z [36;1mecho "" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0691281Z [36;1mecho "## Results by Compiler" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0692664Z [36;1mecho "" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0693707Z [36;1m[0m
+2025-12-27T14:41:18.0694579Z [36;1mfor compiler in gcc clang msvc intel; do[0m
+2025-12-27T14:41:18.0695887Z [36;1m  echo "### $compiler" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0697416Z [36;1m  if [ -d "all-benchmarks/benchmark-results-$compiler" ]; then[0m
+2025-12-27T14:41:18.0698930Z [36;1m    echo "✅ Completed" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0701051Z [36;1m    if [ -f "all-benchmarks/benchmark-results-$compiler/benchmark_results/summary.txt" ]; then[0m
+2025-12-27T14:41:18.0702954Z [36;1m      echo "\`\`\`" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0705094Z [36;1m      cat "all-benchmarks/benchmark-results-$compiler/benchmark_results/summary.txt" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0707237Z [36;1m      echo "\`\`\`" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0708354Z [36;1m    fi[0m
+2025-12-27T14:41:18.0709122Z [36;1m  else[0m
+2025-12-27T14:41:18.0710364Z [36;1m    echo "❌ Failed or not available" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0711673Z [36;1m  fi[0m
+2025-12-27T14:41:18.0712500Z [36;1m  echo "" >> benchmark-report.md[0m
+2025-12-27T14:41:18.0713547Z [36;1mdone[0m
+2025-12-27T14:41:18.0751151Z shell: /usr/bin/bash -e {0}
+2025-12-27T14:41:18.0752103Z ##[endgroup]
+2025-12-27T14:41:18.1023253Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T14:41:18.1024298Z with:
+2025-12-27T14:41:18.1025067Z   name: benchmark-comparison-report
+2025-12-27T14:41:18.1026098Z   path: benchmark-report.md
+2025-12-27T14:41:18.1026992Z   retention-days: 365
+2025-12-27T14:41:18.1027841Z   if-no-files-found: warn
+2025-12-27T14:41:18.1028706Z   compression-level: 6
+2025-12-27T14:41:18.1029526Z   overwrite: false
+2025-12-27T14:41:18.1030795Z   include-hidden-files: false
+2025-12-27T14:41:18.1031692Z ##[endgroup]
+2025-12-27T14:41:18.3153830Z With the provided path, there will be 1 file uploaded
+2025-12-27T14:41:18.3159488Z Artifact name is valid!
+2025-12-27T14:41:18.3161233Z Root directory input is valid!
+2025-12-27T14:41:18.3199586Z ##[warning]Retention days cannot be greater than the maximum allowed retention set within the repository. Using 90 instead.
+2025-12-27T14:41:18.4006541Z Beginning upload of artifact content to blob storage
+2025-12-27T14:41:18.4569613Z Uploaded bytes 343
+2025-12-27T14:41:18.4749156Z Finished uploading artifact content to blob storage!
+2025-12-27T14:41:18.4752825Z SHA256 digest of uploaded artifact zip is c6529d89370fb954b3a826e7dd21960d84defa9636072ce19d8f4ef944756cfd
+2025-12-27T14:41:18.4755403Z Finalizing artifact upload
+2025-12-27T14:41:18.5572555Z Artifact benchmark-comparison-report.zip successfully finalized. Artifact ID 4975380597
+2025-12-27T14:41:18.5575365Z Artifact benchmark-comparison-report has been successfully uploaded! Final size is 343 bytes. Artifact ID is 4975380597
+2025-12-27T14:41:18.5579383Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20540387181/artifacts/4975380597
+2025-12-27T14:41:18.5844053Z Post job cleanup.
+2025-12-27T14:41:18.6779548Z [command]/usr/bin/git version
+2025-12-27T14:41:18.6816070Z git version 2.52.0
+2025-12-27T14:41:18.6863062Z Temporarily overriding HOME='/home/runner/work/_temp/33f01a34-a396-4fe8-886f-b529984c636a' before making global git config changes
+2025-12-27T14:41:18.6867764Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T14:41:18.6871645Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T14:41:18.6905019Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T14:41:18.6941889Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T14:41:18.7186304Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T14:41:18.7209026Z http.https://github.com/.extraheader
+2025-12-27T14:41:18.7221640Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T14:41:18.7253202Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T14:41:18.7472608Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T14:41:18.7505575Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T14:41:18.7845356Z Cleaning up orphan processes

@@ -1,0 +1,563 @@
+﻿2025-12-27T19:29:09.3121549Z Current runner version: '2.330.0'
+2025-12-27T19:29:09.3147056Z ##[group]Runner Image Provisioner
+2025-12-27T19:29:09.3147956Z Hosted Compute Agent
+2025-12-27T19:29:09.3148465Z Version: 20251211.462
+2025-12-27T19:29:09.3149058Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:29:09.3149750Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:29:09.3150403Z Worker ID: {18716fa8-116f-4b0c-8b20-a07ba6199355}
+2025-12-27T19:29:09.3151108Z ##[endgroup]
+2025-12-27T19:29:09.3151690Z ##[group]Operating System
+2025-12-27T19:29:09.3152269Z Ubuntu
+2025-12-27T19:29:09.3152837Z 24.04.3
+2025-12-27T19:29:09.3153399Z LTS
+2025-12-27T19:29:09.3153832Z ##[endgroup]
+2025-12-27T19:29:09.3154361Z ##[group]Runner Image
+2025-12-27T19:29:09.3154853Z Image: ubuntu-24.04
+2025-12-27T19:29:09.3155420Z Version: 20251215.174.1
+2025-12-27T19:29:09.3156436Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T19:29:09.3158020Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T19:29:09.3159000Z ##[endgroup]
+2025-12-27T19:29:09.3160343Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:29:09.3162455Z Contents: read
+2025-12-27T19:29:09.3163277Z Metadata: read
+2025-12-27T19:29:09.3163884Z Packages: read
+2025-12-27T19:29:09.3164378Z ##[endgroup]
+2025-12-27T19:29:09.3166390Z Secret source: Actions
+2025-12-27T19:29:09.3167452Z Prepare workflow directory
+2025-12-27T19:29:09.3492537Z Prepare all required actions
+2025-12-27T19:29:09.3530867Z Getting action download info
+2025-12-27T19:29:09.6392061Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:29:09.7305053Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:29:09.9510338Z Complete job name: Clang 19 - debug
+2025-12-27T19:29:10.0145597Z ##[group]Run actions/checkout@v4
+2025-12-27T19:29:10.0146444Z with:
+2025-12-27T19:29:10.0146831Z   repository: julian1c2a/int128
+2025-12-27T19:29:10.0147501Z   token: ***
+2025-12-27T19:29:10.0147867Z   ssh-strict: true
+2025-12-27T19:29:10.0148236Z   ssh-user: git
+2025-12-27T19:29:10.0148637Z   persist-credentials: true
+2025-12-27T19:29:10.0149065Z   clean: true
+2025-12-27T19:29:10.0149463Z   sparse-checkout-cone-mode: true
+2025-12-27T19:29:10.0149926Z   fetch-depth: 1
+2025-12-27T19:29:10.0150310Z   fetch-tags: false
+2025-12-27T19:29:10.0150705Z   show-progress: true
+2025-12-27T19:29:10.0151097Z   lfs: false
+2025-12-27T19:29:10.0151459Z   submodules: false
+2025-12-27T19:29:10.0151848Z   set-safe-directory: true
+2025-12-27T19:29:10.0152503Z ##[endgroup]
+2025-12-27T19:29:10.1239433Z Syncing repository: julian1c2a/int128
+2025-12-27T19:29:10.1241440Z ##[group]Getting Git version info
+2025-12-27T19:29:10.1242083Z Working directory is '/home/runner/work/int128/int128'
+2025-12-27T19:29:10.1243355Z [command]/usr/bin/git version
+2025-12-27T19:29:10.1311915Z git version 2.52.0
+2025-12-27T19:29:10.1338946Z ##[endgroup]
+2025-12-27T19:29:10.1363604Z Temporarily overriding HOME='/home/runner/work/_temp/7fa2a5f1-5e1e-4e68-8449-f940cbb7f56d' before making global git config changes
+2025-12-27T19:29:10.1365971Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:29:10.1369823Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T19:29:10.1410036Z Deleting the contents of '/home/runner/work/int128/int128'
+2025-12-27T19:29:10.1414432Z ##[group]Initializing the repository
+2025-12-27T19:29:10.1419011Z [command]/usr/bin/git init /home/runner/work/int128/int128
+2025-12-27T19:29:10.1534569Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-27T19:29:10.1535922Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-27T19:29:10.1537006Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-27T19:29:10.1538158Z hint: call:
+2025-12-27T19:29:10.1538928Z hint:
+2025-12-27T19:29:10.1539765Z hint: 	git config --global init.defaultBranch <name>
+2025-12-27T19:29:10.1540809Z hint:
+2025-12-27T19:29:10.1541792Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-27T19:29:10.1543644Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-27T19:29:10.1544974Z hint:
+2025-12-27T19:29:10.1545660Z hint: 	git branch -m <name>
+2025-12-27T19:29:10.1546407Z hint:
+2025-12-27T19:29:10.1547391Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-27T19:29:10.1549067Z Initialized empty Git repository in /home/runner/work/int128/int128/.git/
+2025-12-27T19:29:10.1551790Z [command]/usr/bin/git remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:29:10.1584452Z ##[endgroup]
+2025-12-27T19:29:10.1585171Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:29:10.1588391Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-27T19:29:10.1616916Z ##[endgroup]
+2025-12-27T19:29:10.1617582Z ##[group]Setting up auth
+2025-12-27T19:29:10.1623546Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:29:10.1652931Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T19:29:10.1987901Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:29:10.2020282Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T19:29:10.2240739Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:29:10.2274806Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T19:29:10.2500471Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-27T19:29:10.2536694Z ##[endgroup]
+2025-12-27T19:29:10.2537446Z ##[group]Fetching the repository
+2025-12-27T19:29:10.2545786Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +380676cc2243a943051f889d575406c157f1a9cb:refs/remotes/origin/main
+2025-12-27T19:29:10.5639583Z From https://github.com/julian1c2a/int128
+2025-12-27T19:29:10.5640436Z  * [new ref]         380676cc2243a943051f889d575406c157f1a9cb -> origin/main
+2025-12-27T19:29:10.5670407Z ##[endgroup]
+2025-12-27T19:29:10.5671582Z ##[group]Determining the checkout info
+2025-12-27T19:29:10.5673310Z ##[endgroup]
+2025-12-27T19:29:10.5678930Z [command]/usr/bin/git sparse-checkout disable
+2025-12-27T19:29:10.5721385Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:29:10.5747382Z ##[group]Checking out the ref
+2025-12-27T19:29:10.5751833Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:29:10.6235908Z Switched to a new branch 'main'
+2025-12-27T19:29:10.6241213Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:29:10.6248478Z ##[endgroup]
+2025-12-27T19:29:10.6289740Z [command]/usr/bin/git log -1 --format=%H
+2025-12-27T19:29:10.6313824Z 380676cc2243a943051f889d575406c157f1a9cb
+2025-12-27T19:29:10.6519849Z ##[group]Run wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+2025-12-27T19:29:10.6521237Z [36;1mwget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -[0m
+2025-12-27T19:29:10.6522837Z [36;1msudo add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main"[0m
+2025-12-27T19:29:10.6523885Z [36;1msudo apt update[0m
+2025-12-27T19:29:10.6524430Z [36;1msudo apt install -y clang-19[0m
+2025-12-27T19:29:10.6525018Z [36;1mclang-19 --version[0m
+2025-12-27T19:29:10.6561444Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:29:10.6562240Z ##[endgroup]
+2025-12-27T19:29:10.6910979Z --2025-12-27 19:29:10--  https://apt.llvm.org/llvm-snapshot.gpg.key
+2025-12-27T19:29:10.7273549Z Resolving apt.llvm.org (apt.llvm.org)... Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+2025-12-27T19:29:10.8870634Z 146.75.30.49, 2a04:4e42:77::561
+2025-12-27T19:29:10.8879261Z Connecting to apt.llvm.org (apt.llvm.org)|146.75.30.49|:443... connected.
+2025-12-27T19:29:10.8960599Z HTTP request sent, awaiting response... 200 OK
+2025-12-27T19:29:10.8961815Z Length: 3145 (3.1K) [application/octet-stream]
+2025-12-27T19:29:10.8963433Z Saving to: ‘STDOUT’
+2025-12-27T19:29:10.8963902Z 
+2025-12-27T19:29:10.8964242Z      0K ...                                                   100% 69.3M=0s
+2025-12-27T19:29:10.8964946Z 
+2025-12-27T19:29:10.8965433Z 2025-12-27 19:29:10 (69.3 MB/s) - written to stdout [3145/3145]
+2025-12-27T19:29:10.8966248Z 
+2025-12-27T19:29:11.3633225Z OK
+2025-12-27T19:29:12.1562311Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T19:29:12.1982288Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T19:29:12.2012022Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-12-27T19:29:12.2098389Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-12-27T19:29:12.2104860Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2025-12-27T19:29:12.2348199Z Get:6 https://apt.llvm.org/noble llvm-toolchain-noble-19 InRelease [5554 B]
+2025-12-27T19:29:12.2411476Z Hit:7 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T19:29:12.2689514Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2025-12-27T19:29:12.3290106Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1684 kB]
+2025-12-27T19:29:12.3474473Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2025-12-27T19:29:12.3500891Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+2025-12-27T19:29:12.3518494Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [15.8 kB]
+2025-12-27T19:29:12.3528861Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1506 kB]
+2025-12-27T19:29:12.3620626Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [306 kB]
+2025-12-27T19:29:12.3653134Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [378 kB]
+2025-12-27T19:29:12.3690662Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.4 kB]
+2025-12-27T19:29:12.3705814Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2413 kB]
+2025-12-27T19:29:12.3881043Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [550 kB]
+2025-12-27T19:29:12.4349562Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+2025-12-27T19:29:12.4365917Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [516 B]
+2025-12-27T19:29:12.4374586Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [30.3 kB]
+2025-12-27T19:29:12.4386739Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6048 B]
+2025-12-27T19:29:12.4394766Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+2025-12-27T19:29:12.4404724Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [488 B]
+2025-12-27T19:29:12.4416411Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+2025-12-27T19:29:12.4430779Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7300 B]
+2025-12-27T19:29:12.4439002Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+2025-12-27T19:29:12.4448110Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [29.5 kB]
+2025-12-27T19:29:12.4458136Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [17.9 kB]
+2025-12-27T19:29:12.4468357Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+2025-12-27T19:29:12.4513171Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1444 B]
+2025-12-27T19:29:12.4515450Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-12-27T19:29:12.4920841Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-12-27T19:29:12.4935608Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [225 kB]
+2025-12-27T19:29:12.4959831Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+2025-12-27T19:29:12.4969671Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9504 B]
+2025-12-27T19:29:12.4979418Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [71.5 kB]
+2025-12-27T19:29:12.5089726Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+2025-12-27T19:29:12.5102386Z Get:39 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+2025-12-27T19:29:12.5881399Z Get:40 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 Packages [12.7 kB]
+2025-12-27T19:29:12.6914132Z Get:41 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.4 kB]
+2025-12-27T19:29:12.7044171Z Get:42 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [58.9 kB]
+2025-12-27T19:29:12.7218125Z Get:43 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [77.4 kB]
+2025-12-27T19:29:20.8477663Z Fetched 8393 kB in 1s (7770 kB/s)
+2025-12-27T19:29:21.6117850Z Reading package lists...
+2025-12-27T19:29:21.6199252Z W: http://apt.llvm.org/noble/dists/llvm-toolchain-noble-19/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+2025-12-27T19:29:21.6208998Z Repository: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main'
+2025-12-27T19:29:21.6209814Z Description:
+2025-12-27T19:29:21.6211437Z Archive for codename: llvm-toolchain-noble-19 components: main
+2025-12-27T19:29:21.6211979Z More info: http://apt.llvm.org/noble/
+2025-12-27T19:29:21.6212389Z Adding repository.
+2025-12-27T19:29:21.6213147Z Adding deb entry to /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_noble_-noble.list
+2025-12-27T19:29:21.6214092Z Adding disabled deb-src entry to /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_noble_-noble.list
+2025-12-27T19:29:21.6607391Z 
+2025-12-27T19:29:21.6608056Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:29:21.6608591Z 
+2025-12-27T19:29:21.7408904Z Get:2 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T19:29:21.7697074Z Hit:3 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T19:29:21.7723559Z Hit:4 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
+2025-12-27T19:29:21.7733824Z Hit:5 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease
+2025-12-27T19:29:21.7763559Z Hit:6 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease
+2025-12-27T19:29:21.7764761Z Hit:1 https://apt.llvm.org/noble llvm-toolchain-noble-19 InRelease
+2025-12-27T19:29:22.0644187Z Hit:7 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T19:29:22.1465900Z Hit:8 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease
+2025-12-27T19:29:23.0580613Z Reading package lists...
+2025-12-27T19:29:23.2281663Z Building dependency tree...
+2025-12-27T19:29:23.2288795Z Reading state information...
+2025-12-27T19:29:23.2440246Z W: http://apt.llvm.org/noble/dists/llvm-toolchain-noble-19/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+2025-12-27T19:29:23.2441269Z 70 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-12-27T19:29:23.2556559Z 
+2025-12-27T19:29:23.2695434Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:29:23.2695929Z 
+2025-12-27T19:29:23.2696064Z Reading package lists...
+2025-12-27T19:29:23.4440722Z Building dependency tree...
+2025-12-27T19:29:23.4448096Z Reading state information...
+2025-12-27T19:29:23.6030723Z The following additional packages will be installed:
+2025-12-27T19:29:23.6033058Z   clang-tools-19 libclang-common-19-dev libclang-cpp19 libclang-rt-19-dev
+2025-12-27T19:29:23.6038029Z   libclang1-19 libllvm19 llvm-19 llvm-19-dev llvm-19-linker-tools
+2025-12-27T19:29:23.6041195Z   llvm-19-runtime llvm-19-tools
+2025-12-27T19:29:23.6047866Z Suggested packages:
+2025-12-27T19:29:23.6048373Z   clang-19-doc wasi-libc llvm-19-doc
+2025-12-27T19:29:23.6386069Z The following NEW packages will be installed:
+2025-12-27T19:29:23.6386981Z   clang-19 clang-tools-19 libclang-common-19-dev libclang-cpp19
+2025-12-27T19:29:23.6391059Z   libclang-rt-19-dev libclang1-19 llvm-19 llvm-19-dev llvm-19-linker-tools
+2025-12-27T19:29:23.6392972Z   llvm-19-runtime llvm-19-tools
+2025-12-27T19:29:23.6398156Z The following packages will be upgraded:
+2025-12-27T19:29:23.6403066Z   libllvm19
+2025-12-27T19:29:23.6607733Z 1 upgraded, 11 newly installed, 0 to remove and 69 not upgraded.
+2025-12-27T19:29:23.7480292Z Need to get 134 MB of archives.
+2025-12-27T19:29:23.7480879Z After this operation, 653 MB of additional disk space will be used.
+2025-12-27T19:29:23.7481735Z Get:1 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libllvm19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [28.7 MB]
+2025-12-27T19:29:23.9639730Z Get:2 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang-cpp19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [14.3 MB]
+2025-12-27T19:29:24.0635199Z Get:3 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang-common-19-dev amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [745 kB]
+2025-12-27T19:29:24.0810642Z Get:4 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-linker-tools amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [1371 kB]
+2025-12-27T19:29:24.0933554Z Get:5 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang1-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [8291 kB]
+2025-12-27T19:29:24.1532491Z Get:6 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 clang-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [120 kB]
+2025-12-27T19:29:24.1598315Z Get:7 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 clang-tools-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [9769 kB]
+2025-12-27T19:29:24.2288837Z Get:8 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang-rt-19-dev amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [3913 kB]
+2025-12-27T19:29:24.2579427Z Get:9 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-runtime amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [594 kB]
+2025-12-27T19:29:24.2685230Z Get:10 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [17.9 MB]
+2025-12-27T19:29:24.3916763Z Get:11 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-tools amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [543 kB]
+2025-12-27T19:29:24.3996722Z Get:12 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-dev amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [47.5 MB]
+2025-12-27T19:29:25.0236976Z Fetched 134 MB in 1s (124 MB/s)
+2025-12-27T19:29:25.0730216Z (Reading database ... 
+2025-12-27T19:29:25.0730635Z (Reading database ... 5%
+2025-12-27T19:29:25.0730926Z (Reading database ... 10%
+2025-12-27T19:29:25.0731135Z (Reading database ... 15%
+2025-12-27T19:29:25.0731354Z (Reading database ... 20%
+2025-12-27T19:29:25.0731540Z (Reading database ... 25%
+2025-12-27T19:29:25.0731749Z (Reading database ... 30%
+2025-12-27T19:29:25.0731931Z (Reading database ... 35%
+2025-12-27T19:29:25.0732118Z (Reading database ... 40%
+2025-12-27T19:29:25.0732299Z (Reading database ... 45%
+2025-12-27T19:29:25.0732491Z (Reading database ... 50%
+2025-12-27T19:29:25.0826665Z (Reading database ... 55%
+2025-12-27T19:29:25.2093136Z (Reading database ... 60%
+2025-12-27T19:29:25.2823101Z (Reading database ... 65%
+2025-12-27T19:29:25.3605547Z (Reading database ... 70%
+2025-12-27T19:29:25.4195036Z (Reading database ... 75%
+2025-12-27T19:29:25.6176626Z (Reading database ... 80%
+2025-12-27T19:29:25.8038880Z (Reading database ... 85%
+2025-12-27T19:29:25.9897240Z (Reading database ... 90%
+2025-12-27T19:29:26.1594780Z (Reading database ... 95%
+2025-12-27T19:29:26.1595197Z (Reading database ... 100%
+2025-12-27T19:29:26.1595672Z (Reading database ... 217374 files and directories currently installed.)
+2025-12-27T19:29:26.1641480Z Preparing to unpack .../00-libllvm19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:26.1704370Z Unpacking libllvm19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) over (1:19.1.1-1ubuntu1~24.04.2) ...
+2025-12-27T19:29:26.6299405Z Selecting previously unselected package libclang-cpp19.
+2025-12-27T19:29:26.6432087Z Preparing to unpack .../01-libclang-cpp19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:26.6442395Z Unpacking libclang-cpp19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:26.8920417Z Selecting previously unselected package libclang-common-19-dev:amd64.
+2025-12-27T19:29:26.9053692Z Preparing to unpack .../02-libclang-common-19-dev_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:26.9063676Z Unpacking libclang-common-19-dev:amd64 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.0057550Z Selecting previously unselected package llvm-19-linker-tools.
+2025-12-27T19:29:27.0191678Z Preparing to unpack .../03-llvm-19-linker-tools_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.0202390Z Unpacking llvm-19-linker-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.0697946Z Selecting previously unselected package libclang1-19.
+2025-12-27T19:29:27.0833226Z Preparing to unpack .../04-libclang1-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.0843725Z Unpacking libclang1-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.2320451Z Selecting previously unselected package clang-19.
+2025-12-27T19:29:27.2454011Z Preparing to unpack .../05-clang-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.2464757Z Unpacking clang-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.2759597Z Selecting previously unselected package clang-tools-19.
+2025-12-27T19:29:27.2895214Z Preparing to unpack .../06-clang-tools-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.2905723Z Unpacking clang-tools-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.4797762Z Selecting previously unselected package libclang-rt-19-dev.
+2025-12-27T19:29:27.4931770Z Preparing to unpack .../07-libclang-rt-19-dev_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.4941743Z Unpacking libclang-rt-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.6726253Z Selecting previously unselected package llvm-19-runtime.
+2025-12-27T19:29:27.6860384Z Preparing to unpack .../08-llvm-19-runtime_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.6873631Z Unpacking llvm-19-runtime (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:27.7186895Z Selecting previously unselected package llvm-19.
+2025-12-27T19:29:27.7321650Z Preparing to unpack .../09-llvm-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:27.7331868Z Unpacking llvm-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:28.0561434Z Selecting previously unselected package llvm-19-tools.
+2025-12-27T19:29:28.0698086Z Preparing to unpack .../10-llvm-19-tools_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:28.0728226Z Unpacking llvm-19-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:28.1883227Z Selecting previously unselected package llvm-19-dev.
+2025-12-27T19:29:28.2019919Z Preparing to unpack .../11-llvm-19-dev_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:29:28.2031410Z Unpacking llvm-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7555355Z Setting up libllvm19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7591579Z Setting up libclang1-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7622814Z Setting up libclang-common-19-dev:amd64 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7653079Z Setting up libclang-rt-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7678709Z Setting up llvm-19-linker-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7704545Z Setting up llvm-19-runtime (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7744133Z Setting up llvm-19-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7771400Z Setting up libclang-cpp19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7805939Z Setting up clang-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7837165Z Setting up clang-tools-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7870085Z Setting up llvm-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7898801Z Setting up llvm-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:29:29.7926603Z Processing triggers for systemd (255.4-1ubuntu8.11) ...
+2025-12-27T19:29:29.8282887Z Processing triggers for man-db (2.12.0-4build2) ...
+2025-12-27T19:29:29.8312599Z Not building database; man-db/auto-update is not 'true'.
+2025-12-27T19:29:29.8326286Z Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+2025-12-27T19:29:30.5144896Z 
+2025-12-27T19:29:30.5145691Z Running kernel seems to be up-to-date.
+2025-12-27T19:29:30.5146131Z 
+2025-12-27T19:29:30.5146692Z No services need to be restarted.
+2025-12-27T19:29:30.5146996Z 
+2025-12-27T19:29:30.5147118Z No containers need to be restarted.
+2025-12-27T19:29:30.5147486Z 
+2025-12-27T19:29:30.5147720Z No user sessions are running outdated binaries.
+2025-12-27T19:29:30.5148094Z 
+2025-12-27T19:29:30.5148475Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2025-12-27T19:29:31.4395374Z Ubuntu clang version 19.1.7 (++20250804090312+cd708029e0b2-1~exp1~20250804210325.79)
+2025-12-27T19:29:31.4396157Z Target: x86_64-pc-linux-gnu
+2025-12-27T19:29:31.4396565Z Thread model: posix
+2025-12-27T19:29:31.4396914Z InstalledDir: /usr/lib/llvm-19/bin
+2025-12-27T19:29:31.4464128Z ##[group]Run export CC=clang-19
+2025-12-27T19:29:31.4464420Z [36;1mexport CC=clang-19[0m
+2025-12-27T19:29:31.4464642Z [36;1mexport CXX=clang++-19[0m
+2025-12-27T19:29:31.4464903Z [36;1mchmod +x scripts/build_extracted_tests.bash[0m
+2025-12-27T19:29:31.4465235Z [36;1m./scripts/build_extracted_tests.bash clang debug[0m
+2025-12-27T19:29:31.4501595Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:29:31.4501825Z ##[endgroup]
+2025-12-27T19:29:31.4647664Z ================================
+2025-12-27T19:29:31.4648052Z Building Extracted Tests
+2025-12-27T19:29:31.4648398Z Compiler: clang
+2025-12-27T19:29:31.4648601Z Build Type: debug
+2025-12-27T19:29:31.4648798Z ================================
+2025-12-27T19:29:31.4683200Z Using compiler: clang++-19
+2025-12-27T19:29:31.4683630Z Optimization flags: -O0 -g
+2025-12-27T19:29:31.4683859Z 
+2025-12-27T19:29:31.4685017Z Found 27 test files
+2025-12-27T19:29:31.4685206Z 
+2025-12-27T19:29:31.4698831Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T19:29:34.4380022Z   [OK] Success
+2025-12-27T19:29:34.4393894Z Compiling: int128_bits_extracted_tests...
+2025-12-27T19:29:35.9887751Z   [OK] Success
+2025-12-27T19:29:35.9901761Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T19:29:37.8373630Z   [OK] Success
+2025-12-27T19:29:37.8387983Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T19:29:39.2974444Z   [OK] Success
+2025-12-27T19:29:39.2988392Z Compiling: int128_format_extracted_tests...
+2025-12-27T19:29:40.7384730Z   [OK] Success
+2025-12-27T19:29:40.7398868Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T19:29:42.2184405Z   [OK] Success
+2025-12-27T19:29:42.2198476Z Compiling: int128_limits_extracted_tests...
+2025-12-27T19:29:43.6193467Z   [OK] Success
+2025-12-27T19:29:43.6207869Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T19:29:45.1098336Z   [OK] Success
+2025-12-27T19:29:45.1112886Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T19:29:46.5478044Z   [OK] Success
+2025-12-27T19:29:46.5492997Z Compiling: int128_safe_extracted_tests...
+2025-12-27T19:29:48.0129734Z   [OK] Success
+2025-12-27T19:29:48.0143952Z Compiling: int128_t_extracted_tests...
+2025-12-27T19:29:49.7336764Z   [OK] Success
+2025-12-27T19:29:49.7350767Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T19:29:52.3792098Z   [OK] Success
+2025-12-27T19:29:52.3806981Z Compiling: int128_traits_extracted_tests...
+2025-12-27T19:29:53.9337242Z   [OK] Success
+2025-12-27T19:29:53.9351257Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T19:29:55.7597555Z   [OK] Success
+2025-12-27T19:29:55.7611652Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T19:29:57.3263578Z   [OK] Success
+2025-12-27T19:29:57.3277707Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T19:29:59.0839414Z   [OK] Success
+2025-12-27T19:29:59.0854100Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T19:30:00.5318768Z   [OK] Success
+2025-12-27T19:30:00.5332920Z Compiling: uint128_format_extracted_tests...
+2025-12-27T19:30:01.9603337Z   [OK] Success
+2025-12-27T19:30:01.9617254Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T19:30:03.6251770Z   [OK] Success
+2025-12-27T19:30:03.6267693Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T19:30:05.0653170Z   [OK] Success
+2025-12-27T19:30:05.0666988Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T19:30:06.4426718Z   [OK] Success
+2025-12-27T19:30:06.4441003Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T19:30:07.9464405Z   [OK] Success
+2025-12-27T19:30:07.9477944Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T19:30:09.3406346Z   [OK] Success
+2025-12-27T19:30:09.3420605Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T19:30:10.7405317Z   [OK] Success
+2025-12-27T19:30:10.7418783Z Compiling: uint128_t_extracted_tests...
+2025-12-27T19:30:12.7860184Z   [OK] Success
+2025-12-27T19:30:12.7874242Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T19:30:15.0870706Z   [OK] Success
+2025-12-27T19:30:15.0884784Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T19:30:16.5838292Z   [OK] Success
+2025-12-27T19:30:16.5838560Z 
+2025-12-27T19:30:16.5838687Z ================================
+2025-12-27T19:30:16.5839053Z Build Summary
+2025-12-27T19:30:16.5839335Z   Compiled: 27
+2025-12-27T19:30:16.5839594Z   Failed: 0
+2025-12-27T19:30:16.5839861Z ================================
+2025-12-27T19:30:16.5840215Z [OK] All tests compiled successfully
+2025-12-27T19:30:16.5870530Z ##[group]Run chmod +x scripts/run_uint128_extracted_tests.bash
+2025-12-27T19:30:16.5870935Z [36;1mchmod +x scripts/run_uint128_extracted_tests.bash[0m
+2025-12-27T19:30:16.5871299Z [36;1m./scripts/run_uint128_extracted_tests.bash clang debug[0m
+2025-12-27T19:30:16.5905846Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:30:16.5906069Z ##[endgroup]
+2025-12-27T19:30:16.5984837Z ================================
+2025-12-27T19:30:16.5985240Z Running Extracted Tests
+2025-12-27T19:30:16.5985566Z Compiler: clang
+2025-12-27T19:30:16.5985872Z Build Type: debug
+2025-12-27T19:30:16.5986153Z ================================
+2025-12-27T19:30:16.6008774Z Found 27 test binaries
+2025-12-27T19:30:16.6009010Z 
+2025-12-27T19:30:16.6021494Z Running: int128_algorithm_extracted_tests...
+2025-12-27T19:30:16.6037968Z   [OK] Passed
+2025-12-27T19:30:16.6049670Z Running: int128_bits_extracted_tests...
+2025-12-27T19:30:16.6063649Z   [OK] Passed
+2025-12-27T19:30:16.6075408Z Running: int128_cmath_extracted_tests...
+2025-12-27T19:30:16.6092548Z   [OK] Passed
+2025-12-27T19:30:16.6104540Z Running: int128_concepts_extracted_tests...
+2025-12-27T19:30:16.6118197Z   [OK] Passed
+2025-12-27T19:30:16.6129945Z Running: int128_format_extracted_tests...
+2025-12-27T19:30:16.6145339Z   [OK] Passed
+2025-12-27T19:30:16.6157040Z Running: int128_iostreams_extracted_tests...
+2025-12-27T19:30:16.6172583Z   [OK] Passed
+2025-12-27T19:30:16.6184994Z Running: int128_limits_extracted_tests...
+2025-12-27T19:30:16.6202205Z   [OK] Passed
+2025-12-27T19:30:16.6214090Z Running: int128_numeric_extracted_tests...
+2025-12-27T19:30:16.6229786Z   [OK] Passed
+2025-12-27T19:30:16.6241350Z Running: int128_ranges_extracted_tests...
+2025-12-27T19:30:16.6255051Z   [OK] Passed
+2025-12-27T19:30:16.6267891Z Running: int128_safe_extracted_tests...
+2025-12-27T19:30:16.6281624Z   [OK] Passed
+2025-12-27T19:30:16.6293298Z Running: int128_t_extracted_tests...
+2025-12-27T19:30:16.6321479Z   [OK] Passed
+2025-12-27T19:30:16.6333390Z Running: int128_thread_safety_extracted_tests...
+2025-12-27T19:30:16.6506797Z   [OK] Passed
+2025-12-27T19:30:16.6518631Z Running: int128_traits_extracted_tests...
+2025-12-27T19:30:16.6532189Z   [OK] Passed
+2025-12-27T19:30:16.6544098Z Running: uint128_algorithm_extracted_tests...
+2025-12-27T19:30:16.6557770Z   [OK] Passed
+2025-12-27T19:30:16.6569400Z Running: uint128_bits_extracted_tests...
+2025-12-27T19:30:16.6583395Z   [OK] Passed
+2025-12-27T19:30:16.6595239Z Running: uint128_cmath_extracted_tests...
+2025-12-27T19:30:16.6610102Z   [OK] Passed
+2025-12-27T19:30:16.6621935Z Running: uint128_concepts_extracted_tests...
+2025-12-27T19:30:16.6635794Z   [OK] Passed
+2025-12-27T19:30:16.6647946Z Running: uint128_format_extracted_tests...
+2025-12-27T19:30:16.7599904Z ./scripts/run_uint128_extracted_tests.bash: line 58:  4132 Aborted                 (core dumped) "$test_bin" > "${test_bin}.output" 2>&1
+2025-12-27T19:30:16.7600833Z   [FAIL] Failed (exit code: 134)
+2025-12-27T19:30:16.7601126Z   Output:
+2025-12-27T19:30:16.7616964Z === uint128_t format tests ===
+2025-12-27T19:30:16.7618089Z test_format_decimal: passed
+2025-12-27T19:30:16.7618541Z test_format_hexadecimal: passed
+2025-12-27T19:30:16.7619063Z test_format_octal: passed
+2025-12-27T19:30:16.7621253Z test_format_with_width: passed
+2025-12-27T19:30:16.7621662Z test_format_internal_align: passed
+2025-12-27T19:30:16.7622833Z uint128_format_extracted_tests: tests/uint128_format_extracted_tests.cpp:81: void test_format_like_iostream(): Assertion `result == "0XFF"' failed.
+2025-12-27T19:30:16.7633673Z Running: uint128_interop_extracted_tests...
+2025-12-27T19:30:16.7654488Z   [OK] Passed
+2025-12-27T19:30:16.7671195Z Running: uint128_iostreams_extracted_tests...
+2025-12-27T19:30:16.7686859Z   [OK] Passed
+2025-12-27T19:30:16.7699020Z Running: uint128_limits_extracted_tests...
+2025-12-27T19:30:16.7715506Z   [OK] Passed
+2025-12-27T19:30:16.7728458Z Running: uint128_numeric_extracted_tests...
+2025-12-27T19:30:16.7748268Z   [OK] Passed
+2025-12-27T19:30:16.7759768Z Running: uint128_ranges_extracted_tests...
+2025-12-27T19:30:16.7775181Z   [OK] Passed
+2025-12-27T19:30:16.7788020Z Running: uint128_safe_extracted_tests...
+2025-12-27T19:30:16.7802467Z   [OK] Passed
+2025-12-27T19:30:16.7815630Z Running: uint128_t_extracted_tests...
+2025-12-27T19:30:16.9444192Z ./scripts/run_uint128_extracted_tests.bash: line 58:  4158 Aborted                 (core dumped) "$test_bin" > "${test_bin}.output" 2>&1
+2025-12-27T19:30:16.9446310Z   [FAIL] Failed (exit code: 134)
+2025-12-27T19:30:16.9446641Z   Output:
+2025-12-27T19:30:16.9470516Z Running comprehensive tests for uint128_t (66 original + 18 additional)...
+2025-12-27T19:30:16.9471950Z 
+2025-12-27T19:30:16.9473614Z test_sizeof_is_16_bytes passed
+2025-12-27T19:30:16.9473993Z test_bits_is_128 passed
+2025-12-27T19:30:16.9474342Z test_sizeof_high_is_8_bytes passed
+2025-12-27T19:30:16.9474743Z test_self_div_2_64_equ_high passed
+2025-12-27T19:30:16.9475115Z test_sizeof_low_is_8_bytes passed
+2025-12-27T19:30:16.9475489Z test_self_rem_2_64_equ_low passed
+2025-12-27T19:30:16.9475854Z test_set_high passed
+2025-12-27T19:30:16.9476195Z test_set_low passed
+2025-12-27T19:30:16.9476506Z test_default_constructor passed
+2025-12-27T19:30:16.9476951Z test_integral_constructor passed
+2025-12-27T19:30:16.9477327Z test_integral_assignment passed
+2025-12-27T19:30:16.9477698Z test_high_low_constructor passed
+2025-12-27T19:30:16.9478070Z test_cstr_constructor passed
+2025-12-27T19:30:16.9478428Z test_cstr_assignment passed
+2025-12-27T19:30:16.9478778Z test_bool_conversion passed
+2025-12-27T19:30:16.9479132Z test_integral_conversion passed
+2025-12-27T19:30:16.9479504Z test___uint128_conversion passed
+2025-12-27T19:30:16.9479874Z test___int128_conversion passed
+2025-12-27T19:30:16.9480251Z test_addition_assignment passed
+2025-12-27T19:30:16.9480625Z test_subtraction_assignment passed
+2025-12-27T19:30:16.9480999Z test_add_operator passed
+2025-12-27T19:30:16.9481329Z test_sub_operator passed
+2025-12-27T19:30:16.9481657Z test_pre_increment passed
+2025-12-27T19:30:16.9481994Z test_post_increment passed
+2025-12-27T19:30:16.9482338Z test_pre_decrement passed
+2025-12-27T19:30:16.9482886Z test_post_decrement passed
+2025-12-27T19:30:16.9483241Z test_leading_zeros passed
+2025-12-27T19:30:16.9483566Z test_trailing_zeros passed
+2025-12-27T19:30:16.9483905Z test_bitwise_operators passed
+2025-12-27T19:30:16.9484306Z test_bitwise_assignment_operators passed
+2025-12-27T19:30:16.9484723Z test_shift_left passed
+2025-12-27T19:30:16.9485043Z test_shift_right passed
+2025-12-27T19:30:16.9485373Z test_effective_length passed
+2025-12-27T19:30:16.9485712Z test_is_power_of_2 passed
+2025-12-27T19:30:16.9486056Z test_comparison_operators passed
+2025-12-27T19:30:16.9486444Z test_divrem: test_divrem_basic ......
+2025-12-27T19:30:16.9486845Z test_divrem: test_divrem_basic passed
+2025-12-27T19:30:16.9487245Z test_divrem: test_divrem_zero ......
+2025-12-27T19:30:16.9487640Z test_divrem: test_divrem_zero passed
+2025-12-27T19:30:16.9488026Z test_divrem: test_divrem_large ......
+2025-12-27T19:30:16.9488419Z test_divrem: test_divrem_large passed
+2025-12-27T19:30:16.9488885Z test_divrem: test_divrem_zero_integral_divisor ......
+2025-12-27T19:30:16.9489415Z test_divrem: test_divrem_zero_integral_divisor passed
+2025-12-27T19:30:16.9489949Z test_divrem: test_divrem_basic_integral_divisor ......
+2025-12-27T19:30:16.9490478Z test_divrem: test_divrem_basic_integral_divisor passed
+2025-12-27T19:30:16.9491000Z test_divrem: test_divrem_large_integral_divisor ......
+2025-12-27T19:30:16.9491520Z test_divrem: test_divrem_large_integral_divisor passed
+2025-12-27T19:30:16.9492004Z test_divrem: test_divrem_random ......
+2025-12-27T19:30:16.9492459Z Running: uint128_thread_safety_extracted_tests...
+2025-12-27T19:30:16.9591780Z   [OK] Passed
+2025-12-27T19:30:16.9609528Z Running: uint128_traits_extracted_tests...
+2025-12-27T19:30:16.9628539Z   [OK] Passed
+2025-12-27T19:30:16.9629125Z 
+2025-12-27T19:30:16.9629358Z ================================
+2025-12-27T19:30:16.9629916Z Test Results
+2025-12-27T19:30:16.9630460Z   Passed: 25
+2025-12-27T19:30:16.9630875Z   Failed: 2
+2025-12-27T19:30:16.9631602Z ================================
+2025-12-27T19:30:16.9632189Z [FAIL] Some tests failed
+2025-12-27T19:30:16.9649278Z ##[error]Process completed with exit code 1.
+2025-12-27T19:30:16.9748933Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:30:16.9749207Z with:
+2025-12-27T19:30:16.9749414Z   name: clang-19-debug-binaries
+2025-12-27T19:30:16.9749653Z   path: build/build_tests/clang/debug/
+2025-12-27T19:30:16.9749890Z   retention-days: 7
+2025-12-27T19:30:16.9750072Z   if-no-files-found: warn
+2025-12-27T19:30:16.9750270Z   compression-level: 6
+2025-12-27T19:30:16.9750453Z   overwrite: false
+2025-12-27T19:30:16.9750647Z   include-hidden-files: false
+2025-12-27T19:30:16.9750849Z ##[endgroup]
+2025-12-27T19:30:17.2168343Z With the provided path, there will be 81 files uploaded
+2025-12-27T19:30:17.2172942Z Artifact name is valid!
+2025-12-27T19:30:17.2174402Z Root directory input is valid!
+2025-12-27T19:30:17.3033717Z Beginning upload of artifact content to blob storage
+2025-12-27T19:30:17.6195259Z Uploaded bytes 1865006
+2025-12-27T19:30:17.6356753Z Finished uploading artifact content to blob storage!
+2025-12-27T19:30:17.6360115Z SHA256 digest of uploaded artifact zip is 70bd4f3d6a242abae685ea6859dace63a6a91dfe68b6e55de5dc0da8794d9057
+2025-12-27T19:30:17.6361477Z Finalizing artifact upload
+2025-12-27T19:30:17.7073317Z Artifact clang-19-debug-binaries.zip successfully finalized. Artifact ID 4976065323
+2025-12-27T19:30:17.7074508Z Artifact clang-19-debug-binaries has been successfully uploaded! Final size is 1865006 bytes. Artifact ID is 4976065323
+2025-12-27T19:30:17.7080570Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543398611/artifacts/4976065323
+2025-12-27T19:30:17.7250543Z Post job cleanup.
+2025-12-27T19:30:17.8171714Z [command]/usr/bin/git version
+2025-12-27T19:30:17.8207201Z git version 2.52.0
+2025-12-27T19:30:17.8249846Z Temporarily overriding HOME='/home/runner/work/_temp/5b8e327a-ff55-4ae8-85cf-772f8d6daadb' before making global git config changes
+2025-12-27T19:30:17.8250798Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:30:17.8261511Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T19:30:17.8295015Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:30:17.8326643Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T19:30:17.8567949Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:30:17.8590145Z http.https://github.com/.extraheader
+2025-12-27T19:30:17.8603917Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T19:30:17.8635373Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T19:30:17.8874601Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:30:17.8907889Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T19:30:17.9258967Z Cleaning up orphan processes

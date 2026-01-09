@@ -1,0 +1,21 @@
+﻿2025-12-27T19:43:56.6783425Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:43:56.6783694Z with:
+2025-12-27T19:43:56.6784029Z   name: clang-19-debug-binaries
+2025-12-27T19:43:56.6784327Z   path: build/build_tests/clang/debug/
+2025-12-27T19:43:56.6784730Z   retention-days: 7
+2025-12-27T19:43:56.6785009Z   if-no-files-found: warn
+2025-12-27T19:43:56.6785328Z   compression-level: 6
+2025-12-27T19:43:56.6785610Z   overwrite: false
+2025-12-27T19:43:56.6786124Z   include-hidden-files: false
+2025-12-27T19:43:56.6786494Z ##[endgroup]
+2025-12-27T19:43:56.9362814Z With the provided path, there will be 81 files uploaded
+2025-12-27T19:43:56.9368263Z Artifact name is valid!
+2025-12-27T19:43:56.9369431Z Root directory input is valid!
+2025-12-27T19:43:57.2181222Z Beginning upload of artifact content to blob storage
+2025-12-27T19:43:58.1899753Z Uploaded bytes 1866911
+2025-12-27T19:43:58.2936532Z Finished uploading artifact content to blob storage!
+2025-12-27T19:43:58.2938821Z SHA256 digest of uploaded artifact zip is 75e9840e617cb30175e9d5d279c2c1b4afabdbeb121a9ce835be937ee7d7501c
+2025-12-27T19:43:58.2940890Z Finalizing artifact upload
+2025-12-27T19:43:58.4371069Z Artifact clang-19-debug-binaries.zip successfully finalized. Artifact ID 4976097634
+2025-12-27T19:43:58.4372500Z Artifact clang-19-debug-binaries has been successfully uploaded! Final size is 1866911 bytes. Artifact ID is 4976097634
+2025-12-27T19:43:58.4379608Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543541965/artifacts/4976097634

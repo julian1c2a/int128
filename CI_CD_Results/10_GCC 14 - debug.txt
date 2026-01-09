@@ -1,0 +1,422 @@
+﻿2025-12-27T19:38:35.0345618Z Current runner version: '2.330.0'
+2025-12-27T19:38:35.0369746Z ##[group]Runner Image Provisioner
+2025-12-27T19:38:35.0370504Z Hosted Compute Agent
+2025-12-27T19:38:35.0371028Z Version: 20251211.462
+2025-12-27T19:38:35.0371684Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:38:35.0372395Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:38:35.0373001Z Worker ID: {02fa9717-9af8-4006-aabd-c33199a432b5}
+2025-12-27T19:38:35.0373750Z ##[endgroup]
+2025-12-27T19:38:35.0374274Z ##[group]Operating System
+2025-12-27T19:38:35.0374793Z Ubuntu
+2025-12-27T19:38:35.0375304Z 24.04.3
+2025-12-27T19:38:35.0375746Z LTS
+2025-12-27T19:38:35.0376227Z ##[endgroup]
+2025-12-27T19:38:35.0376713Z ##[group]Runner Image
+2025-12-27T19:38:35.0377251Z Image: ubuntu-24.04
+2025-12-27T19:38:35.0377713Z Version: 20251215.174.1
+2025-12-27T19:38:35.0379053Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T19:38:35.0380658Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T19:38:35.0381692Z ##[endgroup]
+2025-12-27T19:38:35.0382707Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:38:35.0384539Z Contents: read
+2025-12-27T19:38:35.0385106Z Metadata: read
+2025-12-27T19:38:35.0385584Z Packages: read
+2025-12-27T19:38:35.0386021Z ##[endgroup]
+2025-12-27T19:38:35.0388851Z Secret source: Actions
+2025-12-27T19:38:35.0389775Z Prepare workflow directory
+2025-12-27T19:38:35.0713368Z Prepare all required actions
+2025-12-27T19:38:35.0753483Z Getting action download info
+2025-12-27T19:38:35.4314068Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:38:35.5354716Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:38:35.8678268Z Complete job name: GCC 14 - debug
+2025-12-27T19:38:35.9315846Z ##[group]Run actions/checkout@v4
+2025-12-27T19:38:35.9316814Z with:
+2025-12-27T19:38:35.9317235Z   repository: julian1c2a/int128
+2025-12-27T19:38:35.9317893Z   token: ***
+2025-12-27T19:38:35.9318267Z   ssh-strict: true
+2025-12-27T19:38:35.9318831Z   ssh-user: git
+2025-12-27T19:38:35.9319223Z   persist-credentials: true
+2025-12-27T19:38:35.9319666Z   clean: true
+2025-12-27T19:38:35.9320058Z   sparse-checkout-cone-mode: true
+2025-12-27T19:38:35.9320542Z   fetch-depth: 1
+2025-12-27T19:38:35.9320918Z   fetch-tags: false
+2025-12-27T19:38:35.9321313Z   show-progress: true
+2025-12-27T19:38:35.9321700Z   lfs: false
+2025-12-27T19:38:35.9322073Z   submodules: false
+2025-12-27T19:38:35.9322486Z   set-safe-directory: true
+2025-12-27T19:38:35.9323234Z ##[endgroup]
+2025-12-27T19:38:36.0383275Z Syncing repository: julian1c2a/int128
+2025-12-27T19:38:36.0385167Z ##[group]Getting Git version info
+2025-12-27T19:38:36.0385891Z Working directory is '/home/runner/work/int128/int128'
+2025-12-27T19:38:36.0386859Z [command]/usr/bin/git version
+2025-12-27T19:38:36.0496093Z git version 2.52.0
+2025-12-27T19:38:36.0522712Z ##[endgroup]
+2025-12-27T19:38:36.0546390Z Temporarily overriding HOME='/home/runner/work/_temp/09a8a8e4-f692-4181-a7ce-1e5185fb3038' before making global git config changes
+2025-12-27T19:38:36.0549074Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:38:36.0552683Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T19:38:36.0593917Z Deleting the contents of '/home/runner/work/int128/int128'
+2025-12-27T19:38:36.0597742Z ##[group]Initializing the repository
+2025-12-27T19:38:36.0602761Z [command]/usr/bin/git init /home/runner/work/int128/int128
+2025-12-27T19:38:36.0738930Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-27T19:38:36.0740388Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-27T19:38:36.0741396Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-27T19:38:36.0742137Z hint: call:
+2025-12-27T19:38:36.0742565Z hint:
+2025-12-27T19:38:36.0743658Z hint: 	git config --global init.defaultBranch <name>
+2025-12-27T19:38:36.0744726Z hint:
+2025-12-27T19:38:36.0745717Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-27T19:38:36.0747247Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-27T19:38:36.0748755Z hint:
+2025-12-27T19:38:36.0749531Z hint: 	git branch -m <name>
+2025-12-27T19:38:36.0750347Z hint:
+2025-12-27T19:38:36.0751394Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-27T19:38:36.0753168Z Initialized empty Git repository in /home/runner/work/int128/int128/.git/
+2025-12-27T19:38:36.0760021Z [command]/usr/bin/git remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:38:36.0797954Z ##[endgroup]
+2025-12-27T19:38:36.0799465Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:38:36.0802929Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-27T19:38:36.0835962Z ##[endgroup]
+2025-12-27T19:38:36.0836690Z ##[group]Setting up auth
+2025-12-27T19:38:36.0845991Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:38:36.0879369Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T19:38:36.1295804Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:38:36.1324761Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T19:38:36.1545417Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:38:36.1585536Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T19:38:36.1806548Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-27T19:38:36.1843456Z ##[endgroup]
+2025-12-27T19:38:36.1844825Z ##[group]Fetching the repository
+2025-12-27T19:38:36.1854231Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fe557597747f7543dc68eb36af4b417ddafd4f07:refs/remotes/origin/main
+2025-12-27T19:38:36.5382424Z From https://github.com/julian1c2a/int128
+2025-12-27T19:38:36.5411360Z  * [new ref]         fe557597747f7543dc68eb36af4b417ddafd4f07 -> origin/main
+2025-12-27T19:38:36.5414266Z ##[endgroup]
+2025-12-27T19:38:36.5415537Z ##[group]Determining the checkout info
+2025-12-27T19:38:36.5416871Z ##[endgroup]
+2025-12-27T19:38:36.5421510Z [command]/usr/bin/git sparse-checkout disable
+2025-12-27T19:38:36.5465926Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:38:36.5491634Z ##[group]Checking out the ref
+2025-12-27T19:38:36.5496042Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:38:36.6052817Z Switched to a new branch 'main'
+2025-12-27T19:38:36.6054451Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:38:36.6065337Z ##[endgroup]
+2025-12-27T19:38:36.6109109Z [command]/usr/bin/git log -1 --format=%H
+2025-12-27T19:38:36.6133622Z fe557597747f7543dc68eb36af4b417ddafd4f07
+2025-12-27T19:38:36.6330957Z ##[group]Run sudo apt update
+2025-12-27T19:38:36.6331552Z [36;1msudo apt update[0m
+2025-12-27T19:38:36.6332077Z [36;1msudo apt install -y gcc-14 g++-14[0m
+2025-12-27T19:38:36.6332639Z [36;1mgcc-14 --version[0m
+2025-12-27T19:38:36.6371175Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:38:36.6371696Z ##[endgroup]
+2025-12-27T19:38:36.6555223Z 
+2025-12-27T19:38:36.6556331Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:38:36.6556985Z 
+2025-12-27T19:38:36.7246950Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T19:38:36.7550381Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T19:38:36.7582127Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-12-27T19:38:36.7632396Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-12-27T19:38:36.7652856Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2025-12-27T19:38:36.8135849Z Hit:6 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T19:38:36.8174092Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2025-12-27T19:38:36.8886228Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1684 kB]
+2025-12-27T19:38:36.9039256Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2025-12-27T19:38:36.9067142Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+2025-12-27T19:38:36.9092239Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [15.8 kB]
+2025-12-27T19:38:36.9117104Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1506 kB]
+2025-12-27T19:38:36.9211417Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [306 kB]
+2025-12-27T19:38:36.9246920Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [378 kB]
+2025-12-27T19:38:36.9292435Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.4 kB]
+2025-12-27T19:38:36.9302762Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2413 kB]
+2025-12-27T19:38:36.9452136Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [550 kB]
+2025-12-27T19:38:36.9939720Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+2025-12-27T19:38:36.9951832Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [516 B]
+2025-12-27T19:38:36.9965072Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [30.3 kB]
+2025-12-27T19:38:36.9973351Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6048 B]
+2025-12-27T19:38:36.9988030Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+2025-12-27T19:38:37.0003755Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [488 B]
+2025-12-27T19:38:37.0016273Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+2025-12-27T19:38:37.0027813Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7300 B]
+2025-12-27T19:38:37.0040887Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+2025-12-27T19:38:37.0052696Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [29.5 kB]
+2025-12-27T19:38:37.0064067Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [17.9 kB]
+2025-12-27T19:38:37.0075034Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+2025-12-27T19:38:37.0086533Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1444 B]
+2025-12-27T19:38:37.0097329Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-12-27T19:38:37.0540498Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-12-27T19:38:37.0558295Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [225 kB]
+2025-12-27T19:38:37.0586320Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+2025-12-27T19:38:37.0596286Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9504 B]
+2025-12-27T19:38:37.0608970Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [71.5 kB]
+2025-12-27T19:38:37.0623624Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+2025-12-27T19:38:37.0634846Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+2025-12-27T19:38:37.1267115Z Get:39 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [58.9 kB]
+2025-12-27T19:38:37.1379897Z Get:40 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.4 kB]
+2025-12-27T19:38:37.1414483Z Get:41 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [77.4 kB]
+2025-12-27T19:38:45.4453147Z Fetched 8375 kB in 1s (7867 kB/s)
+2025-12-27T19:38:46.2023660Z Reading package lists...
+2025-12-27T19:38:46.3734658Z Building dependency tree...
+2025-12-27T19:38:46.3740766Z Reading state information...
+2025-12-27T19:38:46.3898359Z 69 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-12-27T19:38:46.4007893Z 
+2025-12-27T19:38:46.4008781Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:38:46.4009367Z 
+2025-12-27T19:38:46.4144258Z Reading package lists...
+2025-12-27T19:38:46.5779132Z Building dependency tree...
+2025-12-27T19:38:46.5786949Z Reading state information...
+2025-12-27T19:38:46.7415976Z gcc-14 is already the newest version (14.2.0-4ubuntu2~24.04).
+2025-12-27T19:38:46.7416649Z gcc-14 set to manually installed.
+2025-12-27T19:38:46.7417127Z g++-14 is already the newest version (14.2.0-4ubuntu2~24.04).
+2025-12-27T19:38:46.8005380Z 0 upgraded, 0 newly installed, 0 to remove and 69 not upgraded.
+2025-12-27T19:38:46.9320793Z gcc-14 (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
+2025-12-27T19:38:46.9321641Z Copyright (C) 2024 Free Software Foundation, Inc.
+2025-12-27T19:38:46.9322541Z This is free software; see the source for copying conditions.  There is NO
+2025-12-27T19:38:46.9323530Z warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+2025-12-27T19:38:46.9324225Z 
+2025-12-27T19:38:46.9364053Z ##[group]Run export CC=gcc-14
+2025-12-27T19:38:46.9364359Z [36;1mexport CC=gcc-14[0m
+2025-12-27T19:38:46.9364581Z [36;1mexport CXX=g++-14[0m
+2025-12-27T19:38:46.9364863Z [36;1mchmod +x scripts/build_extracted_tests.bash[0m
+2025-12-27T19:38:46.9365180Z [36;1m./scripts/build_extracted_tests.bash gcc debug[0m
+2025-12-27T19:38:46.9396749Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:38:46.9396983Z ##[endgroup]
+2025-12-27T19:38:46.9474552Z ================================
+2025-12-27T19:38:46.9474971Z Building Extracted Tests
+2025-12-27T19:38:46.9475247Z Compiler: gcc
+2025-12-27T19:38:46.9475484Z Build Type: debug
+2025-12-27T19:38:46.9475799Z ================================
+2025-12-27T19:38:46.9510687Z Using compiler: g++-14
+2025-12-27T19:38:46.9511320Z Optimization flags: -O0 -g
+2025-12-27T19:38:46.9511573Z 
+2025-12-27T19:38:46.9512577Z Found 27 test files
+2025-12-27T19:38:46.9512836Z 
+2025-12-27T19:38:46.9527286Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T19:38:50.1889761Z   [OK] Success
+2025-12-27T19:38:50.1903217Z Compiling: int128_bits_extracted_tests...
+2025-12-27T19:38:51.4135640Z   [OK] Success
+2025-12-27T19:38:51.4150592Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T19:38:52.8455339Z   [OK] Success
+2025-12-27T19:38:52.8468870Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T19:38:53.9389966Z   [OK] Success
+2025-12-27T19:38:53.9404238Z Compiling: int128_format_extracted_tests...
+2025-12-27T19:38:55.1071402Z   [OK] Success
+2025-12-27T19:38:55.1085630Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T19:38:56.3096627Z   [OK] Success
+2025-12-27T19:38:56.3110562Z Compiling: int128_limits_extracted_tests...
+2025-12-27T19:38:57.4123226Z   [OK] Success
+2025-12-27T19:38:57.4137295Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T19:38:58.6188331Z   [OK] Success
+2025-12-27T19:38:58.6202418Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T19:38:59.7288465Z   [OK] Success
+2025-12-27T19:38:59.7302960Z Compiling: int128_safe_extracted_tests...
+2025-12-27T19:39:00.8633561Z   [OK] Success
+2025-12-27T19:39:00.8646489Z Compiling: int128_t_extracted_tests...
+2025-12-27T19:39:02.2259469Z   [OK] Success
+2025-12-27T19:39:02.2273281Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T19:39:04.3009383Z   [OK] Success
+2025-12-27T19:39:04.3023074Z Compiling: int128_traits_extracted_tests...
+2025-12-27T19:39:05.4766098Z   [OK] Success
+2025-12-27T19:39:05.4780492Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T19:39:06.9692933Z   [OK] Success
+2025-12-27T19:39:06.9706722Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T19:39:08.1357264Z   [OK] Success
+2025-12-27T19:39:08.1370863Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T19:39:09.5154919Z   [OK] Success
+2025-12-27T19:39:09.5168399Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T19:39:10.5951457Z   [OK] Success
+2025-12-27T19:39:10.5965263Z Compiling: uint128_format_extracted_tests...
+2025-12-27T19:39:11.7349069Z   [OK] Success
+2025-12-27T19:39:11.7363499Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T19:39:13.0679580Z   [OK] Success
+2025-12-27T19:39:13.0696408Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T19:39:14.2826411Z   [OK] Success
+2025-12-27T19:39:14.2840848Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T19:39:15.3727075Z   [OK] Success
+2025-12-27T19:39:15.3740920Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T19:39:16.5666845Z   [OK] Success
+2025-12-27T19:39:16.5681049Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T19:39:17.6383430Z   [OK] Success
+2025-12-27T19:39:17.6397009Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T19:39:18.7311828Z   [OK] Success
+2025-12-27T19:39:18.7325587Z Compiling: uint128_t_extracted_tests...
+2025-12-27T19:39:20.5627638Z   [OK] Success
+2025-12-27T19:39:20.5642963Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T19:39:22.3702363Z   [OK] Success
+2025-12-27T19:39:22.3716524Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T19:39:23.5203959Z   [OK] Success
+2025-12-27T19:39:23.5204264Z 
+2025-12-27T19:39:23.5204412Z ================================
+2025-12-27T19:39:23.5204846Z Build Summary
+2025-12-27T19:39:23.5205233Z   Compiled: 27
+2025-12-27T19:39:23.5205604Z   Failed: 0
+2025-12-27T19:39:23.5205890Z ================================
+2025-12-27T19:39:23.5206289Z [OK] All tests compiled successfully
+2025-12-27T19:39:23.5300441Z ##[group]Run chmod +x scripts/run_uint128_extracted_tests.bash
+2025-12-27T19:39:23.5300878Z [36;1mchmod +x scripts/run_uint128_extracted_tests.bash[0m
+2025-12-27T19:39:23.5301226Z [36;1m./scripts/run_uint128_extracted_tests.bash gcc debug[0m
+2025-12-27T19:39:23.5333008Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:39:23.5333240Z ##[endgroup]
+2025-12-27T19:39:23.5408970Z ================================
+2025-12-27T19:39:23.5409380Z Running Extracted Tests
+2025-12-27T19:39:23.5409704Z Compiler: gcc
+2025-12-27T19:39:23.5409983Z Build Type: debug
+2025-12-27T19:39:23.5410293Z ================================
+2025-12-27T19:39:23.5431905Z Found 27 test binaries
+2025-12-27T19:39:23.5432128Z 
+2025-12-27T19:39:23.5444797Z Running: int128_algorithm_extracted_tests...
+2025-12-27T19:39:23.5460852Z   [OK] Passed
+2025-12-27T19:39:23.5472673Z Running: int128_bits_extracted_tests...
+2025-12-27T19:39:23.5486704Z   [OK] Passed
+2025-12-27T19:39:23.5498737Z Running: int128_cmath_extracted_tests...
+2025-12-27T19:39:23.5516279Z   [OK] Passed
+2025-12-27T19:39:23.5527828Z Running: int128_concepts_extracted_tests...
+2025-12-27T19:39:23.5541554Z   [OK] Passed
+2025-12-27T19:39:23.5553360Z Running: int128_format_extracted_tests...
+2025-12-27T19:39:23.5568857Z   [OK] Passed
+2025-12-27T19:39:23.5580587Z Running: int128_iostreams_extracted_tests...
+2025-12-27T19:39:23.5596587Z   [OK] Passed
+2025-12-27T19:39:23.5608852Z Running: int128_limits_extracted_tests...
+2025-12-27T19:39:23.5626361Z   [OK] Passed
+2025-12-27T19:39:23.5638134Z Running: int128_numeric_extracted_tests...
+2025-12-27T19:39:23.5654324Z   [OK] Passed
+2025-12-27T19:39:23.5666161Z Running: int128_ranges_extracted_tests...
+2025-12-27T19:39:23.5680391Z   [OK] Passed
+2025-12-27T19:39:23.5692268Z Running: int128_safe_extracted_tests...
+2025-12-27T19:39:23.5706097Z   [OK] Passed
+2025-12-27T19:39:23.5717561Z Running: int128_t_extracted_tests...
+2025-12-27T19:39:23.5745106Z   [OK] Passed
+2025-12-27T19:39:23.5756811Z Running: int128_thread_safety_extracted_tests...
+2025-12-27T19:39:23.5963456Z   [OK] Passed
+2025-12-27T19:39:23.5975383Z Running: int128_traits_extracted_tests...
+2025-12-27T19:39:23.5989741Z   [OK] Passed
+2025-12-27T19:39:23.6001381Z Running: uint128_algorithm_extracted_tests...
+2025-12-27T19:39:23.6015375Z   [OK] Passed
+2025-12-27T19:39:23.6027052Z Running: uint128_bits_extracted_tests...
+2025-12-27T19:39:23.6040925Z   [OK] Passed
+2025-12-27T19:39:23.6052737Z Running: uint128_cmath_extracted_tests...
+2025-12-27T19:39:23.6067583Z   [OK] Passed
+2025-12-27T19:39:23.6079341Z Running: uint128_concepts_extracted_tests...
+2025-12-27T19:39:23.6093154Z   [OK] Passed
+2025-12-27T19:39:23.6104500Z Running: uint128_format_extracted_tests...
+2025-12-27T19:39:23.6780212Z ./scripts/run_uint128_extracted_tests.bash: line 58:  2877 Aborted                 (core dumped) "$test_bin" > "${test_bin}.output" 2>&1
+2025-12-27T19:39:23.6781432Z   [FAIL] Failed (exit code: 134)
+2025-12-27T19:39:23.6782757Z   Output:
+2025-12-27T19:39:23.6795473Z === uint128_t format tests ===
+2025-12-27T19:39:23.6796434Z test_format_decimal: passed
+2025-12-27T19:39:23.6796836Z test_format_hexadecimal: passed
+2025-12-27T19:39:23.6797394Z test_format_octal: passed
+2025-12-27T19:39:23.6797765Z test_format_with_width: passed
+2025-12-27T19:39:23.6798156Z test_format_internal_align: passed
+2025-12-27T19:39:23.6799713Z uint128_format_extracted_tests: tests/uint128_format_extracted_tests.cpp:81: void test_format_like_iostream(): Assertion `result == "0XFF"' failed.
+2025-12-27T19:39:23.6814028Z Running: uint128_interop_extracted_tests...
+2025-12-27T19:39:23.6835948Z   [OK] Passed
+2025-12-27T19:39:23.6849854Z Running: uint128_iostreams_extracted_tests...
+2025-12-27T19:39:23.6865538Z   [OK] Passed
+2025-12-27T19:39:23.6877579Z Running: uint128_limits_extracted_tests...
+2025-12-27T19:39:23.6892843Z   [OK] Passed
+2025-12-27T19:39:23.6906744Z Running: uint128_numeric_extracted_tests...
+2025-12-27T19:39:23.6924528Z   [OK] Passed
+2025-12-27T19:39:23.6937050Z Running: uint128_ranges_extracted_tests...
+2025-12-27T19:39:23.6952425Z   [OK] Passed
+2025-12-27T19:39:23.6964614Z Running: uint128_safe_extracted_tests...
+2025-12-27T19:39:23.6979618Z   [OK] Passed
+2025-12-27T19:39:23.6991622Z Running: uint128_t_extracted_tests...
+2025-12-27T19:39:23.8758780Z ./scripts/run_uint128_extracted_tests.bash: line 58:  2903 Aborted                 (core dumped) "$test_bin" > "${test_bin}.output" 2>&1
+2025-12-27T19:39:23.8759624Z   [FAIL] Failed (exit code: 134)
+2025-12-27T19:39:23.8759974Z   Output:
+2025-12-27T19:39:23.8775260Z Running comprehensive tests for uint128_t (66 original + 18 additional)...
+2025-12-27T19:39:23.8775822Z 
+2025-12-27T19:39:23.8775961Z test_sizeof_is_16_bytes passed
+2025-12-27T19:39:23.8776468Z test_bits_is_128 passed
+2025-12-27T19:39:23.8777460Z test_sizeof_high_is_8_bytes passed
+2025-12-27T19:39:23.8777868Z test_self_div_2_64_equ_high passed
+2025-12-27T19:39:23.8778253Z test_sizeof_low_is_8_bytes passed
+2025-12-27T19:39:23.8779525Z test_self_rem_2_64_equ_low passed
+2025-12-27T19:39:23.8780078Z test_set_high passed
+2025-12-27T19:39:23.8780408Z test_set_low passed
+2025-12-27T19:39:23.8780758Z test_default_constructor passed
+2025-12-27T19:39:23.8781131Z test_integral_constructor passed
+2025-12-27T19:39:23.8782252Z test_integral_assignment passed
+2025-12-27T19:39:23.8782654Z test_high_low_constructor passed
+2025-12-27T19:39:23.8783048Z test_cstr_constructor passed
+2025-12-27T19:39:23.8783409Z test_cstr_assignment passed
+2025-12-27T19:39:23.8783769Z test_bool_conversion passed
+2025-12-27T19:39:23.8784116Z test_integral_conversion passed
+2025-12-27T19:39:23.8784468Z test___uint128_conversion passed
+2025-12-27T19:39:23.8785103Z test___int128_conversion passed
+2025-12-27T19:39:23.8785648Z test_addition_assignment passed
+2025-12-27T19:39:23.8786034Z test_subtraction_assignment passed
+2025-12-27T19:39:23.8786430Z test_add_operator passed
+2025-12-27T19:39:23.8786775Z test_sub_operator passed
+2025-12-27T19:39:23.8787330Z test_pre_increment passed
+2025-12-27T19:39:23.8787686Z test_post_increment passed
+2025-12-27T19:39:23.8788042Z test_pre_decrement passed
+2025-12-27T19:39:23.8789166Z test_post_decrement passed
+2025-12-27T19:39:23.8789545Z test_leading_zeros passed
+2025-12-27T19:39:23.8789907Z test_trailing_zeros passed
+2025-12-27T19:39:23.8790263Z test_bitwise_operators passed
+2025-12-27T19:39:23.8790661Z test_bitwise_assignment_operators passed
+2025-12-27T19:39:23.8791072Z test_shift_left passed
+2025-12-27T19:39:23.8791399Z test_shift_right passed
+2025-12-27T19:39:23.8791736Z test_effective_length passed
+2025-12-27T19:39:23.8792467Z test_is_power_of_2 passed
+2025-12-27T19:39:23.8792846Z test_comparison_operators passed
+2025-12-27T19:39:23.8793250Z test_divrem: test_divrem_basic ......
+2025-12-27T19:39:23.8793670Z test_divrem: test_divrem_basic passed
+2025-12-27T19:39:23.8794227Z test_divrem: test_divrem_zero ......
+2025-12-27T19:39:23.8794634Z test_divrem: test_divrem_zero passed
+2025-12-27T19:39:23.8795025Z test_divrem: test_divrem_large ......
+2025-12-27T19:39:23.8795430Z test_divrem: test_divrem_large passed
+2025-12-27T19:39:23.8795893Z test_divrem: test_divrem_zero_integral_divisor ......
+2025-12-27T19:39:23.8796431Z test_divrem: test_divrem_zero_integral_divisor passed
+2025-12-27T19:39:23.8796976Z test_divrem: test_divrem_basic_integral_divisor ......
+2025-12-27T19:39:23.8797524Z test_divrem: test_divrem_basic_integral_divisor passed
+2025-12-27T19:39:23.8798073Z test_divrem: test_divrem_large_integral_divisor ......
+2025-12-27T19:39:23.8799409Z test_divrem: test_divrem_large_integral_divisor passed
+2025-12-27T19:39:23.8799925Z test_divrem: test_divrem_random ......
+2025-12-27T19:39:23.8800386Z Running: uint128_thread_safety_extracted_tests...
+2025-12-27T19:39:23.8887620Z   [OK] Passed
+2025-12-27T19:39:23.8900308Z Running: uint128_traits_extracted_tests...
+2025-12-27T19:39:23.8916299Z   [OK] Passed
+2025-12-27T19:39:23.8916617Z 
+2025-12-27T19:39:23.8916784Z ================================
+2025-12-27T19:39:23.8917158Z Test Results
+2025-12-27T19:39:23.8917440Z   Passed: 25
+2025-12-27T19:39:23.8917724Z   Failed: 2
+2025-12-27T19:39:23.8918259Z ================================
+2025-12-27T19:39:23.8918861Z [FAIL] Some tests failed
+2025-12-27T19:39:23.8936345Z ##[error]Process completed with exit code 1.
+2025-12-27T19:39:23.9040403Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:39:23.9040850Z with:
+2025-12-27T19:39:23.9041169Z   name: gcc-14-debug-binaries
+2025-12-27T19:39:23.9041600Z   path: build/build_tests/gcc/debug/
+2025-12-27T19:39:23.9042002Z   retention-days: 7
+2025-12-27T19:39:23.9042316Z   if-no-files-found: warn
+2025-12-27T19:39:23.9042671Z   compression-level: 6
+2025-12-27T19:39:23.9043009Z   overwrite: false
+2025-12-27T19:39:23.9043338Z   include-hidden-files: false
+2025-12-27T19:39:23.9043708Z ##[endgroup]
+2025-12-27T19:39:24.1364040Z With the provided path, there will be 81 files uploaded
+2025-12-27T19:39:24.1369148Z Artifact name is valid!
+2025-12-27T19:39:24.1369986Z Root directory input is valid!
+2025-12-27T19:39:24.2977513Z Beginning upload of artifact content to blob storage
+2025-12-27T19:39:24.9665252Z Uploaded bytes 2183007
+2025-12-27T19:39:25.0065662Z Finished uploading artifact content to blob storage!
+2025-12-27T19:39:25.0068868Z SHA256 digest of uploaded artifact zip is 1b4529362f9c36d9c1ccca33c71fdc0c18e6ad7a4a11043f1a3f7e1a35695919
+2025-12-27T19:39:25.0070875Z Finalizing artifact upload
+2025-12-27T19:39:25.1196078Z Artifact gcc-14-debug-binaries.zip successfully finalized. Artifact ID 4976086791
+2025-12-27T19:39:25.1196924Z Artifact gcc-14-debug-binaries has been successfully uploaded! Final size is 2183007 bytes. Artifact ID is 4976086791
+2025-12-27T19:39:25.1205025Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543497569/artifacts/4976086791
+2025-12-27T19:39:25.1364119Z Post job cleanup.
+2025-12-27T19:39:25.2292295Z [command]/usr/bin/git version
+2025-12-27T19:39:25.2327883Z git version 2.52.0
+2025-12-27T19:39:25.2371938Z Temporarily overriding HOME='/home/runner/work/_temp/1fec406a-2a39-470d-b7de-41980ca83312' before making global git config changes
+2025-12-27T19:39:25.2373211Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:39:25.2378198Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T19:39:25.2413744Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:39:25.2445556Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T19:39:25.2671042Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:39:25.2691423Z http.https://github.com/.extraheader
+2025-12-27T19:39:25.2703794Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T19:39:25.2734206Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T19:39:25.2950588Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:39:25.2981806Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T19:39:25.3316532Z Cleaning up orphan processes

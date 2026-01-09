@@ -1,0 +1,935 @@
+﻿2025-12-27T15:48:07.1494876Z Current runner version: '2.330.0'
+2025-12-27T15:48:07.1529971Z ##[group]Runner Image Provisioner
+2025-12-27T15:48:07.1531845Z Hosted Compute Agent
+2025-12-27T15:48:07.1532667Z Version: 20251211.462
+2025-12-27T15:48:07.1533956Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T15:48:07.1535288Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T15:48:07.1536435Z Worker ID: {b4e23b17-4285-4449-bbab-311eb58396a1}
+2025-12-27T15:48:07.1537534Z ##[endgroup]
+2025-12-27T15:48:07.1538568Z ##[group]Operating System
+2025-12-27T15:48:07.1539451Z Ubuntu
+2025-12-27T15:48:07.1540206Z 24.04.3
+2025-12-27T15:48:07.1541061Z LTS
+2025-12-27T15:48:07.1541758Z ##[endgroup]
+2025-12-27T15:48:07.1542525Z ##[group]Runner Image
+2025-12-27T15:48:07.1543656Z Image: ubuntu-24.04
+2025-12-27T15:48:07.1544505Z Version: 20251215.174.1
+2025-12-27T15:48:07.1546246Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T15:48:07.1549208Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T15:48:07.1550965Z ##[endgroup]
+2025-12-27T15:48:07.1553158Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T15:48:07.1556231Z Contents: read
+2025-12-27T15:48:07.1557124Z Metadata: read
+2025-12-27T15:48:07.1558132Z Packages: read
+2025-12-27T15:48:07.1558954Z ##[endgroup]
+2025-12-27T15:48:07.1562105Z Secret source: Actions
+2025-12-27T15:48:07.1563821Z Prepare workflow directory
+2025-12-27T15:48:07.2041390Z Prepare all required actions
+2025-12-27T15:48:07.2099800Z Getting action download info
+2025-12-27T15:48:07.4667224Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T15:48:07.5665856Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T15:48:07.7930616Z Complete job name: GCC 14 - release
+2025-12-27T15:48:07.8574579Z ##[group]Run actions/checkout@v4
+2025-12-27T15:48:07.8575440Z with:
+2025-12-27T15:48:07.8575828Z   repository: julian1c2a/int128
+2025-12-27T15:48:07.8576510Z   token: ***
+2025-12-27T15:48:07.8576875Z   ssh-strict: true
+2025-12-27T15:48:07.8577260Z   ssh-user: git
+2025-12-27T15:48:07.8577646Z   persist-credentials: true
+2025-12-27T15:48:07.8578066Z   clean: true
+2025-12-27T15:48:07.8578450Z   sparse-checkout-cone-mode: true
+2025-12-27T15:48:07.8578914Z   fetch-depth: 1
+2025-12-27T15:48:07.8579293Z   fetch-tags: false
+2025-12-27T15:48:07.8579675Z   show-progress: true
+2025-12-27T15:48:07.8580061Z   lfs: false
+2025-12-27T15:48:07.8580417Z   submodules: false
+2025-12-27T15:48:07.8580809Z   set-safe-directory: true
+2025-12-27T15:48:07.8581435Z ##[endgroup]
+2025-12-27T15:48:07.9681286Z Syncing repository: julian1c2a/int128
+2025-12-27T15:48:07.9683273Z ##[group]Getting Git version info
+2025-12-27T15:48:07.9683945Z Working directory is '/home/runner/work/int128/int128'
+2025-12-27T15:48:07.9684878Z [command]/usr/bin/git version
+2025-12-27T15:48:07.9790909Z git version 2.52.0
+2025-12-27T15:48:07.9818276Z ##[endgroup]
+2025-12-27T15:48:07.9834054Z Temporarily overriding HOME='/home/runner/work/_temp/8c6ab86a-f2db-4503-8935-d9db0d09dd97' before making global git config changes
+2025-12-27T15:48:07.9835400Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T15:48:07.9847911Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T15:48:07.9891033Z Deleting the contents of '/home/runner/work/int128/int128'
+2025-12-27T15:48:07.9895206Z ##[group]Initializing the repository
+2025-12-27T15:48:07.9899589Z [command]/usr/bin/git init /home/runner/work/int128/int128
+2025-12-27T15:48:08.0018927Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-27T15:48:08.0020322Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-27T15:48:08.0021623Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-27T15:48:08.0023207Z hint: call:
+2025-12-27T15:48:08.0024229Z hint:
+2025-12-27T15:48:08.0025163Z hint: 	git config --global init.defaultBranch <name>
+2025-12-27T15:48:08.0026360Z hint:
+2025-12-27T15:48:08.0027534Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-27T15:48:08.0029444Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-27T15:48:08.0030843Z hint:
+2025-12-27T15:48:08.0031567Z hint: 	git branch -m <name>
+2025-12-27T15:48:08.0032565Z hint:
+2025-12-27T15:48:08.0033813Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-27T15:48:08.0035307Z Initialized empty Git repository in /home/runner/work/int128/int128/.git/
+2025-12-27T15:48:08.0039082Z [command]/usr/bin/git remote add origin https://github.com/julian1c2a/int128
+2025-12-27T15:48:08.0082335Z ##[endgroup]
+2025-12-27T15:48:08.0083761Z ##[group]Disabling automatic garbage collection
+2025-12-27T15:48:08.0087779Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-27T15:48:08.0118376Z ##[endgroup]
+2025-12-27T15:48:08.0119585Z ##[group]Setting up auth
+2025-12-27T15:48:08.0126502Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T15:48:08.0158583Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T15:48:08.0522899Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T15:48:08.0553444Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T15:48:08.0781496Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T15:48:08.0814408Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T15:48:08.1057430Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-27T15:48:08.1096895Z ##[endgroup]
+2025-12-27T15:48:08.1098330Z ##[group]Fetching the repository
+2025-12-27T15:48:08.1106534Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b9cce535b34bdf1ed354f2ba62682ec05d64eb57:refs/remotes/origin/main
+2025-12-27T15:48:08.5015852Z From https://github.com/julian1c2a/int128
+2025-12-27T15:48:08.5017545Z  * [new ref]         b9cce535b34bdf1ed354f2ba62682ec05d64eb57 -> origin/main
+2025-12-27T15:48:08.5050775Z ##[endgroup]
+2025-12-27T15:48:08.5052113Z ##[group]Determining the checkout info
+2025-12-27T15:48:08.5053920Z ##[endgroup]
+2025-12-27T15:48:08.5057877Z [command]/usr/bin/git sparse-checkout disable
+2025-12-27T15:48:08.5100274Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-27T15:48:08.5127610Z ##[group]Checking out the ref
+2025-12-27T15:48:08.5131345Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T15:48:08.5621102Z Switched to a new branch 'main'
+2025-12-27T15:48:08.5622241Z branch 'main' set up to track 'origin/main'.
+2025-12-27T15:48:08.5631908Z ##[endgroup]
+2025-12-27T15:48:08.5671427Z [command]/usr/bin/git log -1 --format=%H
+2025-12-27T15:48:08.5696164Z b9cce535b34bdf1ed354f2ba62682ec05d64eb57
+2025-12-27T15:48:08.5901670Z ##[group]Run sudo apt update
+2025-12-27T15:48:08.5902317Z [36;1msudo apt update[0m
+2025-12-27T15:48:08.5902834Z [36;1msudo apt install -y gcc-14 g++-14[0m
+2025-12-27T15:48:08.5903542Z [36;1mgcc-14 --version[0m
+2025-12-27T15:48:08.5940801Z shell: /usr/bin/bash -e {0}
+2025-12-27T15:48:08.5941326Z ##[endgroup]
+2025-12-27T15:48:08.6153502Z 
+2025-12-27T15:48:08.6154403Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T15:48:08.6155362Z 
+2025-12-27T15:48:08.6865365Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T15:48:08.7232184Z Hit:6 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T15:48:08.7238949Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T15:48:08.7240422Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2025-12-27T15:48:08.7259876Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-12-27T15:48:08.7309403Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-12-27T15:48:08.7335683Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2025-12-27T15:48:08.9125336Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.4 kB]
+2025-12-27T15:48:08.9235978Z Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [77.4 kB]
+2025-12-27T15:48:08.9270431Z Get:10 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [58.9 kB]
+2025-12-27T15:48:08.9647290Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1684 kB]
+2025-12-27T15:48:08.9740170Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2025-12-27T15:48:08.9767876Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+2025-12-27T15:48:08.9788771Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [15.8 kB]
+2025-12-27T15:48:08.9798915Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1506 kB]
+2025-12-27T15:48:08.9895674Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [306 kB]
+2025-12-27T15:48:08.9922552Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [378 kB]
+2025-12-27T15:48:08.9953778Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.4 kB]
+2025-12-27T15:48:08.9978078Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2413 kB]
+2025-12-27T15:48:09.0107378Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [550 kB]
+2025-12-27T15:48:09.0571230Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+2025-12-27T15:48:09.0584932Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [516 B]
+2025-12-27T15:48:09.0606445Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [30.3 kB]
+2025-12-27T15:48:09.0616534Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6048 B]
+2025-12-27T15:48:09.0634280Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+2025-12-27T15:48:09.0649466Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [488 B]
+2025-12-27T15:48:09.0664919Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+2025-12-27T15:48:09.0674594Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7288 B]
+2025-12-27T15:48:09.0694136Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+2025-12-27T15:48:09.0712251Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [29.5 kB]
+2025-12-27T15:48:09.0731008Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [17.9 kB]
+2025-12-27T15:48:09.0778738Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+2025-12-27T15:48:09.0782626Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1444 B]
+2025-12-27T15:48:09.0786293Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-12-27T15:48:09.1209108Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-12-27T15:48:09.1227451Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [225 kB]
+2025-12-27T15:48:09.1246279Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+2025-12-27T15:48:09.1273511Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9504 B]
+2025-12-27T15:48:09.1284039Z Get:39 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [71.4 kB]
+2025-12-27T15:48:09.1295292Z Get:40 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+2025-12-27T15:48:09.1306960Z Get:41 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+2025-12-27T15:48:17.7729017Z Fetched 8375 kB in 1s (7199 kB/s)
+2025-12-27T15:48:18.6114935Z Reading package lists...
+2025-12-27T15:48:18.8174833Z Building dependency tree...
+2025-12-27T15:48:18.8181279Z Reading state information...
+2025-12-27T15:48:18.8379147Z 69 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-12-27T15:48:18.8494026Z 
+2025-12-27T15:48:18.8494725Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T15:48:18.8495163Z 
+2025-12-27T15:48:18.8632530Z Reading package lists...
+2025-12-27T15:48:19.0701854Z Building dependency tree...
+2025-12-27T15:48:19.0709564Z Reading state information...
+2025-12-27T15:48:19.2766059Z gcc-14 is already the newest version (14.2.0-4ubuntu2~24.04).
+2025-12-27T15:48:19.2766571Z gcc-14 set to manually installed.
+2025-12-27T15:48:19.2766967Z g++-14 is already the newest version (14.2.0-4ubuntu2~24.04).
+2025-12-27T15:48:19.3317320Z 0 upgraded, 0 newly installed, 0 to remove and 69 not upgraded.
+2025-12-27T15:48:19.4848030Z gcc-14 (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
+2025-12-27T15:48:19.4848825Z Copyright (C) 2024 Free Software Foundation, Inc.
+2025-12-27T15:48:19.4849668Z This is free software; see the source for copying conditions.  There is NO
+2025-12-27T15:48:19.4850698Z warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+2025-12-27T15:48:19.4851398Z 
+2025-12-27T15:48:19.4892152Z ##[group]Run export CC=gcc-14
+2025-12-27T15:48:19.4892455Z [36;1mexport CC=gcc-14[0m
+2025-12-27T15:48:19.4892678Z [36;1mexport CXX=g++-14[0m
+2025-12-27T15:48:19.4893156Z [36;1mchmod +x scripts/build_extracted_tests.bash[0m
+2025-12-27T15:48:19.4893579Z [36;1m./scripts/build_extracted_tests.bash gcc release[0m
+2025-12-27T15:48:19.4927414Z shell: /usr/bin/bash -e {0}
+2025-12-27T15:48:19.4927657Z ##[endgroup]
+2025-12-27T15:48:19.5011876Z ================================
+2025-12-27T15:48:19.5012352Z Building Extracted Tests
+2025-12-27T15:48:19.5012764Z Compiler: gcc
+2025-12-27T15:48:19.5013275Z Build Type: release
+2025-12-27T15:48:19.5013645Z ================================
+2025-12-27T15:48:19.5049865Z Using compiler: g++-14
+2025-12-27T15:48:19.5050408Z Optimization flags: -O3 -DNDEBUG
+2025-12-27T15:48:19.5050696Z 
+2025-12-27T15:48:19.5051729Z Found 27 test files
+2025-12-27T15:48:19.5051992Z 
+2025-12-27T15:48:19.5066579Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T15:48:24.8941451Z   [OK] Success
+2025-12-27T15:48:24.8956225Z Compiling: int128_bits_extracted_tests...
+2025-12-27T15:48:26.2411190Z   [OK] Success
+2025-12-27T15:48:26.2425530Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T15:48:28.4707584Z   [OK] Success
+2025-12-27T15:48:28.4722411Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T15:48:29.7454827Z   [OK] Success
+2025-12-27T15:48:29.7469849Z Compiling: int128_format_extracted_tests...
+2025-12-27T15:48:31.6406342Z   [OK] Success
+2025-12-27T15:48:31.6421310Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T15:48:33.8654637Z   [OK] Success
+2025-12-27T15:48:33.8673875Z Compiling: int128_limits_extracted_tests...
+2025-12-27T15:48:35.2307418Z   [OK] Success
+2025-12-27T15:48:35.2322706Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T15:48:37.0344070Z   [OK] Success
+2025-12-27T15:48:37.0358505Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T15:48:38.3259108Z   [OK] Success
+2025-12-27T15:48:38.3274556Z Compiling: int128_safe_extracted_tests...
+2025-12-27T15:48:39.6137302Z   [OK] Success
+2025-12-27T15:48:39.6151411Z Compiling: int128_t_extracted_tests...
+2025-12-27T15:48:41.4833603Z   [OK] Success
+2025-12-27T15:48:41.4847489Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T15:48:44.0041141Z   [OK] Success
+2025-12-27T15:48:44.0056509Z Compiling: int128_traits_extracted_tests...
+2025-12-27T15:48:45.3049844Z   [OK] Success
+2025-12-27T15:48:45.3064716Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T15:48:47.1336914Z   [OK] Success
+2025-12-27T15:48:47.1351746Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T15:48:48.5457414Z   [OK] Success
+2025-12-27T15:48:48.5472158Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T15:48:50.2021927Z   [OK] Success
+2025-12-27T15:48:50.2036376Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T15:48:51.3976473Z   [OK] Success
+2025-12-27T15:48:51.3991064Z Compiling: uint128_format_extracted_tests...
+2025-12-27T15:48:53.1128431Z   [OK] Success
+2025-12-27T15:48:53.1142842Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T15:48:54.8475644Z   [OK] Success
+2025-12-27T15:48:54.8493227Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T15:48:56.8255896Z   [OK] Success
+2025-12-27T15:48:56.8270601Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T15:48:58.2347785Z   [OK] Success
+2025-12-27T15:48:58.2362256Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T15:48:59.7222377Z   [OK] Success
+2025-12-27T15:48:59.7238314Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T15:49:00.9411341Z   [OK] Success
+2025-12-27T15:49:00.9426628Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T15:49:02.1501279Z   [OK] Success
+2025-12-27T15:49:02.1516117Z Compiling: uint128_t_extracted_tests...
+2025-12-27T15:49:04.9230624Z   [OK] Success
+2025-12-27T15:49:04.9245349Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T15:49:07.0793623Z   [OK] Success
+2025-12-27T15:49:07.0809217Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T15:49:08.4081718Z   [OK] Success
+2025-12-27T15:49:08.4082040Z 
+2025-12-27T15:49:08.4082160Z ================================
+2025-12-27T15:49:08.4082521Z Build Summary
+2025-12-27T15:49:08.4082802Z   Compiled: 27
+2025-12-27T15:49:08.4083243Z   Failed: 0
+2025-12-27T15:49:08.4083500Z ================================
+2025-12-27T15:49:08.4083867Z [OK] All tests compiled successfully
+2025-12-27T15:49:08.4189929Z ##[group]Run chmod +x scripts/run_uint128_extracted_tests.bash
+2025-12-27T15:49:08.4190376Z [36;1mchmod +x scripts/run_uint128_extracted_tests.bash[0m
+2025-12-27T15:49:08.4190721Z [36;1m./scripts/run_uint128_extracted_tests.bash gcc release[0m
+2025-12-27T15:49:08.4224153Z shell: /usr/bin/bash -e {0}
+2025-12-27T15:49:08.4224383Z ##[endgroup]
+2025-12-27T15:49:08.4305095Z ================================
+2025-12-27T15:49:08.4305487Z Running Extracted Tests
+2025-12-27T15:49:08.4305777Z Compiler: gcc
+2025-12-27T15:49:08.4305984Z Build Type: release
+2025-12-27T15:49:08.4306215Z ================================
+2025-12-27T15:49:08.4328990Z Found 27 test binaries
+2025-12-27T15:49:08.4329255Z 
+2025-12-27T15:49:08.4341994Z Running: int128_algorithm_extracted_tests...
+2025-12-27T15:49:08.4358754Z   [OK] Passed
+2025-12-27T15:49:08.4370548Z Running: int128_bits_extracted_tests...
+2025-12-27T15:49:08.4385437Z   [OK] Passed
+2025-12-27T15:49:08.4397280Z Running: int128_cmath_extracted_tests...
+2025-12-27T15:49:08.4415369Z   [OK] Passed
+2025-12-27T15:49:08.4427654Z Running: int128_concepts_extracted_tests...
+2025-12-27T15:49:08.4442119Z   [OK] Passed
+2025-12-27T15:49:08.4454241Z Running: int128_format_extracted_tests...
+2025-12-27T15:49:08.4469094Z   [OK] Passed
+2025-12-27T15:49:08.4480999Z Running: int128_iostreams_extracted_tests...
+2025-12-27T15:49:08.4495980Z   [OK] Passed
+2025-12-27T15:49:08.4507939Z Running: int128_limits_extracted_tests...
+2025-12-27T15:49:08.4522329Z   [OK] Passed
+2025-12-27T15:49:08.4534518Z Running: int128_numeric_extracted_tests...
+2025-12-27T15:49:08.4549972Z   [OK] Passed
+2025-12-27T15:49:08.4562089Z Running: int128_ranges_extracted_tests...
+2025-12-27T15:49:08.4576498Z   [OK] Passed
+2025-12-27T15:49:08.4588684Z Running: int128_safe_extracted_tests...
+2025-12-27T15:49:08.4603106Z   [OK] Passed
+2025-12-27T15:49:08.4615513Z Running: int128_t_extracted_tests...
+2025-12-27T15:49:08.4630388Z   [OK] Passed
+2025-12-27T15:49:08.4642473Z Running: int128_thread_safety_extracted_tests...
+2025-12-27T15:49:08.4705308Z   [OK] Passed
+2025-12-27T15:49:08.4719820Z Running: int128_traits_extracted_tests...
+2025-12-27T15:49:08.4734428Z   [OK] Passed
+2025-12-27T15:49:08.4746625Z Running: uint128_algorithm_extracted_tests...
+2025-12-27T15:49:08.4760457Z   [OK] Passed
+2025-12-27T15:49:08.4773100Z Running: uint128_bits_extracted_tests...
+2025-12-27T15:49:08.4787094Z   [OK] Passed
+2025-12-27T15:49:08.4799384Z Running: uint128_cmath_extracted_tests...
+2025-12-27T15:49:08.4813811Z   [OK] Passed
+2025-12-27T15:49:08.4825880Z Running: uint128_concepts_extracted_tests...
+2025-12-27T15:49:08.4839759Z   [OK] Passed
+2025-12-27T15:49:08.4851699Z Running: uint128_format_extracted_tests...
+2025-12-27T15:49:08.4866622Z   [OK] Passed
+2025-12-27T15:49:08.4878635Z Running: uint128_interop_extracted_tests...
+2025-12-27T15:49:08.4892827Z   [OK] Passed
+2025-12-27T15:49:08.4904900Z Running: uint128_iostreams_extracted_tests...
+2025-12-27T15:49:08.4919969Z   [OK] Passed
+2025-12-27T15:49:08.4931820Z Running: uint128_limits_extracted_tests...
+2025-12-27T15:49:08.4946122Z   [OK] Passed
+2025-12-27T15:49:08.4958291Z Running: uint128_numeric_extracted_tests...
+2025-12-27T15:49:08.4972285Z   [OK] Passed
+2025-12-27T15:49:08.4984370Z Running: uint128_ranges_extracted_tests...
+2025-12-27T15:49:08.4998580Z   [OK] Passed
+2025-12-27T15:49:08.5010442Z Running: uint128_safe_extracted_tests...
+2025-12-27T15:49:08.5024519Z   [OK] Passed
+2025-12-27T15:49:08.5036535Z Running: uint128_t_extracted_tests...
+2025-12-27T15:49:08.5053380Z   [OK] Passed
+2025-12-27T15:49:08.5065350Z Running: uint128_thread_safety_extracted_tests...
+2025-12-27T15:49:08.5110841Z   [OK] Passed
+2025-12-27T15:49:08.5124046Z Running: uint128_traits_extracted_tests...
+2025-12-27T15:49:08.5137821Z   [OK] Passed
+2025-12-27T15:49:08.5138051Z 
+2025-12-27T15:49:08.5138195Z ================================
+2025-12-27T15:49:08.5138613Z Test Results
+2025-12-27T15:49:08.5138932Z   Passed: 27
+2025-12-27T15:49:08.5139253Z   Failed: 0
+2025-12-27T15:49:08.5139817Z ================================
+2025-12-27T15:49:08.5140098Z [OK] All tests passed
+2025-12-27T15:49:08.5178948Z ##[group]Run export CC=gcc-14
+2025-12-27T15:49:08.5179231Z [36;1mexport CC=gcc-14[0m
+2025-12-27T15:49:08.5179443Z [36;1mexport CXX=g++-14[0m
+2025-12-27T15:49:08.5179804Z [36;1mmake demo CATEGORY=tutorials DEMO=tut_01_basic COMPILER=gcc BUILD=release || true[0m
+2025-12-27T15:49:08.5180357Z [36;1mmake demo CATEGORY=showcase DEMO=showcase_cryptography COMPILER=gcc BUILD=release || true[0m
+2025-12-27T15:49:08.5180952Z [36;1mmake demo CATEGORY=showcase DEMO=expression_templates COMPILER=gcc BUILD=release || true[0m
+2025-12-27T15:49:08.5213677Z shell: /usr/bin/bash -e {0}
+2025-12-27T15:49:08.5213909Z ##[endgroup]
+2025-12-27T15:49:08.5355371Z 🔨 Compilando demo: tutorials/tut_01_basic [gcc/all]
+2025-12-27T15:49:08.5388468Z [1;33m-> Building demo: tutorials/tut_01_basic...[0m
+2025-12-27T15:49:08.5389235Z [0;31m[ERROR] Source file not found: demos/tutorials/tut_01_basic.cpp[0m
+2025-12-27T15:49:08.5390305Z make: *** [Makefile:101: build_demo] Error 1
+2025-12-27T15:49:08.5467949Z 🔨 Compilando demo: showcase/showcase_cryptography [gcc/all]
+2025-12-27T15:49:08.5500534Z [1;33m-> Building demo: showcase/showcase_cryptography...[0m
+2025-12-27T15:49:08.5502594Z 
+2025-12-27T15:49:08.5502795Z [1;33m-> Building with gcc...[0m
+2025-12-27T15:49:08.5531582Z [1;33m->   Compiling [debug]...[0m
+2025-12-27T15:49:10.6150294Z In file included from ./include/int128.hpp:75,
+2025-12-27T15:49:10.6150894Z                  from demos/showcase/showcase_cryptography.cpp:17:
+2025-12-27T15:49:10.6158234Z ./include/int128/int128_traits.hpp:68:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:10.6159184Z    68 | template <> struct is_pod<int128_t> : true_type {
+2025-12-27T15:49:10.6159532Z       |                    ^~~~~~
+2025-12-27T15:49:10.6160023Z In file included from ./include/int128/../uint128/uint128_traits_specializations.hpp:62,
+2025-12-27T15:49:10.6160598Z                  from ./include/int128/../uint128/uint128_t.hpp:6,
+2025-12-27T15:49:10.6160972Z                  from ./include/int128/int128_t.hpp:30,
+2025-12-27T15:49:10.6161312Z                  from ./include/int128.hpp:71:
+2025-12-27T15:49:10.6161701Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:10.6162066Z   819 |     is_pod
+2025-12-27T15:49:10.6162269Z       |     ^~~~~~
+2025-12-27T15:49:10.6162518Z In file included from ./include/int128.hpp:76:
+2025-12-27T15:49:10.6163800Z ./include/uint128/uint128_traits.hpp:65:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:10.6164485Z    65 | template <> struct is_pod<uint128_t> : true_type {
+2025-12-27T15:49:10.6164757Z       |                    ^~~~~~
+2025-12-27T15:49:10.6165020Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:10.6165297Z   819 |     is_pod
+2025-12-27T15:49:10.6165453Z       |     ^~~~~~
+2025-12-27T15:49:10.7995464Z demos/showcase/showcase_cryptography.cpp: In function ‘void demo_prime_numbers()’:
+2025-12-27T15:49:10.7996814Z demos/showcase/showcase_cryptography.cpp:148:15: warning: variable ‘found’ set but not used [-Wunused-but-set-variable]
+2025-12-27T15:49:10.7997662Z   148 |     uint128_t found = 0;
+2025-12-27T15:49:10.7997997Z       |               ^~~~~
+2025-12-27T15:49:11.5088530Z [0;32m[OK]   gcc [debug]: build/build_demos/gcc/debug/showcase_cryptography[0m
+2025-12-27T15:49:11.5117603Z [1;33m->   Compiling [release]...[0m
+2025-12-27T15:49:12.4676085Z In file included from ./include/int128.hpp:75,
+2025-12-27T15:49:12.4676661Z                  from demos/showcase/showcase_cryptography.cpp:17:
+2025-12-27T15:49:12.4678417Z ./include/int128/int128_traits.hpp:68:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:12.4679339Z    68 | template <> struct is_pod<int128_t> : true_type {
+2025-12-27T15:49:12.4680117Z       |                    ^~~~~~
+2025-12-27T15:49:12.4680603Z In file included from ./include/int128/../uint128/uint128_traits_specializations.hpp:62,
+2025-12-27T15:49:12.4681151Z                  from ./include/int128/../uint128/uint128_t.hpp:6,
+2025-12-27T15:49:12.4681731Z                  from ./include/int128/int128_t.hpp:30,
+2025-12-27T15:49:12.4682265Z                  from ./include/int128.hpp:71:
+2025-12-27T15:49:12.4682859Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:12.4683516Z   819 |     is_pod
+2025-12-27T15:49:12.4683724Z       |     ^~~~~~
+2025-12-27T15:49:12.4683985Z In file included from ./include/int128.hpp:76:
+2025-12-27T15:49:12.4685173Z ./include/uint128/uint128_traits.hpp:65:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:12.4686083Z    65 | template <> struct is_pod<uint128_t> : true_type {
+2025-12-27T15:49:12.4686440Z       |                    ^~~~~~
+2025-12-27T15:49:12.4686783Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:12.4687141Z   819 |     is_pod
+2025-12-27T15:49:12.4687345Z       |     ^~~~~~
+2025-12-27T15:49:12.6480685Z demos/showcase/showcase_cryptography.cpp: In function ‘void demo_prime_numbers()’:
+2025-12-27T15:49:12.6482337Z demos/showcase/showcase_cryptography.cpp:148:15: warning: variable ‘found’ set but not used [-Wunused-but-set-variable]
+2025-12-27T15:49:12.6483706Z   148 |     uint128_t found = 0;
+2025-12-27T15:49:12.6484702Z       |               ^~~~~
+2025-12-27T15:49:14.1582062Z [0;32m[OK]   gcc [release]: build/build_demos/gcc/release/showcase_cryptography[0m
+2025-12-27T15:49:14.1582704Z 
+2025-12-27T15:49:14.1583260Z [0;32m[OK] Build complete for demo showcase/showcase_cryptography![0m
+2025-12-27T15:49:14.1600486Z ⚡ Ejecutando demo: showcase/showcase_cryptography [gcc/all]
+2025-12-27T15:49:14.1637518Z [0;34m========================================================================[0m
+2025-12-27T15:49:14.1638294Z [0;34m  DEMO EXECUTION: showcase/showcase_cryptography[0m
+2025-12-27T15:49:14.1639029Z [0;34m========================================================================[0m
+2025-12-27T15:49:14.1639432Z 
+2025-12-27T15:49:14.1639810Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:14.1640721Z [1;33m-> Running demo: showcase/showcase_cryptography with gcc [debug][0m
+2025-12-27T15:49:14.1641633Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:14.1642101Z 
+2025-12-27T15:49:14.1655008Z [36m
+2025-12-27T15:49:14.1655526Z     ╔═══════════════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1655961Z     ║                                                               ║
+2025-12-27T15:49:14.1656341Z     ║   ██████╗██████╗ ██╗   ██╗██████╗ ████████╗ ██████╗          ║
+2025-12-27T15:49:14.1656751Z     ║  ██╔════╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔═══██╗         ║
+2025-12-27T15:49:14.1657131Z     ║  ██║     ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ██║   ██║         ║
+2025-12-27T15:49:14.1657492Z     ║  ██║     ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ██║   ██║         ║
+2025-12-27T15:49:14.1657860Z     ║  ╚██████╗██║  ██║   ██║   ██║        ██║   ╚██████╔╝         ║
+2025-12-27T15:49:14.1658223Z     ║   ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝    ╚═════╝          ║
+2025-12-27T15:49:14.1658555Z     ║                                                               ║
+2025-12-27T15:49:14.1658974Z     ║              SHOWCASE: Aplicaciones Criptográficas           ║
+2025-12-27T15:49:14.1659363Z     ║                                                               ║
+2025-12-27T15:49:14.1659757Z     ╚═══════════════════════════════════════════════════════════════╝
+2025-12-27T15:49:14.1660034Z [0m
+2025-12-27T15:49:14.1660559Z Esta demo muestra aplicaciones criptográficas de uint128_t.
+2025-12-27T15:49:14.1661163Z [35mADVERTENCIA: Solo para fines educativos.[0m
+2025-12-27T15:49:14.1662160Z Para criptografía real, usa bibliotecas especializadas.
+2025-12-27T15:49:14.1662572Z 
+2025-12-27T15:49:14.1702247Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1703149Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1703866Z ║ DEMO 1: Números Primos Grandes                       ║
+2025-12-27T15:49:14.1704580Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1704898Z 
+2025-12-27T15:49:14.1705124Z [33m>>> Primos de Mersenne conocidos[0m
+2025-12-27T15:49:14.1705449Z 
+2025-12-27T15:49:14.1705679Z   M 2 = 2^2 - 1 = [32m3[0m ✓ PRIMO
+2025-12-27T15:49:14.1706126Z   M 3 = 2^3 - 1 = [32m7[0m ✓ PRIMO
+2025-12-27T15:49:14.1706554Z   M 5 = 2^5 - 1 = [32m31[0m ✓ PRIMO
+2025-12-27T15:49:14.1706991Z   M 7 = 2^7 - 1 = [32m127[0m ✓ PRIMO
+2025-12-27T15:49:14.1707439Z   M13 = 2^13 - 1 = [32m8191[0m ✓ PRIMO
+2025-12-27T15:49:14.1707910Z   M17 = 2^17 - 1 = [32m131071[0m ✓ PRIMO
+2025-12-27T15:49:14.1708394Z   M19 = 2^19 - 1 = [32m524287[0m ✓ PRIMO
+2025-12-27T15:49:14.1708875Z   M31 = 2^31 - 1 = [32m2147483647[0m ✓ PRIMO
+2025-12-27T15:49:14.1709173Z 
+2025-12-27T15:49:14.1709317Z [33m>>> Buscando primos en un rango[0m
+2025-12-27T15:49:14.1709494Z 
+2025-12-27T15:49:14.1709582Z   Buscando 5 primos cerca de 1000000000...
+2025-12-27T15:49:14.1709864Z   ✓ Primo #1: [32m1000000007[0m
+2025-12-27T15:49:14.1710126Z   ✓ Primo #2: [32m1000000009[0m
+2025-12-27T15:49:14.1710363Z   ✓ Primo #3: [32m1000000021[0m
+2025-12-27T15:49:14.1710600Z   ✓ Primo #4: [32m1000000033[0m
+2025-12-27T15:49:14.1711080Z   ✓ Primo #5: [32m1000000087[0m
+2025-12-27T15:49:14.1711212Z 
+2025-12-27T15:49:14.1711299Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1711634Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1711992Z ║ DEMO 2: Aritmética Modular                           ║
+2025-12-27T15:49:14.1712361Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1712537Z 
+2025-12-27T15:49:14.1712668Z [33m>>> Exponenciación modular[0m
+2025-12-27T15:49:14.1712827Z 
+2025-12-27T15:49:14.1712892Z   Base:      12345
+2025-12-27T15:49:14.1713309Z   Exponente: 67890
+2025-12-27T15:49:14.1713518Z   Módulo:    9999991
+2025-12-27T15:49:14.1713660Z 
+2025-12-27T15:49:14.1713789Z   [32m12345^67890 mod 9999991 = 4598250[0m
+2025-12-27T15:49:14.1713951Z 
+2025-12-27T15:49:14.1714149Z [33m>>> Propiedad: (a * b) mod m = ((a mod m) * (b mod m)) mod m[0m
+2025-12-27T15:49:14.1714370Z 
+2025-12-27T15:49:14.1714438Z   Directo:   77351694
+2025-12-27T15:49:14.1714634Z   Indirecto: 77351694
+2025-12-27T15:49:14.1714853Z   [32m¡Verificación exitosa![0m
+2025-12-27T15:49:14.1715003Z 
+2025-12-27T15:49:14.1715090Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1715411Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1715751Z ║ DEMO 3: RSA Toy (Educativo)                           ║
+2025-12-27T15:49:14.1716112Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1716290Z 
+2025-12-27T15:49:14.1716630Z [33m>>> Generación de claves RSA (versión simplificada)[0m
+2025-12-27T15:49:14.1716891Z 
+2025-12-27T15:49:14.1716987Z   1. Seleccionar dos primos p y q:
+2025-12-27T15:49:14.1717247Z      p = [32m61[0m (primo)
+2025-12-27T15:49:14.1717467Z      q = [32m53[0m (primo)
+2025-12-27T15:49:14.1717586Z 
+2025-12-27T15:49:14.1717655Z   2. Calcular n = p * q:
+2025-12-27T15:49:14.1717864Z      n = [32m3233[0m
+2025-12-27T15:49:14.1717972Z 
+2025-12-27T15:49:14.1718097Z   3. Calcular φ(n) = (p-1)(q-1):
+2025-12-27T15:49:14.1718334Z      φ(n) = [32m3120[0m
+2025-12-27T15:49:14.1718450Z 
+2025-12-27T15:49:14.1718572Z   4. Elegir exponente público e:
+2025-12-27T15:49:14.1718820Z      e = [32m17[0m (coprimo con φ(n))
+2025-12-27T15:49:14.1718981Z 
+2025-12-27T15:49:14.1719065Z   5. Calcular exponente privado d:
+2025-12-27T15:49:14.1719330Z      d = [32m2753[0m (inverso de e mod φ(n))
+2025-12-27T15:49:14.1719507Z 
+2025-12-27T15:49:14.1719625Z   [36mClave pública:  (e=17, n=3233)
+2025-12-27T15:49:14.1719901Z   Clave privada: (d=2753, n=3233)[0m
+2025-12-27T15:49:14.1720049Z 
+2025-12-27T15:49:14.1720158Z [33m>>> Cifrado y descifrado[0m
+2025-12-27T15:49:14.1720297Z 
+2025-12-27T15:49:14.1720409Z   Mensaje original: [32m42[0m
+2025-12-27T15:49:14.1720648Z   Mensaje cifrado:  [35m2557[0m
+2025-12-27T15:49:14.1720893Z   Mensaje descifrado: [32m42[0m
+2025-12-27T15:49:14.1721029Z 
+2025-12-27T15:49:14.1721151Z   [32m✓ ¡Cifrado/descifrado exitoso![0m
+2025-12-27T15:49:14.1721317Z 
+2025-12-27T15:49:14.1721533Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1721860Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1722202Z ║ DEMO 4: Funciones Hash Simples                        ║
+2025-12-27T15:49:14.1722570Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1722745Z 
+2025-12-27T15:49:14.1723177Z [33m>>> Hash simple basado en aritmética modular[0m
+2025-12-27T15:49:14.1723529Z 
+2025-12-27T15:49:14.1723826Z   Hash("Hello, World!") = [32m37eaa6435955b8c6[0m
+2025-12-27T15:49:14.1724385Z   Hash("int128 library") = [32md85a06fb47e7e578[0m
+2025-12-27T15:49:14.1724940Z   Hash("Cryptography demo") = [32mabff9d01eb7d14c6[0m
+2025-12-27T15:49:14.1725281Z   Hash("Hello, World!") = [32m37eaa6435955b8c6[0m
+2025-12-27T15:49:14.1725456Z 
+2025-12-27T15:49:14.1725634Z   [33mNota: Hashes idénticos para strings idénticos ✓[0m
+2025-12-27T15:49:14.1725843Z 
+2025-12-27T15:49:14.1725925Z [36m
+2025-12-27T15:49:14.1726188Z ╔═══════════════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1726540Z ║                   🔐 DEMO COMPLETADA 🔐                       ║
+2025-12-27T15:49:14.1726889Z ╚═══════════════════════════════════════════════════════════════╝
+2025-12-27T15:49:14.1727134Z [0m
+2025-12-27T15:49:14.1727303Z Explora más:
+2025-12-27T15:49:14.1727646Z   • Documentación de criptografía: https://crypto.stackexchange.com
+2025-12-27T15:49:14.1728072Z   • OpenSSL para producción: https://www.openssl.org
+2025-12-27T15:49:14.1728290Z 
+2025-12-27T15:49:14.1728445Z [0;32m[OK]   gcc [debug]: completed (exit code: 0)[0m
+2025-12-27T15:49:14.1728634Z 
+2025-12-27T15:49:14.1728823Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:14.1729268Z [1;33m-> Running demo: showcase/showcase_cryptography with gcc [release][0m
+2025-12-27T15:49:14.1729714Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:14.1730050Z 
+2025-12-27T15:49:14.1730235Z [36m
+2025-12-27T15:49:14.1730731Z     ╔═══════════════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1731251Z     ║                                                               ║
+2025-12-27T15:49:14.1731600Z     ║   ██████╗██████╗ ██╗   ██╗██████╗ ████████╗ ██████╗          ║
+2025-12-27T15:49:14.1731944Z     ║  ██╔════╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔═══██╗         ║
+2025-12-27T15:49:14.1732282Z     ║  ██║     ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ██║   ██║         ║
+2025-12-27T15:49:14.1732878Z     ║  ██║     ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ██║   ██║         ║
+2025-12-27T15:49:14.1733746Z     ║  ╚██████╗██║  ██║   ██║   ██║        ██║   ╚██████╔╝         ║
+2025-12-27T15:49:14.1734327Z     ║   ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝    ╚═════╝          ║
+2025-12-27T15:49:14.1734866Z     ║                                                               ║
+2025-12-27T15:49:14.1735457Z     ║              SHOWCASE: Aplicaciones Criptográficas           ║
+2025-12-27T15:49:14.1736019Z     ║                                                               ║
+2025-12-27T15:49:14.1736905Z     ╚═══════════════════════════════════════════════════════════════╝
+2025-12-27T15:49:14.1737334Z [0m
+2025-12-27T15:49:14.1737662Z Esta demo muestra aplicaciones criptográficas de uint128_t.
+2025-12-27T15:49:14.1738175Z [35mADVERTENCIA: Solo para fines educativos.[0m
+2025-12-27T15:49:14.1738790Z Para criptografía real, usa bibliotecas especializadas.
+2025-12-27T15:49:14.1739151Z 
+2025-12-27T15:49:14.1739322Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1739899Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1740266Z ║ DEMO 1: Números Primos Grandes                       ║
+2025-12-27T15:49:14.1740635Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1740809Z 
+2025-12-27T15:49:14.1740935Z [33m>>> Primos de Mersenne conocidos[0m
+2025-12-27T15:49:14.1741107Z 
+2025-12-27T15:49:14.1741327Z   M 2 = 2^2 - 1 = [32m3[0m ✓ PRIMO
+2025-12-27T15:49:14.1741688Z   M 3 = 2^3 - 1 = [32m7[0m ✓ PRIMO
+2025-12-27T15:49:14.1741938Z   M 5 = 2^5 - 1 = [32m31[0m ✓ PRIMO
+2025-12-27T15:49:14.1742214Z   M 7 = 2^7 - 1 = [32m127[0m ✓ PRIMO
+2025-12-27T15:49:14.1742476Z   M13 = 2^13 - 1 = [32m8191[0m ✓ PRIMO
+2025-12-27T15:49:14.1742741Z   M17 = 2^17 - 1 = [32m131071[0m ✓ PRIMO
+2025-12-27T15:49:14.1743286Z   M19 = 2^19 - 1 = [32m524287[0m ✓ PRIMO
+2025-12-27T15:49:14.1743585Z   M31 = 2^31 - 1 = [32m2147483647[0m ✓ PRIMO
+2025-12-27T15:49:14.1743758Z 
+2025-12-27T15:49:14.1743898Z [33m>>> Buscando primos en un rango[0m
+2025-12-27T15:49:14.1744063Z 
+2025-12-27T15:49:14.1744153Z   Buscando 5 primos cerca de 1000000000...
+2025-12-27T15:49:14.1744417Z   ✓ Primo #1: [32m1000000007[0m
+2025-12-27T15:49:14.1744656Z   ✓ Primo #2: [32m1000000009[0m
+2025-12-27T15:49:14.1744888Z   ✓ Primo #3: [32m1000000021[0m
+2025-12-27T15:49:14.1745119Z   ✓ Primo #4: [32m1000000033[0m
+2025-12-27T15:49:14.1745343Z   ✓ Primo #5: [32m1000000087[0m
+2025-12-27T15:49:14.1745479Z 
+2025-12-27T15:49:14.1745571Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1745894Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1746416Z ║ DEMO 2: Aritmética Modular                           ║
+2025-12-27T15:49:14.1747063Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1747324Z 
+2025-12-27T15:49:14.1747448Z [33m>>> Exponenciación modular[0m
+2025-12-27T15:49:14.1747606Z 
+2025-12-27T15:49:14.1747672Z   Base:      12345
+2025-12-27T15:49:14.1748020Z   Exponente: 67890
+2025-12-27T15:49:14.1748231Z   Módulo:    9999991
+2025-12-27T15:49:14.1748340Z 
+2025-12-27T15:49:14.1748465Z   [32m12345^67890 mod 9999991 = 4598250[0m
+2025-12-27T15:49:14.1748626Z 
+2025-12-27T15:49:14.1748812Z [33m>>> Propiedad: (a * b) mod m = ((a mod m) * (b mod m)) mod m[0m
+2025-12-27T15:49:14.1749029Z 
+2025-12-27T15:49:14.1749100Z   Directo:   77351694
+2025-12-27T15:49:14.1749269Z   Indirecto: 77351694
+2025-12-27T15:49:14.1749487Z   [32m¡Verificación exitosa![0m
+2025-12-27T15:49:14.1749750Z 
+2025-12-27T15:49:14.1749833Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1750157Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1750487Z ║ DEMO 3: RSA Toy (Educativo)                           ║
+2025-12-27T15:49:14.1750842Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1751014Z 
+2025-12-27T15:49:14.1751199Z [33m>>> Generación de claves RSA (versión simplificada)[0m
+2025-12-27T15:49:14.1751402Z 
+2025-12-27T15:49:14.1751496Z   1. Seleccionar dos primos p y q:
+2025-12-27T15:49:14.1751751Z      p = [32m61[0m (primo)
+2025-12-27T15:49:14.1751962Z      q = [32m53[0m (primo)
+2025-12-27T15:49:14.1752085Z 
+2025-12-27T15:49:14.1752155Z   2. Calcular n = p * q:
+2025-12-27T15:49:14.1752357Z      n = [32m3233[0m
+2025-12-27T15:49:14.1752468Z 
+2025-12-27T15:49:14.1752575Z   3. Calcular φ(n) = (p-1)(q-1):
+2025-12-27T15:49:14.1752804Z      φ(n) = [32m3120[0m
+2025-12-27T15:49:14.1752919Z 
+2025-12-27T15:49:14.1753264Z   4. Elegir exponente público e:
+2025-12-27T15:49:14.1753523Z      e = [32m17[0m (coprimo con φ(n))
+2025-12-27T15:49:14.1753678Z 
+2025-12-27T15:49:14.1753758Z   5. Calcular exponente privado d:
+2025-12-27T15:49:14.1754029Z      d = [32m2753[0m (inverso de e mod φ(n))
+2025-12-27T15:49:14.1754192Z 
+2025-12-27T15:49:14.1754310Z   [36mClave pública:  (e=17, n=3233)
+2025-12-27T15:49:14.1754573Z   Clave privada: (d=2753, n=3233)[0m
+2025-12-27T15:49:14.1754718Z 
+2025-12-27T15:49:14.1754839Z [33m>>> Cifrado y descifrado[0m
+2025-12-27T15:49:14.1754977Z 
+2025-12-27T15:49:14.1755087Z   Mensaje original: [32m42[0m
+2025-12-27T15:49:14.1755327Z   Mensaje cifrado:  [35m2557[0m
+2025-12-27T15:49:14.1755565Z   Mensaje descifrado: [32m42[0m
+2025-12-27T15:49:14.1755705Z 
+2025-12-27T15:49:14.1755825Z   [32m✓ ¡Cifrado/descifrado exitoso![0m
+2025-12-27T15:49:14.1755983Z 
+2025-12-27T15:49:14.1756062Z Presiona Enter para continuar...
+2025-12-27T15:49:14.1756384Z [36m╔═══════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1756731Z ║ DEMO 4: Funciones Hash Simples                        ║
+2025-12-27T15:49:14.1757089Z ╚═══════════════════════════════════════════════════════╝[0m
+2025-12-27T15:49:14.1757261Z 
+2025-12-27T15:49:14.1757415Z [33m>>> Hash simple basado en aritmética modular[0m
+2025-12-27T15:49:14.1757599Z 
+2025-12-27T15:49:14.1757744Z   Hash("Hello, World!") = [32m37eaa6435955b8c6[0m
+2025-12-27T15:49:14.1758073Z   Hash("int128 library") = [32md85a06fb47e7e578[0m
+2025-12-27T15:49:14.1758579Z   Hash("Cryptography demo") = [32mabff9d01eb7d14c6[0m
+2025-12-27T15:49:14.1758920Z   Hash("Hello, World!") = [32m37eaa6435955b8c6[0m
+2025-12-27T15:49:14.1759094Z 
+2025-12-27T15:49:14.1759274Z   [33mNota: Hashes idénticos para strings idénticos ✓[0m
+2025-12-27T15:49:14.1759477Z 
+2025-12-27T15:49:14.1759550Z [36m
+2025-12-27T15:49:14.1759811Z ╔═══════════════════════════════════════════════════════════════╗
+2025-12-27T15:49:14.1760136Z ║                   🔐 DEMO COMPLETADA 🔐                       ║
+2025-12-27T15:49:14.1760965Z ╚═══════════════════════════════════════════════════════════════╝
+2025-12-27T15:49:14.1761216Z [0m
+2025-12-27T15:49:14.1761380Z Explora más:
+2025-12-27T15:49:14.1761716Z   • Documentación de criptografía: https://crypto.stackexchange.com
+2025-12-27T15:49:14.1762148Z   • OpenSSL para producción: https://www.openssl.org
+2025-12-27T15:49:14.1762353Z 
+2025-12-27T15:49:14.1762511Z [0;32m[OK]   gcc [release]: completed (exit code: 0)[0m
+2025-12-27T15:49:14.1762703Z 
+2025-12-27T15:49:14.1762870Z [0;34m========================================================================[0m
+2025-12-27T15:49:14.1763397Z [0;34m  DEMO EXECUTION SUMMARY[0m
+2025-12-27T15:49:14.1763701Z [0;34m========================================================================[0m
+2025-12-27T15:49:14.1763886Z 
+2025-12-27T15:49:14.1763950Z Executed: 2
+2025-12-27T15:49:14.1764101Z Failed: 0
+2025-12-27T15:49:14.1764245Z Skipped: 0
+2025-12-27T15:49:14.1764336Z 
+2025-12-27T15:49:14.1764485Z ✅ Demo showcase/showcase_cryptography completado
+2025-12-27T15:49:14.1830931Z 🔨 Compilando demo: showcase/expression_templates [gcc/all]
+2025-12-27T15:49:14.1865496Z [1;33m-> Building demo: showcase/expression_templates...[0m
+2025-12-27T15:49:14.1865933Z 
+2025-12-27T15:49:14.1868164Z [1;33m-> Building with gcc...[0m
+2025-12-27T15:49:14.1895708Z [1;33m->   Compiling [debug]...[0m
+2025-12-27T15:49:14.4144126Z demos/showcase/expression_templates.cpp:442:19: warning: integer constant is too large for its type
+2025-12-27T15:49:14.4144977Z   442 |     uint128_t b = 98765432109876543210ULL;
+2025-12-27T15:49:14.4145382Z       |                   ^~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:49:14.4146050Z demos/showcase/expression_templates.cpp:444:19: warning: integer constant is too large for its type
+2025-12-27T15:49:14.4146739Z   444 |     uint128_t d = 22222222222222222222ULL;
+2025-12-27T15:49:14.4147148Z       |                   ^~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:49:15.4925519Z In file included from ./include/int128.hpp:75,
+2025-12-27T15:49:15.4926165Z                  from demos/showcase/expression_templates.cpp:34:
+2025-12-27T15:49:15.4927765Z ./include/int128/int128_traits.hpp:68:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:15.4928751Z    68 | template <> struct is_pod<int128_t> : true_type {
+2025-12-27T15:49:15.4929150Z       |                    ^~~~~~
+2025-12-27T15:49:15.4929503Z In file included from /usr/include/c++/13/ratio:39,
+2025-12-27T15:49:15.4929908Z                  from /usr/include/c++/13/bits/chrono.h:37,
+2025-12-27T15:49:15.4930282Z                  from /usr/include/c++/13/chrono:41,
+2025-12-27T15:49:15.4930683Z                  from demos/showcase/expression_templates.cpp:33:
+2025-12-27T15:49:15.4931142Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:15.4931614Z   819 |     is_pod
+2025-12-27T15:49:15.4931975Z       |     ^~~~~~
+2025-12-27T15:49:15.4932430Z In file included from ./include/int128.hpp:76:
+2025-12-27T15:49:15.4934371Z ./include/uint128/uint128_traits.hpp:65:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:15.4935295Z    65 | template <> struct is_pod<uint128_t> : true_type {
+2025-12-27T15:49:15.4935652Z       |                    ^~~~~~
+2025-12-27T15:49:15.4935997Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:15.4936971Z   819 |     is_pod
+2025-12-27T15:49:15.4937200Z       |     ^~~~~~
+2025-12-27T15:49:16.2862393Z [0;32m[OK]   gcc [debug]: build/build_demos/gcc/debug/expression_templates[0m
+2025-12-27T15:49:16.2891093Z [1;33m->   Compiling [release]...[0m
+2025-12-27T15:49:16.4094922Z demos/showcase/expression_templates.cpp:442:19: warning: integer constant is too large for its type
+2025-12-27T15:49:16.4095773Z   442 |     uint128_t b = 98765432109876543210ULL;
+2025-12-27T15:49:16.4096180Z       |                   ^~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:49:16.4096924Z demos/showcase/expression_templates.cpp:444:19: warning: integer constant is too large for its type
+2025-12-27T15:49:16.4097639Z   444 |     uint128_t d = 22222222222222222222ULL;
+2025-12-27T15:49:16.4098019Z       |                   ^~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:49:17.5099066Z In file included from ./include/int128.hpp:75,
+2025-12-27T15:49:17.5099652Z                  from demos/showcase/expression_templates.cpp:34:
+2025-12-27T15:49:17.5101599Z ./include/int128/int128_traits.hpp:68:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:17.5102618Z    68 | template <> struct is_pod<int128_t> : true_type {
+2025-12-27T15:49:17.5103282Z       |                    ^~~~~~
+2025-12-27T15:49:17.5103616Z In file included from /usr/include/c++/13/ratio:39,
+2025-12-27T15:49:17.5103997Z                  from /usr/include/c++/13/bits/chrono.h:37,
+2025-12-27T15:49:17.5104744Z                  from /usr/include/c++/13/chrono:41,
+2025-12-27T15:49:17.5105122Z                  from demos/showcase/expression_templates.cpp:33:
+2025-12-27T15:49:17.5105551Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:17.5105914Z   819 |     is_pod
+2025-12-27T15:49:17.5106127Z       |     ^~~~~~
+2025-12-27T15:49:17.5109211Z In file included from ./include/int128.hpp:76:
+2025-12-27T15:49:17.5111153Z ./include/uint128/uint128_traits.hpp:65:20: warning: ‘template<class _Tp> struct std::is_pod’ is deprecated: use 'is_standard_layout && is_trivial' instead [-Wdeprecated-declarations]
+2025-12-27T15:49:17.5112086Z    65 | template <> struct is_pod<uint128_t> : true_type {
+2025-12-27T15:49:17.5112432Z       |                    ^~~~~~
+2025-12-27T15:49:17.5112776Z /usr/include/c++/13/type_traits:819:5: note: declared here
+2025-12-27T15:49:17.5113390Z   819 |     is_pod
+2025-12-27T15:49:17.5113602Z       |     ^~~~~~
+2025-12-27T15:49:18.5800252Z In member function ‘constexpr uint128_t Uint128Expr::eval() const’,
+2025-12-27T15:49:18.5802246Z     inlined from ‘constexpr uint128_t BinOp<E1, E2, Op>::eval() const [with E1 = BinOp<BinOp<Uint128Expr, Uint128Expr, AddOp>, Uint128Expr, AddOp>; E2 = Uint128Expr; Op = AddOp]’ at demos/showcase/expression_templates.cpp:117:49,
+2025-12-27T15:49:18.5806376Z     inlined from ‘void demo_basic_usage()’ at demos/showcase/expression_templates.cpp:359:34:
+2025-12-27T15:49:18.5808624Z demos/showcase/expression_templates.cpp:91:16: warning: ‘*(const uint128_t::uint64_t*)((char*)&<unnamed> + offsetof(Uint128Expr, Uint128Expr::<unnamed>))’ may be used uninitialized [-Wmaybe-uninitialized]
+2025-12-27T15:49:18.5809958Z    91 |         return value;
+2025-12-27T15:49:18.5810334Z       |                ^~~~~
+2025-12-27T15:49:18.5811114Z demos/showcase/expression_templates.cpp: In function ‘void demo_basic_usage()’:
+2025-12-27T15:49:18.5812213Z demos/showcase/expression_templates.cpp:358:81: note: ‘<anonymous>’ declared here
+2025-12-27T15:49:18.5813417Z   358 |     auto expr = Uint128Expr(a) + Uint128Expr(b) + Uint128Expr(c) + Uint128Expr(d);
+2025-12-27T15:49:18.5814097Z       |                                                                                 ^
+2025-12-27T15:49:18.5814961Z In member function ‘constexpr uint128_t Uint128Expr::eval() const’,
+2025-12-27T15:49:18.5817194Z     inlined from ‘constexpr uint128_t BinOp<E1, E2, Op>::eval() const [with E1 = BinOp<BinOp<Uint128Expr, Uint128Expr, AddOp>, Uint128Expr, AddOp>; E2 = Uint128Expr; Op = AddOp]’ at demos/showcase/expression_templates.cpp:117:49,
+2025-12-27T15:49:18.5819009Z     inlined from ‘void demo_basic_usage()’ at demos/showcase/expression_templates.cpp:359:34:
+2025-12-27T15:49:18.5820994Z demos/showcase/expression_templates.cpp:91:16: warning: ‘*(const uint128_t::uint64_t*)((char*)&<unnamed> + offsetof(Uint128Expr, Uint128Expr::value.uint128_t::data[1]))’ may be used uninitialized [-Wmaybe-uninitialized]
+2025-12-27T15:49:18.5822337Z    91 |         return value;
+2025-12-27T15:49:18.5822709Z       |                ^~~~~
+2025-12-27T15:49:18.5823652Z demos/showcase/expression_templates.cpp: In function ‘void demo_basic_usage()’:
+2025-12-27T15:49:18.5824693Z demos/showcase/expression_templates.cpp:358:81: note: ‘<anonymous>’ declared here
+2025-12-27T15:49:18.5825550Z   358 |     auto expr = Uint128Expr(a) + Uint128Expr(b) + Uint128Expr(c) + Uint128Expr(d);
+2025-12-27T15:49:18.5826173Z       |                                                                                 ^
+2025-12-27T15:49:18.7174534Z [0;32m[OK]   gcc [release]: build/build_demos/gcc/release/expression_templates[0m
+2025-12-27T15:49:18.7175050Z 
+2025-12-27T15:49:18.7175451Z [0;32m[OK] Build complete for demo showcase/expression_templates![0m
+2025-12-27T15:49:18.7192288Z ⚡ Ejecutando demo: showcase/expression_templates [gcc/all]
+2025-12-27T15:49:18.7228074Z [0;34m========================================================================[0m
+2025-12-27T15:49:18.7228727Z [0;34m  DEMO EXECUTION: showcase/expression_templates[0m
+2025-12-27T15:49:18.7229492Z [0;34m========================================================================[0m
+2025-12-27T15:49:18.7229716Z 
+2025-12-27T15:49:18.7230390Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:18.7231183Z [1;33m-> Running demo: showcase/expression_templates with gcc [debug][0m
+2025-12-27T15:49:18.7231948Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:18.7232325Z 
+2025-12-27T15:49:18.7245262Z ╔══════════════════════════════════════════════════════════════╗
+2025-12-27T15:49:18.7246005Z ║       EXPRESSION TEMPLATES PARA uint128_t                    ║
+2025-12-27T15:49:18.7246637Z ║                                                              ║
+2025-12-27T15:49:18.7247313Z ║  Técnica avanzada de C++ para eliminar temporales           ║
+2025-12-27T15:49:18.7248096Z ║  intermedios en expresiones aritméticas complejas            ║
+2025-12-27T15:49:18.7248858Z ╚══════════════════════════════════════════════════════════════╝
+2025-12-27T15:49:18.7249212Z 
+2025-12-27T15:49:18.7249406Z === DEMOSTRACIÓN BÁSICA ===
+2025-12-27T15:49:18.7249907Z Sin Expression Templates, 'e = a + b + c + d' crea 3 temporales.
+2025-12-27T15:49:18.7250642Z Con Expression Templates, se evalúa en una sola pasada.
+2025-12-27T15:49:18.7251012Z 
+2025-12-27T15:49:18.7251124Z a = 1000
+2025-12-27T15:49:18.7251371Z b = 2000
+2025-12-27T15:49:18.7251615Z c = 3000
+2025-12-27T15:49:18.7251849Z d = 4000
+2025-12-27T15:49:18.7252267Z 
+2025-12-27T15:49:18.7252425Z --- Sin Expression Templates ---
+2025-12-27T15:49:18.7252799Z e = a + b + c + d = 10000
+2025-12-27T15:49:18.7253417Z (Creó 3 temporales intermedios)
+2025-12-27T15:49:18.7253672Z 
+2025-12-27T15:49:18.7253821Z --- Con Expression Templates ---
+2025-12-27T15:49:18.7254208Z e = a + b + c + d = 10000
+2025-12-27T15:49:18.7254712Z (Sin temporales intermedios, evaluación en una pasada)
+2025-12-27T15:49:18.7255083Z 
+2025-12-27T15:49:18.7255254Z --- Con UInt128ET (wrapper conveniente) ---
+2025-12-27T15:49:18.7255695Z e = a + b + c + d = 10000
+2025-12-27T15:49:18.7256171Z (Sintaxis transparente, optimización automática)
+2025-12-27T15:49:18.7256509Z 
+2025-12-27T15:49:18.7256646Z === EXPRESIONES COMPLEJAS ===
+2025-12-27T15:49:18.7256886Z 
+2025-12-27T15:49:18.7257015Z a = 100, b = 200, c = 300, d = 400, e = 500
+2025-12-27T15:49:18.7257308Z 
+2025-12-27T15:49:18.7257537Z Resultado de (a + b) * (c - d) + e = 340282366920938463463374607431768181956
+2025-12-27T15:49:18.7258269Z Verificación manual: 340282366920938463463374607431768181956
+2025-12-27T15:49:18.7258796Z Coincide: SÍ ✓
+2025-12-27T15:49:18.7258969Z 
+2025-12-27T15:49:18.7259137Z Resultado de ((a + b) * c - d) / (e + 50) = 162
+2025-12-27T15:49:18.7259453Z 
+2025-12-27T15:49:18.7259678Z === DEDUCCIÓN DE TIPOS (COMPILE-TIME) ===
+2025-12-27T15:49:18.7259982Z 
+2025-12-27T15:49:18.7260099Z auto expr = a + b + c;
+2025-12-27T15:49:18.7260538Z Tipo de expr (con typeid): 5BinOpIS_I9UInt128ETS0_5AddOpES0_S1_E
+2025-12-27T15:49:18.7260936Z 
+2025-12-27T15:49:18.7261332Z Este tipo complejo es optimizado por el compilador.
+2025-12-27T15:49:18.7261848Z Al evaluar: expr.eval() o asignar a uint128_t,
+2025-12-27T15:49:18.7262472Z el compilador inline-a toda la expresión sin temporales.
+2025-12-27T15:49:18.7262849Z 
+2025-12-27T15:49:18.7263349Z Resultado: 60
+2025-12-27T15:49:18.7263529Z 
+2025-12-27T15:49:18.7263665Z =================================================================
+2025-12-27T15:49:18.7264070Z BENCHMARKS
+2025-12-27T15:49:18.7264372Z =================================================================
+2025-12-27T15:49:18.7264673Z 
+2025-12-27T15:49:18.7264827Z === BENCHMARK: SUMA SIMPLE (a + b + c + d) ===
+2025-12-27T15:49:18.7265246Z Iteraciones: 1,000,000
+2025-12-27T15:49:18.7265445Z 
+2025-12-27T15:49:18.7497223Z Sin ET (temporales)                     :      24.75 ns/op
+2025-12-27T15:49:18.8573947Z Con ET (sin temporales)                 :     107.58 ns/op
+2025-12-27T15:49:18.8574325Z 
+2025-12-27T15:49:18.8574435Z Speedup: 0.23x
+2025-12-27T15:49:18.8575193Z Sin ET es 334.66% más rápido (overhead de ET no vale la pena para expresiones simples)
+2025-12-27T15:49:18.8575597Z 
+2025-12-27T15:49:18.8575778Z === BENCHMARK: EXPRESIÓN COMPLEJA ===
+2025-12-27T15:49:18.8576114Z e = (a + b) * (c - d) + (e / f) - g
+2025-12-27T15:49:18.8576421Z Iteraciones: 1,000,000
+2025-12-27T15:49:18.8576586Z 
+2025-12-27T15:49:19.3471180Z Sin ET                                  :     489.67 ns/op
+2025-12-27T15:49:20.0377388Z Con ET                                  :     690.64 ns/op
+2025-12-27T15:49:20.0377786Z 
+2025-12-27T15:49:20.0377910Z Speedup: 0.71x
+2025-12-27T15:49:20.0378098Z 
+2025-12-27T15:49:20.0378602Z === BENCHMARK: EXPRESIÓN GRANDE (10 operandos) ===
+2025-12-27T15:49:20.0379102Z e = a + b + c + d + e + f + g + h + i + j
+2025-12-27T15:49:20.0379506Z Iteraciones: 1,000,000
+2025-12-27T15:49:20.0379710Z 
+2025-12-27T15:49:20.1049135Z Sin ET (9 temporales)                   :      67.15 ns/op
+2025-12-27T15:49:20.4296358Z Con ET (sin temporales)                 :     324.69 ns/op
+2025-12-27T15:49:20.4296810Z 
+2025-12-27T15:49:20.4296937Z Speedup: 0.21x
+2025-12-27T15:49:20.4297119Z 
+2025-12-27T15:49:20.4297594Z NOTA: Cuantos más operandos, mayor beneficio de ET
+2025-12-27T15:49:20.4298105Z       (menos temporales = menos copias de 16 bytes)
+2025-12-27T15:49:20.4298392Z 
+2025-12-27T15:49:20.4298659Z === ANÁLISIS DE ENSAMBLADOR (CONCEPTUAL) ===
+2025-12-27T15:49:20.4298889Z 
+2025-12-27T15:49:20.4298976Z Sin Expression Templates:
+2025-12-27T15:49:20.4299180Z   e = a + b + c + d;
+2025-12-27T15:49:20.4299725Z   // Ensamblador (simplificado):
+2025-12-27T15:49:20.4300106Z   mov  temp1, a
+2025-12-27T15:49:20.4300409Z   add  temp1, b      ; temp1 = a + b
+2025-12-27T15:49:20.4300791Z   mov  temp2, temp1
+2025-12-27T15:49:20.4301105Z   add  temp2, c      ; temp2 = temp1 + c
+2025-12-27T15:49:20.4301484Z   mov  temp3, temp2
+2025-12-27T15:49:20.4301786Z   add  temp3, d      ; temp3 = temp2 + d
+2025-12-27T15:49:20.4302127Z   mov  e, temp3      ; copia final
+2025-12-27T15:49:20.4302346Z   // 7 operaciones (4 mov + 3 add)
+2025-12-27T15:49:20.4302566Z 
+2025-12-27T15:49:20.4302707Z Con Expression Templates:
+2025-12-27T15:49:20.4303409Z   e = a + b + c + d; // expresión lazy
+2025-12-27T15:49:20.4303823Z   // Ensamblador (simplificado):
+2025-12-27T15:49:20.4304178Z   mov  e, a
+2025-12-27T15:49:20.4304429Z   add  e, b
+2025-12-27T15:49:20.4304659Z   add  e, c
+2025-12-27T15:49:20.4304802Z   add  e, d
+2025-12-27T15:49:20.4304967Z   // 4 operaciones (1 mov + 3 add)
+2025-12-27T15:49:20.4305132Z 
+2025-12-27T15:49:20.4305284Z Reducción: 43% menos instrucciones
+2025-12-27T15:49:20.4305580Z Beneficio: Menos escrituras en memoria, mejor uso de cache
+2025-12-27T15:49:20.4305799Z 
+2025-12-27T15:49:20.4305889Z =================================================================
+2025-12-27T15:49:20.4306122Z CONCLUSIONES
+2025-12-27T15:49:20.4306305Z =================================================================
+2025-12-27T15:49:20.4306465Z 
+2025-12-27T15:49:20.4306590Z 1. Expression Templates eliminan copias innecesarias
+2025-12-27T15:49:20.4307261Z 2. Mayor beneficio con expresiones largas/complejas
+2025-12-27T15:49:20.4307561Z 3. Sin overhead en runtime (todo en compile-time)
+2025-12-27T15:49:20.4307913Z 4. Compiladores modernos con -O3 pueden optimizar ambos casos
+2025-12-27T15:49:20.4308264Z 5. Para uint128_t (16 bytes), el beneficio es notable
+2025-12-27T15:49:20.4308652Z 6. Trade-off: tiempo de compilación vs tiempo de ejecución
+2025-12-27T15:49:20.4308865Z 
+2025-12-27T15:49:20.4308999Z ✓ Demo completado exitosamente
+2025-12-27T15:49:20.4309143Z 
+2025-12-27T15:49:20.4309302Z [0;32m[OK]   gcc [debug]: completed (exit code: 0)[0m
+2025-12-27T15:49:20.4309495Z 
+2025-12-27T15:49:20.4309688Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:20.4310142Z [1;33m-> Running demo: showcase/expression_templates with gcc [release][0m
+2025-12-27T15:49:20.4310573Z [0;34m--------------------------------------------------------------------[0m
+2025-12-27T15:49:20.4310783Z 
+2025-12-27T15:49:20.4321068Z ╔══════════════════════════════════════════════════════════════╗
+2025-12-27T15:49:20.4321545Z ║       EXPRESSION TEMPLATES PARA uint128_t                    ║
+2025-12-27T15:49:20.4321908Z ║                                                              ║
+2025-12-27T15:49:20.4322321Z ║  Técnica avanzada de C++ para eliminar temporales           ║
+2025-12-27T15:49:20.4322740Z ║  intermedios en expresiones aritméticas complejas            ║
+2025-12-27T15:49:20.4323379Z ╚══════════════════════════════════════════════════════════════╝
+2025-12-27T15:49:20.4323666Z 
+2025-12-27T15:49:20.4323855Z === DEMOSTRACIÓN BÁSICA ===
+2025-12-27T15:49:20.4324323Z Sin Expression Templates, 'e = a + b + c + d' crea 3 temporales.
+2025-12-27T15:49:20.4325011Z Con Expression Templates, se evalúa en una sola pasada.
+2025-12-27T15:49:20.4325381Z 
+2025-12-27T15:49:20.4325449Z a = 1000
+2025-12-27T15:49:20.4325602Z b = 2000
+2025-12-27T15:49:20.4325740Z c = 3000
+2025-12-27T15:49:20.4325878Z d = 4000
+2025-12-27T15:49:20.4325984Z 
+2025-12-27T15:49:20.4326072Z --- Sin Expression Templates ---
+2025-12-27T15:49:20.4326292Z e = a + b + c + d = 10000
+2025-12-27T15:49:20.4326538Z (Creó 3 temporales intermedios)
+2025-12-27T15:49:20.4326682Z 
+2025-12-27T15:49:20.4326772Z --- Con Expression Templates ---
+2025-12-27T15:49:20.5052027Z scripts/run_generic.bash: line 157:  2992 Segmentation fault      (core dumped) "$exe_path" "${extra_args[@]}"
+2025-12-27T15:49:20.5056290Z scripts/run_generic.bash: line 240: local: can only be used in a function
+2025-12-27T15:49:20.5056807Z 
+2025-12-27T15:49:20.5057357Z [0;31m[ERROR]   gcc [release]: failed (exit code: 139)[0m
+2025-12-27T15:49:20.5057880Z make: *** [Makefile:131: run_demo] Error 1
+2025-12-27T15:49:20.5145182Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T15:49:20.5145448Z with:
+2025-12-27T15:49:20.5145638Z   name: gcc-14-release-binaries
+2025-12-27T15:49:20.5145859Z   path: build/build_tests/gcc/release/
+2025-12-27T15:49:20.5146088Z   retention-days: 7
+2025-12-27T15:49:20.5146296Z   if-no-files-found: warn
+2025-12-27T15:49:20.5146487Z   compression-level: 6
+2025-12-27T15:49:20.5146670Z   overwrite: false
+2025-12-27T15:49:20.5146852Z   include-hidden-files: false
+2025-12-27T15:49:20.5147060Z ##[endgroup]
+2025-12-27T15:49:20.7534621Z With the provided path, there will be 81 files uploaded
+2025-12-27T15:49:20.7540426Z Artifact name is valid!
+2025-12-27T15:49:20.7541373Z Root directory input is valid!
+2025-12-27T15:49:20.8736461Z Beginning upload of artifact content to blob storage
+2025-12-27T15:49:21.2010693Z Uploaded bytes 377689
+2025-12-27T15:49:21.2326640Z Finished uploading artifact content to blob storage!
+2025-12-27T15:49:21.2329543Z SHA256 digest of uploaded artifact zip is d03e29043594a2513844a0580ba14e6b034b384f71bd87b3574ca4455ed8fe2d
+2025-12-27T15:49:21.2331011Z Finalizing artifact upload
+2025-12-27T15:49:21.3096742Z Artifact gcc-14-release-binaries.zip successfully finalized. Artifact ID 4975536905
+2025-12-27T15:49:21.3098113Z Artifact gcc-14-release-binaries has been successfully uploaded! Final size is 377689 bytes. Artifact ID is 4975536905
+2025-12-27T15:49:21.3104739Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20541100891/artifacts/4975536905
+2025-12-27T15:49:21.3273423Z Post job cleanup.
+2025-12-27T15:49:21.4227196Z [command]/usr/bin/git version
+2025-12-27T15:49:21.4266219Z git version 2.52.0
+2025-12-27T15:49:21.4309691Z Temporarily overriding HOME='/home/runner/work/_temp/d68e6ede-f2f4-4a33-9571-e1ab47dfc02e' before making global git config changes
+2025-12-27T15:49:21.4310716Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T15:49:21.4315313Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T15:49:21.4353300Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T15:49:21.4387723Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T15:49:21.4629635Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T15:49:21.4652807Z http.https://github.com/.extraheader
+2025-12-27T15:49:21.4666504Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T15:49:21.4699348Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T15:49:21.4928859Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T15:49:21.4961362Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T15:49:21.5300127Z Cleaning up orphan processes

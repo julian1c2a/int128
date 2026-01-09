@@ -1,0 +1,12 @@
+﻿2025-12-27T19:43:06.5887751Z ##[group]Run # Obtener vcvarsall.bat path
+2025-12-27T19:43:06.5888213Z [36;1m# Obtener vcvarsall.bat path[0m
+2025-12-27T19:43:06.5888549Z [36;1m$vcvarsPath = & python scripts/vcvars.py[0m
+2025-12-27T19:43:06.5888819Z [36;1mif ($vcvarsPath) {[0m
+2025-12-27T19:43:06.5889106Z [36;1m  Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"[0m
+2025-12-27T19:43:06.5889458Z [36;1m  echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV[0m
+2025-12-27T19:43:06.5890128Z [36;1m} else {[0m
+2025-12-27T19:43:06.5890408Z [36;1m  Write-Host "⚠ vcvarsall.bat not found, using default path"[0m
+2025-12-27T19:43:06.5891508Z [36;1m}[0m
+2025-12-27T19:43:06.7782584Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2025-12-27T19:43:06.7783081Z ##[endgroup]
+2025-12-27T19:43:24.9654150Z ✓ Found vcvarsall.bat at: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat

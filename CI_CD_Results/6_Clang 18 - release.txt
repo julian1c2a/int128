@@ -1,0 +1,1082 @@
+﻿2025-12-27T15:48:07.3367216Z Current runner version: '2.330.0'
+2025-12-27T15:48:07.3395617Z ##[group]Runner Image Provisioner
+2025-12-27T15:48:07.3396499Z Hosted Compute Agent
+2025-12-27T15:48:07.3396997Z Version: 20251211.462
+2025-12-27T15:48:07.3397597Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T15:48:07.3398282Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T15:48:07.3398944Z Worker ID: {802d74cd-4e89-4138-9976-ad6209be203b}
+2025-12-27T15:48:07.3399608Z ##[endgroup]
+2025-12-27T15:48:07.3400505Z ##[group]Operating System
+2025-12-27T15:48:07.3401075Z Ubuntu
+2025-12-27T15:48:07.3401536Z 24.04.3
+2025-12-27T15:48:07.3402058Z LTS
+2025-12-27T15:48:07.3402525Z ##[endgroup]
+2025-12-27T15:48:07.3403038Z ##[group]Runner Image
+2025-12-27T15:48:07.3403853Z Image: ubuntu-24.04
+2025-12-27T15:48:07.3404461Z Version: 20251215.174.1
+2025-12-27T15:48:07.3405444Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T15:48:07.3407083Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T15:48:07.3408092Z ##[endgroup]
+2025-12-27T15:48:07.3409187Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T15:48:07.3411347Z Contents: read
+2025-12-27T15:48:07.3411844Z Metadata: read
+2025-12-27T15:48:07.3412422Z Packages: read
+2025-12-27T15:48:07.3412874Z ##[endgroup]
+2025-12-27T15:48:07.3415409Z Secret source: Actions
+2025-12-27T15:48:07.3416561Z Prepare workflow directory
+2025-12-27T15:48:07.3851673Z Prepare all required actions
+2025-12-27T15:48:07.3909143Z Getting action download info
+2025-12-27T15:48:07.7217388Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T15:48:07.8177916Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T15:48:08.0465822Z Complete job name: Clang 18 - release
+2025-12-27T15:48:08.1096418Z ##[group]Run actions/checkout@v4
+2025-12-27T15:48:08.1097237Z with:
+2025-12-27T15:48:08.1097624Z   repository: julian1c2a/int128
+2025-12-27T15:48:08.1098298Z   token: ***
+2025-12-27T15:48:08.1098672Z   ssh-strict: true
+2025-12-27T15:48:08.1099057Z   ssh-user: git
+2025-12-27T15:48:08.1099446Z   persist-credentials: true
+2025-12-27T15:48:08.1099881Z   clean: true
+2025-12-27T15:48:08.1100265Z   sparse-checkout-cone-mode: true
+2025-12-27T15:48:08.1100734Z   fetch-depth: 1
+2025-12-27T15:48:08.1101103Z   fetch-tags: false
+2025-12-27T15:48:08.1101490Z   show-progress: true
+2025-12-27T15:48:08.1101896Z   lfs: false
+2025-12-27T15:48:08.1102248Z   submodules: false
+2025-12-27T15:48:08.1102641Z   set-safe-directory: true
+2025-12-27T15:48:08.1103491Z ##[endgroup]
+2025-12-27T15:48:08.2199078Z Syncing repository: julian1c2a/int128
+2025-12-27T15:48:08.2200869Z ##[group]Getting Git version info
+2025-12-27T15:48:08.2201535Z Working directory is '/home/runner/work/int128/int128'
+2025-12-27T15:48:08.2202664Z [command]/usr/bin/git version
+2025-12-27T15:48:08.2286516Z git version 2.52.0
+2025-12-27T15:48:08.2313557Z ##[endgroup]
+2025-12-27T15:48:08.2329323Z Temporarily overriding HOME='/home/runner/work/_temp/d585a65e-ba1b-4b81-9058-7a9ce1090ef6' before making global git config changes
+2025-12-27T15:48:08.2331030Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T15:48:08.2342796Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T15:48:08.2385069Z Deleting the contents of '/home/runner/work/int128/int128'
+2025-12-27T15:48:08.2388836Z ##[group]Initializing the repository
+2025-12-27T15:48:08.2392661Z [command]/usr/bin/git init /home/runner/work/int128/int128
+2025-12-27T15:48:08.2518359Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-27T15:48:08.2519775Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-27T15:48:08.2520965Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-27T15:48:08.2522100Z hint: call:
+2025-12-27T15:48:08.2522861Z hint:
+2025-12-27T15:48:08.2523916Z hint: 	git config --global init.defaultBranch <name>
+2025-12-27T15:48:08.2524668Z hint:
+2025-12-27T15:48:08.2525685Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-27T15:48:08.2527215Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-27T15:48:08.2528129Z hint:
+2025-12-27T15:48:08.2528606Z hint: 	git branch -m <name>
+2025-12-27T15:48:08.2529172Z hint:
+2025-12-27T15:48:08.2529842Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-27T15:48:08.2530822Z Initialized empty Git repository in /home/runner/work/int128/int128/.git/
+2025-12-27T15:48:08.2538138Z [command]/usr/bin/git remote add origin https://github.com/julian1c2a/int128
+2025-12-27T15:48:08.2574598Z ##[endgroup]
+2025-12-27T15:48:08.2575335Z ##[group]Disabling automatic garbage collection
+2025-12-27T15:48:08.2578714Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-27T15:48:08.2608397Z ##[endgroup]
+2025-12-27T15:48:08.2609142Z ##[group]Setting up auth
+2025-12-27T15:48:08.2615826Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T15:48:08.2647911Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T15:48:08.3002570Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T15:48:08.3032661Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T15:48:08.3276689Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T15:48:08.3309266Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T15:48:08.3577057Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-27T15:48:08.3620226Z ##[endgroup]
+2025-12-27T15:48:08.3632218Z ##[group]Fetching the repository
+2025-12-27T15:48:08.3634112Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b9cce535b34bdf1ed354f2ba62682ec05d64eb57:refs/remotes/origin/main
+2025-12-27T15:48:08.9471269Z From https://github.com/julian1c2a/int128
+2025-12-27T15:48:08.9472971Z  * [new ref]         b9cce535b34bdf1ed354f2ba62682ec05d64eb57 -> origin/main
+2025-12-27T15:48:08.9508130Z ##[endgroup]
+2025-12-27T15:48:08.9509386Z ##[group]Determining the checkout info
+2025-12-27T15:48:08.9512591Z ##[endgroup]
+2025-12-27T15:48:08.9516761Z [command]/usr/bin/git sparse-checkout disable
+2025-12-27T15:48:08.9561417Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-27T15:48:08.9592261Z ##[group]Checking out the ref
+2025-12-27T15:48:08.9594519Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T15:48:09.0088951Z Switched to a new branch 'main'
+2025-12-27T15:48:09.0090597Z branch 'main' set up to track 'origin/main'.
+2025-12-27T15:48:09.0099283Z ##[endgroup]
+2025-12-27T15:48:09.0138855Z [command]/usr/bin/git log -1 --format=%H
+2025-12-27T15:48:09.0162600Z b9cce535b34bdf1ed354f2ba62682ec05d64eb57
+2025-12-27T15:48:09.0394521Z ##[group]Run wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+2025-12-27T15:48:09.0397010Z [36;1mwget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -[0m
+2025-12-27T15:48:09.0399444Z [36;1msudo add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main"[0m
+2025-12-27T15:48:09.0401396Z [36;1msudo apt update[0m
+2025-12-27T15:48:09.0402611Z [36;1msudo apt install -y clang-18[0m
+2025-12-27T15:48:09.0404132Z [36;1mclang-18 --version[0m
+2025-12-27T15:48:09.0442471Z shell: /usr/bin/bash -e {0}
+2025-12-27T15:48:09.0444027Z ##[endgroup]
+2025-12-27T15:48:09.0578858Z --2025-12-27 15:48:09--  https://apt.llvm.org/llvm-snapshot.gpg.key
+2025-12-27T15:48:09.1141279Z Resolving apt.llvm.org (apt.llvm.org)... 146.75.78.49, 2a04:4e42:83::561
+2025-12-27T15:48:09.1151588Z Connecting to apt.llvm.org (apt.llvm.org)|146.75.78.49|:443... connected.
+2025-12-27T15:48:09.1190897Z Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+2025-12-27T15:48:09.1241084Z HTTP request sent, awaiting response... 200 OK
+2025-12-27T15:48:09.1243741Z Length: 3145 (3.1K) [application/octet-stream]
+2025-12-27T15:48:09.1246093Z Saving to: ‘STDOUT’
+2025-12-27T15:48:09.1246986Z 
+2025-12-27T15:48:09.1247680Z      0K ...                                                   100% 70.4M=0s
+2025-12-27T15:48:09.1248978Z 
+2025-12-27T15:48:09.1249957Z 2025-12-27 15:48:09 (70.4 MB/s) - written to stdout [3145/3145]
+2025-12-27T15:48:09.1251331Z 
+2025-12-27T15:48:09.3663726Z OK
+2025-12-27T15:48:09.8684662Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T15:48:09.9074497Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T15:48:09.9079316Z Hit:6 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T15:48:09.9101389Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2025-12-27T15:48:09.9109976Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-12-27T15:48:09.9165287Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-12-27T15:48:09.9193865Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2025-12-27T15:48:10.0974260Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [77.4 kB]
+2025-12-27T15:48:10.1082824Z Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [58.9 kB]
+2025-12-27T15:48:10.1108616Z Get:10 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.4 kB]
+2025-12-27T15:48:10.1482963Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1684 kB]
+2025-12-27T15:48:10.1626436Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2025-12-27T15:48:10.1645960Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+2025-12-27T15:48:10.1652447Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [15.8 kB]
+2025-12-27T15:48:10.1663633Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1506 kB]
+2025-12-27T15:48:10.1759750Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [306 kB]
+2025-12-27T15:48:10.1794680Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [378 kB]
+2025-12-27T15:48:10.1813513Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.4 kB]
+2025-12-27T15:48:10.1886324Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2413 kB]
+2025-12-27T15:48:10.1991794Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [550 kB]
+2025-12-27T15:48:10.2194203Z Get:27 https://apt.llvm.org/noble llvm-toolchain-noble-18 InRelease [5554 B]
+2025-12-27T15:48:10.2438646Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+2025-12-27T15:48:10.2446954Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [516 B]
+2025-12-27T15:48:10.2456637Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [30.3 kB]
+2025-12-27T15:48:10.2466962Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6048 B]
+2025-12-27T15:48:10.2476769Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+2025-12-27T15:48:10.2485706Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [488 B]
+2025-12-27T15:48:10.2495910Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+2025-12-27T15:48:10.2508405Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7288 B]
+2025-12-27T15:48:10.2516734Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+2025-12-27T15:48:10.2527914Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [29.5 kB]
+2025-12-27T15:48:10.2538046Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [17.9 kB]
+2025-12-27T15:48:10.2549073Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+2025-12-27T15:48:10.2558150Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1444 B]
+2025-12-27T15:48:10.2567596Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-12-27T15:48:10.3054415Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-12-27T15:48:10.3072145Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [225 kB]
+2025-12-27T15:48:10.3097071Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+2025-12-27T15:48:10.3112404Z Get:39 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9504 B]
+2025-12-27T15:48:10.3126457Z Get:40 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [71.4 kB]
+2025-12-27T15:48:10.3141533Z Get:41 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+2025-12-27T15:48:10.3148555Z Get:42 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+2025-12-27T15:48:10.4301391Z Get:43 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 Packages [12.6 kB]
+2025-12-27T15:48:18.8736647Z Fetched 8393 kB in 1s (7000 kB/s)
+2025-12-27T15:48:19.7173134Z Reading package lists...
+2025-12-27T15:48:19.7266872Z W: http://apt.llvm.org/noble/dists/llvm-toolchain-noble-18/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+2025-12-27T15:48:19.7277304Z Repository: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main'
+2025-12-27T15:48:19.7278069Z Description:
+2025-12-27T15:48:19.7278454Z Archive for codename: llvm-toolchain-noble-18 components: main
+2025-12-27T15:48:19.7278782Z More info: http://apt.llvm.org/noble/
+2025-12-27T15:48:19.7283739Z Adding repository.
+2025-12-27T15:48:19.7284356Z Adding deb entry to /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_noble_-noble.list
+2025-12-27T15:48:19.7285093Z Adding disabled deb-src entry to /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_noble_-noble.list
+2025-12-27T15:48:19.7661204Z 
+2025-12-27T15:48:19.7661855Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T15:48:19.7662259Z 
+2025-12-27T15:48:19.8408650Z Get:2 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T15:48:19.8741322Z Hit:3 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T15:48:19.8754526Z Hit:4 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
+2025-12-27T15:48:19.8765153Z Hit:5 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease
+2025-12-27T15:48:19.8784585Z Hit:6 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease
+2025-12-27T15:48:19.8790683Z Hit:7 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T15:48:19.8804720Z Hit:1 https://apt.llvm.org/noble llvm-toolchain-noble-18 InRelease
+2025-12-27T15:48:19.8835659Z Hit:8 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease
+2025-12-27T15:48:21.2815451Z Reading package lists...
+2025-12-27T15:48:21.4962334Z Building dependency tree...
+2025-12-27T15:48:21.4969105Z Reading state information...
+2025-12-27T15:48:21.5158557Z W: http://apt.llvm.org/noble/dists/llvm-toolchain-noble-18/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+2025-12-27T15:48:21.5159945Z 87 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-12-27T15:48:21.5275559Z 
+2025-12-27T15:48:21.5276077Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T15:48:21.5276561Z 
+2025-12-27T15:48:21.5417077Z Reading package lists...
+2025-12-27T15:48:21.7610519Z Building dependency tree...
+2025-12-27T15:48:21.7618551Z Reading state information...
+2025-12-27T15:48:21.9559197Z The following additional packages will be installed:
+2025-12-27T15:48:21.9560335Z   clang-format-18 clang-tidy-18 clang-tools-18 libclang-common-18-dev
+2025-12-27T15:48:21.9566392Z   libclang-cpp18 libclang-rt-18-dev libclang1-18 liblldb-18 libllvm18 lld-18
+2025-12-27T15:48:21.9567243Z   lldb-18 llvm-18 llvm-18-dev llvm-18-linker-tools llvm-18-runtime
+2025-12-27T15:48:21.9568232Z   llvm-18-tools python3-lldb-18
+2025-12-27T15:48:21.9575411Z Suggested packages:
+2025-12-27T15:48:21.9575838Z   clang-18-doc wasi-libc llvm-18-doc
+2025-12-27T15:48:21.9986623Z The following packages will be upgraded:
+2025-12-27T15:48:21.9987558Z   clang-18 clang-format-18 clang-tidy-18 clang-tools-18 libclang-common-18-dev
+2025-12-27T15:48:21.9992530Z   libclang-cpp18 libclang-rt-18-dev libclang1-18 liblldb-18 libllvm18 lld-18
+2025-12-27T15:48:21.9993176Z   lldb-18 llvm-18 llvm-18-dev llvm-18-linker-tools llvm-18-runtime
+2025-12-27T15:48:21.9994823Z   llvm-18-tools python3-lldb-18
+2025-12-27T15:48:22.0236753Z 18 upgraded, 0 newly installed, 0 to remove and 69 not upgraded.
+2025-12-27T15:48:22.0997286Z Need to get 148 MB of archives.
+2025-12-27T15:48:22.0997854Z After this operation, 1255 kB of additional disk space will be used.
+2025-12-27T15:48:22.0998688Z Get:1 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 python3-lldb-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [152 kB]
+2025-12-27T15:48:22.1126591Z Get:2 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 liblldb-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [4283 kB]
+2025-12-27T15:48:22.1476984Z Get:3 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 lldb-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [1262 kB]
+2025-12-27T15:48:22.1597838Z Get:4 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 lld-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [1410 kB]
+2025-12-27T15:48:22.1725427Z Get:5 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 clang-tools-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [9124 kB]
+2025-12-27T15:48:22.2421218Z Get:6 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 clang-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [119 kB]
+2025-12-27T15:48:22.2464525Z Get:7 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 clang-tidy-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [5002 kB]
+2025-12-27T15:48:22.2866626Z Get:8 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 libclang-common-18-dev amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [739 kB]
+2025-12-27T15:48:22.2939056Z Get:9 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 clang-format-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [93.4 kB]
+2025-12-27T15:48:22.2981709Z Get:10 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 llvm-18-dev amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [45.4 MB]
+2025-12-27T15:48:22.6412169Z Get:11 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 libclang-cpp18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [13.6 MB]
+2025-12-27T15:48:22.7449280Z Get:12 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 libllvm18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [27.5 MB]
+2025-12-27T15:48:22.9523969Z Get:13 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 llvm-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [25.3 MB]
+2025-12-27T15:48:23.1445550Z Get:14 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 llvm-18-runtime amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [578 kB]
+2025-12-27T15:48:23.1523516Z Get:15 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 llvm-18-linker-tools amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [1353 kB]
+2025-12-27T15:48:23.1663984Z Get:16 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 llvm-18-tools amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [537 kB]
+2025-12-27T15:48:23.1727907Z Get:17 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 libclang1-18 amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [7838 kB]
+2025-12-27T15:48:23.2330699Z Get:18 https://apt.llvm.org/noble llvm-toolchain-noble-18/main amd64 libclang-rt-18-dev amd64 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 [3762 kB]
+2025-12-27T15:48:23.5486001Z Fetched 148 MB in 1s (122 MB/s)
+2025-12-27T15:48:23.6065850Z (Reading database ... 
+2025-12-27T15:48:23.6066311Z (Reading database ... 5%
+2025-12-27T15:48:23.6066603Z (Reading database ... 10%
+2025-12-27T15:48:23.6066835Z (Reading database ... 15%
+2025-12-27T15:48:23.6067050Z (Reading database ... 20%
+2025-12-27T15:48:23.6067276Z (Reading database ... 25%
+2025-12-27T15:48:23.6067488Z (Reading database ... 30%
+2025-12-27T15:48:23.6067701Z (Reading database ... 35%
+2025-12-27T15:48:23.6067910Z (Reading database ... 40%
+2025-12-27T15:48:23.6068126Z (Reading database ... 45%
+2025-12-27T15:48:23.6068393Z (Reading database ... 50%
+2025-12-27T15:48:23.6178839Z (Reading database ... 55%
+2025-12-27T15:48:23.7404202Z (Reading database ... 60%
+2025-12-27T15:48:23.8801706Z (Reading database ... 65%
+2025-12-27T15:48:23.9296202Z (Reading database ... 70%
+2025-12-27T15:48:24.0140174Z (Reading database ... 75%
+2025-12-27T15:48:24.1466885Z (Reading database ... 80%
+2025-12-27T15:48:24.2915957Z (Reading database ... 85%
+2025-12-27T15:48:24.4712431Z (Reading database ... 90%
+2025-12-27T15:48:24.5591634Z (Reading database ... 95%
+2025-12-27T15:48:24.5592091Z (Reading database ... 100%
+2025-12-27T15:48:24.5592706Z (Reading database ... 217374 files and directories currently installed.)
+2025-12-27T15:48:24.5641242Z Preparing to unpack .../00-python3-lldb-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:24.5696028Z Unpacking python3-lldb-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:24.6410058Z Preparing to unpack .../01-liblldb-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:24.6514206Z Unpacking liblldb-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:24.7584186Z Preparing to unpack .../02-lldb-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:24.7619594Z Unpacking lldb-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:24.8239947Z Preparing to unpack .../03-lld-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:24.8267977Z Unpacking lld-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:24.8879228Z Preparing to unpack .../04-clang-tools-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:24.8907974Z Unpacking clang-tools-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:25.1190357Z Preparing to unpack .../05-clang-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:25.1228627Z Unpacking clang-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:25.1729182Z Preparing to unpack .../06-clang-tidy-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:25.1760380Z Unpacking clang-tidy-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:25.3152728Z Preparing to unpack .../07-libclang-common-18-dev_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:25.3182226Z Unpacking libclang-common-18-dev:amd64 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:25.4715502Z Preparing to unpack .../08-clang-format-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:25.4751472Z Unpacking clang-format-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:25.5511340Z Preparing to unpack .../09-llvm-18-dev_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:25.5614627Z Unpacking llvm-18-dev (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:27.2291282Z Preparing to unpack .../10-libclang-cpp18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:27.2456646Z Unpacking libclang-cpp18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:27.5183479Z Preparing to unpack .../11-libllvm18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:27.5285534Z Unpacking libllvm18:amd64 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:28.0220617Z Preparing to unpack .../12-llvm-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:28.0250413Z Unpacking llvm-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:28.5855067Z Preparing to unpack .../13-llvm-18-runtime_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:28.5918982Z Unpacking llvm-18-runtime (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:28.6404536Z Preparing to unpack .../14-llvm-18-linker-tools_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:28.6431288Z Unpacking llvm-18-linker-tools (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:28.7011958Z Preparing to unpack .../15-llvm-18-tools_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:28.7034713Z Unpacking llvm-18-tools (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:28.9101606Z Preparing to unpack .../16-libclang1-18_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:28.9165018Z Unpacking libclang1-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:29.0845424Z Preparing to unpack .../17-libclang-rt-18-dev_1%3a18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92_amd64.deb ...
+2025-12-27T15:48:29.0865880Z Unpacking libclang-rt-18-dev:amd64 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) over (1:18.1.3-1ubuntu1) ...
+2025-12-27T15:48:29.2800064Z Setting up llvm-18-tools (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.2861862Z Setting up libclang-common-18-dev:amd64 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.2883693Z Setting up libclang-rt-18-dev:amd64 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.2904448Z Setting up libllvm18:amd64 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.2935488Z Setting up libclang1-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.2956131Z Setting up llvm-18-linker-tools (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.2978170Z Setting up llvm-18-runtime (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3012357Z Setting up libclang-cpp18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3035519Z Setting up lld-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3071036Z Setting up clang-format-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3089918Z Setting up liblldb-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3116881Z Setting up clang-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3138614Z Setting up clang-tools-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3159254Z Setting up clang-tidy-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3180458Z Setting up llvm-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3202077Z Setting up python3-lldb-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3229658Z Setting up llvm-18-dev (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3252863Z Setting up lldb-18 (1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92) ...
+2025-12-27T15:48:29.3331889Z Processing triggers for systemd (255.4-1ubuntu8.11) ...
+2025-12-27T15:48:29.3672851Z Processing triggers for man-db (2.12.0-4build2) ...
+2025-12-27T15:48:29.3701603Z Not building database; man-db/auto-update is not 'true'.
+2025-12-27T15:48:29.3716219Z Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+2025-12-27T15:48:30.3490146Z 
+2025-12-27T15:48:30.3490654Z Running kernel seems to be up-to-date.
+2025-12-27T15:48:30.3491016Z 
+2025-12-27T15:48:30.3491209Z No services need to be restarted.
+2025-12-27T15:48:30.3491466Z 
+2025-12-27T15:48:30.3491608Z No containers need to be restarted.
+2025-12-27T15:48:30.3491886Z 
+2025-12-27T15:48:30.3492063Z No user sessions are running outdated binaries.
+2025-12-27T15:48:30.3492405Z 
+2025-12-27T15:48:30.3492709Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2025-12-27T15:48:31.4431047Z Ubuntu clang version 18.1.8 (++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92)
+2025-12-27T15:48:31.4431637Z Target: x86_64-pc-linux-gnu
+2025-12-27T15:48:31.4431945Z Thread model: posix
+2025-12-27T15:48:31.4432240Z InstalledDir: /usr/bin
+2025-12-27T15:48:31.4567487Z ##[group]Run export CC=clang-18
+2025-12-27T15:48:31.4567786Z [36;1mexport CC=clang-18[0m
+2025-12-27T15:48:31.4568011Z [36;1mexport CXX=clang++-18[0m
+2025-12-27T15:48:31.4568273Z [36;1mchmod +x scripts/build_extracted_tests.bash[0m
+2025-12-27T15:48:31.4568604Z [36;1m./scripts/build_extracted_tests.bash clang release[0m
+2025-12-27T15:48:31.4604870Z shell: /usr/bin/bash -e {0}
+2025-12-27T15:48:31.4605113Z ##[endgroup]
+2025-12-27T15:48:31.4687834Z ================================
+2025-12-27T15:48:31.4688274Z Building Extracted Tests
+2025-12-27T15:48:31.4688627Z Compiler: clang
+2025-12-27T15:48:31.4688914Z Build Type: release
+2025-12-27T15:48:31.4689209Z ================================
+2025-12-27T15:48:31.4725384Z Using compiler: clang++-18
+2025-12-27T15:48:31.4725794Z Optimization flags: -O3 -DNDEBUG
+2025-12-27T15:48:31.4726071Z 
+2025-12-27T15:48:31.4727368Z Found 27 test files
+2025-12-27T15:48:31.4727582Z 
+2025-12-27T15:48:31.4741708Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T15:48:34.0320459Z   [FAIL] Failed
+2025-12-27T15:48:34.0320889Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:34.0331848Z In file included from tests/int128_algorithm_extracted_tests.cpp:6:
+2025-12-27T15:48:34.0332465Z In file included from include/int128/int128_algorithm.hpp:30:
+2025-12-27T15:48:34.0333149Z In file included from include/int128/int128_cmath.hpp:3:
+2025-12-27T15:48:34.0333937Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:34.0335122Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:34.0336335Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:34.0336898Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:34.0337568Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:34.0338410Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:34.0338886Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:34.0339936Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:34.0340751Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:34.0341176Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:34.0341726Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:34.0342317Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:34.0342678Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:34.0343176Z tests/int128_algorithm_extracted_tests.cpp:48:10: warning: unused variable 'it' [-Wunused-variable]
+2025-12-27T15:48:34.0343937Z    48 |     auto it =
+2025-12-27T15:48:34.0344146Z       |          ^~
+2025-12-27T15:48:34.0344653Z tests/int128_algorithm_extracted_tests.cpp:53:10: warning: unused variable 'it2' [-Wunused-variable]
+2025-12-27T15:48:34.0345279Z    53 |     auto it2 =
+2025-12-27T15:48:34.0345488Z       |          ^~~
+2025-12-27T15:48:34.0346122Z tests/int128_algorithm_extracted_tests.cpp:58:10: warning: unused variable 'it3' [-Wunused-variable]
+2025-12-27T15:48:34.0346931Z    58 |     auto it3 =
+2025-12-27T15:48:34.0347258Z       |          ^~~
+2025-12-27T15:48:34.0347968Z tests/int128_algorithm_extracted_tests.cpp:119:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:48:34.0349132Z   119 |     auto sum = accumulate_int128(vec.begin(), vec.end(), int128_t(100), std::plus<int128_t>());
+2025-12-27T15:48:34.0349600Z       |          ^~~
+2025-12-27T15:48:34.0350064Z tests/int128_algorithm_extracted_tests.cpp:124:10: warning: unused variable 'product' [-Wunused-variable]
+2025-12-27T15:48:34.0350600Z   124 |     auto product =
+2025-12-27T15:48:34.0350834Z   ===================================
+2025-12-27T15:48:34.0351493Z Compiling: int128_bits_extracted_tests...
+2025-12-27T15:48:35.4269419Z   [FAIL] Failed
+2025-12-27T15:48:35.4269836Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:35.4280121Z In file included from tests/int128_bits_extracted_tests.cpp:6:
+2025-12-27T15:48:35.4280746Z In file included from include/int128/int128_bits.hpp:5:
+2025-12-27T15:48:35.4281291Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:35.4282260Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:35.4283496Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:35.4284064Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:35.4284651Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:35.4285201Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:35.4285860Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:35.4286447Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:35.4287121Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:35.4287491Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:35.4287983Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:35.4288556Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:35.4288914Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:35.4289173Z 2 errors generated.
+2025-12-27T15:48:35.4289393Z   ===================================
+2025-12-27T15:48:35.4294850Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T15:48:37.0607881Z   [FAIL] Failed
+2025-12-27T15:48:37.0608433Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:37.0619467Z In file included from tests/int128_cmath_extracted_tests.cpp:5:
+2025-12-27T15:48:37.0620546Z In file included from include/int128/int128_cmath.hpp:3:
+2025-12-27T15:48:37.0621462Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:37.0623080Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:37.0625156Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:37.0625738Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:37.0626524Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:37.0627416Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:37.0627998Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:37.0628850Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:37.0629829Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:37.0630337Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:37.0630979Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:37.0631744Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:37.0632217Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:37.0632967Z tests/int128_cmath_extracted_tests.cpp:394:9: warning: variable 'prev_total' set but not used [-Wunused-but-set-variable]
+2025-12-27T15:48:37.0633965Z   394 |     int prev_total = total_tests;
+2025-12-27T15:48:37.0634326Z       |         ^
+2025-12-27T15:48:37.0634663Z 1 warning and 2 errors generated.
+2025-12-27T15:48:37.0635231Z   ===================================
+2025-12-27T15:48:37.0635878Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T15:48:38.4092718Z   [FAIL] Failed
+2025-12-27T15:48:38.4093033Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:38.4103047Z In file included from tests/int128_concepts_extracted_tests.cpp:6:
+2025-12-27T15:48:38.4103937Z In file included from tests/../include/int128/int128_concepts.hpp:30:
+2025-12-27T15:48:38.4104393Z In file included from tests/../include/int128/int128_t.hpp:30:
+2025-12-27T15:48:38.4105514Z tests/../include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:38.4106273Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:38.4106664Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:38.4107183Z tests/../include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:38.4107784Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:38.4108350Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:38.4108983Z tests/../include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:38.4109732Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:38.4110116Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:38.4110618Z tests/../include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:38.4111233Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:38.4111573Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:38.4111833Z 2 errors generated.
+2025-12-27T15:48:38.4112038Z   ===================================
+2025-12-27T15:48:38.4117823Z Compiling: int128_format_extracted_tests...
+2025-12-27T15:48:39.6606266Z   [FAIL] Failed
+2025-12-27T15:48:39.6606679Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:39.6616734Z In file included from tests/int128_format_extracted_tests.cpp:1:
+2025-12-27T15:48:39.6617210Z In file included from include/int128/int128_format.hpp:30:
+2025-12-27T15:48:39.6617830Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:39.6618823Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:39.6620023Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:39.6620528Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:39.6621040Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:39.6621632Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:39.6621994Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:39.6622621Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:39.6624140Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:39.6624541Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:39.6625025Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:39.6625604Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:39.6625960Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:39.6626446Z tests/int128_format_extracted_tests.cpp:98:14: warning: unused variable 'zero' [-Wunused-variable]
+2025-12-27T15:48:39.6626938Z    98 |     int128_t zero(0);
+2025-12-27T15:48:39.6627175Z       |              ^~~~
+2025-12-27T15:48:39.6627432Z 1 warning and 2 errors generated.
+2025-12-27T15:48:39.6627699Z   ===================================
+2025-12-27T15:48:39.6631821Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T15:48:40.9431436Z   [FAIL] Failed
+2025-12-27T15:48:40.9441846Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:40.9442531Z In file included from tests/int128_iostreams_extracted_tests.cpp:1:
+2025-12-27T15:48:40.9443473Z In file included from include/int128/int128_iostreams.hpp:31:
+2025-12-27T15:48:40.9444158Z In file included from include/int128/int128_format.hpp:30:
+2025-12-27T15:48:40.9444857Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:40.9446012Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:40.9447037Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:40.9447462Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:40.9448004Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:40.9448633Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:40.9449219Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:40.9449882Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:40.9450658Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:40.9451068Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:40.9451559Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:40.9452131Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:40.9452481Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:40.9452737Z 2 errors generated.
+2025-12-27T15:48:40.9452948Z   ===================================
+2025-12-27T15:48:40.9457001Z Compiling: int128_limits_extracted_tests...
+2025-12-27T15:48:42.1643535Z   [FAIL] Failed
+2025-12-27T15:48:42.1643980Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:42.1654325Z In file included from tests/int128_limits_extracted_tests.cpp:6:
+2025-12-27T15:48:42.1655071Z In file included from tests/../include/int128/int128_limits.hpp:30:
+2025-12-27T15:48:42.1655756Z In file included from tests/../include/int128/int128_t.hpp:30:
+2025-12-27T15:48:42.1656892Z tests/../include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:42.1658096Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:42.1658703Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:42.1659257Z tests/../include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:42.1659871Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:42.1660254Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:42.1660912Z tests/../include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:42.1661693Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:42.1662076Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:42.1662612Z tests/../include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:42.1663453Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:42.1663985Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:42.1664446Z tests/int128_limits_extracted_tests.cpp:176:14: warning: unused variable 'min_val' [-Wunused-variable]
+2025-12-27T15:48:42.1665248Z   176 |     int128_t min_val = std::numeric_limits<int128_t>::min();
+2025-12-27T15:48:42.1665669Z       |              ^~~~~~~
+2025-12-27T15:48:42.1666317Z tests/int128_limits_extracted_tests.cpp:193:14: warning: unused variable 'max_plus_one' [-Wunused-variable]
+2025-12-27T15:48:42.1667442Z   193 |     int128_t max_plus_one = result + int128_t(1);
+2025-12-27T15:48:42.1667934Z       |              ^~~~~~~~~~~~
+2025-12-27T15:48:42.1668651Z tests/int128_limits_extracted_tests.cpp:271:14: warning: unused variable 'min_val' [-Wunused-variable]
+2025-12-27T15:48:42.1669605Z   271 |     int128_t min_val = std::numeric_limits<int128_t>::min();
+2025-12-27T15:48:42.1670100Z       |              ^~~~~~~
+2025-12-27T15:48:42.1670444Z 3 warnings and 2 errors generated.
+2025-12-27T15:48:42.1670832Z   ===================================
+2025-12-27T15:48:42.1671271Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T15:48:43.4645582Z   [FAIL] Failed
+2025-12-27T15:48:43.4645837Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:43.4656451Z In file included from tests/int128_numeric_extracted_tests.cpp:5:
+2025-12-27T15:48:43.4657201Z In file included from tests/../include/int128/int128_numeric.hpp:30:
+2025-12-27T15:48:43.4657809Z In file included from tests/../include/int128/int128_t.hpp:30:
+2025-12-27T15:48:43.4659035Z tests/../include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:43.4659883Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:43.4660453Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:43.4661220Z tests/../include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:43.4662099Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:43.4662687Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:43.4663739Z tests/../include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:43.4664452Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:43.4664806Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:43.4665307Z tests/../include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:43.4665866Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:43.4666198Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:43.4666443Z 2 errors generated.
+2025-12-27T15:48:43.4666645Z   ===================================
+2025-12-27T15:48:43.4672821Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T15:48:44.7310229Z   [FAIL] Failed
+2025-12-27T15:48:44.7310565Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:44.7320710Z In file included from tests/int128_ranges_extracted_tests.cpp:1:
+2025-12-27T15:48:44.7321408Z In file included from include/int128/int128_ranges.hpp:31:
+2025-12-27T15:48:44.7321909Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:44.7322708Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:44.7323687Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:44.7324247Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:44.7324960Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:44.7325792Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:44.7326301Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:44.7327238Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:44.7328108Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:44.7328468Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:44.7328933Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:44.7329730Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:44.7330070Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:44.7330513Z tests/int128_ranges_extracted_tests.cpp:43:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:48:44.7331132Z    43 |     auto sum = std::accumulate(vec.begin(), vec.end(), int128_t(0));
+2025-12-27T15:48:44.7331464Z       |          ^~~
+2025-12-27T15:48:44.7331849Z tests/int128_ranges_extracted_tests.cpp:53:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:48:44.7332368Z    53 |     auto sum = std::accumulate(vec.begin(), vec.end(), int128_t(0));
+2025-12-27T15:48:44.7332648Z       |          ^~~
+2025-12-27T15:48:44.7333003Z tests/int128_ranges_extracted_tests.cpp:63:10: warning: unused variable 'product' [-Wunused-variable]
+2025-12-27T15:48:44.7333839Z    63 |     auto product = std::accumulate(vec.begin(), vec.end(), int128_t(1),
+2025-12-27T15:48:44.7334165Z       |          ^~~~~~~
+2025-12-27T15:48:44.7334705Z tests/int128_ranges_extracted_tests.cpp:76:10: warning: unused variable 'result' [-Wunused-variable]
+2025-12-27T15:48:44.7335250Z    76 |     auto result = std::inner_product(vec1.begin(), vec1.end(), vec2.begin(), int128_t(0));
+2025-12-27T15:48:44.7335604Z       |          ^~~~~~
+2025-12-27T15:48:44.7335958Z tests/int128_ranges_extracted_tests.cpp:117:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:48:44.7336789Z   117 |     auto sum = std::accumulate(empty.begin(), empty.end(), int128_t(0));
+2025-12-27T15:48:44.7337261Z       |          ^~~
+2025-12-27T15:48:44.7337529Z   ===================================
+2025-12-27T15:48:44.7337900Z Compiling: int128_safe_extracted_tests...
+2025-12-27T15:48:46.0398931Z   [FAIL] Failed
+2025-12-27T15:48:46.0399224Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:46.0410540Z In file included from tests/int128_safe_extracted_tests.cpp:1:
+2025-12-27T15:48:46.0411198Z In file included from include/int128/int128_safe.hpp:3:
+2025-12-27T15:48:46.0411811Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:46.0412555Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:46.0413674Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:46.0414251Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:46.0414795Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:46.0415417Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:46.0415806Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:46.0416475Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:46.0417197Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:46.0417546Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:46.0417962Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:46.0418469Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:46.0418779Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:46.0419195Z tests/int128_safe_extracted_tests.cpp:59:10: warning: unused variable 'result' [-Wunused-variable]
+2025-12-27T15:48:46.0419759Z    59 |     auto result = int128_safe::safe_make_int128(42);
+2025-12-27T15:48:46.0420030Z       |          ^~~~~~
+2025-12-27T15:48:46.0420421Z tests/int128_safe_extracted_tests.cpp:62:10: warning: unused variable 'result_neg' [-Wunused-variable]
+2025-12-27T15:48:46.0421175Z    62 |     auto result_neg = int128_safe::safe_make_int128(-100);
+2025-12-27T15:48:46.0421677Z       |          ^~~~~~~~~~
+2025-12-27T15:48:46.0422267Z tests/int128_safe_extracted_tests.cpp:164:10: warning: unused variable 'result' [-Wunused-variable]
+2025-12-27T15:48:46.0423495Z   164 |     auto result = int128_safe::safe_add(a, b);
+2025-12-27T15:48:46.0423956Z       |          ^~~~~~
+2025-12-27T15:48:46.0424647Z tests/int128_safe_extracted_tests.cpp:168:10: warning: unused variable 'result_overflow' [-Wunused-variable]
+2025-12-27T15:48:46.0425621Z   168 |     auto result_overflow = int128_safe::safe_add(max_val, int128_t(1));
+2025-12-27T15:48:46.0426187Z       |          ^~~~~~~~~~~~~~~
+2025-12-27T15:48:46.0426586Z 4 warnings and 2 errors generated.
+2025-12-27T15:48:46.0427024Z   ===================================
+2025-12-27T15:48:46.0427409Z Compiling: int128_t_extracted_tests...
+2025-12-27T15:48:47.5674663Z   [FAIL] Failed
+2025-12-27T15:48:47.5675182Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:47.5686543Z In file included from tests/int128_t_extracted_tests.cpp:6:
+2025-12-27T15:48:47.5687215Z In file included from tests/../include/int128/int128_t.hpp:30:
+2025-12-27T15:48:47.5688539Z tests/../include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:47.5690301Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:47.5690803Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:47.5691431Z tests/../include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:47.5692174Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:47.5692600Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:47.5693645Z tests/../include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:47.5694535Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:47.5694987Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:47.5695598Z tests/../include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:47.5696324Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:47.5696736Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:47.5697048Z 2 errors generated.
+2025-12-27T15:48:47.5697297Z   ===================================
+2025-12-27T15:48:47.5703162Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T15:48:49.8338486Z   [FAIL] Failed
+2025-12-27T15:48:49.8338856Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:49.8349503Z In file included from tests/int128_thread_safety_extracted_tests.cpp:6:
+2025-12-27T15:48:49.8350342Z In file included from tests/../include/int128/int128_t.hpp:30:
+2025-12-27T15:48:49.8351314Z tests/../include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:49.8352084Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:49.8352602Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:49.8353576Z tests/../include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:49.8354535Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:49.8355069Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:49.8356150Z tests/../include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:49.8357069Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:49.8357455Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:49.8357944Z tests/../include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:49.8358465Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:49.8359028Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:49.8359514Z tests/int128_thread_safety_extracted_tests.cpp:299:14: warning: unused variable 'final_value' [-Wunused-variable]
+2025-12-27T15:48:49.8360021Z   299 |     int128_t final_value = counter.get();
+2025-12-27T15:48:49.8360286Z       |              ^~~~~~~~~~~
+2025-12-27T15:48:49.8360728Z tests/int128_thread_safety_extracted_tests.cpp:336:14: warning: unused variable 'final_value' [-Wunused-variable]
+2025-12-27T15:48:49.8361223Z   336 |     int128_t final_value = counter.get();
+2025-12-27T15:48:49.8361472Z       |              ^~~~~~~~~~~
+2025-12-27T15:48:49.8361895Z tests/int128_thread_safety_extracted_tests.cpp:451:18: warning: unused variable 'loaded' [-Wunused-variable]
+2025-12-27T15:48:49.8362421Z   451 |         int128_t loaded = atomic_value.load();
+2025-12-27T15:48:49.8362681Z       |                  ^~~~~~
+2025-12-27T15:48:49.8363127Z tests/int128_thread_safety_extracted_tests.cpp:488:14: warning: unused variable 'final_value' [-Wunused-variable]
+2025-12-27T15:48:49.8364127Z   488 |     int128_t final_value = atomic_counter.load();
+2025-12-27T15:48:49.8364406Z       |              ^~~~~~~~~~~
+2025-12-27T15:48:49.8364635Z 4 warnings and 2 errors generated.
+2025-12-27T15:48:49.8364875Z   ===================================
+2025-12-27T15:48:49.8366210Z Compiling: int128_traits_extracted_tests...
+2025-12-27T15:48:51.1977606Z   [FAIL] Failed
+2025-12-27T15:48:51.1978028Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:51.1989846Z In file included from tests/int128_traits_extracted_tests.cpp:10:
+2025-12-27T15:48:51.1990456Z In file included from tests/../include/int128/int128_limits.hpp:30:
+2025-12-27T15:48:51.1990921Z In file included from tests/../include/int128/int128_t.hpp:30:
+2025-12-27T15:48:51.1992043Z tests/../include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:51.1994725Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:51.1995362Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:51.1995933Z tests/../include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:51.1996602Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:51.1996991Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:51.1997679Z tests/../include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:51.1998497Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:51.1998906Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:51.1999465Z tests/../include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:51.2000119Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:51.2000512Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:51.2001052Z tests/int128_traits_extracted_tests.cpp:367:14: warning: unused variable 'min_val' [-Wunused-variable]
+2025-12-27T15:48:51.2001680Z   367 |     int128_t min_val = limits::min();
+2025-12-27T15:48:51.2001987Z       |              ^~~~~~~
+2025-12-27T15:48:51.2002480Z tests/int128_traits_extracted_tests.cpp:368:14: warning: unused variable 'max_val' [-Wunused-variable]
+2025-12-27T15:48:51.2003051Z   368 |     int128_t max_val = limits::max();
+2025-12-27T15:48:51.2003603Z       |              ^~~~~~~
+2025-12-27T15:48:51.2003822Z 2 warnings and 2 errors generated.
+2025-12-27T15:48:51.2004063Z   ===================================
+2025-12-27T15:48:51.2006275Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T15:48:52.8077231Z   [FAIL] Failed
+2025-12-27T15:48:52.8077703Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:52.8088447Z In file included from tests/uint128_algorithm_extracted_tests.cpp:6:
+2025-12-27T15:48:52.8089552Z In file included from tests/../include/uint128/uint128_algorithm.hpp:30:
+2025-12-27T15:48:52.8090228Z In file included from tests/../include/uint128/uint128_cmath.hpp:3:
+2025-12-27T15:48:52.8090858Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:52.8091480Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:52.8091816Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:52.8092242Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:52.8092716Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:52.8093020Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:52.8093841Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:52.8094454Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:52.8094964Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:52.8095359Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:52.8095832Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:52.8096128Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:52.8096545Z tests/uint128_algorithm_extracted_tests.cpp:51:10: warning: unused variable 'it' [-Wunused-variable]
+2025-12-27T15:48:52.8097019Z    51 |     auto it = find_if_uint128(vec.begin(), vec.end(),
+2025-12-27T15:48:52.8097276Z       |          ^~
+2025-12-27T15:48:52.8097639Z tests/uint128_algorithm_extracted_tests.cpp:57:10: warning: unused variable 'it2' [-Wunused-variable]
+2025-12-27T15:48:52.8098151Z    57 |     auto it2 = find_if_uint128(vec.begin(), vec.end(), [](const uint128_t& x) {
+2025-12-27T15:48:52.8098474Z       |          ^~~
+2025-12-27T15:48:52.8098838Z tests/uint128_algorithm_extracted_tests.cpp:64:10: warning: unused variable 'it3' [-Wunused-variable]
+2025-12-27T15:48:52.8099299Z    64 |     auto it3 = find_if_uint128(vec.begin(), vec.end(),
+2025-12-27T15:48:52.8099561Z       |          ^~~
+2025-12-27T15:48:52.8099920Z tests/uint128_algorithm_extracted_tests.cpp:136:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:48:52.8100558Z   136 |     auto sum = accumulate_uint128(vec.begin(), vec.end(), uint128_t(0), std::plus<uint128_t>());
+2025-12-27T15:48:52.8100922Z       |          ^~~
+2025-12-27T15:48:52.8101290Z tests/uint128_algorithm_extracted_tests.cpp:140:10: warning: unused variable 'sum2' [-Wunused-variable]
+2025-12-27T15:48:52.8101865Z   140 |     auto sum2 = accumulate_uint128(vec.begin(), vec.end(), uint128_t(100), std::plus<uint128_t>());
+2025-12-27T15:48:52.8102253Z       |          ^~~~
+2025-12-27T15:48:52.8102445Z   ===================================
+2025-12-27T15:48:52.8104669Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T15:48:54.2261433Z   [FAIL] Failed
+2025-12-27T15:48:54.2261886Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:54.2272893Z In file included from tests/uint128_bits_extracted_tests.cpp:6:
+2025-12-27T15:48:54.2274094Z In file included from include/uint128/uint128_bits.hpp:3:
+2025-12-27T15:48:54.2275190Z include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:54.2276382Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:54.2277046Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:54.2277598Z include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:54.2278201Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:54.2278599Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:54.2279656Z include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:54.2280344Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:54.2280656Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:54.2281056Z include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:54.2281508Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:54.2281810Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:54.2282035Z 2 errors generated.
+2025-12-27T15:48:54.2282213Z   ===================================
+2025-12-27T15:48:54.2289731Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T15:48:55.7704925Z   [FAIL] Failed
+2025-12-27T15:48:55.7705199Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:55.7716099Z In file included from tests/uint128_cmath_extracted_tests.cpp:14:
+2025-12-27T15:48:55.7716864Z In file included from tests/../include/uint128/uint128_cmath.hpp:3:
+2025-12-27T15:48:55.7718271Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:55.7719116Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:55.7719554Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:55.7720095Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:55.7720733Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:55.7721113Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7721794Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:55.7722580Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:55.7722986Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:55.7723738Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:55.7724362Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:55.7724738Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7725392Z tests/uint128_cmath_extracted_tests.cpp:353:25: error: constexpr variable 'lcm_result' must be initialized by a constant expression
+2025-12-27T15:48:55.7726243Z   353 |     constexpr uint128_t lcm_result = std::lcm(uint128_t(4), uint128_t(6));
+2025-12-27T15:48:55.7726698Z       |                         ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7727250Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:55.7727885Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:55.7728266Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7728795Z tests/../include/uint128/uint128_t.hpp:1338:9: note: in call to 'result.operator-=(uint128_t(0, 1))'
+2025-12-27T15:48:55.7729270Z  1338 |         result -= other;
+2025-12-27T15:48:55.7729479Z       |         ^~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7729861Z tests/../include/uint128/uint128_t.hpp:732:27: note: in call to '*this.operator-(uint128_t(0, 1))'
+2025-12-27T15:48:55.7730418Z   732 |                ((*this & (*this - uint128_t(0, 1))) == uint128_t(0, 0));
+2025-12-27T15:48:55.7730887Z       |                           ^~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7731388Z tests/../include/uint128/uint128_t.hpp:928:20: note: in call to 'divisor.is_power_of_2()'
+2025-12-27T15:48:55.7731775Z   928 |         } else if (divisor.is_power_of_2()) {
+2025-12-27T15:48:55.7732027Z       |                    ^~~~~~~~~~~~~~~~~~~~~~~
+2025-12-27T15:48:55.7732377Z tests/../include/uint128/uint128_t.hpp:986:29: note: in call to 'this->divrem(gcd_val)'
+2025-12-27T15:48:55.7732736Z   ===================================
+2025-12-27T15:48:55.7733196Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T15:48:57.1108532Z   [FAIL] Failed
+2025-12-27T15:48:57.1108942Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:57.1119531Z In file included from tests/uint128_concepts_extracted_tests.cpp:6:
+2025-12-27T15:48:57.1120330Z In file included from tests/../include/uint128/uint128_concepts.hpp:30:
+2025-12-27T15:48:57.1121486Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:57.1122614Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:57.1123411Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:57.1124254Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:57.1125268Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:57.1125669Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:57.1126667Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:57.1127459Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:57.1127879Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:57.1128411Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:57.1129032Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:57.1129421Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:57.1129713Z 2 errors generated.
+2025-12-27T15:48:57.1129940Z   ===================================
+2025-12-27T15:48:57.1135321Z Compiling: uint128_format_extracted_tests...
+2025-12-27T15:48:58.3672115Z   [FAIL] Failed
+2025-12-27T15:48:58.3672515Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:58.3682885Z In file included from tests/uint128_format_extracted_tests.cpp:1:
+2025-12-27T15:48:58.3683722Z In file included from include/uint128/uint128_format.hpp:29:
+2025-12-27T15:48:58.3684662Z include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:58.3685632Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:58.3686175Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:58.3686813Z include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:58.3687581Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:58.3687889Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:58.3688401Z include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:58.3689010Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:58.3689347Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:58.3689745Z include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:58.3690212Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:58.3690523Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:58.3690947Z tests/uint128_format_extracted_tests.cpp:103:15: warning: unused variable 'zero' [-Wunused-variable]
+2025-12-27T15:48:58.3691394Z   103 |     uint128_t zero(0, 0);
+2025-12-27T15:48:58.3691627Z       |               ^~~~
+2025-12-27T15:48:58.3691836Z 1 warning and 2 errors generated.
+2025-12-27T15:48:58.3692061Z   ===================================
+2025-12-27T15:48:58.3698243Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T15:48:59.8879873Z   [FAIL] Failed
+2025-12-27T15:48:59.8880260Z   === Error log (first 30 lines) ===
+2025-12-27T15:48:59.8891086Z In file included from tests/uint128_interop_extracted_tests.cpp:17:
+2025-12-27T15:48:59.8892025Z In file included from include/int128/int128_numeric.hpp:30:
+2025-12-27T15:48:59.8892671Z In file included from include/int128/int128_t.hpp:30:
+2025-12-27T15:48:59.8895171Z include/int128/../uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:59.8895949Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:48:59.8896337Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:59.8896836Z include/int128/../uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:59.8897416Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:48:59.8897763Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:59.8898374Z include/int128/../uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:48:59.8899275Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:48:59.8899652Z       |                          ^~~~~~~~~~
+2025-12-27T15:48:59.8900134Z include/int128/../uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:48:59.8900701Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:48:59.8901055Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:48:59.8901540Z tests/uint128_interop_extracted_tests.cpp:430:15: warning: unused variable 'u2' [-Wunused-variable]
+2025-12-27T15:48:59.8902044Z   430 |     uint128_t u2(48);
+2025-12-27T15:48:59.8902276Z       |               ^~
+2025-12-27T15:48:59.8902512Z 1 warning and 2 errors generated.
+2025-12-27T15:48:59.8902786Z   ===================================
+2025-12-27T15:48:59.8905440Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T15:49:01.1593446Z   [FAIL] Failed
+2025-12-27T15:49:01.1593867Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:01.1604208Z In file included from tests/uint128_iostreams_extracted_tests.cpp:1:
+2025-12-27T15:49:01.1604897Z In file included from include/uint128/uint128_iostreams.hpp:33:
+2025-12-27T15:49:01.1605707Z include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:01.1606651Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:01.1607036Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:01.1607473Z include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:01.1607989Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:01.1608314Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:01.1608866Z include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:01.1609547Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:01.1609934Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:01.1610392Z include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:01.1610942Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:01.1611306Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:01.1611569Z 2 errors generated.
+2025-12-27T15:49:01.1611794Z   ===================================
+2025-12-27T15:49:01.1618580Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T15:49:02.4089690Z   [FAIL] Failed
+2025-12-27T15:49:02.4089944Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:02.4101296Z In file included from tests/uint128_limits_extracted_tests.cpp:6:
+2025-12-27T15:49:02.4102085Z In file included from tests/../include/uint128/uint128_limits.hpp:30:
+2025-12-27T15:49:02.4103666Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:02.4104488Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:02.4104895Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:02.4105402Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:02.4105984Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:02.4106333Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:02.4106954Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:02.4107683Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:02.4108068Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:02.4108554Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:02.4109280Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:02.4109641Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:02.4110157Z tests/uint128_limits_extracted_tests.cpp:192:15: warning: unused variable 'max_plus_one' [-Wunused-variable]
+2025-12-27T15:49:02.4110743Z   192 |     uint128_t max_plus_one = result + uint128_t(1);
+2025-12-27T15:49:02.4111059Z       |               ^~~~~~~~~~~~
+2025-12-27T15:49:02.4111322Z 1 warning and 2 errors generated.
+2025-12-27T15:49:02.4111588Z   ===================================
+2025-12-27T15:49:02.4116483Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T15:49:03.7736816Z   [FAIL] Failed
+2025-12-27T15:49:03.7737195Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:03.7747825Z In file included from tests/uint128_numeric_extracted_tests.cpp:1:
+2025-12-27T15:49:03.7748512Z In file included from tests/../include/uint128/uint128_numeric.hpp:30:
+2025-12-27T15:49:03.7749447Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:03.7750306Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:03.7750651Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:03.7751102Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:03.7751635Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:03.7751948Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:03.7752488Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:03.7753115Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:03.7753988Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:03.7754427Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:03.7754931Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:03.7755243Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:03.7755470Z 2 errors generated.
+2025-12-27T15:49:03.7755659Z   ===================================
+2025-12-27T15:49:03.7762134Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T15:49:05.0591790Z   [FAIL] Failed
+2025-12-27T15:49:05.0592198Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:05.0602741Z In file included from tests/uint128_ranges_extracted_tests.cpp:1:
+2025-12-27T15:49:05.0603621Z In file included from include/uint128/uint128_ranges.hpp:30:
+2025-12-27T15:49:05.0604564Z include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:05.0605548Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:05.0606422Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:05.0607138Z include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:05.0607714Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:05.0608025Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:05.0608541Z include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:05.0609141Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:05.0609478Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:05.0609880Z include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:05.0610353Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:05.0610672Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:05.0611095Z tests/uint128_ranges_extracted_tests.cpp:30:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:49:05.0611832Z    30 |     auto sum = std::accumulate(vec.begin(), vec.end(), uint128_t(0, 0));
+2025-12-27T15:49:05.0612150Z       |          ^~~
+2025-12-27T15:49:05.0612546Z tests/uint128_ranges_extracted_tests.cpp:40:10: warning: unused variable 'product' [-Wunused-variable]
+2025-12-27T15:49:05.0613110Z    40 |     auto product = std::accumulate(vec.begin(), vec.end(), uint128_t(0, 1),
+2025-12-27T15:49:05.0614281Z       |          ^~~~~~~
+2025-12-27T15:49:05.0614674Z tests/uint128_ranges_extracted_tests.cpp:53:10: warning: unused variable 'result' [-Wunused-variable]
+2025-12-27T15:49:05.0615254Z    53 |     auto result = std::inner_product(vec1.begin(), vec1.end(), vec2.begin(), uint128_t(0, 0));
+2025-12-27T15:49:05.0615630Z       |          ^~~~~~
+2025-12-27T15:49:05.0615998Z tests/uint128_ranges_extracted_tests.cpp:96:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:49:05.0616503Z    96 |     auto sum = std::accumulate(empty.begin(), empty.end(), uint128_t(0, 0));
+2025-12-27T15:49:05.0616828Z       |          ^~~
+2025-12-27T15:49:05.0617187Z tests/uint128_ranges_extracted_tests.cpp:112:10: warning: unused variable 'sum' [-Wunused-variable]
+2025-12-27T15:49:05.0617860Z   112 |     auto sum = std::accumulate(vec.begin(), vec.end(), uint128_t(0, 0));
+2025-12-27T15:49:05.0618363Z       |          ^~~
+2025-12-27T15:49:05.0618671Z 5 warnings and 2 errors generated.
+2025-12-27T15:49:05.0619053Z   ===================================
+2025-12-27T15:49:05.0619327Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T15:49:06.3662332Z   [FAIL] Failed
+2025-12-27T15:49:06.3662715Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:06.3673921Z In file included from tests/uint128_safe_extracted_tests.cpp:1:
+2025-12-27T15:49:06.3674547Z In file included from include/uint128/uint128_safe.hpp:3:
+2025-12-27T15:49:06.3675479Z include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:06.3676492Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:06.3677068Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:06.3677716Z include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:06.3678470Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:06.3678963Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:06.3679769Z include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:06.3680796Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:06.3681349Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:06.3681993Z include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:06.3683063Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:06.3683759Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:06.3684138Z In file included from tests/uint128_safe_extracted_tests.cpp:1:
+2025-12-27T15:49:06.3684630Z include/uint128/uint128_safe.hpp:74:28: warning: unused variable 'max_val' [-Wunused-variable]
+2025-12-27T15:49:06.3685402Z    74 |             constexpr auto max_val = std::numeric_limits<T>::max();
+2025-12-27T15:49:06.3685832Z       |                            ^~~~~~~
+2025-12-27T15:49:06.3686779Z tests/uint128_safe_extracted_tests.cpp:13:33: note: in instantiation of function template specialization 'uint128_safe::safe_cast<unsigned long>' requested here
+2025-12-27T15:49:06.3687768Z    13 |     auto result = uint128_safe::safe_cast<uint64_t>(small);
+2025-12-27T15:49:06.3688200Z       |                                 ^
+2025-12-27T15:49:06.3688800Z tests/uint128_safe_extracted_tests.cpp:51:10: warning: unused variable 'result' [-Wunused-variable]
+2025-12-27T15:49:06.3689554Z    51 |     auto result = uint128_safe::safe_make_uint128(42);
+2025-12-27T15:49:06.3689821Z       |          ^~~~~~
+2025-12-27T15:49:06.3690194Z tests/uint128_safe_extracted_tests.cpp:54:10: warning: unused variable 'result_neg' [-Wunused-variable]
+2025-12-27T15:49:06.3690834Z    54 |     auto result_neg = uint128_safe::safe_make_uint128(-1);
+2025-12-27T15:49:06.3691293Z       |          ^~~~~~~~~~
+2025-12-27T15:49:06.3691919Z tests/uint128_safe_extracted_tests.cpp:140:10: warning: unused variable 'result' [-Wunused-variable]
+2025-12-27T15:49:06.3692370Z   140 |     auto result = uint128_safe::safe_add(a, b);
+2025-12-27T15:49:06.3692616Z       |          ^~~~~~
+2025-12-27T15:49:06.3692794Z   ===================================
+2025-12-27T15:49:06.3693030Z Compiling: uint128_t_extracted_tests...
+2025-12-27T15:49:07.9900752Z   [FAIL] Failed
+2025-12-27T15:49:07.9901035Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:07.9911698Z In file included from tests/uint128_t_extracted_tests.cpp:6:
+2025-12-27T15:49:07.9912575Z In file included from tests/../include/uint128/uint128_iostreams.hpp:33:
+2025-12-27T15:49:07.9913739Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:07.9914514Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:07.9914904Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:07.9915409Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:07.9915991Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:07.9916344Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:07.9916972Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:07.9917691Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:07.9918094Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:07.9918522Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:07.9919022Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:07.9919324Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:07.9919796Z tests/uint128_t_extracted_tests.cpp:2976:25: error: constexpr variable 'sum' must be initialized by a constant expression
+2025-12-27T15:49:07.9920298Z  2976 |     constexpr uint128_t sum = one + one;
+2025-12-27T15:49:07.9920547Z       |                         ^     ~~~~~~~~~
+2025-12-27T15:49:07.9920957Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:07.9921427Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:07.9921717Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:07.9922343Z tests/../include/uint128/uint128_t.hpp:1323:9: note: in call to 'result.operator+=(one)'
+2025-12-27T15:49:07.9922734Z  1323 |         result += other;
+2025-12-27T15:49:07.9922941Z       |         ^~~~~~~~~~~~~~~
+2025-12-27T15:49:07.9923846Z tests/uint128_t_extracted_tests.cpp:2976:31: note: in call to 'one.operator+(one)'
+2025-12-27T15:49:07.9924248Z  2976 |     constexpr uint128_t sum = one + one;
+2025-12-27T15:49:07.9924507Z       |                               ^~~~~~~~~
+2025-12-27T15:49:07.9924974Z tests/uint128_t_extracted_tests.cpp:2977:19: error: static assertion expression is not an integral constant expression
+2025-12-27T15:49:07.9925526Z  2977 |     static_assert(sum.low() == 2, "Constexpr addition failed");
+2025-12-27T15:49:07.9925826Z       |                   ^~~~~~~~~~~~~~
+2025-12-27T15:49:07.9926335Z tests/uint128_t_extracted_tests.cpp:2977:23: note: initializer of 'sum' is not a constant expression
+2025-12-27T15:49:07.9926920Z   ===================================
+2025-12-27T15:49:07.9927196Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T15:49:10.1078746Z   [FAIL] Failed
+2025-12-27T15:49:10.1079032Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:10.1090508Z In file included from tests/uint128_thread_safety_extracted_tests.cpp:6:
+2025-12-27T15:49:10.1091657Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:10.1092904Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:10.1093548Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:10.1094080Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:10.1094712Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:10.1095102Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:10.1095796Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:10.1096629Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:10.1097042Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:10.1097581Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:10.1098137Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:10.1098450Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:10.1098947Z tests/uint128_thread_safety_extracted_tests.cpp:230:15: warning: unused variable 'final_value' [-Wunused-variable]
+2025-12-27T15:49:10.1099459Z   230 |     uint128_t final_value = counter.get();
+2025-12-27T15:49:10.1099753Z       |               ^~~~~~~~~~~
+2025-12-27T15:49:10.1100187Z tests/uint128_thread_safety_extracted_tests.cpp:323:19: warning: unused variable 'loaded' [-Wunused-variable]
+2025-12-27T15:49:10.1100682Z   323 |         uint128_t loaded = atomic_value.load();
+2025-12-27T15:49:10.1100956Z       |                   ^~~~~~
+2025-12-27T15:49:10.1101180Z 2 warnings and 2 errors generated.
+2025-12-27T15:49:10.1119258Z   ===================================
+2025-12-27T15:49:10.1119702Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T15:49:11.4759054Z   [FAIL] Failed
+2025-12-27T15:49:11.4759374Z   === Error log (first 30 lines) ===
+2025-12-27T15:49:11.4770196Z In file included from tests/uint128_traits_extracted_tests.cpp:10:
+2025-12-27T15:49:11.4771165Z In file included from tests/../include/uint128/uint128_limits.hpp:30:
+2025-12-27T15:49:11.4772408Z tests/../include/uint128/uint128_t.hpp:521:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:11.4773864Z   521 |     constexpr uint128_t& operator+=(const uint128_t& other) noexcept
+2025-12-27T15:49:11.4774267Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:11.4775152Z tests/../include/uint128/uint128_t.hpp:545:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:11.4776094Z   545 |         data[0] = __builtin_addcll(data[0], other.data[0], 0, &carry);
+2025-12-27T15:49:11.4776680Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:11.4777669Z tests/../include/uint128/uint128_t.hpp:590:26: error: constexpr function never produces a constant expression [-Winvalid-constexpr]
+2025-12-27T15:49:11.4778765Z   590 |     constexpr uint128_t& operator-=(const uint128_t& other) noexcept
+2025-12-27T15:49:11.4779248Z       |                          ^~~~~~~~~~
+2025-12-27T15:49:11.4779839Z tests/../include/uint128/uint128_t.hpp:614:19: note: subexpression not valid in a constant expression
+2025-12-27T15:49:11.4780427Z   614 |         data[0] = __builtin_subcll(data[0], other.data[0], 0, &borrow);
+2025-12-27T15:49:11.4780785Z       |                   ^~~~~~~~~~~~~~~~
+2025-12-27T15:49:11.4781285Z tests/uint128_traits_extracted_tests.cpp:352:15: warning: unused variable 'min_val' [-Wunused-variable]
+2025-12-27T15:49:11.4782064Z   352 |     uint128_t min_val = limits::min();
+2025-12-27T15:49:11.4782346Z       |               ^~~~~~~
+2025-12-27T15:49:11.4782824Z tests/uint128_traits_extracted_tests.cpp:353:15: warning: unused variable 'max_val' [-Wunused-variable]
+2025-12-27T15:49:11.4784161Z   353 |     uint128_t max_val = limits::max();
+2025-12-27T15:49:11.4784412Z       |               ^~~~~~~
+2025-12-27T15:49:11.4784626Z 2 warnings and 2 errors generated.
+2025-12-27T15:49:11.4784865Z   ===================================
+2025-12-27T15:49:11.4785021Z 
+2025-12-27T15:49:11.4785090Z ================================
+2025-12-27T15:49:11.4785287Z Build Summary
+2025-12-27T15:49:11.4785453Z   Compiled: 0
+2025-12-27T15:49:11.4785612Z   Failed: 27
+2025-12-27T15:49:11.4785769Z ================================
+2025-12-27T15:49:11.4785990Z [FAIL] Some tests failed to compile
+2025-12-27T15:49:11.4796362Z ##[error]Process completed with exit code 1.
+2025-12-27T15:49:11.4873913Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T15:49:11.4874212Z with:
+2025-12-27T15:49:11.4874391Z   name: clang-18-release-binaries
+2025-12-27T15:49:11.4874643Z   path: build/build_tests/clang/release/
+2025-12-27T15:49:11.4874890Z   retention-days: 7
+2025-12-27T15:49:11.4875079Z   if-no-files-found: warn
+2025-12-27T15:49:11.4875276Z   compression-level: 6
+2025-12-27T15:49:11.4875463Z   overwrite: false
+2025-12-27T15:49:11.4875637Z   include-hidden-files: false
+2025-12-27T15:49:11.4875844Z ##[endgroup]
+2025-12-27T15:49:11.7225679Z With the provided path, there will be 27 files uploaded
+2025-12-27T15:49:11.7232453Z Artifact name is valid!
+2025-12-27T15:49:11.7234524Z Root directory input is valid!
+2025-12-27T15:49:11.8521189Z Beginning upload of artifact content to blob storage
+2025-12-27T15:49:12.0150203Z Uploaded bytes 16867
+2025-12-27T15:49:12.0461956Z Finished uploading artifact content to blob storage!
+2025-12-27T15:49:12.0465715Z SHA256 digest of uploaded artifact zip is 8ef6ee1ad25d69d7a1133cc3a10b7c6a9ad8ca217860eaa144a4f289d4301e80
+2025-12-27T15:49:12.0467545Z Finalizing artifact upload
+2025-12-27T15:49:12.1420266Z Artifact clang-18-release-binaries.zip successfully finalized. Artifact ID 4975536593
+2025-12-27T15:49:12.1422128Z Artifact clang-18-release-binaries has been successfully uploaded! Final size is 16867 bytes. Artifact ID is 4975536593
+2025-12-27T15:49:12.1429859Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20541100891/artifacts/4975536593
+2025-12-27T15:49:12.1589643Z Post job cleanup.
+2025-12-27T15:49:12.2550909Z [command]/usr/bin/git version
+2025-12-27T15:49:12.2589117Z git version 2.52.0
+2025-12-27T15:49:12.2633009Z Temporarily overriding HOME='/home/runner/work/_temp/5eab2805-cce7-4919-81ff-fc8f7ae97ec8' before making global git config changes
+2025-12-27T15:49:12.2634299Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T15:49:12.2639041Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/int128/int128
+2025-12-27T15:49:12.2677077Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T15:49:12.2710895Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-27T15:49:12.2947031Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T15:49:12.2969476Z http.https://github.com/.extraheader
+2025-12-27T15:49:12.2983566Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T15:49:12.3015424Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-27T15:49:12.3245037Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T15:49:12.3277337Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-27T15:49:12.3612602Z Cleaning up orphan processes

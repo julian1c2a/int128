@@ -1,0 +1,206 @@
+﻿2025-12-27T19:42:49.8426885Z ##[group]Run wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+2025-12-27T19:42:49.8429021Z [36;1mwget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -[0m
+2025-12-27T19:42:49.8431123Z [36;1msudo add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main"[0m
+2025-12-27T19:42:49.8432698Z [36;1msudo apt update[0m
+2025-12-27T19:42:49.8433368Z [36;1msudo apt install -y clang-19[0m
+2025-12-27T19:42:49.8470211Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:42:49.8470892Z ##[endgroup]
+2025-12-27T19:42:49.8918946Z --2025-12-27 19:42:49--  https://apt.llvm.org/llvm-snapshot.gpg.key
+2025-12-27T19:42:50.0082193Z Resolving apt.llvm.org (apt.llvm.org)... Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+2025-12-27T19:42:50.1763924Z 199.232.90.49, 2a04:4e42:77::561
+2025-12-27T19:42:50.1823590Z Connecting to apt.llvm.org (apt.llvm.org)|199.232.90.49|:443... connected.
+2025-12-27T19:42:50.2067050Z HTTP request sent, awaiting response... 200 OK
+2025-12-27T19:42:50.2068796Z Length: 3145 (3.1K) [application/octet-stream]
+2025-12-27T19:42:50.2070170Z Saving to: ‘STDOUT’
+2025-12-27T19:42:50.2070665Z 
+2025-12-27T19:42:50.2071415Z      0K ...                                                   100% 47.2M=0s
+2025-12-27T19:42:50.2072780Z 
+2025-12-27T19:42:50.2073363Z 2025-12-27 19:42:50 (47.2 MB/s) - written to stdout [3145/3145]
+2025-12-27T19:42:50.2074308Z 
+2025-12-27T19:42:50.4106264Z OK
+2025-12-27T19:42:52.3665710Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T19:42:52.3954416Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T19:42:52.4019917Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-12-27T19:42:52.4086589Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-12-27T19:42:52.4091149Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2025-12-27T19:42:52.4182691Z Hit:7 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T19:42:52.4242247Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2025-12-27T19:42:52.5234955Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1684 kB]
+2025-12-27T19:42:52.5471898Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [311 kB]
+2025-12-27T19:42:52.5507730Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+2025-12-27T19:42:52.5529874Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [15.8 kB]
+2025-12-27T19:42:52.5537809Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1506 kB]
+2025-12-27T19:42:52.5643158Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [306 kB]
+2025-12-27T19:42:52.5669680Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [378 kB]
+2025-12-27T19:42:52.5701964Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [31.4 kB]
+2025-12-27T19:42:52.5716724Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2413 kB]
+2025-12-27T19:42:52.5874077Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [550 kB]
+2025-12-27T19:42:52.6359709Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+2025-12-27T19:42:52.6361461Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [516 B]
+2025-12-27T19:42:52.6364101Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [30.3 kB]
+2025-12-27T19:42:52.6377325Z Get:22 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6048 B]
+2025-12-27T19:42:52.6386493Z Get:23 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+2025-12-27T19:42:52.6403491Z Get:24 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [488 B]
+2025-12-27T19:42:52.6437929Z Get:25 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.4 kB]
+2025-12-27T19:42:52.6453864Z Get:26 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7300 B]
+2025-12-27T19:42:52.6461394Z Get:27 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+2025-12-27T19:42:52.6484027Z Get:28 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [29.5 kB]
+2025-12-27T19:42:52.6499711Z Get:29 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [17.9 kB]
+2025-12-27T19:42:52.6508916Z Get:30 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+2025-12-27T19:42:52.6527339Z Get:31 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1444 B]
+2025-12-27T19:42:52.6548807Z Get:32 http://azure.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-12-27T19:42:52.6863461Z Get:6 https://apt.llvm.org/noble llvm-toolchain-noble-19 InRelease [5554 B]
+2025-12-27T19:42:52.6989344Z Get:33 http://azure.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-12-27T19:42:52.6999111Z Get:34 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [225 kB]
+2025-12-27T19:42:52.7024807Z Get:35 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+2025-12-27T19:42:52.7034510Z Get:36 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9504 B]
+2025-12-27T19:42:52.7043132Z Get:37 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [71.5 kB]
+2025-12-27T19:42:52.7060919Z Get:38 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+2025-12-27T19:42:52.7075214Z Get:39 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+2025-12-27T19:42:52.7421276Z Get:40 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [77.4 kB]
+2025-12-27T19:42:52.7470941Z Get:41 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [58.9 kB]
+2025-12-27T19:42:52.7501779Z Get:42 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [11.4 kB]
+2025-12-27T19:42:52.8854005Z Get:43 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 Packages [12.7 kB]
+2025-12-27T19:43:01.2447133Z Fetched 8393 kB in 1s (7750 kB/s)
+2025-12-27T19:43:02.0348821Z Reading package lists...
+2025-12-27T19:43:02.0433195Z W: http://apt.llvm.org/noble/dists/llvm-toolchain-noble-19/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+2025-12-27T19:43:02.0443164Z Repository: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-19 main'
+2025-12-27T19:43:02.0444131Z Description:
+2025-12-27T19:43:02.0444543Z Archive for codename: llvm-toolchain-noble-19 components: main
+2025-12-27T19:43:02.0445241Z More info: http://apt.llvm.org/noble/
+2025-12-27T19:43:02.0445600Z Adding repository.
+2025-12-27T19:43:02.0446173Z Adding deb entry to /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_noble_-noble.list
+2025-12-27T19:43:02.0447104Z Adding disabled deb-src entry to /etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_noble_-noble.list
+2025-12-27T19:43:02.0875929Z 
+2025-12-27T19:43:02.0876751Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:43:02.0877262Z 
+2025-12-27T19:43:02.1509056Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2025-12-27T19:43:02.1783964Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-27T19:43:02.1800239Z Hit:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease
+2025-12-27T19:43:02.1809003Z Hit:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease
+2025-12-27T19:43:02.1817502Z Hit:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease
+2025-12-27T19:43:02.2241267Z Hit:7 https://packages.microsoft.com/repos/azure-cli noble InRelease
+2025-12-27T19:43:02.2276558Z Hit:8 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease
+2025-12-27T19:43:02.2629599Z Hit:6 https://apt.llvm.org/noble llvm-toolchain-noble-19 InRelease
+2025-12-27T19:43:03.5148735Z Reading package lists...
+2025-12-27T19:43:03.7227832Z Building dependency tree...
+2025-12-27T19:43:03.7234729Z Reading state information...
+2025-12-27T19:43:03.7382835Z W: http://apt.llvm.org/noble/dists/llvm-toolchain-noble-19/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+2025-12-27T19:43:03.7384358Z 70 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-12-27T19:43:03.7496994Z 
+2025-12-27T19:43:03.7497525Z WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+2025-12-27T19:43:03.7497840Z 
+2025-12-27T19:43:03.7635720Z Reading package lists...
+2025-12-27T19:43:03.9531441Z Building dependency tree...
+2025-12-27T19:43:03.9538967Z Reading state information...
+2025-12-27T19:43:04.1185467Z The following additional packages will be installed:
+2025-12-27T19:43:04.1186302Z   clang-tools-19 libclang-common-19-dev libclang-cpp19 libclang-rt-19-dev
+2025-12-27T19:43:04.1190787Z   libclang1-19 libllvm19 llvm-19 llvm-19-dev llvm-19-linker-tools
+2025-12-27T19:43:04.1191953Z   llvm-19-runtime llvm-19-tools
+2025-12-27T19:43:04.1198182Z Suggested packages:
+2025-12-27T19:43:04.1198534Z   clang-19-doc wasi-libc llvm-19-doc
+2025-12-27T19:43:04.1577224Z The following NEW packages will be installed:
+2025-12-27T19:43:04.1578084Z   clang-19 clang-tools-19 libclang-common-19-dev libclang-cpp19
+2025-12-27T19:43:04.1582736Z   libclang-rt-19-dev libclang1-19 llvm-19 llvm-19-dev llvm-19-linker-tools
+2025-12-27T19:43:04.1584840Z   llvm-19-runtime llvm-19-tools
+2025-12-27T19:43:04.1590493Z The following packages will be upgraded:
+2025-12-27T19:43:04.1594964Z   libllvm19
+2025-12-27T19:43:04.1867918Z 1 upgraded, 11 newly installed, 0 to remove and 69 not upgraded.
+2025-12-27T19:43:04.5881800Z Need to get 134 MB of archives.
+2025-12-27T19:43:04.5882315Z After this operation, 653 MB of additional disk space will be used.
+2025-12-27T19:43:04.5883193Z Get:1 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libllvm19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [28.7 MB]
+2025-12-27T19:43:04.8979077Z Get:2 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang-cpp19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [14.3 MB]
+2025-12-27T19:43:05.0735317Z Get:3 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang-common-19-dev amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [745 kB]
+2025-12-27T19:43:05.0892536Z Get:4 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-linker-tools amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [1371 kB]
+2025-12-27T19:43:05.1141069Z Get:5 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang1-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [8291 kB]
+2025-12-27T19:43:05.2010112Z Get:6 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 clang-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [120 kB]
+2025-12-27T19:43:05.2144827Z Get:7 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 clang-tools-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [9769 kB]
+2025-12-27T19:43:05.3233707Z Get:8 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 libclang-rt-19-dev amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [3913 kB]
+2025-12-27T19:43:05.3768425Z Get:9 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-runtime amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [594 kB]
+2025-12-27T19:43:05.3935473Z Get:10 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19 amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [17.9 MB]
+2025-12-27T19:43:05.6721786Z Get:11 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-tools amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [543 kB]
+2025-12-27T19:43:05.6944898Z Get:12 https://apt.llvm.org/noble llvm-toolchain-noble-19/main amd64 llvm-19-dev amd64 1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79 [47.5 MB]
+2025-12-27T19:43:06.7865843Z Fetched 134 MB in 2s (58.1 MB/s)
+2025-12-27T19:43:06.8456143Z (Reading database ... 
+2025-12-27T19:43:06.8456502Z (Reading database ... 5%
+2025-12-27T19:43:06.8457065Z (Reading database ... 10%
+2025-12-27T19:43:06.8457324Z (Reading database ... 15%
+2025-12-27T19:43:06.8457580Z (Reading database ... 20%
+2025-12-27T19:43:06.8457822Z (Reading database ... 25%
+2025-12-27T19:43:06.8458074Z (Reading database ... 30%
+2025-12-27T19:43:06.8458315Z (Reading database ... 35%
+2025-12-27T19:43:06.8458581Z (Reading database ... 40%
+2025-12-27T19:43:06.8458821Z (Reading database ... 45%
+2025-12-27T19:43:06.8459070Z (Reading database ... 50%
+2025-12-27T19:43:06.8566976Z (Reading database ... 55%
+2025-12-27T19:43:06.9776143Z (Reading database ... 60%
+2025-12-27T19:43:07.0767799Z (Reading database ... 65%
+2025-12-27T19:43:07.1389606Z (Reading database ... 70%
+2025-12-27T19:43:07.2053148Z (Reading database ... 75%
+2025-12-27T19:43:07.3908751Z (Reading database ... 80%
+2025-12-27T19:43:07.7909528Z (Reading database ... 85%
+2025-12-27T19:43:07.9618564Z (Reading database ... 90%
+2025-12-27T19:43:08.1120983Z (Reading database ... 95%
+2025-12-27T19:43:08.1121606Z (Reading database ... 100%
+2025-12-27T19:43:08.1122107Z (Reading database ... 217374 files and directories currently installed.)
+2025-12-27T19:43:08.1168776Z Preparing to unpack .../00-libllvm19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:08.1285304Z Unpacking libllvm19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) over (1:19.1.1-1ubuntu1~24.04.2) ...
+2025-12-27T19:43:08.6574743Z Selecting previously unselected package libclang-cpp19.
+2025-12-27T19:43:08.6709777Z Preparing to unpack .../01-libclang-cpp19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:08.6730290Z Unpacking libclang-cpp19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:08.9340917Z Selecting previously unselected package libclang-common-19-dev:amd64.
+2025-12-27T19:43:08.9476800Z Preparing to unpack .../02-libclang-common-19-dev_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:08.9494495Z Unpacking libclang-common-19-dev:amd64 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.0554119Z Selecting previously unselected package llvm-19-linker-tools.
+2025-12-27T19:43:09.0691574Z Preparing to unpack .../03-llvm-19-linker-tools_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.0707413Z Unpacking llvm-19-linker-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.1224611Z Selecting previously unselected package libclang1-19.
+2025-12-27T19:43:09.1361378Z Preparing to unpack .../04-libclang1-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.1380318Z Unpacking libclang1-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.3133442Z Selecting previously unselected package clang-19.
+2025-12-27T19:43:09.3269998Z Preparing to unpack .../05-clang-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.3283818Z Unpacking clang-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.3616556Z Selecting previously unselected package clang-tools-19.
+2025-12-27T19:43:09.3754254Z Preparing to unpack .../06-clang-tools-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.3769421Z Unpacking clang-tools-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.5735898Z Selecting previously unselected package libclang-rt-19-dev.
+2025-12-27T19:43:09.5871019Z Preparing to unpack .../07-libclang-rt-19-dev_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.5885218Z Unpacking libclang-rt-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.8024816Z Selecting previously unselected package llvm-19-runtime.
+2025-12-27T19:43:09.8161834Z Preparing to unpack .../08-llvm-19-runtime_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.8179805Z Unpacking llvm-19-runtime (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:09.8559742Z Selecting previously unselected package llvm-19.
+2025-12-27T19:43:09.8694809Z Preparing to unpack .../09-llvm-19_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:09.8709799Z Unpacking llvm-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:10.2239711Z Selecting previously unselected package llvm-19-tools.
+2025-12-27T19:43:10.2375692Z Preparing to unpack .../10-llvm-19-tools_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:10.2391215Z Unpacking llvm-19-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:10.3728147Z Selecting previously unselected package llvm-19-dev.
+2025-12-27T19:43:10.3865406Z Preparing to unpack .../11-llvm-19-dev_1%3a19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79_amd64.deb ...
+2025-12-27T19:43:10.3882111Z Unpacking llvm-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8464755Z Setting up libllvm19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8502846Z Setting up libclang1-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8544960Z Setting up libclang-common-19-dev:amd64 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8591990Z Setting up libclang-rt-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8629180Z Setting up llvm-19-linker-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8674528Z Setting up llvm-19-runtime (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8715268Z Setting up llvm-19-tools (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8748921Z Setting up libclang-cpp19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8789690Z Setting up clang-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8854361Z Setting up clang-tools-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8889900Z Setting up llvm-19 (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8926482Z Setting up llvm-19-dev (1:19.1.7~++20250804090312+cd708029e0b2-1~exp1~20250804210325.79) ...
+2025-12-27T19:43:11.8972978Z Processing triggers for systemd (255.4-1ubuntu8.11) ...
+2025-12-27T19:43:11.9391628Z Processing triggers for man-db (2.12.0-4build2) ...
+2025-12-27T19:43:11.9426632Z Not building database; man-db/auto-update is not 'true'.
+2025-12-27T19:43:11.9443540Z Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+2025-12-27T19:43:12.7024473Z 
+2025-12-27T19:43:12.7025523Z Running kernel seems to be up-to-date.
+2025-12-27T19:43:12.7025890Z 
+2025-12-27T19:43:12.7026058Z No services need to be restarted.
+2025-12-27T19:43:12.7026314Z 
+2025-12-27T19:43:12.7026449Z No containers need to be restarted.
+2025-12-27T19:43:12.7027107Z 
+2025-12-27T19:43:12.7027282Z No user sessions are running outdated binaries.
+2025-12-27T19:43:12.7027596Z 
+2025-12-27T19:43:12.7027884Z No VM guests are running outdated hypervisor (qemu) binaries on this host.

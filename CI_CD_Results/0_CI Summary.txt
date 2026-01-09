@@ -1,0 +1,62 @@
+﻿2025-12-27T19:44:54.5698011Z Current runner version: '2.330.0'
+2025-12-27T19:44:54.5720668Z ##[group]Runner Image Provisioner
+2025-12-27T19:44:54.5721666Z Hosted Compute Agent
+2025-12-27T19:44:54.5722486Z Version: 20251211.462
+2025-12-27T19:44:54.5723095Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:44:54.5723834Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:44:54.5724484Z Worker ID: {c649334f-0166-4379-912f-2f8e830c20ec}
+2025-12-27T19:44:54.5725137Z ##[endgroup]
+2025-12-27T19:44:54.5725710Z ##[group]Operating System
+2025-12-27T19:44:54.5726236Z Ubuntu
+2025-12-27T19:44:54.5726700Z 24.04.3
+2025-12-27T19:44:54.5727149Z LTS
+2025-12-27T19:44:54.5727610Z ##[endgroup]
+2025-12-27T19:44:54.5728117Z ##[group]Runner Image
+2025-12-27T19:44:54.5728638Z Image: ubuntu-24.04
+2025-12-27T19:44:54.5729147Z Version: 20251215.174.1
+2025-12-27T19:44:54.5730109Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-27T19:44:54.5731662Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-27T19:44:54.5732946Z ##[endgroup]
+2025-12-27T19:44:54.5734028Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:44:54.5735801Z Contents: read
+2025-12-27T19:44:54.5736276Z Metadata: read
+2025-12-27T19:44:54.5736880Z Packages: read
+2025-12-27T19:44:54.5737366Z ##[endgroup]
+2025-12-27T19:44:54.5739299Z Secret source: Actions
+2025-12-27T19:44:54.5740062Z Prepare workflow directory
+2025-12-27T19:44:54.6116967Z Prepare all required actions
+2025-12-27T19:44:54.6210866Z Complete job name: CI Summary
+2025-12-27T19:44:54.7202603Z ##[group]Run echo "## 🔍 CI Build Summary" >> $GITHUB_STEP_SUMMARY
+2025-12-27T19:44:54.7203605Z [36;1mecho "## 🔍 CI Build Summary" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7204359Z [36;1mecho "" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7205070Z [36;1mecho "| Compiler | Status |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7205790Z [36;1mecho "|----------|--------|" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7206826Z [36;1mecho "| GCC 13/14      | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7207645Z [36;1mecho "| Clang 18/19    | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7208403Z [36;1mecho "| MSVC           | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7209260Z [36;1mecho "| Sanitizers     | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7209944Z [36;1mecho "" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7210517Z [36;1m[0m
+2025-12-27T19:44:54.7211167Z [36;1m# Verificar resultados críticos[0m
+2025-12-27T19:44:54.7211950Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7212759Z [36;1m  echo "❌ GCC builds failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7213375Z [36;1mfi[0m
+2025-12-27T19:44:54.7213870Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7214612Z [36;1m  echo "❌ Clang builds failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7215308Z [36;1mfi[0m
+2025-12-27T19:44:54.7215767Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7216554Z [36;1m  echo "❌ MSVC builds failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7217257Z [36;1mfi[0m
+2025-12-27T19:44:54.7217757Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7218605Z [36;1m  echo "⚠️  Sanitizer checks failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7219308Z [36;1mfi[0m
+2025-12-27T19:44:54.7824497Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:44:54.7825666Z ##[endgroup]
+2025-12-27T19:44:54.8170893Z ##[group]Run echo "💥 CI failed - critical build failures detected"
+2025-12-27T19:44:54.8172074Z [36;1mecho "💥 CI failed - critical build failures detected"[0m
+2025-12-27T19:44:54.8172980Z [36;1mexit 1[0m
+2025-12-27T19:44:54.8205100Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:44:54.8205751Z ##[endgroup]
+2025-12-27T19:44:54.8438608Z 💥 CI failed - critical build failures detected
+2025-12-27T19:44:54.8448555Z ##[error]Process completed with exit code 1.
+2025-12-27T19:44:54.8523495Z Cleaning up orphan processes

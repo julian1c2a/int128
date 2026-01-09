@@ -1,0 +1,26 @@
+﻿2025-12-27T19:44:54.7202577Z ##[group]Run echo "## 🔍 CI Build Summary" >> $GITHUB_STEP_SUMMARY
+2025-12-27T19:44:54.7203599Z [36;1mecho "## 🔍 CI Build Summary" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7204354Z [36;1mecho "" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7205067Z [36;1mecho "| Compiler | Status |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7205787Z [36;1mecho "|----------|--------|" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7206819Z [36;1mecho "| GCC 13/14      | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7207641Z [36;1mecho "| Clang 18/19    | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7208400Z [36;1mecho "| MSVC           | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7209256Z [36;1mecho "| Sanitizers     | failure |" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7209941Z [36;1mecho "" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7210514Z [36;1m[0m
+2025-12-27T19:44:54.7211100Z [36;1m# Verificar resultados críticos[0m
+2025-12-27T19:44:54.7211945Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7212704Z [36;1m  echo "❌ GCC builds failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7213371Z [36;1mfi[0m
+2025-12-27T19:44:54.7213866Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7214609Z [36;1m  echo "❌ Clang builds failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7215305Z [36;1mfi[0m
+2025-12-27T19:44:54.7215764Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7216550Z [36;1m  echo "❌ MSVC builds failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7217254Z [36;1mfi[0m
+2025-12-27T19:44:54.7217754Z [36;1mif [ "failure" != "success" ]; then[0m
+2025-12-27T19:44:54.7218601Z [36;1m  echo "⚠️  Sanitizer checks failed" >> $GITHUB_STEP_SUMMARY[0m
+2025-12-27T19:44:54.7219306Z [36;1mfi[0m
+2025-12-27T19:44:54.7824463Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:44:54.7825654Z ##[endgroup]

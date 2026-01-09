@@ -1,0 +1,135 @@
+﻿2025-12-27T19:43:44.4587603Z ##[group]Run chmod +x scripts/run_uint128_extracted_tests.bash
+2025-12-27T19:43:44.4588142Z [36;1mchmod +x scripts/run_uint128_extracted_tests.bash[0m
+2025-12-27T19:43:44.4588496Z [36;1m./scripts/run_uint128_extracted_tests.bash gcc debug[0m
+2025-12-27T19:43:44.4620290Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:43:44.4620521Z ##[endgroup]
+2025-12-27T19:43:44.4700390Z ================================
+2025-12-27T19:43:44.4700812Z Running Extracted Tests
+2025-12-27T19:43:44.4701147Z Compiler: gcc
+2025-12-27T19:43:44.4701368Z Build Type: debug
+2025-12-27T19:43:44.4701577Z ================================
+2025-12-27T19:43:44.4723546Z Found 27 test binaries
+2025-12-27T19:43:44.4723799Z 
+2025-12-27T19:43:44.4736651Z Running: int128_algorithm_extracted_tests...
+2025-12-27T19:43:44.4753444Z   [OK] Passed
+2025-12-27T19:43:44.4765228Z Running: int128_bits_extracted_tests...
+2025-12-27T19:43:44.4779433Z   [OK] Passed
+2025-12-27T19:43:44.4791439Z Running: int128_cmath_extracted_tests...
+2025-12-27T19:43:44.4809088Z   [OK] Passed
+2025-12-27T19:43:44.4821713Z Running: int128_concepts_extracted_tests...
+2025-12-27T19:43:44.4835722Z   [OK] Passed
+2025-12-27T19:43:44.4848199Z Running: int128_format_extracted_tests...
+2025-12-27T19:43:44.4863817Z   [OK] Passed
+2025-12-27T19:43:44.4875709Z Running: int128_iostreams_extracted_tests...
+2025-12-27T19:43:44.4891585Z   [OK] Passed
+2025-12-27T19:43:44.4903612Z Running: int128_limits_extracted_tests...
+2025-12-27T19:43:44.4922198Z   [OK] Passed
+2025-12-27T19:43:44.4934314Z Running: int128_numeric_extracted_tests...
+2025-12-27T19:43:44.4950706Z   [OK] Passed
+2025-12-27T19:43:44.4963219Z Running: int128_ranges_extracted_tests...
+2025-12-27T19:43:44.4977553Z   [OK] Passed
+2025-12-27T19:43:44.4990189Z Running: int128_safe_extracted_tests...
+2025-12-27T19:43:44.5004306Z   [OK] Passed
+2025-12-27T19:43:44.5017099Z Running: int128_t_extracted_tests...
+2025-12-27T19:43:44.5046082Z   [OK] Passed
+2025-12-27T19:43:44.5058351Z Running: int128_thread_safety_extracted_tests...
+2025-12-27T19:43:44.5214226Z   [OK] Passed
+2025-12-27T19:43:44.5227572Z Running: int128_traits_extracted_tests...
+2025-12-27T19:43:44.5242968Z   [OK] Passed
+2025-12-27T19:43:44.5255368Z Running: uint128_algorithm_extracted_tests...
+2025-12-27T19:43:44.5270161Z   [OK] Passed
+2025-12-27T19:43:44.5282428Z Running: uint128_bits_extracted_tests...
+2025-12-27T19:43:44.5297247Z   [OK] Passed
+2025-12-27T19:43:44.5309514Z Running: uint128_cmath_extracted_tests...
+2025-12-27T19:43:44.5325271Z   [OK] Passed
+2025-12-27T19:43:44.5337289Z Running: uint128_concepts_extracted_tests...
+2025-12-27T19:43:44.5352144Z   [OK] Passed
+2025-12-27T19:43:44.5364080Z Running: uint128_format_extracted_tests...
+2025-12-27T19:43:44.6338596Z ./scripts/run_uint128_extracted_tests.bash: line 58:  2830 Aborted                 (core dumped) "$test_bin" > "${test_bin}.output" 2>&1
+2025-12-27T19:43:44.6341990Z   [FAIL] Failed (exit code: 134)
+2025-12-27T19:43:44.6343496Z   Output:
+2025-12-27T19:43:44.6357003Z === uint128_t format tests ===
+2025-12-27T19:43:44.6357846Z test_format_decimal: passed
+2025-12-27T19:43:44.6358270Z test_format_hexadecimal: passed
+2025-12-27T19:43:44.6358641Z test_format_octal: passed
+2025-12-27T19:43:44.6358888Z test_format_with_width: passed
+2025-12-27T19:43:44.6359119Z test_format_internal_align: passed
+2025-12-27T19:43:44.6359677Z uint128_format_extracted_tests: tests/uint128_format_extracted_tests.cpp:81: void test_format_like_iostream(): Assertion `result == "0XFF"' failed.
+2025-12-27T19:43:44.6375092Z Running: uint128_interop_extracted_tests...
+2025-12-27T19:43:44.6397777Z   [OK] Passed
+2025-12-27T19:43:44.6411490Z Running: uint128_iostreams_extracted_tests...
+2025-12-27T19:43:44.6428958Z   [OK] Passed
+2025-12-27T19:43:44.6442957Z Running: uint128_limits_extracted_tests...
+2025-12-27T19:43:44.6463177Z   [OK] Passed
+2025-12-27T19:43:44.6475173Z Running: uint128_numeric_extracted_tests...
+2025-12-27T19:43:44.6492350Z   [OK] Passed
+2025-12-27T19:43:44.6505447Z Running: uint128_ranges_extracted_tests...
+2025-12-27T19:43:44.6521455Z   [OK] Passed
+2025-12-27T19:43:44.6534748Z Running: uint128_safe_extracted_tests...
+2025-12-27T19:43:44.6549684Z   [OK] Passed
+2025-12-27T19:43:44.6562449Z Running: uint128_t_extracted_tests...
+2025-12-27T19:43:44.8175198Z ./scripts/run_uint128_extracted_tests.bash: line 58:  2856 Aborted                 (core dumped) "$test_bin" > "${test_bin}.output" 2>&1
+2025-12-27T19:43:44.8175807Z   [FAIL] Failed (exit code: 134)
+2025-12-27T19:43:44.8176196Z   Output:
+2025-12-27T19:43:44.8194478Z Running comprehensive tests for uint128_t (66 original + 18 additional)...
+2025-12-27T19:43:44.8195535Z 
+2025-12-27T19:43:44.8195801Z test_sizeof_is_16_bytes passed
+2025-12-27T19:43:44.8196405Z test_bits_is_128 passed
+2025-12-27T19:43:44.8209488Z test_sizeof_high_is_8_bytes passed
+2025-12-27T19:43:44.8209939Z test_self_div_2_64_equ_high passed
+2025-12-27T19:43:44.8210342Z test_sizeof_low_is_8_bytes passed
+2025-12-27T19:43:44.8210721Z test_self_rem_2_64_equ_low passed
+2025-12-27T19:43:44.8211083Z test_set_high passed
+2025-12-27T19:43:44.8211415Z test_set_low passed
+2025-12-27T19:43:44.8211735Z test_default_constructor passed
+2025-12-27T19:43:44.8212101Z test_integral_constructor passed
+2025-12-27T19:43:44.8212484Z test_integral_assignment passed
+2025-12-27T19:43:44.8212857Z test_high_low_constructor passed
+2025-12-27T19:43:44.8213236Z test_cstr_constructor passed
+2025-12-27T19:43:44.8213606Z test_cstr_assignment passed
+2025-12-27T19:43:44.8213956Z test_bool_conversion passed
+2025-12-27T19:43:44.8214314Z test_integral_conversion passed
+2025-12-27T19:43:44.8214678Z test___uint128_conversion passed
+2025-12-27T19:43:44.8215354Z test___int128_conversion passed
+2025-12-27T19:43:44.8215725Z test_addition_assignment passed
+2025-12-27T19:43:44.8216112Z test_subtraction_assignment passed
+2025-12-27T19:43:44.8216505Z test_add_operator passed
+2025-12-27T19:43:44.8216855Z test_sub_operator passed
+2025-12-27T19:43:44.8217197Z test_pre_increment passed
+2025-12-27T19:43:44.8219145Z test_post_increment passed
+2025-12-27T19:43:44.8219536Z test_pre_decrement passed
+2025-12-27T19:43:44.8219924Z test_post_decrement passed
+2025-12-27T19:43:44.8220279Z test_leading_zeros passed
+2025-12-27T19:43:44.8220620Z test_trailing_zeros passed
+2025-12-27T19:43:44.8220975Z test_bitwise_operators passed
+2025-12-27T19:43:44.8221356Z test_bitwise_assignment_operators passed
+2025-12-27T19:43:44.8221764Z test_shift_left passed
+2025-12-27T19:43:44.8222082Z test_shift_right passed
+2025-12-27T19:43:44.8222422Z test_effective_length passed
+2025-12-27T19:43:44.8222781Z test_is_power_of_2 passed
+2025-12-27T19:43:44.8224145Z test_comparison_operators passed
+2025-12-27T19:43:44.8224562Z test_divrem: test_divrem_basic ......
+2025-12-27T19:43:44.8224945Z test_divrem: test_divrem_basic passed
+2025-12-27T19:43:44.8225315Z test_divrem: test_divrem_zero ......
+2025-12-27T19:43:44.8225669Z test_divrem: test_divrem_zero passed
+2025-12-27T19:43:44.8226027Z test_divrem: test_divrem_large ......
+2025-12-27T19:43:44.8226379Z test_divrem: test_divrem_large passed
+2025-12-27T19:43:44.8226832Z test_divrem: test_divrem_zero_integral_divisor ......
+2025-12-27T19:43:44.8227530Z test_divrem: test_divrem_zero_integral_divisor passed
+2025-12-27T19:43:44.8228055Z test_divrem: test_divrem_basic_integral_divisor ......
+2025-12-27T19:43:44.8228574Z test_divrem: test_divrem_basic_integral_divisor passed
+2025-12-27T19:43:44.8229102Z test_divrem: test_divrem_large_integral_divisor ......
+2025-12-27T19:43:44.8229630Z test_divrem: test_divrem_large_integral_divisor passed
+2025-12-27T19:43:44.8230107Z test_divrem: test_divrem_random ......
+2025-12-27T19:43:44.8230577Z Running: uint128_thread_safety_extracted_tests...
+2025-12-27T19:43:44.8322885Z   [OK] Passed
+2025-12-27T19:43:44.8337256Z Running: uint128_traits_extracted_tests...
+2025-12-27T19:43:44.8355141Z   [OK] Passed
+2025-12-27T19:43:44.8355445Z 
+2025-12-27T19:43:44.8355807Z ================================
+2025-12-27T19:43:44.8356310Z Test Results
+2025-12-27T19:43:44.8356819Z   Passed: 25
+2025-12-27T19:43:44.8357109Z   Failed: 2
+2025-12-27T19:43:44.8357708Z ================================
+2025-12-27T19:43:44.8358364Z [FAIL] Some tests failed
+2025-12-27T19:43:44.8378040Z ##[error]Process completed with exit code 1.

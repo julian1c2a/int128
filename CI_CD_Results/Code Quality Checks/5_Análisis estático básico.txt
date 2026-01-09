@@ -1,0 +1,6 @@
+﻿2025-12-27T19:43:09.6426494Z ##[group]Run echo "✓ Static analysis would run here"
+2025-12-27T19:43:09.6426641Z [36;1mecho "✓ Static analysis would run here"[0m
+2025-12-27T19:43:09.6426748Z [36;1m# clang-tidy analysis can be added here[0m
+2025-12-27T19:43:09.6446832Z shell: /usr/bin/bash -e {0}
+2025-12-27T19:43:09.6446920Z ##[endgroup]
+2025-12-27T19:43:09.6482329Z ✓ Static analysis would run here

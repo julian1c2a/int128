@@ -1,0 +1,32 @@
+﻿2025-12-27T19:42:49.0158914Z Current runner version: '2.330.0'
+2025-12-27T19:42:49.0201522Z ##[group]Runner Image Provisioner
+2025-12-27T19:42:49.0202305Z Hosted Compute Agent
+2025-12-27T19:42:49.0202815Z Version: 20251211.462
+2025-12-27T19:42:49.0203380Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:42:49.0203997Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:42:49.0204621Z Worker ID: {fa3ad0ab-ed6e-4644-8f2f-4cfc30995e8d}
+2025-12-27T19:42:49.0205255Z ##[endgroup]
+2025-12-27T19:42:49.0205705Z ##[group]Operating System
+2025-12-27T19:42:49.0206251Z Microsoft Windows Server 2025
+2025-12-27T19:42:49.0206746Z 10.0.26100
+2025-12-27T19:42:49.0207171Z Datacenter
+2025-12-27T19:42:49.0207560Z ##[endgroup]
+2025-12-27T19:42:49.0208026Z ##[group]Runner Image
+2025-12-27T19:42:49.0208513Z Image: windows-2025
+2025-12-27T19:42:49.0208931Z Version: 20251216.149.1
+2025-12-27T19:42:49.0209912Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T19:42:49.0212238Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T19:42:49.0213067Z ##[endgroup]
+2025-12-27T19:42:49.0214065Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:42:49.0215982Z Contents: read
+2025-12-27T19:42:49.0216509Z Metadata: read
+2025-12-27T19:42:49.0216928Z Packages: read
+2025-12-27T19:42:49.0217448Z ##[endgroup]
+2025-12-27T19:42:49.0219531Z Secret source: Actions
+2025-12-27T19:42:49.0220210Z Prepare workflow directory
+2025-12-27T19:42:49.0547819Z Prepare all required actions
+2025-12-27T19:42:49.0594988Z Getting action download info
+2025-12-27T19:42:49.4667066Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:42:49.5965110Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T19:42:50.1259747Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:42:50.5609018Z Complete job name: MSVC - release

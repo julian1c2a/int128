@@ -1,0 +1,610 @@
+﻿2025-12-27T19:19:25.8911594Z Current runner version: '2.330.0'
+2025-12-27T19:19:25.8936640Z ##[group]Runner Image Provisioner
+2025-12-27T19:19:25.8937366Z Hosted Compute Agent
+2025-12-27T19:19:25.8937884Z Version: 20251211.462
+2025-12-27T19:19:25.8938413Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-27T19:19:25.8939059Z Build Date: 2025-12-11T16:28:49Z
+2025-12-27T19:19:25.8939665Z Worker ID: {2eb258b7-043e-47ac-b9fe-4cf5e9e161c5}
+2025-12-27T19:19:25.8940272Z ##[endgroup]
+2025-12-27T19:19:25.8940761Z ##[group]Operating System
+2025-12-27T19:19:25.8941256Z Microsoft Windows Server 2025
+2025-12-27T19:19:25.8941806Z 10.0.26100
+2025-12-27T19:19:25.8942204Z Datacenter
+2025-12-27T19:19:25.8942621Z ##[endgroup]
+2025-12-27T19:19:25.8943050Z ##[group]Runner Image
+2025-12-27T19:19:25.8943533Z Image: windows-2025
+2025-12-27T19:19:25.8943990Z Version: 20251216.149.1
+2025-12-27T19:19:25.8945321Z Included Software: https://github.com/actions/runner-images/blob/win25/20251216.149/images/windows/Windows2025-Readme.md
+2025-12-27T19:19:25.8946771Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20251216.149
+2025-12-27T19:19:25.8947639Z ##[endgroup]
+2025-12-27T19:19:25.8948929Z ##[group]GITHUB_TOKEN Permissions
+2025-12-27T19:19:25.8950910Z Contents: read
+2025-12-27T19:19:25.8951388Z Metadata: read
+2025-12-27T19:19:25.8951852Z Packages: read
+2025-12-27T19:19:25.8952300Z ##[endgroup]
+2025-12-27T19:19:25.8954313Z Secret source: Actions
+2025-12-27T19:19:25.8954950Z Prepare workflow directory
+2025-12-27T19:19:25.9292373Z Prepare all required actions
+2025-12-27T19:19:25.9330883Z Getting action download info
+2025-12-27T19:19:26.3924254Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-27T19:19:26.5178613Z Download action repository 'microsoft/setup-msbuild@v2' (SHA:6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce)
+2025-12-27T19:19:27.0654671Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-12-27T19:19:27.4312901Z Complete job name: MSVC - release
+2025-12-27T19:19:27.5710459Z ##[group]Run actions/checkout@v4
+2025-12-27T19:19:27.5711816Z with:
+2025-12-27T19:19:27.5712522Z   repository: julian1c2a/int128
+2025-12-27T19:19:27.5713688Z   token: ***
+2025-12-27T19:19:27.5714362Z   ssh-strict: true
+2025-12-27T19:19:27.5715062Z   ssh-user: git
+2025-12-27T19:19:27.5715790Z   persist-credentials: true
+2025-12-27T19:19:27.5716595Z   clean: true
+2025-12-27T19:19:27.5717326Z   sparse-checkout-cone-mode: true
+2025-12-27T19:19:27.5718234Z   fetch-depth: 1
+2025-12-27T19:19:27.5718959Z   fetch-tags: false
+2025-12-27T19:19:27.5719719Z   show-progress: true
+2025-12-27T19:19:27.5720444Z   lfs: false
+2025-12-27T19:19:27.5721121Z   submodules: false
+2025-12-27T19:19:27.5722249Z   set-safe-directory: true
+2025-12-27T19:19:27.5723339Z ##[endgroup]
+2025-12-27T19:19:27.7435657Z Syncing repository: julian1c2a/int128
+2025-12-27T19:19:27.7438118Z ##[group]Getting Git version info
+2025-12-27T19:19:27.7439157Z Working directory is 'D:\a\int128\int128'
+2025-12-27T19:19:27.8439786Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:19:28.1658746Z git version 2.52.0.windows.1
+2025-12-27T19:19:28.1714533Z ##[endgroup]
+2025-12-27T19:19:28.1737428Z Temporarily overriding HOME='D:\a\_temp\07d6d056-a580-4a28-97c2-84a5c987f98b' before making global git config changes
+2025-12-27T19:19:28.1739728Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:19:28.1749216Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:19:28.2310669Z Deleting the contents of 'D:\a\int128\int128'
+2025-12-27T19:19:28.2318714Z ##[group]Initializing the repository
+2025-12-27T19:19:28.2329230Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\int128\int128
+2025-12-27T19:19:28.3163502Z Initialized empty Git repository in D:/a/int128/int128/.git/
+2025-12-27T19:19:28.3211619Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/julian1c2a/int128
+2025-12-27T19:19:28.3752770Z ##[endgroup]
+2025-12-27T19:19:28.3754717Z ##[group]Disabling automatic garbage collection
+2025-12-27T19:19:28.3764308Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2025-12-27T19:19:28.4118609Z ##[endgroup]
+2025-12-27T19:19:28.4120376Z ##[group]Setting up auth
+2025-12-27T19:19:28.4133835Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:19:28.4480870Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:19:29.8615070Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:19:29.8922979Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:19:30.4437475Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:19:30.4742982Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:19:31.0249395Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2025-12-27T19:19:31.0581519Z ##[endgroup]
+2025-12-27T19:19:31.0582614Z ##[group]Fetching the repository
+2025-12-27T19:19:31.0596567Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +54d31eaf5cac406e3cc789698af4ca3945af95f1:refs/remotes/origin/main
+2025-12-27T19:19:32.2576126Z From https://github.com/julian1c2a/int128
+2025-12-27T19:19:32.2579037Z  * [new ref]         54d31eaf5cac406e3cc789698af4ca3945af95f1 -> origin/main
+2025-12-27T19:19:32.2842481Z ##[endgroup]
+2025-12-27T19:19:32.2843139Z ##[group]Determining the checkout info
+2025-12-27T19:19:32.2845573Z ##[endgroup]
+2025-12-27T19:19:32.2856924Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2025-12-27T19:19:32.3367262Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2025-12-27T19:19:32.3685269Z ##[group]Checking out the ref
+2025-12-27T19:19:32.3696597Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+2025-12-27T19:19:32.6271113Z branch 'main' set up to track 'origin/main'.
+2025-12-27T19:19:32.6278736Z Switched to a new branch 'main'
+2025-12-27T19:19:32.6320829Z ##[endgroup]
+2025-12-27T19:19:32.6705256Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2025-12-27T19:19:32.6997715Z 54d31eaf5cac406e3cc789698af4ca3945af95f1
+2025-12-27T19:19:32.7387080Z ##[group]Run microsoft/setup-msbuild@v2
+2025-12-27T19:19:32.7387417Z with:
+2025-12-27T19:19:32.7387605Z   msbuild-architecture: x86
+2025-12-27T19:19:32.7387802Z ##[endgroup]
+2025-12-27T19:19:32.8785742Z [command]C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest
+2025-12-27T19:19:33.2717559Z C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2025-12-27T19:19:33.3010251Z ##[group]Run # Obtener vcvarsall.bat path
+2025-12-27T19:19:33.3010681Z [36;1m# Obtener vcvarsall.bat path[0m
+2025-12-27T19:19:33.3011004Z [36;1m$vcvarsPath = & python scripts/vcvars.py[0m
+2025-12-27T19:19:33.3011278Z [36;1mif ($vcvarsPath) {[0m
+2025-12-27T19:19:33.3011571Z [36;1m  Write-Host "✓ Found vcvarsall.bat at: $vcvarsPath"[0m
+2025-12-27T19:19:33.3011896Z [36;1m  echo "VCVARS_PATH=$vcvarsPath" >> $env:GITHUB_ENV[0m
+2025-12-27T19:19:33.3012155Z [36;1m} else {[0m
+2025-12-27T19:19:33.3012400Z [36;1m  Write-Host "⚠ vcvarsall.bat not found, using default path"[0m
+2025-12-27T19:19:33.3013411Z [36;1m}[0m
+2025-12-27T19:19:33.4001278Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2025-12-27T19:19:33.4001678Z ##[endgroup]
+2025-12-27T19:19:38.8462169Z ✓ Found vcvarsall.bat at: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:19:39.2169073Z ##[group]Run call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+2025-12-27T19:19:39.2169809Z [36;1mcall "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"[0m
+2025-12-27T19:19:39.2170418Z [36;1mbash -c "chmod +x scripts/build_extracted_tests.bash && ./scripts/build_extracted_tests.bash msvc release"[0m
+2025-12-27T19:19:39.2204023Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+2025-12-27T19:19:39.2204345Z env:
+2025-12-27T19:19:39.2204699Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:19:39.2205130Z ##[endgroup]
+2025-12-27T19:19:39.5052110Z **********************************************************************
+2025-12-27T19:19:39.5052673Z ** Visual Studio 2022 Developer Command Prompt v17.14.22
+2025-12-27T19:19:39.5053321Z ** Copyright (c) 2025 Microsoft Corporation
+2025-12-27T19:19:39.5056055Z **********************************************************************
+2025-12-27T19:19:41.6146641Z [vcvarsall.bat] Environment initialized for: 'x64'
+2025-12-27T19:19:41.8498485Z ================================
+2025-12-27T19:19:41.8498807Z Building Extracted Tests
+2025-12-27T19:19:41.8499017Z Compiler: msvc
+2025-12-27T19:19:41.8499195Z Build Type: release
+2025-12-27T19:19:41.8499373Z ================================
+2025-12-27T19:19:41.9501888Z Using compiler: cl
+2025-12-27T19:19:41.9503122Z Optimization flags: //O2 //DNDEBUG
+2025-12-27T19:19:41.9503437Z 
+2025-12-27T19:19:41.9506850Z Found 27 test files
+2025-12-27T19:19:41.9507272Z 
+2025-12-27T19:19:41.9749051Z Compiling: int128_algorithm_extracted_tests...
+2025-12-27T19:19:43.2520144Z   [FAIL] Failed
+2025-12-27T19:19:43.2521258Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:43.2915752Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:43.2917594Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.2920587Z 
+2025-12-27T19:19:43.2921343Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:43.2922154Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:43.2923462Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_algorithm_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:43.2924595Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:43.2925718Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.2926114Z 
+2025-12-27T19:19:43.2926629Z "/out:\build\build_tests\msvc\release\int128_algorithm_extracted_tests.exe\" 
+2025-12-27T19:19:43.2927244Z "\tests\int128_algorithm_extracted_tests.cpp\" 
+2025-12-27T19:19:43.2928205Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_algorithm_extracted_tests.exe\'
+2025-12-27T19:19:43.2943376Z   ===================================
+2025-12-27T19:19:43.3159054Z Compiling: int128_bits_extracted_tests...
+2025-12-27T19:19:43.4440743Z   [FAIL] Failed
+2025-12-27T19:19:43.4441785Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:43.4666731Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:43.4667857Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.4668253Z 
+2025-12-27T19:19:43.4668463Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:43.4669448Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:43.4671042Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_bits_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:43.4672462Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:43.4673354Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.4673981Z 
+2025-12-27T19:19:43.4676893Z "/out:\build\build_tests\msvc\release\int128_bits_extracted_tests.exe\" 
+2025-12-27T19:19:43.4677561Z "\tests\int128_bits_extracted_tests.cpp\" 
+2025-12-27T19:19:43.4678312Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_bits_extracted_tests.exe\'
+2025-12-27T19:19:43.4679061Z   ===================================
+2025-12-27T19:19:43.4872724Z Compiling: int128_cmath_extracted_tests...
+2025-12-27T19:19:43.6081427Z   [FAIL] Failed
+2025-12-27T19:19:43.6081809Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:43.6266583Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:43.6267557Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.6267973Z 
+2025-12-27T19:19:43.6268607Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:43.6269208Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:43.6271236Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_cmath_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:43.6272409Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:43.6272988Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.6273359Z 
+2025-12-27T19:19:43.6273644Z "/out:\build\build_tests\msvc\release\int128_cmath_extracted_tests.exe\" 
+2025-12-27T19:19:43.6274209Z "\tests\int128_cmath_extracted_tests.cpp\" 
+2025-12-27T19:19:43.6274945Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_cmath_extracted_tests.exe\'
+2025-12-27T19:19:43.6275697Z   ===================================
+2025-12-27T19:19:43.6461940Z Compiling: int128_concepts_extracted_tests...
+2025-12-27T19:19:43.7587489Z   [FAIL] Failed
+2025-12-27T19:19:43.7587912Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:43.7767534Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:43.7768226Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.7768649Z 
+2025-12-27T19:19:43.7768894Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:43.7769504Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:43.7770465Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_concepts_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:43.7771360Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:43.7771914Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.7772285Z 
+2025-12-27T19:19:43.7772572Z "/out:\build\build_tests\msvc\release\int128_concepts_extracted_tests.exe\" 
+2025-12-27T19:19:43.7773169Z "\tests\int128_concepts_extracted_tests.cpp\" 
+2025-12-27T19:19:43.7774338Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_concepts_extracted_tests.exe\'
+2025-12-27T19:19:43.7893498Z   ===================================
+2025-12-27T19:19:43.8087536Z Compiling: int128_format_extracted_tests...
+2025-12-27T19:19:43.9282976Z   [FAIL] Failed
+2025-12-27T19:19:43.9283346Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:43.9470098Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:43.9470802Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.9471187Z 
+2025-12-27T19:19:43.9471431Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:43.9472065Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:43.9473012Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_format_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:43.9474257Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:43.9474815Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:43.9475618Z 
+2025-12-27T19:19:43.9475934Z "/out:\build\build_tests\msvc\release\int128_format_extracted_tests.exe\" 
+2025-12-27T19:19:43.9477611Z "\tests\int128_format_extracted_tests.cpp\" 
+2025-12-27T19:19:43.9478475Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_format_extracted_tests.exe\'
+2025-12-27T19:19:43.9479229Z   ===================================
+2025-12-27T19:19:43.9670382Z Compiling: int128_iostreams_extracted_tests...
+2025-12-27T19:19:44.0854501Z   [FAIL] Failed
+2025-12-27T19:19:44.0854899Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:44.1039505Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:44.1040186Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.1040584Z 
+2025-12-27T19:19:44.1040821Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:44.1041425Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:44.1042771Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_iostreams_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:44.1043500Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:44.1043866Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.1044128Z 
+2025-12-27T19:19:44.1044426Z "/out:\build\build_tests\msvc\release\int128_iostreams_extracted_tests.exe\" 
+2025-12-27T19:19:44.1045038Z "\tests\int128_iostreams_extracted_tests.cpp\" 
+2025-12-27T19:19:44.1045785Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_iostreams_extracted_tests.exe\'
+2025-12-27T19:19:44.1046538Z   ===================================
+2025-12-27T19:19:44.1236894Z Compiling: int128_limits_extracted_tests...
+2025-12-27T19:19:44.2390242Z   [FAIL] Failed
+2025-12-27T19:19:44.2390604Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:44.2594413Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:44.2595879Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.2597114Z 
+2025-12-27T19:19:44.2598265Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:44.2599236Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:44.2600365Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_limits_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:44.2601686Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:44.2602426Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.2602990Z 
+2025-12-27T19:19:44.2603451Z "/out:\build\build_tests\msvc\release\int128_limits_extracted_tests.exe\" 
+2025-12-27T19:19:44.2604273Z "\tests\int128_limits_extracted_tests.cpp\" 
+2025-12-27T19:19:44.2605257Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_limits_extracted_tests.exe\'
+2025-12-27T19:19:44.2607037Z   ===================================
+2025-12-27T19:19:44.2830361Z Compiling: int128_numeric_extracted_tests...
+2025-12-27T19:19:44.4189559Z   [FAIL] Failed
+2025-12-27T19:19:44.4189936Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:44.4369311Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:44.4370177Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.4370758Z 
+2025-12-27T19:19:44.4370995Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:44.4371413Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:44.4371959Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_numeric_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:44.4374204Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:44.4374779Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.4375175Z 
+2025-12-27T19:19:44.4375360Z "/out:\build\build_tests\msvc\release\int128_numeric_extracted_tests.exe\" 
+2025-12-27T19:19:44.4376282Z "\tests\int128_numeric_extracted_tests.cpp\" 
+2025-12-27T19:19:44.4377104Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_numeric_extracted_tests.exe\'
+2025-12-27T19:19:44.4377698Z   ===================================
+2025-12-27T19:19:44.4565728Z Compiling: int128_ranges_extracted_tests...
+2025-12-27T19:19:44.5737233Z   [FAIL] Failed
+2025-12-27T19:19:44.5737920Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:44.5917653Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:44.5918595Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.5919030Z 
+2025-12-27T19:19:44.5919274Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:44.5919908Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:44.5920873Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_ranges_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:44.5921758Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:44.5922318Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.5922670Z 
+2025-12-27T19:19:44.5922942Z "/out:\build\build_tests\msvc\release\int128_ranges_extracted_tests.exe\" 
+2025-12-27T19:19:44.5923519Z "\tests\int128_ranges_extracted_tests.cpp\" 
+2025-12-27T19:19:44.5924246Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_ranges_extracted_tests.exe\'
+2025-12-27T19:19:44.5924956Z   ===================================
+2025-12-27T19:19:44.6119682Z Compiling: int128_safe_extracted_tests...
+2025-12-27T19:19:44.7255129Z   [FAIL] Failed
+2025-12-27T19:19:44.7255570Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:44.7432691Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:44.7433245Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.7433534Z 
+2025-12-27T19:19:44.7433778Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:44.7434417Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:44.7435666Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_safe_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:44.7436576Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:44.7437139Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.7437502Z 
+2025-12-27T19:19:44.7437770Z "/out:\build\build_tests\msvc\release\int128_safe_extracted_tests.exe\" 
+2025-12-27T19:19:44.7438346Z "\tests\int128_safe_extracted_tests.cpp\" 
+2025-12-27T19:19:44.7439026Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_safe_extracted_tests.exe\'
+2025-12-27T19:19:44.7439700Z   ===================================
+2025-12-27T19:19:44.7629878Z Compiling: int128_t_extracted_tests...
+2025-12-27T19:19:44.8756420Z   [FAIL] Failed
+2025-12-27T19:19:44.8756814Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:44.8942619Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:44.8943158Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.8943420Z 
+2025-12-27T19:19:44.8943644Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:44.8944232Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:44.8945137Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_t_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:44.8946340Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:44.8946889Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:44.8947251Z 
+2025-12-27T19:19:44.8947503Z "/out:\build\build_tests\msvc\release\int128_t_extracted_tests.exe\" 
+2025-12-27T19:19:44.8948216Z "\tests\int128_t_extracted_tests.cpp\" 
+2025-12-27T19:19:44.8948913Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_t_extracted_tests.exe\'
+2025-12-27T19:19:44.8949788Z   ===================================
+2025-12-27T19:19:44.9142333Z Compiling: int128_thread_safety_extracted_tests...
+2025-12-27T19:19:45.0274696Z   [FAIL] Failed
+2025-12-27T19:19:45.0275012Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.0456601Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.0457566Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.0457962Z 
+2025-12-27T19:19:45.0458227Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.0458853Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.0459508Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_thread_safety_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.0460120Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.0460657Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.0461022Z 
+2025-12-27T19:19:45.0461331Z "/out:\build\build_tests\msvc\release\int128_thread_safety_extracted_tests.exe\" 
+2025-12-27T19:19:45.0461942Z "\tests\int128_thread_safety_extracted_tests.cpp\" 
+2025-12-27T19:19:45.0462760Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_thread_safety_extracted_tests.exe\'
+2025-12-27T19:19:45.0463548Z   ===================================
+2025-12-27T19:19:45.0658447Z Compiling: int128_traits_extracted_tests...
+2025-12-27T19:19:45.1856704Z   [FAIL] Failed
+2025-12-27T19:19:45.1856999Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.2040062Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.2040828Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.2041505Z 
+2025-12-27T19:19:45.2042590Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.2047191Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.2048760Z cl : Command line warning D9024 : unrecognized source file type '"tests\int128_traits_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.2049724Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.2051052Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.2051678Z 
+2025-12-27T19:19:45.2051996Z "/out:\build\build_tests\msvc\release\int128_traits_extracted_tests.exe\" 
+2025-12-27T19:19:45.2052626Z "\tests\int128_traits_extracted_tests.cpp\" 
+2025-12-27T19:19:45.2053366Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\int128_traits_extracted_tests.exe\'
+2025-12-27T19:19:45.2054098Z   ===================================
+2025-12-27T19:19:45.2248364Z Compiling: uint128_algorithm_extracted_tests...
+2025-12-27T19:19:45.3395447Z   [FAIL] Failed
+2025-12-27T19:19:45.3395808Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.3576684Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.3577402Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.3577794Z 
+2025-12-27T19:19:45.3578040Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.3578659Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.3579606Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_algorithm_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.3580922Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.3581468Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.3581809Z 
+2025-12-27T19:19:45.3582083Z "/out:\build\build_tests\msvc\release\uint128_algorithm_extracted_tests.exe\" 
+2025-12-27T19:19:45.3583815Z "\tests\uint128_algorithm_extracted_tests.cpp\" 
+2025-12-27T19:19:45.3584646Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_algorithm_extracted_tests.exe\'
+2025-12-27T19:19:45.3585388Z   ===================================
+2025-12-27T19:19:45.3776427Z Compiling: uint128_bits_extracted_tests...
+2025-12-27T19:19:45.4952729Z   [FAIL] Failed
+2025-12-27T19:19:45.4953140Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.5134013Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.5134790Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.5135215Z 
+2025-12-27T19:19:45.5135478Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.5136107Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.5137092Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_bits_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.5137979Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.5138543Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.5138899Z 
+2025-12-27T19:19:45.5139438Z "/out:\build\build_tests\msvc\release\uint128_bits_extracted_tests.exe\" 
+2025-12-27T19:19:45.5140028Z "\tests\uint128_bits_extracted_tests.cpp\" 
+2025-12-27T19:19:45.5140762Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_bits_extracted_tests.exe\'
+2025-12-27T19:19:45.5141541Z   ===================================
+2025-12-27T19:19:45.5331686Z Compiling: uint128_cmath_extracted_tests...
+2025-12-27T19:19:45.6482448Z   [FAIL] Failed
+2025-12-27T19:19:45.6482804Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.6667254Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.6668145Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.6668508Z 
+2025-12-27T19:19:45.6668696Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.6669103Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.6669839Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_cmath_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.6670431Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.6670813Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.6671170Z 
+2025-12-27T19:19:45.6671745Z "/out:\build\build_tests\msvc\release\uint128_cmath_extracted_tests.exe\" 
+2025-12-27T19:19:45.6672371Z "\tests\uint128_cmath_extracted_tests.cpp\" 
+2025-12-27T19:19:45.6673109Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_cmath_extracted_tests.exe\'
+2025-12-27T19:19:45.6674914Z   ===================================
+2025-12-27T19:19:45.6869814Z Compiling: uint128_concepts_extracted_tests...
+2025-12-27T19:19:45.8001038Z   [FAIL] Failed
+2025-12-27T19:19:45.8001435Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.8183209Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.8184107Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.8184488Z 
+2025-12-27T19:19:45.8184722Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.8185325Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.8186265Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_concepts_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.8187531Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.8188049Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.8188267Z 
+2025-12-27T19:19:45.8188537Z "/out:\build\build_tests\msvc\release\uint128_concepts_extracted_tests.exe\" 
+2025-12-27T19:19:45.8189375Z "\tests\uint128_concepts_extracted_tests.cpp\" 
+2025-12-27T19:19:45.8190151Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_concepts_extracted_tests.exe\'
+2025-12-27T19:19:45.8190669Z   ===================================
+2025-12-27T19:19:45.8386542Z Compiling: uint128_format_extracted_tests...
+2025-12-27T19:19:45.9543199Z   [FAIL] Failed
+2025-12-27T19:19:45.9543550Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:45.9726066Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:45.9726798Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.9727190Z 
+2025-12-27T19:19:45.9727465Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:45.9728079Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:45.9729030Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_format_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:45.9729955Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:45.9730492Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:45.9730845Z 
+2025-12-27T19:19:45.9731123Z "/out:\build\build_tests\msvc\release\uint128_format_extracted_tests.exe\" 
+2025-12-27T19:19:45.9731692Z "\tests\uint128_format_extracted_tests.cpp\" 
+2025-12-27T19:19:45.9732436Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_format_extracted_tests.exe\'
+2025-12-27T19:19:45.9733216Z   ===================================
+2025-12-27T19:19:45.9922603Z Compiling: uint128_interop_extracted_tests...
+2025-12-27T19:19:46.1081958Z   [FAIL] Failed
+2025-12-27T19:19:46.1082347Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:46.1260555Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:46.1261283Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.1261644Z 
+2025-12-27T19:19:46.1261913Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:46.1262782Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:46.1263739Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_interop_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:46.1264629Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:46.1265166Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.1265537Z 
+2025-12-27T19:19:46.1265816Z "/out:\build\build_tests\msvc\release\uint128_interop_extracted_tests.exe\" 
+2025-12-27T19:19:46.1266393Z "\tests\uint128_interop_extracted_tests.cpp\" 
+2025-12-27T19:19:46.1267088Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_interop_extracted_tests.exe\'
+2025-12-27T19:19:46.1267802Z   ===================================
+2025-12-27T19:19:46.1461527Z Compiling: uint128_iostreams_extracted_tests...
+2025-12-27T19:19:46.2646987Z   [FAIL] Failed
+2025-12-27T19:19:46.2647385Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:46.2830311Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:46.2831009Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.2831369Z 
+2025-12-27T19:19:46.2831595Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:46.2832193Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:46.2833426Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_iostreams_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:46.2841328Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:46.2841924Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.2842243Z 
+2025-12-27T19:19:46.2842544Z "/out:\build\build_tests\msvc\release\uint128_iostreams_extracted_tests.exe\" 
+2025-12-27T19:19:46.2843802Z "\tests\uint128_iostreams_extracted_tests.cpp\" 
+2025-12-27T19:19:46.2844515Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_iostreams_extracted_tests.exe\'
+2025-12-27T19:19:46.2845179Z   ===================================
+2025-12-27T19:19:46.3032552Z Compiling: uint128_limits_extracted_tests...
+2025-12-27T19:19:46.4211186Z   [FAIL] Failed
+2025-12-27T19:19:46.4211557Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:46.4394619Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:46.4395285Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.4395683Z 
+2025-12-27T19:19:46.4395912Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:46.4396529Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:46.4397451Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_limits_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:46.4398357Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:46.4398899Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.4399270Z 
+2025-12-27T19:19:46.4399554Z "/out:\build\build_tests\msvc\release\uint128_limits_extracted_tests.exe\" 
+2025-12-27T19:19:46.4400147Z "\tests\uint128_limits_extracted_tests.cpp\" 
+2025-12-27T19:19:46.4401204Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_limits_extracted_tests.exe\'
+2025-12-27T19:19:46.4401926Z   ===================================
+2025-12-27T19:19:46.4589719Z Compiling: uint128_numeric_extracted_tests...
+2025-12-27T19:19:46.5722141Z   [FAIL] Failed
+2025-12-27T19:19:46.5722567Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:46.5901822Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:46.5902410Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.5902733Z 
+2025-12-27T19:19:46.5903006Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:46.5903633Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:46.5904721Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_numeric_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:46.5905655Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:46.5906202Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.5906587Z 
+2025-12-27T19:19:46.5906884Z "/out:\build\build_tests\msvc\release\uint128_numeric_extracted_tests.exe\" 
+2025-12-27T19:19:46.5907430Z "\tests\uint128_numeric_extracted_tests.cpp\" 
+2025-12-27T19:19:46.5907883Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_numeric_extracted_tests.exe\'
+2025-12-27T19:19:46.5909496Z   ===================================
+2025-12-27T19:19:46.6098346Z Compiling: uint128_ranges_extracted_tests...
+2025-12-27T19:19:46.7237764Z   [FAIL] Failed
+2025-12-27T19:19:46.7238734Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:46.7427416Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:46.7427974Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.7428245Z 
+2025-12-27T19:19:46.7428437Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:46.7429391Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:46.7431158Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_ranges_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:46.7433484Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:46.7434137Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.7434519Z 
+2025-12-27T19:19:46.7435086Z "/out:\build\build_tests\msvc\release\uint128_ranges_extracted_tests.exe\" 
+2025-12-27T19:19:46.7436159Z "\tests\uint128_ranges_extracted_tests.cpp\" 
+2025-12-27T19:19:46.7436998Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_ranges_extracted_tests.exe\'
+2025-12-27T19:19:46.7437756Z   ===================================
+2025-12-27T19:19:46.7628166Z Compiling: uint128_safe_extracted_tests...
+2025-12-27T19:19:46.8791807Z   [FAIL] Failed
+2025-12-27T19:19:46.8792363Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:46.8980292Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:46.8981321Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.8981703Z 
+2025-12-27T19:19:46.8982731Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:46.8983405Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:46.8984341Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_safe_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:46.8985237Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:46.8985784Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:46.8986389Z 
+2025-12-27T19:19:46.8986656Z "/out:\build\build_tests\msvc\release\uint128_safe_extracted_tests.exe\" 
+2025-12-27T19:19:46.8987501Z "\tests\uint128_safe_extracted_tests.cpp\" 
+2025-12-27T19:19:46.8988617Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_safe_extracted_tests.exe\'
+2025-12-27T19:19:46.8989332Z   ===================================
+2025-12-27T19:19:46.9180363Z Compiling: uint128_t_extracted_tests...
+2025-12-27T19:19:47.0304800Z   [FAIL] Failed
+2025-12-27T19:19:47.0305217Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:47.0481902Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:47.0482545Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:47.0482779Z 
+2025-12-27T19:19:47.0482959Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:47.0483384Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:47.0484209Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_t_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:47.0484980Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:47.0485531Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:47.0485887Z 
+2025-12-27T19:19:47.0486131Z "/out:\build\build_tests\msvc\release\uint128_t_extracted_tests.exe\" 
+2025-12-27T19:19:47.0486680Z "\tests\uint128_t_extracted_tests.cpp\" 
+2025-12-27T19:19:47.0487331Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_t_extracted_tests.exe\'
+2025-12-27T19:19:47.0487925Z   ===================================
+2025-12-27T19:19:47.0684769Z Compiling: uint128_thread_safety_extracted_tests...
+2025-12-27T19:19:47.1835923Z   [FAIL] Failed
+2025-12-27T19:19:47.1836311Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:47.2016031Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:47.2016717Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:47.2017374Z 
+2025-12-27T19:19:47.2017621Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:47.2018417Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:47.2020282Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_thread_safety_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:47.2021922Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:47.2022467Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:47.2023071Z 
+2025-12-27T19:19:47.2023426Z "/out:\build\build_tests\msvc\release\uint128_thread_safety_extracted_tests.exe\" 
+2025-12-27T19:19:47.2024074Z "\tests\uint128_thread_safety_extracted_tests.cpp\" 
+2025-12-27T19:19:47.2027381Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_thread_safety_extracted_tests.exe\'
+2025-12-27T19:19:47.2028012Z   ===================================
+2025-12-27T19:19:47.2217250Z Compiling: uint128_traits_extracted_tests...
+2025-12-27T19:19:47.3387284Z   [FAIL] Failed
+2025-12-27T19:19:47.3387639Z   === Error log (first 30 lines) ===
+2025-12-27T19:19:47.3570975Z Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35222 for x64
+2025-12-27T19:19:47.3571678Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:47.3572071Z 
+2025-12-27T19:19:47.3572356Z cl : Command line warning D9002 : ignoring unknown option '//O2'
+2025-12-27T19:19:47.3572988Z cl : Command line warning D9002 : ignoring unknown option '//DNDEBUG'
+2025-12-27T19:19:47.3573921Z cl : Command line warning D9024 : unrecognized source file type '"tests\uint128_traits_extracted_tests.cpp"', object file assumed
+2025-12-27T19:19:47.3574845Z Microsoft (R) Incremental Linker Version 14.44.35222.0
+2025-12-27T19:19:47.3575387Z Copyright (C) Microsoft Corporation.  All rights reserved.
+2025-12-27T19:19:47.3575746Z 
+2025-12-27T19:19:47.3576017Z "/out:\build\build_tests\msvc\release\uint128_traits_extracted_tests.exe\" 
+2025-12-27T19:19:47.3576593Z "\tests\uint128_traits_extracted_tests.cpp\" 
+2025-12-27T19:19:47.3577330Z LINK : fatal error LNK1104: cannot open file '\build\build_tests\msvc\release\uint128_traits_extracted_tests.exe\'
+2025-12-27T19:19:47.3578090Z   ===================================
+2025-12-27T19:19:47.3578691Z 
+2025-12-27T19:19:47.3578798Z ================================
+2025-12-27T19:19:47.3579126Z Build Summary
+2025-12-27T19:19:47.3580157Z   Compiled: 0
+2025-12-27T19:19:47.3580620Z   Failed: 27
+2025-12-27T19:19:47.3580878Z ================================
+2025-12-27T19:19:47.3581207Z [FAIL] Some tests failed to compile
+2025-12-27T19:19:47.3657554Z ##[error]Process completed with exit code 1.
+2025-12-27T19:19:47.3850008Z ##[group]Run actions/upload-artifact@v4
+2025-12-27T19:19:47.3850310Z with:
+2025-12-27T19:19:47.3850493Z   name: msvc-release-binaries
+2025-12-27T19:19:47.3850722Z   path: build/build_tests/msvc/release/
+2025-12-27T19:19:47.3850961Z   retention-days: 7
+2025-12-27T19:19:47.3851140Z   if-no-files-found: warn
+2025-12-27T19:19:47.3851324Z   compression-level: 6
+2025-12-27T19:19:47.3851501Z   overwrite: false
+2025-12-27T19:19:47.3851669Z   include-hidden-files: false
+2025-12-27T19:19:47.3851854Z env:
+2025-12-27T19:19:47.3852180Z   VCVARS_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat
+2025-12-27T19:19:47.3852588Z ##[endgroup]
+2025-12-27T19:19:47.6858801Z With the provided path, there will be 27 files uploaded
+2025-12-27T19:19:47.6865045Z Artifact name is valid!
+2025-12-27T19:19:47.6868307Z Root directory input is valid!
+2025-12-27T19:19:47.9922876Z Beginning upload of artifact content to blob storage
+2025-12-27T19:19:48.3611134Z Uploaded bytes 13685
+2025-12-27T19:19:48.4426674Z Finished uploading artifact content to blob storage!
+2025-12-27T19:19:48.4430514Z SHA256 digest of uploaded artifact zip is 3c28bd2cbce0d32d910e7bcfb7a740dcc442245493fcaa8b4cba585465fbdb31
+2025-12-27T19:19:48.4432964Z Finalizing artifact upload
+2025-12-27T19:19:48.5800423Z Artifact msvc-release-binaries.zip successfully finalized. Artifact ID 4976043094
+2025-12-27T19:19:48.5801253Z Artifact msvc-release-binaries has been successfully uploaded! Final size is 13685 bytes. Artifact ID is 4976043094
+2025-12-27T19:19:48.5813442Z Artifact download URL: https://github.com/julian1c2a/int128/actions/runs/20543297767/artifacts/4976043094
+2025-12-27T19:19:48.6093624Z Post job cleanup.
+2025-12-27T19:19:48.8426795Z [command]"C:\Program Files\Git\bin\git.exe" version
+2025-12-27T19:19:48.8694263Z git version 2.52.0.windows.1
+2025-12-27T19:19:48.8772179Z Temporarily overriding HOME='D:\a\_temp\0194708d-99dd-4857-a607-1fa08e10a54b' before making global git config changes
+2025-12-27T19:19:48.8773087Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-27T19:19:48.8783493Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\int128\int128
+2025-12-27T19:19:48.9084095Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2025-12-27T19:19:48.9383546Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2025-12-27T19:19:49.4669819Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-27T19:19:49.4924941Z http.https://github.com/.extraheader
+2025-12-27T19:19:49.4965578Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2025-12-27T19:19:49.5258382Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2025-12-27T19:19:50.0226807Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-27T19:19:50.0515675Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-12-27T19:19:50.5764345Z Cleaning up orphan processes
+2025-12-27T19:19:50.5983537Z Terminate orphan process: pid (8568) (vctip)
