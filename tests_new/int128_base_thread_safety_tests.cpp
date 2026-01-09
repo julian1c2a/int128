@@ -183,6 +183,9 @@ void test_threadsaferw_concurrent_reads()
 
 void test_threadsafeatomic_basic()
 {
+#ifdef SKIP_ALL_ATOMIC_TESTS
+    std::cout << "[SKIP] ThreadSafeAtomic store/load (disabled for this compiler)" << std::endl;
+#else
     ThreadSafeUint128Atomic counter(uint128_t(0));
 
     // ThreadSafeAtomic uses std::atomic directly
@@ -196,6 +199,7 @@ void test_threadsafeatomic_basic()
     assert(counter.get() == uint128_t(150));
 
     test_passed("ThreadSafeAtomic store/load");
+#endif
 }
 
 void test_threadsafeatomic_exchange()
@@ -241,6 +245,9 @@ void test_threadsafeatomic_compare_exchange()
 
 void test_threadsafeatomic_is_lock_free()
 {
+#ifdef SKIP_ALL_ATOMIC_TESTS
+    std::cout << "[SKIP] ThreadSafeAtomic is_lock_free (disabled for this compiler)" << std::endl;
+#else
     ThreadSafeUint128Atomic counter(uint128_t(0));
 
     // Just check it doesn't crash - 128-bit atomics are usually NOT lock-free
@@ -248,6 +255,7 @@ void test_threadsafeatomic_is_lock_free()
     std::cout << "  (is_lock_free: " << (lock_free ? "true" : "false") << ")" << std::endl;
 
     test_passed("ThreadSafeAtomic is_lock_free check");
+#endif
 }
 
 // =============================================================================
