@@ -177,6 +177,8 @@ void test_threadsaferw_concurrent_reads()
 
 // =============================================================================
 // TEST THREADSAFEATOMIC
+// Note: std::atomic<128-bit> may have issues on some compilers/platforms
+// These tests are kept minimal to avoid hangs
 // =============================================================================
 
 void test_threadsafeatomic_basic()
@@ -200,7 +202,8 @@ void test_threadsafeatomic_exchange()
 {
     ThreadSafeUint128Atomic counter(uint128_t(100));
 
-    // Test exchange
+    // Note: exchange may hang on some Clang versions with 128-bit atomics
+    // Test basic functionality only
     uint128_t old = counter.exchange(uint128_t(200));
     assert(old == uint128_t(100));
     assert(counter.get() == uint128_t(200));
