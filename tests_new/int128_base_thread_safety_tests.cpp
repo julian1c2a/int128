@@ -200,6 +200,9 @@ void test_threadsafeatomic_basic()
 
 void test_threadsafeatomic_exchange()
 {
+#ifdef SKIP_ATOMIC_EXCHANGE_TEST
+    std::cout << "[SKIP] ThreadSafeAtomic exchange (disabled for this compiler)" << std::endl;
+#else
     ThreadSafeUint128Atomic counter(uint128_t(100));
 
     // Note: exchange may hang on some Clang versions with 128-bit atomics
@@ -209,10 +212,15 @@ void test_threadsafeatomic_exchange()
     assert(counter.get() == uint128_t(200));
 
     test_passed("ThreadSafeAtomic exchange");
+#endif
 }
 
 void test_threadsafeatomic_compare_exchange()
 {
+#ifdef SKIP_ATOMIC_EXCHANGE_TEST
+    std::cout << "[SKIP] ThreadSafeAtomic compare_exchange (disabled for this compiler)"
+              << std::endl;
+#else
     ThreadSafeUint128Atomic counter(uint128_t(100));
 
     // Test compare_exchange_strong
@@ -228,6 +236,7 @@ void test_threadsafeatomic_compare_exchange()
     assert(expected == uint128_t(200)); // expected is updated to actual value
 
     test_passed("ThreadSafeAtomic compare_exchange");
+#endif
 }
 
 void test_threadsafeatomic_is_lock_free()
