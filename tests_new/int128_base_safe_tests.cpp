@@ -133,7 +133,7 @@ void test_safe_add_no_overflow()
 
 void test_safe_add_overflow_unsigned()
 {
-    uint128_t max_val = std::numeric_limits<uint128_t>::max();
+    uint128_t max_val = nstd::numeric_limits<uint128_t>::max();
     uint128_t one(1);
     auto result = safe_add(max_val, one);
     assert(!result.is_valid());
@@ -322,7 +322,7 @@ void test_safe_shr()
 
 void test_saturating_add()
 {
-    uint128_t max_val = std::numeric_limits<uint128_t>::max();
+    uint128_t max_val = nstd::numeric_limits<uint128_t>::max();
     uint128_t one(1);
     auto result = saturating_add(max_val, one);
     assert(result == max_val); // Saturates at max
@@ -353,7 +353,7 @@ void test_saturating_sub()
 void test_saturating_mul()
 {
     uint128_t big(uint64_t(1), uint64_t(0)); // 2^64
-    uint128_t max_val = std::numeric_limits<uint128_t>::max();
+    uint128_t max_val = nstd::numeric_limits<uint128_t>::max();
     auto result = saturating_mul(big, big);
     assert(result == max_val); // Saturates at max
 
