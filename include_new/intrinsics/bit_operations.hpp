@@ -83,7 +83,7 @@ inline constexpr int clz64(uint64_t x) noexcept
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return fallback::clz64_portable(x);
     } else {
-        unsigned long index;
+        unsigned long index = 0; // Inicializar para evitar warning Intel ICX
         _BitScanReverse64(&index, x);
         return 63 - static_cast<int>(index);
     }
@@ -115,7 +115,7 @@ inline constexpr int ctz64(uint64_t x) noexcept
     if (INTRINSICS_IS_CONSTANT_EVALUATED()) {
         return fallback::ctz64_portable(x);
     } else {
-        unsigned long index;
+        unsigned long index = 0; // Inicializar para evitar warning Intel ICX
         _BitScanForward64(&index, x);
         return static_cast<int>(index);
     }
