@@ -1,193 +1,203 @@
-/*
- * Benchmarks para int128_limits.hpp
- * Mide el rendimiento de acceso a std::numeric_limits<int128_t>
+/**
+ * @file int128_limits_extracted_benchs.cpp
+ * @brief Benchmarks unificados para std::numeric_limits de int128_base_t
+ *
+ * Testea acceso a constantes de numeric_limits:
+ * - min(), max(), lowest()
+ * - digits, digits10, is_signed
+ * - Comparación constexpr vs runtime
  */
 
 #include "int128_base_limits.hpp"
-#include "int128_base_tt.hpp"
 #include <chrono>
-#include <ctime>
+#include <cstdint>
 #include <iomanip>
 #include <iostream>
 #include <limits>
-#include <sstream>
-#include <string>
-#include <vector>
+
+#ifdef _MSC_VER
+#include <intrin.h>
+#pragma intrinsic(__rdtsc)
+#endif
 
 using namespace nstd;
-// =============================================================================
-// UTILIDADES DE BENCHMARK
-// =============================================================================
+using namespace std::chrono;
 
-struct BenchmarkResult {
-    std::string name;
-    double ns_per_op;
-    double cycles_per_op;
-    uint64_t ops_per_sec;
-};
-
-std::vector<BenchmarkResult> g_results;
-
-double get_cpu_freq_ghz()
+inline uint64_t rdtsc()
 {
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-    return 3.1;
+#if defined(_MSC_VER)
+    return __rdtsc();
+#elif defined(__x86_64__) || defined(__i386__)
+    uint32_t hi, lo;
+    __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+    return ((uint64_t)hi << 32) | lo;
 #else
-    return 2.5;
+    return 0;
 #endif
 }
 
-std::string get_timestamp()
-{
-    auto now = std::chrono::system_clock::now();
-    auto time_t_now = std::chrono::system_clock::to_time_t(now);
-    std::stringstream ss;
-#ifdef _WIN32
-    struct tm tm_buf;
-    localtime_s(&tm_buf, &time_t_now);
-    ss << std::put_time(&tm_buf, "%Y-%m-%d %H:%M:%S");
-#else
-    ss << std::put_time(std::localtime(&time_t_now), "%Y-%m-%d %H:%M:%S");
-#endif
-    return ss.str();
-}
-
-std::string get_compiler()
-{
-#if defined(__clang__)
-    return "Clang-" + std::to_string(__clang_major__) + "." + std::to_string(__clang_minor__);
-#elif defined(__GNUC__) && !defined(__clang__)
-    return "GCC-" + std::to_string(__GNUC__) + "." + std::to_string(__GNUC_MINOR__);
-#elif defined(__INTEL_LLVM_COMPILER)
-    return "Clang-" + std::to_string(__clang_major__) + "." + std::to_string(__clang_minor__);
-#elif defined(_MSC_VER)
-    return "MSVC-" + std::to_string(_MSC_VER);
-#else
-    return "Unknown";
-#endif
-}
-
-std::string get_optimization()
-{
-#if defined(__OPTIMIZE__)
-#if __OPTIMIZE__ >= 3
-    return "O3";
-#elif __OPTIMIZE__ >= 2
-    return "O2";
-#elif __OPTIMIZE__ >= 1
-    return "O1";
-#else
-    return "O0";
-#endif
-#elif defined(_DEBUG) || defined(DEBUG)
-    return "O0";
-#else
-    return "O1";
-#endif
-}
-
-template <typename Func>
-BenchmarkResult benchmark(const std::string& name, Func func, uint64_t iterations = 10000000)
-{
-    // Warmup
-    for (uint64_t i = 0; i < iterations / 10; ++i) {
-        func();
+#define BENCHMARK(name, type_name, iterations, code)                                                \
+    {                                                                                               \
+        auto start_time = high_resolution_clock::now();                                             \
+        uint64_t start_cycles = rdtsc();                                                            \
+        for (size_t _i = 0; _i < iterations; ++_i)                                                  \
+        {                                                                                           \
+            code;                                                                                   \
+        }                                                                                           \
+        uint64_t end_cycles = rdtsc();                                                              \
+        auto end_time = high_resolution_clock::now();                                               \
+        double ns = duration_cast<nanoseconds>(end_time - start_time).count() / double(iterations); \
+        double cycles = double(end_cycles - start_cycles) / double(iterations);                     \
+        std::cout << "  " << std::setw(20) << std::left << name                                     \
+                  << " [" << std::setw(12) << type_name << "]"                                      \
+                  << std::fixed << std::setprecision(2)                                             \
+                  << std::setw(12) << ns << " ns/op"                                                \
+                  << std::setw(14) << cycles << " cycles/op\n";                                     \
     }
 
-    auto start = std::chrono::high_resolution_clock::now();
-    for (uint64_t i = 0; i < iterations; ++i) {
-        func();
-    }
-    auto end = std::chrono::high_resolution_clock::now();
+constexpr size_t ITERATIONS = 1000000;
 
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    double ns_per_op = static_cast<double>(duration.count()) / iterations;
-    double cycles_per_op = ns_per_op * get_cpu_freq_ghz();
-    uint64_t ops_per_sec = static_cast<uint64_t>(1e9 / ns_per_op);
-
-    BenchmarkResult result{name, ns_per_op, cycles_per_op, ops_per_sec};
-    g_results.push_back(result);
-
-    std::cout << name << ": " << std::fixed << std::setprecision(3) << ns_per_op << " ns, "
-              << std::setprecision(2) << cycles_per_op << " cycles, " << ops_per_sec
-              << " ops/sec\n";
-
-    return result;
-}
-
-// =============================================================================
-// BENCHMARKS DE LIMITS
-// =============================================================================
-
-void benchmark_limits_constants()
+void benchmark_limits_min()
 {
-    std::cout << "\nBenchmarking Limits Constants...\n";
+    std::cout << "\n=== numeric_limits::min() ===\n";
 
-    benchmark("limits::max()",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::max(); });
+    BENCHMARK("min()", "uint128_t", ITERATIONS, {
+        auto result = std::numeric_limits<uint128_t>::min();
+        volatile auto sink = result.low();
+        (void)sink;
+    });
 
-    benchmark("limits::min()",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::min(); });
+    BENCHMARK("min()", "int128_t", ITERATIONS, {
+        auto result = std::numeric_limits<int128_t>::min();
+        volatile auto sink = result.low();
+        (void)sink;
+    });
 
-    benchmark("limits::lowest()",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::lowest(); });
+    BENCHMARK("min()", "uint64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<uint64_t>::min();
+        (void)result;
+    });
+
+    BENCHMARK("min()", "int64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<int64_t>::min();
+        (void)result;
+    });
 }
 
-void benchmark_limits_properties()
+void benchmark_limits_max()
 {
-    std::cout << "\nBenchmarking Limits Properties...\n";
+    std::cout << "\n=== numeric_limits::max() ===\n";
 
-    benchmark("limits::digits",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::digits; });
+    BENCHMARK("max()", "uint128_t", ITERATIONS, {
+        auto result = std::numeric_limits<uint128_t>::max();
+        volatile auto sink = result.low();
+        (void)sink;
+    });
 
-    benchmark("limits::digits10",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::digits10; });
+    BENCHMARK("max()", "int128_t", ITERATIONS, {
+        auto result = std::numeric_limits<int128_t>::max();
+        volatile auto sink = result.low();
+        (void)sink;
+    });
 
-    benchmark("limits::max_digits10",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::max_digits10; });
+    BENCHMARK("max()", "uint64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<uint64_t>::max();
+        (void)result;
+    });
 
-    benchmark("limits::is_signed",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::is_signed; });
-
-    benchmark("limits::is_integer",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::is_integer; });
-
-    benchmark("limits::is_exact",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::is_exact; });
-
-    benchmark("limits::is_bounded",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::is_bounded; });
-
-    benchmark("limits::is_modulo",
-              []() { [[maybe_unused]] auto v = std::numeric_limits<int128_t>::is_modulo; });
+    BENCHMARK("max()", "int64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<int64_t>::max();
+        (void)result;
+    });
 }
 
-// =============================================================================
-// MAIN
-// =============================================================================
+void benchmark_limits_lowest()
+{
+    std::cout << "\n=== numeric_limits::lowest() ===\n";
+
+    BENCHMARK("lowest()", "uint128_t", ITERATIONS, {
+        auto result = std::numeric_limits<uint128_t>::lowest();
+        volatile auto sink = result.low();
+        (void)sink;
+    });
+
+    BENCHMARK("lowest()", "int128_t", ITERATIONS, {
+        auto result = std::numeric_limits<int128_t>::lowest();
+        volatile auto sink = result.low();
+        (void)sink;
+    });
+
+    BENCHMARK("lowest()", "uint64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<uint64_t>::lowest();
+        (void)result;
+    });
+
+    BENCHMARK("lowest()", "int64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<int64_t>::lowest();
+        (void)result;
+    });
+}
+
+void benchmark_limits_digits()
+{
+    std::cout << "\n=== numeric_limits::digits (constexpr) ===\n";
+
+    BENCHMARK("digits", "uint128_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<uint128_t>::digits;
+        (void)result;
+    });
+
+    BENCHMARK("digits", "int128_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<int128_t>::digits;
+        (void)result;
+    });
+
+    BENCHMARK("digits", "uint64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<uint64_t>::digits;
+        (void)result;
+    });
+
+    BENCHMARK("digits", "int64_t", ITERATIONS, {
+        volatile auto result = std::numeric_limits<int64_t>::digits;
+        (void)result;
+    });
+}
+
+void verify_limits()
+{
+    std::cout << "\n=== Verification ===\n";
+
+    std::cout << "uint128_t:\n";
+    std::cout << "  digits    = " << std::numeric_limits<uint128_t>::digits << "\n";
+    std::cout << "  digits10  = " << std::numeric_limits<uint128_t>::digits10 << "\n";
+    std::cout << "  is_signed = " << std::boolalpha << std::numeric_limits<uint128_t>::is_signed << "\n";
+
+    std::cout << "int128_t:\n";
+    std::cout << "  digits    = " << std::numeric_limits<int128_t>::digits << "\n";
+    std::cout << "  digits10  = " << std::numeric_limits<int128_t>::digits10 << "\n";
+    std::cout << "  is_signed = " << std::boolalpha << std::numeric_limits<int128_t>::is_signed << "\n";
+
+    std::cout << "uint64_t:\n";
+    std::cout << "  digits    = " << std::numeric_limits<uint64_t>::digits << "\n";
+    std::cout << "  digits10  = " << std::numeric_limits<uint64_t>::digits10 << "\n";
+    std::cout << "  is_signed = " << std::boolalpha << std::numeric_limits<uint64_t>::is_signed << "\n";
+}
 
 int main()
 {
     std::cout << "========================================\n";
-    std::cout << "int128_t Limits Benchmarks\n";
-    std::cout << "========================================\n";
-    std::cout << "Compiler: " << get_compiler() << "\n";
-    std::cout << "Optimization: " << get_optimization() << "\n";
-    std::cout << "Timestamp: " << get_timestamp() << "\n";
+    std::cout << " int128 Limits Benchmarks\n";
     std::cout << "========================================\n";
 
-    benchmark_limits_constants();
-    benchmark_limits_properties();
+    benchmark_limits_min();
+    benchmark_limits_max();
+    benchmark_limits_lowest();
+    benchmark_limits_digits();
+    verify_limits();
 
     std::cout << "\n========================================\n";
-    std::cout << "BENCHMARK SUMMARY\n";
+    std::cout << " Benchmark complete!\n";
     std::cout << "========================================\n";
-    std::cout << "Compiler: " << get_compiler() << "\n";
-    std::cout << "Optimization: " << get_optimization() << "\n";
-    std::cout << "Total operations benchmarked: " << g_results.size() << "\n";
-    std::cout << "========================================\n";
-
-    std::cout << "\nBenchmarks completed successfully!\n";
 
     return 0;
 }

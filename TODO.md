@@ -773,6 +773,66 @@ static_assert(std::regular<int128_t>);                  // ✅ true
   - 💡 **Nota**: El código usa principalmente operaciones C++ estándar portables.
     Los intrínsecos son optimizaciones opcionales, no requisitos.
 
+### 🔄 Unificación de Benchmarks (int128_*_extracted_benchs.cpp)
+
+**Objetivo:** Crear benchmarks unificados `int128_*` que prueben AMBOS tipos (uint128_t e int128_t)
+
+| Feature | Estado | Notas |
+|---------|--------|-------|
+| `tt` | ✅ Completo | Base template con comparativa Boost |
+| `bits` | ✅ Completo | popcount, clz, ctz, rotl, rotr |
+| `algorithm` | ✅ Completo | STL: iota, accumulate, transform, sort |
+| `cmath` | ✅ Completo | gcd, lcm, sqrt, pow, bezout |
+| `numeric` | ✅ Completo | midpoint, iota, inner_product |
+| `limits` | ✅ Completo | numeric_limits (⚠️ verificación muestra bugs) |
+| `traits` | ✅ Completo | type_traits (⚠️ std:: retorna false) |
+| `concepts` | 📋 Pendiente | C++20 concepts |
+| `format` | 📋 Pendiente | Formateo strings |
+| `iostreams` | 📋 Pendiente | Operadores << y >> |
+| `ranges` | 📋 Pendiente | Integración con std::ranges |
+| `safe` | 📋 Pendiente | Operaciones con detección overflow |
+| `thread_safety` | 📋 Pendiente | Operaciones atómicas |
+| `comparison_boost` | ⚠️ Pendiente | **Añadir tests int128_t signed** |
+| `interop` | ⚠️ Pendiente | **Añadir tests int128_t signed** |
+
+### 🐛 Bugs Conocidos - Especializaciones std
+
+**Descubiertos durante benchmarks (11 enero 2026):**
+
+#### Bug 1: `std::numeric_limits<uint128_t>::digits` retorna 0
+
+- **Esperado:** 128 (para uint128_t) o 127 (para int128_t)
+- **Actual:** 0
+- **Impacto:** Código que depende de `digits` para determinar tamaño de tipo
+- **Archivo afectado:** `include/int128_base_limits.hpp`
+- **Estado:** 📋 Por investigar
+
+#### Bug 2: `std::is_integral_v<uint128_t>` retorna false
+
+- **Esperado:** true
+- **Actual:** false
+- **Impacto:** Conceptos C++20 como `std::integral` fallan
+- **Archivo afectado:** `include/int128_base_traits_specializations.hpp`
+- **Nota:** Las variantes `nstd::` funcionan correctamente
+- **Estado:** 📋 Por investigar (posible orden de includes)
+
+#### Bug 3: `std::is_arithmetic_v<uint128_t>` retorna false
+
+- **Esperado:** true
+- **Actual:** false
+- **Relacionado:** Bug 2 (is_integral es prerequisito de is_arithmetic)
+- **Estado:** 📋 Por investigar
+
+#### Bug 4: to_string / from_string comportamiento anómalo
+
+- **Síntoma:** Comportamiento inesperado en conversiones string
+- **Contexto:** Detectado en benchmarks de format/iostreams
+- **Estado:** 📋 Por documentar y reproducir
+
+**Nota:** Las especializaciones en namespace `nstd::` funcionan correctamente.
+El problema parece ser que las especializaciones `std::` no se cargan antes
+de que el código cliente las use.
+
 ## 📋 Roadmap Futuro
 
 ### ✅ Replicación Sistemática uint128_*.hpp → int128_*.hpp COMPLETADO

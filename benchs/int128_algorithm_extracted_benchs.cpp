@@ -1,6 +1,8 @@
 /**
- * @file int128_algorithm_benchmarks.cpp
- * @brief Benchmarks para funciones de int128_algorithm.hpp
+ * @file int128_algorithm_extracted_benchs.cpp
+ * @brief Benchmarks unificados para algoritmos STL con int128_base_t
+ *
+ * Compara rendimiento de algoritmos STL entre uint128_t, int128_t y uint64_t
  */
 
 #include "int128_base_algorithm.hpp"
@@ -8,12 +10,12 @@
 #include <chrono>
 #include <cstdint>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <numeric>
 #include <random>
 #include <vector>
 
-using namespace nstd;
 #ifdef _MSC_VER
 #include <intrin.h>
 #pragma intrinsic(__rdtsc)
@@ -26,7 +28,6 @@ using namespace nstd;
 using namespace nstd;
 using namespace std::chrono;
 
-// Función para leer ciclos de CPU (rdtsc)
 inline uint64_t rdtsc()
 {
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
@@ -36,411 +37,315 @@ inline uint64_t rdtsc()
     __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
     return ((uint64_t)hi << 32) | lo;
 #else
-    return 0; // Fallback para arquitecturas no soportadas
+    return 0;
 #endif
 }
 
-// Generador de numeros aleatorios
 std::mt19937_64 rng(std::random_device{}());
 
-// Generador de valores int128_t aleatorios
-int128_t random_int128(int64_t min_val = INT64_MIN / 1000, int64_t max_val = INT64_MAX / 1000)
-{
-    int64_t value = std::uniform_int_distribution<int64_t>(min_val, max_val)(rng);
-    return int128_t(value);
-}
+inline uint64_t random_u64() { return rng(); }
+inline uint128_t random_uint128() { return uint128_t(random_u64() % 1000000, random_u64()); }
+inline int128_t random_int128() { return int128_t(static_cast<uint64_t>(static_cast<int64_t>(random_u64()) % 1000000), random_u64()); }
 
-// Macro para benchmark con tiempo y ciclos de CPU
-#define BENCHMARK(name, iterations, code)                                                          \
-    {                                                                                              \
-        auto start_time = high_resolution_clock::now();                                            \
-        uint64_t start_cycles = rdtsc();                                                           \
-        for (size_t i = 0; i < iterations; ++i) {                                                  \
-            code;                                                                                  \
-        }                                                                                          \
-        uint64_t end_cycles = rdtsc();                                                             \
-        auto end_time = high_resolution_clock::now();                                              \
-        auto duration = duration_cast<microseconds>(end_time - start_time).count();                \
-        double avg_us = static_cast<double>(duration) / iterations;                                \
-        uint64_t total_cycles = end_cycles - start_cycles;                                         \
-        double avg_cycles = static_cast<double>(total_cycles) / iterations;                        \
-        std::cout << "  " << name << ": " << avg_us << " us/op, " << avg_cycles << " cycles/op ("  \
-                  << iterations << " ops)\n";                                                      \
+#define BENCHMARK(name, type_name, iterations, code)                                                \
+    {                                                                                               \
+        auto start_time = high_resolution_clock::now();                                             \
+        uint64_t start_cycles = rdtsc();                                                            \
+        for (size_t _i = 0; _i < iterations; ++_i)                                                  \
+        {                                                                                           \
+            code;                                                                                   \
+        }                                                                                           \
+        uint64_t end_cycles = rdtsc();                                                              \
+        auto end_time = high_resolution_clock::now();                                               \
+        double ns = duration_cast<nanoseconds>(end_time - start_time).count() / double(iterations); \
+        double cycles = double(end_cycles - start_cycles) / double(iterations);                     \
+        std::cout << "  " << std::setw(25) << std::left << name                                     \
+                  << " [" << std::setw(12) << type_name << "]"                                      \
+                  << std::fixed << std::setprecision(2)                                             \
+                  << std::setw(12) << ns << " ns/op"                                                \
+                  << std::setw(14) << cycles << " cycles/op\n";                                     \
     }
 
-// ===============================================================================
-// BENCHMARKS DE BUSQUEDA
-// ===============================================================================
+constexpr size_t VECTOR_SIZE = 10000;
+constexpr size_t ITERATIONS = 500;
 
 void benchmark_binary_search()
 {
-    std::cout << "\n[Benchmark] binary_search_int128\n";
+    std::cout << "\n=== BINARY SEARCH ===\n";
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 1000;
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_u[i] = uint128_t(i * 100);
+    uint128_t target_u{500000};
 
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (int i = 0; i < static_cast<int>(SIZE); ++i) {
-        vec.push_back(int128_t(i * 100 - 50000));
-    }
+    BENCHMARK("std::binary_search", "uint128_t", ITERATIONS, {
+        volatile bool found = std::binary_search(vec_u.begin(), vec_u.end(), target_u);
+        (void)found;
+    });
 
-    int128_t target = int128_t(25000);
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_s[i] = int128_t(static_cast<int64_t>(i) * 100 - 500000);
+    std::sort(vec_s.begin(), vec_s.end());
+    int128_t target_s{0};
 
-    BENCHMARK("binary_search (sorted)", ITERATIONS, {
-        volatile bool found = binary_search_int128(vec.begin(), vec.end(), target);
+    BENCHMARK("std::binary_search", "int128_t", ITERATIONS, {
+        volatile bool found = std::binary_search(vec_s.begin(), vec_s.end(), target_s);
+        (void)found;
+    });
+
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_64[i] = i * 100;
+    uint64_t target_64{500000};
+
+    BENCHMARK("std::binary_search", "uint64_t", ITERATIONS, {
+        volatile bool found = std::binary_search(vec_64.begin(), vec_64.end(), target_64);
         (void)found;
     });
 }
 
 void benchmark_find_if()
 {
-    std::cout << "\n[Benchmark] find_if_int128\n";
+    std::cout << "\n=== FIND_IF ===\n";
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 1000;
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_u[i] = random_uint128();
+    auto pred_u = [](const uint128_t &x)
+    { return x > uint128_t(500000); };
 
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (size_t i = 0; i < SIZE; ++i) {
-        vec.push_back(random_int128());
-    }
+    BENCHMARK("std::find_if", "uint128_t", ITERATIONS, {
+        volatile auto it = std::find_if(vec_u.begin(), vec_u.end(), pred_u);
+        (void)it;
+    });
 
-    auto predicate = [](const int128_t& x) { return x > int128_t(50000); };
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_s[i] = random_int128();
+    auto pred_s = [](const int128_t &x)
+    { return x.is_negative(); };
 
-    BENCHMARK("find_if (predicate)", ITERATIONS, {
-        volatile auto it = find_if_int128(vec.begin(), vec.end(), predicate);
+    BENCHMARK("std::find_if", "int128_t", ITERATIONS, {
+        volatile auto it = std::find_if(vec_s.begin(), vec_s.end(), pred_s);
+        (void)it;
+    });
+
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_64[i] = random_u64();
+    auto pred_64 = [](uint64_t x)
+    { return x > 500000; };
+
+    BENCHMARK("std::find_if", "uint64_t", ITERATIONS, {
+        volatile auto it = std::find_if(vec_64.begin(), vec_64.end(), pred_64);
         (void)it;
     });
 }
 
-// ===============================================================================
-// BENCHMARKS DE TRANSFORMACION
-// ===============================================================================
-
 void benchmark_transform()
 {
-    std::cout << "\n[Benchmark] transform_int128\n";
+    std::cout << "\n=== TRANSFORM ===\n";
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 500;
+    std::vector<uint128_t> input_u(VECTOR_SIZE), output_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        input_u[i] = random_uint128();
+    auto doubler_u = [](const uint128_t &x)
+    { return x * uint128_t{2}; };
 
-    std::vector<int128_t> input;
-    std::vector<int128_t> output(SIZE);
-    input.reserve(SIZE);
+    BENCHMARK("std::transform (x*2)", "uint128_t", ITERATIONS, {
+        std::transform(input_u.begin(), input_u.end(), output_u.begin(), doubler_u);
+    });
 
-    for (size_t i = 0; i < SIZE; ++i) {
-        input.push_back(random_int128());
-    }
+    std::vector<int128_t> input_s(VECTOR_SIZE), output_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        input_s[i] = random_int128();
+    auto doubler_s = [](const int128_t &x)
+    { return x * int128_t{2}; };
 
-    auto doubler = [](const int128_t& x) { return x * int128_t(2); };
+    BENCHMARK("std::transform (x*2)", "int128_t", ITERATIONS, {
+        std::transform(input_s.begin(), input_s.end(), output_s.begin(), doubler_s);
+    });
 
-    BENCHMARK("transform (double)", ITERATIONS,
-              { transform_int128(input.begin(), input.end(), output.begin(), doubler); });
-}
+    std::vector<uint64_t> input_64(VECTOR_SIZE), output_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        input_64[i] = random_u64();
+    auto doubler_64 = [](uint64_t x)
+    { return x * 2; };
 
-void benchmark_for_each()
-{
-    std::cout << "\n[Benchmark] for_each_int128\n";
-
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 1000;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (size_t i = 0; i < SIZE; ++i) {
-        vec.push_back(random_int128());
-    }
-
-    int128_t sum = 0;
-    auto accumulator = [&sum](const int128_t& x) { sum += x; };
-
-    BENCHMARK("for_each (accumulate)", ITERATIONS, {
-        sum = 0;
-        for_each_int128(vec.begin(), vec.end(), accumulator);
+    BENCHMARK("std::transform (x*2)", "uint64_t", ITERATIONS, {
+        std::transform(input_64.begin(), input_64.end(), output_64.begin(), doubler_64);
     });
 }
-
-// ===============================================================================
-// BENCHMARKS DE REDUCCION
-// ===============================================================================
 
 void benchmark_accumulate()
 {
-    std::cout << "\n[Benchmark] accumulate_int128\n";
+    std::cout << "\n=== ACCUMULATE ===\n";
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 500;
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_u[i] = uint128_t(i + 1);
 
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (int i = 0; i < static_cast<int>(SIZE); ++i) {
-        vec.push_back(int128_t(i - 5000));
-    }
-
-    BENCHMARK("accumulate (sum)", ITERATIONS, {
-        volatile auto result =
-            accumulate_int128(vec.begin(), vec.end(), int128_t(0), std::plus<int128_t>());
-        (void)result;
+    BENCHMARK("std::accumulate (sum)", "uint128_t", ITERATIONS, {
+        auto result = std::accumulate(vec_u.begin(), vec_u.end(), uint128_t{0});
+        volatile auto sink = result.low();
+        (void)sink;
     });
-}
 
-void benchmark_sum()
-{
-    std::cout << "\n[Benchmark] sum_int128\n";
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_s[i] = int128_t(static_cast<int64_t>(i) - 5000);
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 500;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (int i = 0; i < static_cast<int>(SIZE); ++i) {
-        vec.push_back(int128_t(i - 5000));
-    }
-
-    BENCHMARK("sum", ITERATIONS, {
-        volatile auto result = sum_int128(vec.begin(), vec.end());
-        (void)result;
+    BENCHMARK("std::accumulate (sum)", "int128_t", ITERATIONS, {
+        auto result = std::accumulate(vec_s.begin(), vec_s.end(), int128_t{0});
+        volatile auto sink = result.low();
+        (void)sink;
     });
-}
 
-void benchmark_product()
-{
-    std::cout << "\n[Benchmark] product_int128\n";
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_64[i] = i + 1;
 
-    const size_t SIZE = 20;
-    const size_t ITERATIONS = 1000;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (int i = 0; i < static_cast<int>(SIZE); ++i) {
-        vec.push_back(int128_t(i - 10));
-    }
-
-    BENCHMARK("product", ITERATIONS, {
-        volatile auto result = product_int128(vec.begin(), vec.end());
+    BENCHMARK("std::accumulate (sum)", "uint64_t", ITERATIONS, {
+        volatile auto result = std::accumulate(vec_64.begin(), vec_64.end(), uint64_t{0});
         (void)result;
-    });
-}
-
-// ===============================================================================
-// BENCHMARKS DE PARTICION Y ORDENAMIENTO
-// ===============================================================================
-
-void benchmark_partition()
-{
-    std::cout << "\n[Benchmark] partition_int128\n";
-
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 100;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-
-    auto predicate = [](const int128_t& x) { return x < int128_t(0); };
-
-    BENCHMARK("partition (negative/positive)", ITERATIONS, {
-        vec.clear();
-        for (size_t i = 0; i < SIZE; ++i) {
-            vec.push_back(random_int128());
-        }
-        partition_int128(vec.begin(), vec.end(), predicate);
     });
 }
 
 void benchmark_sort()
 {
-    std::cout << "\n[Benchmark] sort_int128\n";
+    std::cout << "\n=== SORT ===\n";
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 50;
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_u[i] = random_uint128();
 
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-
-    BENCHMARK("sort (ascending)", ITERATIONS, {
-        vec.clear();
-        for (size_t i = 0; i < SIZE; ++i) {
-            vec.push_back(random_int128());
-        }
-        sort_int128(vec.begin(), vec.end());
+    BENCHMARK("std::sort", "uint128_t", ITERATIONS / 10, {
+        auto copy = vec_u;
+        std::sort(copy.begin(), copy.end());
     });
 
-    BENCHMARK("sort (descending)", ITERATIONS, {
-        vec.clear();
-        for (size_t i = 0; i < SIZE; ++i) {
-            vec.push_back(random_int128());
-        }
-        sort_int128(vec.begin(), vec.end(), std::greater<int128_t>());
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_s[i] = random_int128();
+
+    BENCHMARK("std::sort", "int128_t", ITERATIONS / 10, {
+        auto copy = vec_s;
+        std::sort(copy.begin(), copy.end());
     });
-}
 
-// ===============================================================================
-// BENCHMARKS DE GCD/LCM
-// ===============================================================================
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_64[i] = random_u64();
 
-void benchmark_gcd_range()
-{
-    std::cout << "\n[Benchmark] gcd_range\n";
-
-    const size_t SIZE = 100;
-    const size_t ITERATIONS = 1000;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (int i = 0; i < static_cast<int>(SIZE); ++i) {
-        vec.push_back(int128_t((i + 1) * 123456));
-    }
-
-    BENCHMARK("gcd_range", ITERATIONS, {
-        volatile auto result = gcd_range(vec.begin(), vec.end());
-        (void)result;
+    BENCHMARK("std::sort", "uint64_t", ITERATIONS / 10, {
+        auto copy = vec_64;
+        std::sort(copy.begin(), copy.end());
     });
 }
 
-void benchmark_lcm_range()
+void benchmark_min_max()
 {
-    std::cout << "\n[Benchmark] lcm_range\n";
+    std::cout << "\n=== MIN/MAX ===\n";
 
-    const size_t SIZE = 20;
-    const size_t ITERATIONS = 500;
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_u[i] = random_uint128();
 
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (int i = 0; i < static_cast<int>(SIZE); ++i) {
-        vec.push_back(int128_t(i + 2));
-    }
+    BENCHMARK("std::min_element", "uint128_t", ITERATIONS, {
+        volatile auto it = std::min_element(vec_u.begin(), vec_u.end());
+        (void)it;
+    });
 
-    BENCHMARK("lcm_range", ITERATIONS, {
-        volatile auto result = lcm_range(vec.begin(), vec.end());
-        (void)result;
+    BENCHMARK("std::max_element", "uint128_t", ITERATIONS, {
+        volatile auto it = std::max_element(vec_u.begin(), vec_u.end());
+        (void)it;
+    });
+
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_s[i] = random_int128();
+
+    BENCHMARK("std::min_element", "int128_t", ITERATIONS, {
+        volatile auto it = std::min_element(vec_s.begin(), vec_s.end());
+        (void)it;
+    });
+
+    BENCHMARK("std::max_element", "int128_t", ITERATIONS, {
+        volatile auto it = std::max_element(vec_s.begin(), vec_s.end());
+        (void)it;
+    });
+
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_64[i] = random_u64();
+
+    BENCHMARK("std::min_element", "uint64_t", ITERATIONS, {
+        volatile auto it = std::min_element(vec_64.begin(), vec_64.end());
+        (void)it;
+    });
+
+    BENCHMARK("std::max_element", "uint64_t", ITERATIONS, {
+        volatile auto it = std::max_element(vec_64.begin(), vec_64.end());
+        (void)it;
     });
 }
 
-// ===============================================================================
-// BENCHMARKS DE GENERACION DE SECUENCIAS
-// ===============================================================================
-
-void benchmark_generate_arithmetic()
+void benchmark_count_if()
 {
-    std::cout << "\n[Benchmark] generate_arithmetic_sequence\n";
+    std::cout << "\n=== COUNT_IF ===\n";
 
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 500;
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_u[i] = random_uint128();
+    auto pred_u = [](const uint128_t &x)
+    { return (x.low() & 1) == 0; };
 
-    std::vector<int128_t> seq(SIZE);
+    BENCHMARK("std::count_if (even)", "uint128_t", ITERATIONS, {
+        volatile auto count = std::count_if(vec_u.begin(), vec_u.end(), pred_u);
+        (void)count;
+    });
 
-    BENCHMARK("generate_arithmetic", ITERATIONS,
-              { generate_arithmetic_sequence(seq.begin(), SIZE, int128_t(-5000), int128_t(5)); });
-}
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_s[i] = random_int128();
+    auto pred_s = [](const int128_t &x)
+    { return x.is_negative(); };
 
-void benchmark_generate_geometric()
-{
-    std::cout << "\n[Benchmark] generate_geometric_sequence\n";
+    BENCHMARK("std::count_if (neg)", "int128_t", ITERATIONS, {
+        volatile auto count = std::count_if(vec_s.begin(), vec_s.end(), pred_s);
+        (void)count;
+    });
 
-    const size_t SIZE = 30;
-    const size_t ITERATIONS = 1000;
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+        vec_64[i] = random_u64();
+    auto pred_64 = [](uint64_t x)
+    { return (x & 1) == 0; };
 
-    std::vector<int128_t> seq(SIZE);
-
-    BENCHMARK("generate_geometric", ITERATIONS,
-              { generate_geometric_sequence(seq.begin(), SIZE, int128_t(2), int128_t(2)); });
-}
-
-// ===============================================================================
-// BENCHMARKS ESPECIFICOS DE SIGNADOS
-// ===============================================================================
-
-void benchmark_partition_by_sign()
-{
-    std::cout << "\n[Benchmark] partition_by_sign\n";
-
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 100;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-
-    BENCHMARK("partition_by_sign", ITERATIONS, {
-        vec.clear();
-        for (size_t i = 0; i < SIZE; ++i) {
-            vec.push_back(random_int128());
-        }
-        partition_by_sign(vec.begin(), vec.end());
+    BENCHMARK("std::count_if (even)", "uint64_t", ITERATIONS, {
+        volatile auto count = std::count_if(vec_64.begin(), vec_64.end(), pred_64);
+        (void)count;
     });
 }
-
-void benchmark_max_abs_value()
-{
-    std::cout << "\n[Benchmark] max_abs_value\n";
-
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 1000;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (size_t i = 0; i < SIZE; ++i) {
-        vec.push_back(random_int128());
-    }
-
-    BENCHMARK("max_abs_value", ITERATIONS, {
-        volatile auto result = max_abs_value(vec.begin(), vec.end());
-        (void)result;
-    });
-}
-
-// ===============================================================================
-// BENCHMARKS DE ESTADISTICAS
-// ===============================================================================
-
-void benchmark_calculate_stats()
-{
-    std::cout << "\n[Benchmark] calculate_stats\n";
-
-    const size_t SIZE = 10000;
-    const size_t ITERATIONS = 500;
-
-    std::vector<int128_t> vec;
-    vec.reserve(SIZE);
-    for (size_t i = 0; i < SIZE; ++i) {
-        vec.push_back(random_int128());
-    }
-
-    BENCHMARK("calculate_stats", ITERATIONS, {
-        volatile auto stats = calculate_stats(vec.begin(), vec.end());
-        (void)stats;
-    });
-}
-
-// ===============================================================================
-// MAIN
-// ===============================================================================
 
 int main()
 {
     std::cout << "========================================\n";
-    std::cout << "  int128_algorithm.hpp Benchmarks\n";
+    std::cout << " int128 Algorithm Benchmarks\n";
     std::cout << "========================================\n";
+    std::cout << "Vector size: " << VECTOR_SIZE << ", Iterations: " << ITERATIONS << "\n";
 
     benchmark_binary_search();
     benchmark_find_if();
     benchmark_transform();
-    benchmark_for_each();
     benchmark_accumulate();
-    benchmark_sum();
-    benchmark_product();
-    benchmark_partition();
     benchmark_sort();
-    benchmark_gcd_range();
-    benchmark_lcm_range();
-    benchmark_generate_arithmetic();
-    benchmark_generate_geometric();
-    benchmark_partition_by_sign();
-    benchmark_max_abs_value();
-    benchmark_calculate_stats();
+    benchmark_min_max();
+    benchmark_count_if();
 
     std::cout << "\n========================================\n";
-    std::cout << "  [OK] Benchmarks completados\n";
+    std::cout << " Benchmark complete!\n";
     std::cout << "========================================\n";
 
     return 0;

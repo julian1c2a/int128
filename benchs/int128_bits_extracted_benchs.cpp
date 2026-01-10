@@ -1,11 +1,18 @@
 /**
- * @file int128_bits_benchmarks.cpp
- * @brief Benchmarks para funciones de int128_bits.hpp
+ * @file int128_bits_extracted_benchs.cpp
+ * @brief Benchmarks unificados para operaciones de bits en int128_base_t
+ *
+ * Testea operaciones de bits (<bit> style) para uint128_t e int128_t:
+ * - popcount, countl_zero, countr_zero, countl_one, countr_one
+ * - bit_width, has_single_bit, bit_floor, bit_ceil
+ * - rotl, rotr (rotaciones)
+ * - byteswap
  */
 
 #include "int128_base_bits.hpp"
 #include <chrono>
 #include <cstdint>
+#include <iomanip>
 #include <iostream>
 #include <random>
 
@@ -16,6 +23,10 @@
 
 #ifdef __INTEL_COMPILER
 #include <ia32intrin.h>
+#endif
+
+#ifdef __SIZEOF_INT128__
+#define HAS_NATIVE_INT128 1
 #endif
 
 using namespace nstd;
@@ -31,343 +42,356 @@ inline uint64_t rdtsc()
     __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
     return ((uint64_t)hi << 32) | lo;
 #else
-    return 0; // Fallback para arquitecturas no soportadas
+    return 0;
 #endif
 }
 
-// Generador de numeros aleatorios
+// Generadores aleatorios
 std::mt19937_64 rng(std::random_device{}());
 
-// Generador de valores int128_t aleatorios
-int128_t random_int128(int64_t max_high = INT64_MAX, uint64_t max_low = UINT64_MAX)
+inline uint64_t random_u64()
 {
-    int64_t high = std::uniform_int_distribution<int64_t>(INT64_MIN, max_high)(rng);
-    uint64_t low = std::uniform_int_distribution<uint64_t>(0, max_low)(rng);
-    return int128_t(high, low);
+    return rng();
 }
 
-// Macro para benchmark con tiempo y ciclos de CPU
-#define BENCHMARK(name, iterations, code)                                                          \
-    {                                                                                              \
-        auto start_time = high_resolution_clock::now();                                            \
-        uint64_t start_cycles = rdtsc();                                                           \
-        for (size_t i = 0; i < iterations; ++i) {                                                  \
-            code;                                                                                  \
-        }                                                                                          \
-        uint64_t end_cycles = rdtsc();                                                             \
-        auto end_time = high_resolution_clock::now();                                              \
-        auto duration = duration_cast<microseconds>(end_time - start_time).count();                \
-        double avg_us = static_cast<double>(duration) / iterations;                                \
-        uint64_t total_cycles = end_cycles - start_cycles;                                         \
-        double avg_cycles = static_cast<double>(total_cycles) / iterations;                        \
-        std::cout << "  " << name << ": " << avg_us << " us/op, " << avg_cycles << " cycles/op ("  \
-                  << iterations << " ops)\n";                                                      \
+inline uint128_t random_uint128()
+{
+    return uint128_t(random_u64(), random_u64());
+}
+
+inline int128_t random_int128()
+{
+    return int128_t(static_cast<uint64_t>(static_cast<int64_t>(random_u64())), random_u64());
+}
+
+// Macro BENCHMARK
+#define BENCHMARK(name, type_name, iterations, code)                                                \
+    {                                                                                               \
+        auto start_time = high_resolution_clock::now();                                             \
+        uint64_t start_cycles = rdtsc();                                                            \
+        for (size_t _i = 0; _i < iterations; ++_i)                                                  \
+        {                                                                                           \
+            code;                                                                                   \
+        }                                                                                           \
+        uint64_t end_cycles = rdtsc();                                                              \
+        auto end_time = high_resolution_clock::now();                                               \
+        double ns = duration_cast<nanoseconds>(end_time - start_time).count() / double(iterations); \
+        double cycles = double(end_cycles - start_cycles) / double(iterations);                     \
+        std::cout << "  " << std::setw(20) << std::left << name                                     \
+                  << " [" << std::setw(12) << type_name << "]"                                      \
+                  << std::fixed << std::setprecision(2)                                             \
+                  << std::setw(10) << ns << " ns/op"                                                \
+                  << std::setw(12) << cycles << " cycles/op\n";                                     \
     }
 
-// ===============================================================================
-// BENCHMARKS std NAMESPACE
-// ===============================================================================
+constexpr size_t ITERATIONS = 1000000;
 
+// ============= Popcount Benchmarks =============
 void benchmark_popcount()
 {
-    std::cout << "\n[Benchmark] std::popcount\n";
+    std::cout << "\n=== POPCOUNT ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
-
-    BENCHMARK("popcount", ITERATIONS, {
-        volatile int result = nstd::popcount(value);
-        (void)result;
+    BENCHMARK("popcount", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile int r = nstd::popcount(x);
+        (void)r;
     });
+
+    BENCHMARK("popcount", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile int r = nstd::popcount(x);
+        (void)r;
+    });
+
+    BENCHMARK("popcount", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile int r = std::popcount(x);
+        (void)r;
+    });
+
+#ifdef HAS_NATIVE_INT128
+    BENCHMARK("popcount", "__uint128_t", ITERATIONS, {
+        __uint128_t x = ((__uint128_t)random_u64() << 64) | random_u64();
+        volatile int r = __builtin_popcountll((uint64_t)x) + __builtin_popcountll((uint64_t)(x >> 64));
+        (void)r;
+    });
+#endif
 }
 
+// ============= Count Leading Zeros =============
 void benchmark_countl_zero()
 {
-    std::cout << "\n[Benchmark] std::countl_zero\n";
+    std::cout << "\n=== COUNTL_ZERO ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
-
-    BENCHMARK("countl_zero", ITERATIONS, {
-        volatile int result = nstd::countl_zero(value);
-        (void)result;
+    BENCHMARK("countl_zero", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile int r = nstd::countl_zero(x);
+        (void)r;
     });
+
+    BENCHMARK("countl_zero", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile int r = nstd::countl_zero(x);
+        (void)r;
+    });
+
+    BENCHMARK("countl_zero", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile int r = std::countl_zero(x);
+        (void)r;
+    });
+
+#ifdef HAS_NATIVE_INT128
+    BENCHMARK("countl_zero", "__uint128_t", ITERATIONS, {
+        __uint128_t x = ((__uint128_t)random_u64() << 64) | random_u64();
+        uint64_t hi = (uint64_t)(x >> 64);
+        volatile int r = (hi == 0) ? 64 + __builtin_clzll((uint64_t)x) : __builtin_clzll(hi);
+        (void)r;
+    });
+#endif
 }
 
+// ============= Count Trailing Zeros =============
 void benchmark_countr_zero()
 {
-    std::cout << "\n[Benchmark] std::countr_zero\n";
+    std::cout << "\n=== COUNTR_ZERO ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
-
-    BENCHMARK("countr_zero", ITERATIONS, {
-        volatile int result = nstd::countr_zero(value);
-        (void)result;
+    BENCHMARK("countr_zero", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile int r = nstd::countr_zero(x);
+        (void)r;
     });
+
+    BENCHMARK("countr_zero", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile int r = nstd::countr_zero(x);
+        (void)r;
+    });
+
+    BENCHMARK("countr_zero", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile int r = std::countr_zero(x);
+        (void)r;
+    });
+
+#ifdef HAS_NATIVE_INT128
+    BENCHMARK("countr_zero", "__uint128_t", ITERATIONS, {
+        __uint128_t x = ((__uint128_t)random_u64() << 64) | random_u64();
+        uint64_t lo = (uint64_t)x;
+        volatile int r = (lo == 0) ? 64 + __builtin_ctzll((uint64_t)(x >> 64)) : __builtin_ctzll(lo);
+        (void)r;
+    });
+#endif
 }
 
+// ============= Count Leading Ones =============
 void benchmark_countl_one()
 {
-    std::cout << "\n[Benchmark] std::countl_one\n";
+    std::cout << "\n=== COUNTL_ONE ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
+    BENCHMARK("countl_one", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile int r = nstd::countl_one(x);
+        (void)r;
+    });
 
-    BENCHMARK("countl_one", ITERATIONS, {
-        volatile int result = nstd::countl_one(value);
-        (void)result;
+    BENCHMARK("countl_one", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile int r = nstd::countl_one(x);
+        (void)r;
     });
 }
 
+// ============= Count Trailing Ones =============
 void benchmark_countr_one()
 {
-    std::cout << "\n[Benchmark] std::countr_one\n";
+    std::cout << "\n=== COUNTR_ONE ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
+    BENCHMARK("countr_one", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile int r = nstd::countr_one(x);
+        (void)r;
+    });
 
-    BENCHMARK("countr_one", ITERATIONS, {
-        volatile int result = nstd::countr_one(value);
-        (void)result;
+    BENCHMARK("countr_one", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile int r = nstd::countr_one(x);
+        (void)r;
     });
 }
 
+// ============= Bit Width =============
 void benchmark_bit_width()
 {
-    std::cout << "\n[Benchmark] std::bit_width\n";
+    std::cout << "\n=== BIT_WIDTH ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
+    BENCHMARK("bit_width", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile int r = nstd::bit_width(x);
+        (void)r;
+    });
 
-    BENCHMARK("bit_width", ITERATIONS, {
-        volatile int result = nstd::bit_width(value);
-        (void)result;
+    BENCHMARK("bit_width", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile int r = nstd::bit_width(x);
+        (void)r;
+    });
+
+    BENCHMARK("bit_width", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile int r = std::bit_width(x);
+        (void)r;
     });
 }
 
+// ============= Has Single Bit =============
 void benchmark_has_single_bit()
 {
-    std::cout << "\n[Benchmark] std::has_single_bit\n";
+    std::cout << "\n=== HAS_SINGLE_BIT ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
+    BENCHMARK("has_single_bit", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        volatile bool r = nstd::has_single_bit(x);
+        (void)r;
+    });
 
-    BENCHMARK("has_single_bit", ITERATIONS, {
-        volatile bool result = nstd::has_single_bit(value);
-        (void)result;
+    BENCHMARK("has_single_bit", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        volatile bool r = nstd::has_single_bit(x);
+        (void)r;
+    });
+
+    BENCHMARK("has_single_bit", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile bool r = std::has_single_bit(x);
+        (void)r;
     });
 }
 
+// ============= Bit Floor =============
 void benchmark_bit_floor()
 {
-    std::cout << "\n[Benchmark] std::bit_floor\n";
+    std::cout << "\n=== BIT_FLOOR ===\n";
 
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
+    BENCHMARK("bit_floor", "uint128_t", ITERATIONS / 2, {
+        uint128_t x = random_uint128();
+        uint128_t r = nstd::bit_floor(x);
+        volatile auto sink = r.low();
+        (void)sink;
+    });
 
-    BENCHMARK("bit_floor", ITERATIONS, {
-        volatile int128_t result = nstd::bit_floor(value);
-        (void)result;
+    BENCHMARK("bit_floor", "uint64_t", ITERATIONS / 2, {
+        uint64_t x = random_u64();
+        volatile uint64_t r = std::bit_floor(x);
+        (void)r;
     });
 }
 
+// ============= Bit Ceil =============
 void benchmark_bit_ceil()
 {
-    std::cout << "\n[Benchmark] std::bit_ceil\n";
+    std::cout << "\n=== BIT_CEIL ===\n";
 
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
+    BENCHMARK("bit_ceil", "uint128_t", ITERATIONS / 2, {
+        uint128_t x = random_uint128();
+        uint128_t r = nstd::bit_ceil(x);
+        volatile auto sink = r.low();
+        (void)sink;
+    });
 
-    BENCHMARK("bit_ceil", ITERATIONS, {
-        volatile int128_t result = nstd::bit_ceil(value);
-        (void)result;
+    BENCHMARK("bit_ceil", "uint64_t", ITERATIONS / 2, {
+        uint64_t x = random_u64();
+        volatile uint64_t r = std::bit_ceil(x);
+        (void)r;
     });
 }
 
-// ===============================================================================
-// BENCHMARKS int128_bits NAMESPACE
-// ===============================================================================
-
-void benchmark_rotl()
+// ============= Rotations =============
+void benchmark_rotations()
 {
-    std::cout << "\n[Benchmark] rotl\n";
+    std::cout << "\n=== ROTATIONS ===\n";
 
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-    int shift = std::uniform_int_distribution<int>(1, 127)(rng);
+    BENCHMARK("rotl", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        int shift = rng() % 128;
+        uint128_t r = nstd::rotl(x, shift);
+        volatile auto sink = r.low();
+        (void)sink;
+    });
 
-    BENCHMARK("rotl", ITERATIONS, {
-        volatile int128_t result = rotl(value, shift);
-        (void)result;
+    BENCHMARK("rotl", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        int shift = rng() % 64;
+        volatile uint64_t r = std::rotl(x, shift);
+        (void)r;
+    });
+
+    BENCHMARK("rotr", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        int shift = rng() % 128;
+        uint128_t r = nstd::rotr(x, shift);
+        volatile auto sink = r.low();
+        (void)sink;
+    });
+
+    BENCHMARK("rotr", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        int shift = rng() % 64;
+        volatile uint64_t r = std::rotr(x, shift);
+        (void)r;
     });
 }
 
-void benchmark_rotr()
-{
-    std::cout << "\n[Benchmark] rotr\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-    int shift = std::uniform_int_distribution<int>(1, 127)(rng);
-
-    BENCHMARK("rotr", ITERATIONS, {
-        volatile int128_t result = rotr(value, shift);
-        (void)result;
-    });
-}
-
-void benchmark_reverse_bits()
-{
-    std::cout << "\n[Benchmark] reverse_bits\n";
-
-    const size_t ITERATIONS = 100000;
-    int128_t value = random_int128();
-
-    BENCHMARK("reverse_bits", ITERATIONS, {
-        volatile int128_t result = reverse_bits(value);
-        (void)result;
-    });
-}
-
+// ============= Byteswap =============
 void benchmark_byteswap()
 {
-    std::cout << "\n[Benchmark] byteswap\n";
+    std::cout << "\n=== BYTESWAP ===\n";
 
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
-
-    BENCHMARK("byteswap", ITERATIONS, {
-        volatile int128_t result = byteswap(value);
-        (void)result;
+    BENCHMARK("byteswap", "uint128_t", ITERATIONS, {
+        uint128_t x = random_uint128();
+        uint128_t r = nstd::byteswap(x);
+        volatile auto sink = r.low();
+        (void)sink;
     });
+
+    BENCHMARK("byteswap", "int128_t", ITERATIONS, {
+        int128_t x = random_int128();
+        int128_t r = nstd::byteswap(x);
+        volatile auto sink = r.low();
+        (void)sink;
+    });
+
+#if __cplusplus > 202002L
+    // std::byteswap es C++23
+    BENCHMARK("byteswap", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile uint64_t r = std::byteswap(x);
+        (void)r;
+    });
+#else
+    // Fallback usando __builtin_bswap64
+    BENCHMARK("byteswap", "uint64_t", ITERATIONS, {
+        uint64_t x = random_u64();
+        volatile uint64_t r = __builtin_bswap64(x);
+        (void)r;
+    });
+#endif
 }
 
-void benchmark_extract_bits()
-{
-    std::cout << "\n[Benchmark] extract_bits\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-    int offset = std::uniform_int_distribution<int>(0, 100)(rng);
-    int width = std::uniform_int_distribution<int>(1, 28)(rng);
-
-    BENCHMARK("extract_bits", ITERATIONS, {
-        volatile int128_t result = extract_bits(value, offset, width);
-        (void)result;
-    });
-}
-
-void benchmark_insert_bits()
-{
-    std::cout << "\n[Benchmark] insert_bits\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t dest = random_int128();
-    int128_t src = random_int128();
-    int offset = std::uniform_int_distribution<int>(0, 100)(rng);
-    int width = std::uniform_int_distribution<int>(1, 28)(rng);
-
-    BENCHMARK("insert_bits", ITERATIONS, {
-        volatile int128_t result = insert_bits(dest, src, offset, width);
-        (void)result;
-    });
-}
-
-void benchmark_test_bit()
-{
-    std::cout << "\n[Benchmark] test_bit\n";
-
-    const size_t ITERATIONS = 1000000;
-    int128_t value = random_int128();
-    int pos = std::uniform_int_distribution<int>(0, 127)(rng);
-
-    BENCHMARK("test_bit", ITERATIONS, {
-        volatile bool result = test_bit(value, pos);
-        (void)result;
-    });
-}
-
-void benchmark_set_bit()
-{
-    std::cout << "\n[Benchmark] set_bit\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-    int pos = std::uniform_int_distribution<int>(0, 127)(rng);
-
-    BENCHMARK("set_bit", ITERATIONS, {
-        volatile int128_t result = set_bit(value, pos);
-        (void)result;
-    });
-}
-
-void benchmark_clear_bit()
-{
-    std::cout << "\n[Benchmark] clear_bit\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-    int pos = std::uniform_int_distribution<int>(0, 127)(rng);
-
-    BENCHMARK("clear_bit", ITERATIONS, {
-        volatile int128_t result = clear_bit(value, pos);
-        (void)result;
-    });
-}
-
-void benchmark_flip_bit()
-{
-    std::cout << "\n[Benchmark] flip_bit\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-    int pos = std::uniform_int_distribution<int>(0, 127)(rng);
-
-    BENCHMARK("flip_bit", ITERATIONS, {
-        volatile int128_t result = flip_bit(value, pos);
-        (void)result;
-    });
-}
-
-void benchmark_find_first_set()
-{
-    std::cout << "\n[Benchmark] find_first_set\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-
-    BENCHMARK("find_first_set", ITERATIONS, {
-        volatile int result = find_first_set(value);
-        (void)result;
-    });
-}
-
-void benchmark_find_last_set()
-{
-    std::cout << "\n[Benchmark] find_last_set\n";
-
-    const size_t ITERATIONS = 500000;
-    int128_t value = random_int128();
-
-    BENCHMARK("find_last_set", ITERATIONS, {
-        volatile int result = find_last_set(value);
-        (void)result;
-    });
-}
-
-// ===============================================================================
-// MAIN
-// ===============================================================================
-
+// ============= Main =============
 int main()
 {
     std::cout << "========================================\n";
-    std::cout << "  int128_bits.hpp Benchmarks\n";
+    std::cout << " int128 Bit Operations Benchmarks\n";
     std::cout << "========================================\n";
+    std::cout << "Iterations: " << ITERATIONS << "\n";
 
-    // Benchmarks std namespace
-    std::cout << "\n--- std namespace ---\n";
+#ifdef HAS_NATIVE_INT128
+    std::cout << "Native __int128: AVAILABLE\n";
+#else
+    std::cout << "Native __int128: NOT available\n";
+#endif
+
     benchmark_popcount();
     benchmark_countl_zero();
     benchmark_countr_zero();
@@ -377,24 +401,11 @@ int main()
     benchmark_has_single_bit();
     benchmark_bit_floor();
     benchmark_bit_ceil();
-
-    // Benchmarks int128_bits namespace
-    std::cout << "\n--- int128_bits namespace ---\n";
-    benchmark_rotl();
-    benchmark_rotr();
-    benchmark_reverse_bits();
+    benchmark_rotations();
     benchmark_byteswap();
-    benchmark_extract_bits();
-    benchmark_insert_bits();
-    benchmark_test_bit();
-    benchmark_set_bit();
-    benchmark_clear_bit();
-    benchmark_flip_bit();
-    benchmark_find_first_set();
-    benchmark_find_last_set();
 
     std::cout << "\n========================================\n";
-    std::cout << "[OK] Benchmarks completados\n";
+    std::cout << " Benchmark complete!\n";
     std::cout << "========================================\n";
 
     return 0;

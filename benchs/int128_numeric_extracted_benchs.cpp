@@ -1,11 +1,10 @@
 /**
- * @file int128_numeric_benchmarks.cpp
- * @brief Performance benchmarks for int128_numeric.hpp functions
+ * @file int128_numeric_extracted_benchs.cpp
+ * @brief Benchmarks unificados para operaciones numéricas de int128_base_t
  *
- * Benchmarks C++20 numeric functions for signed int128:
- * - std::midpoint, std::clamp, std::abs
- * - std::popcount, countl_zero, countr_zero (bit manipulation)
- * - std::bit_width, has_single_bit, bit_ceil, bit_floor
+ * Testea funciones de <numeric> style:
+ * - midpoint, iota
+ * - inner_product, reduce
  */
 
 #include "int128_base_numeric.hpp"
@@ -13,530 +12,150 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <numeric>
 #include <random>
 #include <vector>
 
-using namespace nstd;
-// ========================= RDTSC for CPU Cycles =========================
-
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 #ifdef _MSC_VER
 #include <intrin.h>
 #pragma intrinsic(__rdtsc)
-#elif defined(__INTEL_COMPILER)
-#include <ia32intrin.h>
-#elif defined(__GNUC__) || defined(__clang__)
-#include <x86intrin.h>
 #endif
+
+using namespace nstd;
+using namespace std::chrono;
 
 inline uint64_t rdtsc()
 {
-#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+#if defined(_MSC_VER)
     return __rdtsc();
-#else
-    uint32_t lo, hi;
+#elif defined(__x86_64__) || defined(__i386__)
+    uint32_t hi, lo;
     __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
-    return (static_cast<uint64_t>(hi) << 32) | lo;
-#endif
-}
+    return ((uint64_t)hi << 32) | lo;
 #else
-inline uint64_t rdtsc()
-{
     return 0;
-}
 #endif
+}
 
-// ========================= Benchmark Infrastructure =========================
+std::mt19937_64 rng(std::random_device{}());
 
-struct BenchmarkResult {
-    std::string name;
-    double time_ns;
-    uint64_t cycles;
-    size_t iterations;
-};
+inline uint64_t random_u64() { return rng(); }
+inline uint128_t random_uint128() { return uint128_t(random_u64(), random_u64()); }
+inline int128_t random_int128() { return int128_t(static_cast<uint64_t>(static_cast<int64_t>(random_u64())), random_u64()); }
+
+#define BENCHMARK(name, type_name, iterations, code)                                                \
+    {                                                                                               \
+        auto start_time = high_resolution_clock::now();                                             \
+        uint64_t start_cycles = rdtsc();                                                            \
+        for (size_t _i = 0; _i < iterations; ++_i)                                                  \
+        {                                                                                           \
+            code;                                                                                   \
+        }                                                                                           \
+        uint64_t end_cycles = rdtsc();                                                              \
+        auto end_time = high_resolution_clock::now();                                               \
+        double ns = duration_cast<nanoseconds>(end_time - start_time).count() / double(iterations); \
+        double cycles = double(end_cycles - start_cycles) / double(iterations);                     \
+        std::cout << "  " << std::setw(20) << std::left << name                                     \
+                  << " [" << std::setw(12) << type_name << "]"                                      \
+                  << std::fixed << std::setprecision(2)                                             \
+                  << std::setw(12) << ns << " ns/op"                                                \
+                  << std::setw(14) << cycles << " cycles/op\n";                                     \
+    }
 
 constexpr size_t ITERATIONS = 100000;
-constexpr size_t WARMUP = 1000;
+constexpr size_t VECTOR_SIZE = 1000;
 
-// ========================= Benchmark: midpoint =========================
-
-BenchmarkResult bench_midpoint()
+void benchmark_midpoint()
 {
-    std::vector<int128_t> values_a(ITERATIONS);
-    std::vector<int128_t> values_b(ITERATIONS);
-    std::vector<int128_t> results(ITERATIONS);
+    std::cout << "\n=== MIDPOINT ===\n";
 
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<int64_t> dist(-1000000, 1000000);
+    BENCHMARK("midpoint", "uint128_t", ITERATIONS, {
+        uint128_t a = random_uint128();
+        uint128_t b = random_uint128();
+        auto result = nstd::midpoint(a, b);
+        volatile auto sink = result.low();
+        (void)sink;
+    });
 
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values_a[i] = int128_t(dist(rng));
-        values_b[i] = int128_t(dist(rng));
-    }
+    BENCHMARK("midpoint", "int128_t", ITERATIONS, {
+        int128_t a = random_int128();
+        int128_t b = random_int128();
+        auto result = nstd::midpoint(a, b);
+        volatile auto sink = result.low();
+        (void)sink;
+    });
 
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::midpoint(values_a[i], values_b[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::midpoint(values_a[i], values_b[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int128_t sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"midpoint", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
+    BENCHMARK("std::midpoint", "uint64_t", ITERATIONS, {
+        uint64_t a = random_u64();
+        uint64_t b = random_u64();
+        volatile auto result = std::midpoint(a, b);
+        (void)result;
+    });
 }
 
-// ========================= Benchmark: clamp =========================
-
-BenchmarkResult bench_clamp()
+void benchmark_iota()
 {
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int128_t> results(ITERATIONS);
-    int128_t lo = int128_t(-1000);
-    int128_t hi = int128_t(1000);
+    std::cout << "\n=== IOTA ===\n";
 
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<int64_t> dist(-2000, 2000);
+    std::vector<uint128_t> vec_u(VECTOR_SIZE);
+    BENCHMARK("std::iota", "uint128_t", ITERATIONS / 10, {
+        std::iota(vec_u.begin(), vec_u.end(), uint128_t{0});
+    });
 
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(dist(rng));
-    }
+    std::vector<int128_t> vec_s(VECTOR_SIZE);
+    BENCHMARK("std::iota", "int128_t", ITERATIONS / 10, {
+        std::iota(vec_s.begin(), vec_s.end(), int128_t{-500});
+    });
 
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = std::clamp(values[i], lo, hi);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = std::clamp(values[i], lo, hi);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int128_t sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"clamp", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS, ITERATIONS};
+    std::vector<uint64_t> vec_64(VECTOR_SIZE);
+    BENCHMARK("std::iota", "uint64_t", ITERATIONS / 10, {
+        std::iota(vec_64.begin(), vec_64.end(), uint64_t{0});
+    });
 }
 
-// ========================= Benchmark: abs =========================
-
-BenchmarkResult bench_abs()
+void benchmark_inner_product()
 {
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int128_t> results(ITERATIONS);
+    std::cout << "\n=== INNER PRODUCT ===\n";
 
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<int64_t> dist(INT64_MIN, INT64_MAX);
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(dist(rng));
+    std::vector<uint128_t> vec1_u(VECTOR_SIZE), vec2_u(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+    {
+        vec1_u[i] = uint128_t{i + 1};
+        vec2_u[i] = uint128_t{i + 1};
     }
 
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::abs(values[i]);
+    BENCHMARK("std::inner_product", "uint128_t", ITERATIONS / 10, {
+        auto result = std::inner_product(vec1_u.begin(), vec1_u.end(), vec2_u.begin(), uint128_t{0});
+        volatile auto sink = result.low();
+        (void)sink;
+    });
+
+    std::vector<uint64_t> vec1_64(VECTOR_SIZE), vec2_64(VECTOR_SIZE);
+    for (size_t i = 0; i < VECTOR_SIZE; ++i)
+    {
+        vec1_64[i] = i + 1;
+        vec2_64[i] = i + 1;
     }
 
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::abs(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int128_t sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"abs", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS, ITERATIONS};
+    BENCHMARK("std::inner_product", "uint64_t", ITERATIONS / 10, {
+        volatile auto result = std::inner_product(vec1_64.begin(), vec1_64.end(), vec2_64.begin(), uint64_t{0});
+        (void)result;
+    });
 }
-
-// ========================= Benchmark: popcount =========================
-
-BenchmarkResult bench_popcount()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist;
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(dist(rng), dist(rng));
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::popcount(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::popcount(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"popcount", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Benchmark: countl_zero =========================
-
-BenchmarkResult bench_countl_zero()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist(1, UINT64_MAX);
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(0, dist(rng)); // Positive values only for countl_zero
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::countl_zero(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::countl_zero(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"countl_zero", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Benchmark: countr_zero =========================
-
-BenchmarkResult bench_countr_zero()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist(1, UINT32_MAX);
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(0, dist(rng)) << (i % 64);
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::countr_zero(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::countr_zero(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"countr_zero", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Benchmark: bit_width =========================
-
-BenchmarkResult bench_bit_width()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist(1, UINT64_MAX);
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(0, dist(rng));
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::bit_width(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::bit_width(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"bit_width", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Benchmark: has_single_bit =========================
-
-BenchmarkResult bench_has_single_bit()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<bool> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist;
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        if (i % 2 == 0) {
-            values[i] = int128_t(0, uint64_t(1) << (i % 63)); // Power of 2
-        } else {
-            values[i] = int128_t(0, dist(rng));
-        }
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::has_single_bit(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::has_single_bit(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile bool sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"has_single_bit", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Benchmark: bit_ceil =========================
-
-BenchmarkResult bench_bit_ceil()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int128_t> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist(1, UINT32_MAX);
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(0, dist(rng));
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::bit_ceil(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::bit_ceil(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int128_t sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"bit_ceil", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Benchmark: bit_floor =========================
-
-BenchmarkResult bench_bit_floor()
-{
-    std::vector<int128_t> values(ITERATIONS);
-    std::vector<int128_t> results(ITERATIONS);
-
-    std::mt19937_64 rng(42);
-    std::uniform_int_distribution<uint64_t> dist(1, UINT32_MAX);
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        values[i] = int128_t(0, dist(rng));
-    }
-
-    // Warmup
-    for (size_t i = 0; i < WARMUP; ++i) {
-        results[i] = nstd::bit_floor(values[i]);
-    }
-
-    // Benchmark
-    auto start = std::chrono::high_resolution_clock::now();
-    uint64_t cycles_start = rdtsc();
-
-    for (size_t i = 0; i < ITERATIONS; ++i) {
-        results[i] = nstd::bit_floor(values[i]);
-    }
-
-    uint64_t cycles_end = rdtsc();
-    auto end = std::chrono::high_resolution_clock::now();
-
-    auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    uint64_t cycles = cycles_end - cycles_start;
-
-    volatile int128_t sink = results[ITERATIONS / 2];
-    (void)sink;
-
-    return {"bit_floor", static_cast<double>(elapsed_ns) / ITERATIONS, cycles / ITERATIONS,
-            ITERATIONS};
-}
-
-// ========================= Display Results =========================
-
-void print_result(const BenchmarkResult& result)
-{
-    std::cout << std::left << std::setw(20) << result.name << " | " << std::right << std::setw(10)
-              << std::fixed << std::setprecision(2) << result.time_ns << " ns/op | "
-              << std::setw(10) << result.cycles << " cycles/op | " << std::setw(10)
-              << result.iterations << " iterations" << std::endl;
-}
-
-// ========================= Main =========================
 
 int main()
 {
-    std::cout << "========================================================================"
-              << std::endl;
-    std::cout << "    INT128_T NUMERIC FUNCTIONS BENCHMARK" << std::endl;
-    std::cout << "========================================================================"
-              << std::endl;
-    std::cout << "\nIterations per benchmark: " << ITERATIONS << std::endl;
-    std::cout << "Warmup iterations: " << WARMUP << std::endl;
-    std::cout << "\n" << std::endl;
+    std::cout << "========================================\n";
+    std::cout << " int128 Numeric Benchmarks\n";
+    std::cout << "========================================\n";
 
-    std::vector<BenchmarkResult> results;
+    benchmark_midpoint();
+    benchmark_iota();
+    benchmark_inner_product();
 
-    std::cout << "[1/10] Benchmarking midpoint..." << std::endl;
-    results.push_back(bench_midpoint());
-
-    std::cout << "[2/10] Benchmarking clamp..." << std::endl;
-    results.push_back(bench_clamp());
-
-    std::cout << "[3/10] Benchmarking abs..." << std::endl;
-    results.push_back(bench_abs());
-
-    std::cout << "[4/10] Benchmarking popcount..." << std::endl;
-    results.push_back(bench_popcount());
-
-    std::cout << "[5/10] Benchmarking countl_zero..." << std::endl;
-    results.push_back(bench_countl_zero());
-
-    std::cout << "[6/10] Benchmarking countr_zero..." << std::endl;
-    results.push_back(bench_countr_zero());
-
-    std::cout << "[7/10] Benchmarking bit_width..." << std::endl;
-    results.push_back(bench_bit_width());
-
-    std::cout << "[8/10] Benchmarking has_single_bit..." << std::endl;
-    results.push_back(bench_has_single_bit());
-
-    std::cout << "[9/10] Benchmarking bit_ceil..." << std::endl;
-    results.push_back(bench_bit_ceil());
-
-    std::cout << "[10/10] Benchmarking bit_floor..." << std::endl;
-    results.push_back(bench_bit_floor());
-
-    std::cout << "\n" << std::endl;
-    std::cout << "========================================================================"
-              << std::endl;
-    std::cout << "    RESULTS" << std::endl;
-    std::cout << "========================================================================"
-              << std::endl;
-    std::cout << std::left << std::setw(20) << "Function" << " | " << std::right << std::setw(10)
-              << "Time" << "        | " << std::setw(10) << "Cycles" << "           | "
-              << std::setw(10) << "Iterations" << std::endl;
-    std::cout << "------------------------------------------------------------------------"
-              << std::endl;
-
-    for (const auto& result : results) {
-        print_result(result);
-    }
-
-    std::cout << "========================================================================"
-              << std::endl;
+    std::cout << "\n========================================\n";
+    std::cout << " Benchmark complete!\n";
+    std::cout << "========================================\n";
 
     return 0;
 }

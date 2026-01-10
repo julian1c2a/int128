@@ -1,32 +1,30 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# run_generic.bash - Script genérico de ejecución
+# run_generic.bash - Script genérico de ejecución de benchmarks y demos
 # ==============================================================================
-# Ejecuta benchmarks o demos compilados con todos los compiladores y modos
-# 
+# Par con: build_benchs_generic.bash (para benchmarks)
+#
 # Uso:
-#   # Para benchs (con TYPE porque archivos son distintos):
-#   run_generic.bash <type> <feature> [compiler] [mode]
+#   # Para benchs:
+#   run_generic.bash <feature> [compiler] [mode]
 #   
 #   # Para demos:
 #   run_generic.bash demos <category> <demo_name> [compiler] [mode] [args...]
 #
 # Argumentos:
-#   type     : uint128 | int128 (para benchs)
-#   feature  : tt | bits | numeric | algorithm | etc. (o "demos" para demos)
+#   feature  : tt | bits | numeric | algorithm | iostreams | cmath | etc.
 #   compiler : gcc | clang | intel | msvc | all (default: all)
 #   mode     : debug | release | all (default: all)
 #   args     : (solo demos) argumentos adicionales para pasar al demo
 #
-# Ejemplos Benchs:
-#   run_generic.bash uint128 bits
-#   run_generic.bash int128 numeric gcc release
-#   run_generic.bash uint128 algorithm all all
+# Ejemplos Benchmarks:
+#   run_generic.bash bits
+#   run_generic.bash numeric gcc release
+#   run_generic.bash algorithm all all
 #
 # Ejemplos Demos:
 #   run_generic.bash demos tutorials 01_basic_operations gcc release
 #   run_generic.bash demos examples ipv6_address clang debug
-#   run_generic.bash demos showcase main gcc release --verbose
 # ==============================================================================
 
 set -euo pipefail
@@ -36,14 +34,13 @@ set -euo pipefail
 if [[ $# -lt 1 ]]; then
     echo "Error: Se requiere al menos 1 argumento"
     echo ""
-    echo "Uso Benchs (con TYPE):"
-    echo "  $0 <type> <feature> [compiler] [mode]"
-    echo "  $0 uint128 bits"
-    echo "  $0 int128 numeric gcc release"
+    echo "Uso Benchmarks:"
+    echo "  $0 <feature> [compiler] [mode]"
+    echo "  $0 bits"
+    echo "  $0 numeric gcc release"
     echo ""
     echo "Uso Demos:"
     echo "  $0 demos <category> <demo_name> [compiler] [mode]"
-    echo "  $0 demos tutorials 01_basic_operations gcc release"
     exit 1
 fi
 
@@ -80,35 +77,36 @@ if [[ "$1" == "demos" ]]; then
         exit 1
     fi
 
-elif [[ "$1" == "uint128" || "$1" == "int128" ]]; then
-    # Sintaxis benchs: <type> <feature> [compiler] [mode]
+else
+    # Sintaxis benchmarks: <feature> [compiler] [mode]
     IS_BENCH=true
-    TYPE="$1"
-    FEATURE="$2"
-    COMPILER="${3:-all}"
-    MODE="${4:-all}"
+    FEATURE="$1"
+    COMPILER="${2:-all}"
+    MODE="${3:-all}"
     
     # Validate feature
-    VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+    VALID_FEATURES=("all" "tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
     if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
         echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
         exit 1
     fi
-
-else
-    # Sintaxis benchs sin TYPE explícito: <feature> [compiler] [mode]
-    IS_BENCH=true
-    FEATURE="$1"
-    TYPE="int128"  # Default
-    COMPILER="${2:-all}"
-    MODE="${3:-all}"
-    echo "-> NOTA: TYPE no especificado, usando '$TYPE' por defecto"
     
-    # Validate feature
-    VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
-    if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
-        echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
-        exit 1
+    # Handle FEATURE=all
+    ALL_FEATURES=("tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+    if [[ "$FEATURE" == "all" ]]; then
+        echo "========================================="
+        echo " Running ALL features (benchmarks)"
+        echo "========================================="
+        for feat in "${ALL_FEATURES[@]}"; do
+            echo ""
+            echo ">>> Running feature: $feat"
+            bash "$0" "$feat" "$COMPILER" "$MODE"
+        done
+        echo ""
+        echo "========================================="
+        echo " [OK] ALL features run!"
+        echo "========================================="
+        exit 0
     fi
 fi
 
@@ -154,9 +152,10 @@ run_benchmark() {
     local comp="$1"
     local mod="$2"
     
-    local exe_name="${TYPE}_${FEATURE}_benchs_${comp}"
+    local exe_name="int128_${FEATURE}_benchs_${comp}"
     
-    if [[ "$comp" == "msvc" || "$comp" == "intel" ]]; then
+    # On Windows/MSYS2/Cygwin, ALL compilers produce .exe files
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "mingw"* ]]; then
         exe_name="${exe_name}.exe"
     fi
     
@@ -188,7 +187,8 @@ run_demo() {
     
     local exe_name="${DEMO_NAME}"
     
-    if [[ "$comp" == "msvc" || "$comp" == "intel" ]]; then
+    # On Windows/MSYS2/Cygwin, ALL compilers produce .exe files
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "mingw"* ]]; then
         exe_name="${exe_name}.exe"
     fi
     
@@ -230,7 +230,7 @@ if [[ "$IS_DEMO" == true ]]; then
     echo ""
 else
     echo_header "========================================================================"
-    echo_header "  ${TYPE^^} ${FEATURE^^} BENCHMARKS - Execution"
+    echo_header "  INT128 ${FEATURE^^} BENCHMARKS - Execution"
     echo_header "========================================================================"
     echo ""
 fi
@@ -264,7 +264,8 @@ for comp in "${compilers_to_test[@]}"; do
             else
                 # Check if file exists to determine if skipped or failed
                 local check_exe="${DEMO_NAME}"
-                if [[ "$comp" == "msvc" || "$comp" == "intel" ]]; then
+                # On Windows/MSYS2/Cygwin, ALL compilers produce .exe files
+                if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "mingw"* ]]; then
                     check_exe="${check_exe}.exe"
                 fi
                 if [[ -f "$BUILD_DIR/$comp/$mod/$check_exe" ]]; then
@@ -277,7 +278,7 @@ for comp in "${compilers_to_test[@]}"; do
             if run_benchmark "$comp" "$mod"; then
                 executed=$((executed + 1))
             else
-                if [[ -f "$BUILD_DIR/$comp/$mod/${TYPE}_${FEATURE}_benchs_${comp}"* ]]; then
+                if [[ -f "$BUILD_DIR/$comp/$mod/int128_${FEATURE}_benchs_${comp}"* ]]; then
                     failed=$((failed + 1))
                 else
                     skipped=$((skipped + 1))

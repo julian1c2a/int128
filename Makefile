@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 # Makefile unificado para int128/uint128
-# Uso: make [action] TYPE=[type] FEATURE=[feature] COMPILER=[compiler] MODE=[mode] PRINT=[print]
+# Uso: make [action] FEATURE=[feature] COMPILER=[compiler] MODE=[mode] PRINT=[print]
 #      make demo CATEGORY=[category] DEMO=[demo] COMPILER=[compiler] MODE=[mode]
 
 .PHONY: help build_tests build_benchs build_demo check check_demos run run_demo clean
@@ -12,7 +12,6 @@
 # =============================================================================
 
 # Valores por defecto
-TYPE ?=
 FEATURE ?=
 COMPILER ?= all
 MODE ?= all
@@ -23,8 +22,7 @@ CATEGORY ?=
 DEMO ?=
 
 # Validación (completo según PROMPT.md)
-VALID_TYPES := uint128 int128
-VALID_FEATURES := t tt traits limits concepts algorithms iostreams bits cmath numeric ranges format safe thread_safety comparison_boost interop
+VALID_FEATURES := all tt traits limits concepts algorithm iostreams bits cmath numeric ranges format safe thread_safety comparison_boost interop
 VALID_CATEGORIES := general tutorials examples showcase comparison performance integration
 VALID_COMPILERS := gcc clang intel msvc all
 VALID_MODES := debug release release-O1 release-O2 release-O3 release-Ofast all
@@ -34,21 +32,10 @@ VALID_MODES := debug release release-O1 release-O2 release-O3 release-Ofast all
 # =============================================================================
 
 define validate_values
-	@if [ -z "$(TYPE)" ]; then \
-		echo "❌ ERROR: Falta TYPE"; \
-		echo "   Valores válidos: $(VALID_TYPES)"; \
-		echo "Uso: make $(1) TYPE=[uint128|int128] FEATURE=[feature] COMPILER=[compiler] MODE=[mode]"; \
-		exit 1; \
-	fi; \
-	if [ -z "$(FEATURE)" ]; then \
+	@if [ -z "$(FEATURE)" ]; then \
 		echo "❌ ERROR: Falta FEATURE"; \
 		echo "   Valores válidos: $(VALID_FEATURES)"; \
-		echo "Uso: make $(1) TYPE=[uint128|int128] FEATURE=[feature] COMPILER=[compiler] MODE=[mode]"; \
-		exit 1; \
-	fi; \
-	if ! echo "$(VALID_TYPES)" | grep -wq "$(TYPE)"; then \
-		echo "❌ ERROR: TYPE inválido '$(TYPE)'"; \
-		echo "   Valores válidos: $(VALID_TYPES)"; \
+		echo "Uso: make $(1) FEATURE=[feature] COMPILER=[compiler] MODE=[mode]"; \
 		exit 1; \
 	fi; \
 	if ! echo "$(VALID_FEATURES)" | grep -wq "$(FEATURE)"; then \
@@ -74,23 +61,23 @@ endef
 
 build_tests:
 	$(call validate_values,build_tests)
-	@echo "🔨 Compilando tests: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/build_generic.bash $(TYPE) $(FEATURE) tests $(COMPILER) $(MODE) $(PRINT)
+	@echo "🔨 Compilando tests: $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/build_tests_generic.bash $(FEATURE) $(COMPILER) $(MODE) $(PRINT)
 
 build_benchs:
 	$(call validate_values,build_benchs)
-	@echo "🔨 Compilando benchmarks: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/build_generic.bash $(TYPE) $(FEATURE) benchs $(COMPILER) $(MODE) $(PRINT)
+	@echo "🔨 Compilando benchmarks: $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/build_benchs_generic.bash $(FEATURE) $(COMPILER) $(MODE) $(PRINT)
 
 check:
 	$(call validate_values,check)
-	@echo "🧪 Ejecutando tests: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/check_generic.bash $(TYPE) $(FEATURE) $(COMPILER) $(MODE)
+	@echo "🧪 Ejecutando tests: $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/check_generic.bash $(FEATURE) $(COMPILER) $(MODE)
 
 run:
 	$(call validate_values,run)
-	@echo "⚡ Ejecutando benchmarks: $(TYPE) $(FEATURE) [$(COMPILER)/$(MODE)]"
-	@bash scripts/run_generic.bash $(TYPE) $(FEATURE) $(COMPILER) $(MODE)
+	@echo "⚡ Ejecutando benchmarks: $(FEATURE) [$(COMPILER)/$(MODE)]"
+	@bash scripts/run_generic.bash $(FEATURE) $(COMPILER) $(MODE)
 
 # =============================================================================
 # TARGETS PARA DEMOS
@@ -165,24 +152,20 @@ build-all-$(1):
 	@echo "========================================="
 	@echo " Building ALL $(1) (tests + benchs)"
 	@echo "========================================="
-	@$$(MAKE) build_tests TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
-	@$$(MAKE) build_tests TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
-	@$$(MAKE) build_benchs TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
-	@$$(MAKE) build_benchs TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) build_tests FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) build_benchs FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
 
 check-all-$(1):
 	@echo "========================================="
 	@echo " Checking ALL $(1) tests"
 	@echo "========================================="
-	@$$(MAKE) check TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
-	@$$(MAKE) check TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) check FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
 
 run-all-$(1):
 	@echo "========================================="
 	@echo " Running ALL $(1) benchmarks"
 	@echo "========================================="
-	@$$(MAKE) run TYPE=uint128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
-	@$$(MAKE) run TYPE=int128 FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
+	@$$(MAKE) run FEATURE=$(1) COMPILER=$$(COMPILER) MODE=$$(MODE)
 
 $(1)-full: build-all-$(1) check-all-$(1) run-all-$(1)
 	@echo "========================================="
@@ -323,21 +306,18 @@ clean: clean-build clean-results clean-logs
 # =============================================================================
 # SANITIZERS
 # =============================================================================
-# Uso: make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan
+# Uso: make sanitize FEATURE=bits COMPILER=gcc SANITIZER=asan
 # SANITIZER: asan | ubsan | tsan | msan | all
 
 SANITIZER ?= asan
 SANIT_TARGET ?= tests
 
 sanitize:
-ifndef TYPE
-	$(error TYPE is required. Use: make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan)
-endif
 ifndef FEATURE
-	$(error FEATURE is required. Use: make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan)
+	$(error FEATURE is required. Use: make sanitize FEATURE=bits COMPILER=gcc SANITIZER=asan)
 endif
 	@echo "🔬 Compilando con sanitizer $(SANITIZER)..."
-	@bash scripts/build_with_sanitizers.bash $(TYPE) $(FEATURE) $(SANIT_TARGET) $(COMPILER) $(SANITIZER)
+	@bash scripts/build_with_sanitizers.bash $(FEATURE) $(SANIT_TARGET) $(COMPILER) $(SANITIZER)
 
 # =============================================================================
 # STATIC ANALYSIS
@@ -408,11 +388,11 @@ build-all-features:
 
 help:
 	@echo "========================================="
-	@echo " INT128/UINT128 - Build System"
+	@echo " INT128 - Build System (Unified Template)"
 	@echo "========================================="
 	@echo ""
 	@echo "USO:"
-	@echo "  make [action] TYPE=[type] FEATURE=[feature] COMPILER=[compiler] MODE=[mode] PRINT=[print]"
+	@echo "  make [action] FEATURE=[feature] COMPILER=[compiler] MODE=[mode] PRINT=[print]"
 	@echo ""
 	@echo "ACCIONES:"
 	@echo "  build_tests   - Compilar tests"
@@ -434,8 +414,7 @@ help:
 	@echo "    make check_demos CATEGORY=all"
 	@echo ""
 	@echo "ARGUMENTOS:"
-	@echo "  TYPE          uint128 | int128 (requerido)"
-	@echo "  FEATURE       t | traits | limits | concepts | algorithms | iostreams"
+	@echo "  FEATURE       all | tt | traits | limits | concepts | algorithm | iostreams"
 	@echo "                bits | cmath | numeric | ranges | format | safe | thread_safety"
 	@echo "                comparison_boost | interop (requerido)"
 	@echo "  CATEGORY      general | tutorials | examples | showcase | comparison"
@@ -446,9 +425,9 @@ help:
 	@echo "  PRINT         print (opcional, genera logs/resultados en archivos)"
 	@echo ""
 	@echo "EJEMPLOS:"
-	@echo "  make build_tests TYPE=uint128 FEATURE=concepts COMPILER=gcc MODE=debug"
-	@echo "  make check TYPE=int128 FEATURE=concepts COMPILER=all MODE=all PRINT=print"
-	@echo "  make run TYPE=uint128 FEATURE=cmath COMPILER=intel MODE=release PRINT=print"
+	@echo "  make build_tests FEATURE=concepts COMPILER=gcc MODE=debug"
+	@echo "  make check FEATURE=concepts COMPILER=all MODE=all PRINT=print"
+	@echo "  make run FEATURE=cmath COMPILER=intel MODE=release PRINT=print"
 	@echo ""
 	@echo "ATAJOS POR FEATURE (disponibles para TODAS las features):"
 	@echo "  make [feature]-full         - Pipeline completo (build+check+run)"
@@ -468,8 +447,8 @@ help:
 	@echo "  make list-all               - Listar todas las opciones"
 	@echo ""
 	@echo "SANITIZADORES Y ANALISIS ESTATICO:"
-	@echo "  make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan"
-	@echo "  make sanitize TYPE=uint128 FEATURE=thread_safety COMPILER=gcc SANITIZER=tsan"
+	@echo "  make sanitize FEATURE=bits COMPILER=gcc SANITIZER=asan"
+	@echo "  make sanitize FEATURE=thread_safety COMPILER=gcc SANITIZER=tsan"
 	@echo "  make static-analysis TOOL=cppcheck TARGET=headers"
 	@echo "  make static-analysis TOOL=clang-tidy TARGET=tests"
 	@echo "  make static-analysis TOOL=all TARGET=all"

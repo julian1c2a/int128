@@ -33,25 +33,37 @@ if [[ $# -lt 1 ]]; then
     echo "  $0 bits"
     echo "  $0 numeric gcc release"
     echo "  $0 algorithm all all"
+    echo "  $0 all gcc release      # Check ALL features"
     exit 1
-fi
-
-# Compatibilidad hacia atrás: detectar sintaxis vieja (uint128/int128 como primer arg)
-if [[ "$1" == "uint128" || "$1" == "int128" ]]; then
-    echo "-> NOTA: Sintaxis vieja detectada. TYPE '$1' ignorado (template unificado)."
-    shift  # Eliminar el primer argumento (TYPE)
 fi
 
 FEATURE="$1"
 COMPILER="${2:-all}"
 MODE="${3:-all}"
 
-# TYPE siempre es int128 con el template unificado
-TYPE="int128"
+# ========================= Handle FEATURE=all =========================
+
+ALL_FEATURES=("tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+
+if [[ "$FEATURE" == "all" ]]; then
+    echo "========================================="
+    echo " Checking ALL features (tests)"
+    echo "========================================="
+    for feat in "${ALL_FEATURES[@]}"; do
+        echo ""
+        echo ">>> Checking feature: $feat"
+        bash "$0" "$feat" "$COMPILER" "$MODE"
+    done
+    echo ""
+    echo "========================================="
+    echo " [OK] ALL features checked!"
+    echo "========================================="
+    exit 0
+fi
 
 # ========================= Validation =========================
 
-VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+VALID_FEATURES=("all" "tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
 if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
     echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
     exit 1
@@ -97,9 +109,10 @@ run_test() {
     local comp="$1"
     local mod="$2"
     
-    local exe_name="${TYPE}_${FEATURE}_tests_${comp}"
+    local exe_name="int128_${FEATURE}_tests_${comp}"
     
-    if [[ "$comp" == "msvc" || "$comp" == "intel" ]]; then
+    # On Windows/MSYS2/Cygwin, ALL compilers produce .exe files
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "mingw"* ]]; then
         exe_name="${exe_name}.exe"
     fi
     
@@ -125,7 +138,7 @@ run_test() {
 # ========================= Execute Tests =========================
 
 echo_header "========================================================================"
-echo_header "  ${TYPE^^} ${FEATURE^^} TESTS - Execution"
+echo_header "  INT128 ${FEATURE^^} TESTS - Execution"
 echo_header "========================================================================"
 echo ""
 

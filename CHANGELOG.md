@@ -64,6 +64,61 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [12:00] 2026-01-11 - Limpieza TYPE + Scripts Directos + Makefile Actualizado
+
+- ✅ **Scripts simplificados (eliminado TYPE de todos):**
+  - `build_tests_generic.bash` - hardcoded `int128_` en lugar de `${TYPE}_`
+  - `build_benchs_generic.bash` - hardcoded `int128_` en lugar de `${TYPE}_`
+  - `check_generic.bash` - removida compatibilidad legacy TYPE
+  - `run_generic.bash` - removida compatibilidad legacy TYPE
+  - `build_generic.bash` - simplificado solo para demos (~220 líneas)
+- ✅ **Nuevos scripts directos creados:**
+  - `check_direct.bash` - ejecuta test directamente con `exec "$EXE_PATH"`
+  - `run_direct.bash` - ejecuta benchmark directamente con `exec "$EXE_PATH"`
+- ✅ **Makefile actualizado:**
+  - Eliminado TYPE de feature_shortcuts (`build-all-*`, `check-all-*`, `run-all-*`)
+  - Eliminado TYPE de target `sanitize`
+  - Actualizado help con nueva sintaxis sin TYPE
+  - Título actualizado: "INT128 - Build System (Unified Template)"
+- ✅ **Benchmarks probados con nuevos scripts:**
+  - `tt`, `format`, `iostreams`, `bits`, `algorithm`, `cmath`, `numeric`, `concepts`
+  - Todos compilan y ejecutan correctamente
+- ⚠️ **`comparison_boost`** requiere GMP instalado (dependencia externa)
+- **Sintaxis nueva:**
+
+  ```bash
+  bash scripts/build_benchs_generic.bash <feature> [compiler] [mode]
+  bash scripts/run_direct.bash <feature> [compiler] [mode]
+  bash scripts/build_tests_generic.bash <feature> [compiler] [mode]
+  bash scripts/check_direct.bash <feature> [compiler] [mode]
+  ```
+
+---
+
+#### [10:00] 2026-01-11 - Unificación de Benchmarks + Bugs Documentados
+
+- ✅ **Benchmarks unificados creados (7 de 14):**
+  - `int128_tt_extracted_benchs.cpp` - Con comparativa Boost
+  - `int128_bits_extracted_benchs.cpp` - popcount, clz, ctz, rotl, rotr
+  - `int128_algorithm_extracted_benchs.cpp` - iota, accumulate, transform, sort
+  - `int128_cmath_extracted_benchs.cpp` - gcd, lcm, sqrt, pow, bezout
+  - `int128_numeric_extracted_benchs.cpp` - midpoint, iota, inner_product
+  - `int128_limits_extracted_benchs.cpp` - numeric_limits
+  - `int128_traits_extracted_benchs.cpp` - type_traits
+- 🐛 **Bugs descubiertos en especializaciones std::**:
+  - `std::numeric_limits<uint128_t>::digits` → 0 (debería ser 128)
+  - `std::is_integral_v<uint128_t>` → false (debería ser true)
+  - `std::is_arithmetic_v<uint128_t>` → false
+  - Variantes `nstd::` funcionan correctamente
+- 📋 **TODO.md actualizado** con:
+  - Tabla de estado de unificaciones de benchmarks
+  - Sección de bugs conocidos en especializaciones std::
+  - Nota sobre comparison_boost e interop pendientes de añadir int128_t
+
+---
+
+### 📜 Sesiones Anteriores
+
 #### [17:30] 2026-01-10 - VALIDACIÓN WINDOWS COMPLETADA: 13/13 Features
 
 - ✅ **Windows (MSYS2) - 26/26 configuraciones GCC+Clang:**
