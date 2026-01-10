@@ -85,14 +85,14 @@ else
     MODE="${3:-all}"
     
     # Validate feature
-    VALID_FEATURES=("all" "tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+    VALID_FEATURES=("all" "tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost")
     if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
         echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
         exit 1
     fi
     
     # Handle FEATURE=all
-    ALL_FEATURES=("tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+    ALL_FEATURES=("tt" "traits" "limits" "concepts" "algorithm" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost")
     if [[ "$FEATURE" == "all" ]]; then
         echo "========================================="
         echo " Running ALL features (benchmarks)"

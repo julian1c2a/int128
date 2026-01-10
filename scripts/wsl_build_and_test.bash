@@ -40,7 +40,7 @@ WSL_SCRIPTS_DIR="$SCRIPT_DIR/wsl"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # ========================= Valid Values =========================
-VALID_FEATURES=("all" "tt" "algorithm" "bits" "cmath" "concepts" "format" "iostreams" "limits" "numeric" "ranges" "safe" "thread_safety" "traits" "comparison_boost" "interop")
+VALID_FEATURES=("all" "tt" "algorithm" "bits" "cmath" "concepts" "format" "iostreams" "limits" "numeric" "ranges" "safe" "thread_safety" "traits" "comparison_boost")
 VALID_COMPILERS=("gcc-13" "gcc-14" "gcc-15" "clang-18" "clang-19" "clang-20" "clang-21" "icpx" "all")
 VALID_MODES=("debug" "release" "all")
 

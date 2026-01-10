@@ -22,7 +22,7 @@ CATEGORY ?=
 DEMO ?=
 
 # Validación (completo según PROMPT.md)
-VALID_FEATURES := all tt traits limits concepts algorithm iostreams bits cmath numeric ranges format safe thread_safety comparison_boost interop
+VALID_FEATURES := all tt traits limits concepts algorithm iostreams bits cmath numeric ranges format safe thread_safety comparison_boost
 VALID_CATEGORIES := general tutorials examples showcase comparison performance integration
 VALID_COMPILERS := gcc clang intel msvc all
 VALID_MODES := debug release release-O1 release-O2 release-O3 release-Ofast all
@@ -416,7 +416,7 @@ help:
 	@echo "ARGUMENTOS:"
 	@echo "  FEATURE       all | tt | traits | limits | concepts | algorithm | iostreams"
 	@echo "                bits | cmath | numeric | ranges | format | safe | thread_safety"
-	@echo "                comparison_boost | interop (requerido)"
+	@echo "                comparison_boost (requerido)"
 	@echo "  CATEGORY      general | tutorials | examples | showcase | comparison"
 	@echo "                performance | integration (para demos)"
 	@echo "  DEMO          nombre del demo sin .cpp (requerido para demos)"

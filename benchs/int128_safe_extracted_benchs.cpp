@@ -13,9 +13,11 @@ void benchmark_safe_cast()
     int64_t sum = 0;
 
     auto start = high_resolution_clock::now();
-    for (int i = 0; i < ITERATIONS; ++i) {
-        auto result = int128_safe::safe_cast<int64_t>(value);
-        if (result.is_valid()) {
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
+        auto result = int128_safe::safe_cast<signedness::signed_type, int64_t>(value);
+        if (result.is_valid())
+        {
             sum += result.value;
         }
     }
@@ -32,9 +34,11 @@ void benchmark_safe_add()
     int128_t sum(0);
 
     auto start = high_resolution_clock::now();
-    for (int i = 0; i < ITERATIONS; ++i) {
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
         auto result = int128_safe::safe_add(a, b);
-        if (result.is_valid()) {
+        if (result.is_valid())
+        {
             sum = result.value;
         }
     }
@@ -51,9 +55,11 @@ void benchmark_safe_mul()
     int128_t product(0);
 
     auto start = high_resolution_clock::now();
-    for (int i = 0; i < ITERATIONS; ++i) {
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
         auto result = int128_safe::safe_mul(a, b);
-        if (result.is_valid()) {
+        if (result.is_valid())
+        {
             product = result.value;
         }
     }
@@ -70,9 +76,11 @@ void benchmark_safe_div()
     int128_t quotient(0);
 
     auto start = high_resolution_clock::now();
-    for (int i = 0; i < ITERATIONS; ++i) {
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
         auto result = int128_safe::safe_div(a, b);
-        if (result.is_valid()) {
+        if (result.is_valid())
+        {
             quotient = result.value;
         }
     }
@@ -88,9 +96,11 @@ void benchmark_safe_abs()
     int128_t result_val(0);
 
     auto start = high_resolution_clock::now();
-    for (int i = 0; i < ITERATIONS; ++i) {
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
         auto result = int128_safe::safe_abs(negative);
-        if (result.is_valid()) {
+        if (result.is_valid())
+        {
             result_val = result.value;
         }
     }
