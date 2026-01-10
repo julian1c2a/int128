@@ -37,10 +37,12 @@ using namespace std::chrono;
 // INFRAESTRUCTURA BÁSICA
 // ============================================================================
 
-template <typename E> struct Expr {
-    constexpr const E& cast() const noexcept
+template <typename E>
+struct Expr
+{
+    constexpr const E &cast() const noexcept
     {
-        return static_cast<const E&>(*this);
+        return static_cast<const E &>(*this);
     }
 
     constexpr uint128_t eval() const
@@ -49,9 +51,15 @@ template <typename E> struct Expr {
     }
 };
 
-struct Terminal : public Expr<Terminal> {
+struct Terminal : public Expr<Terminal>
+{
     uint128_t value;
     constexpr explicit Terminal(uint128_t v) noexcept : value(v) {}
+    template <typename T>
+        requires std::integral<T>
+    constexpr Terminal(T v) noexcept : value{static_cast<uint64_t>(v)}
+    {
+    }
     constexpr uint128_t eval() const noexcept
     {
         return value;
@@ -68,7 +76,8 @@ struct Terminal : public Expr<Terminal> {
  * Esta es la implementación MÁS SIMPLE Y CORRECTA.
  * El compilador se encarga de todo el desenrollado.
  */
-template <typename... Args> constexpr auto sum_fold(Args... args)
+template <typename... Args>
+constexpr auto sum_fold(Args... args)
 {
     // Left fold: (... + args)
     // Se expande a: ((arg1 + arg2) + arg3) + ... + argN
@@ -78,7 +87,8 @@ template <typename... Args> constexpr auto sum_fold(Args... args)
 /**
  * @brief Suma n-aria con valor inicial
  */
-template <typename... Args> constexpr auto sum_fold_init(Args... args)
+template <typename... Args>
+constexpr auto sum_fold_init(Args... args)
 {
     // Binary left fold: (init + ... + args)
     // Se expande a: (((0 + arg1) + arg2) + arg3) + ...
@@ -88,7 +98,8 @@ template <typename... Args> constexpr auto sum_fold_init(Args... args)
 /**
  * @brief Right fold para suma (asociatividad derecha)
  */
-template <typename... Args> constexpr auto sum_fold_right(Args... args)
+template <typename... Args>
+constexpr auto sum_fold_right(Args... args)
 {
     // Right fold: (args + ...)
     // Se expande a: arg1 + (arg2 + (arg3 + ... + argN))
@@ -99,13 +110,15 @@ template <typename... Args> constexpr auto sum_fold_right(Args... args)
 // FOLD EXPRESSIONS PARA PRODUCTO
 // ============================================================================
 
-template <typename... Args> constexpr auto product_fold(Args... args)
+template <typename... Args>
+constexpr auto product_fold(Args... args)
 {
     // Left fold para multiplicación
     return (... * args.eval());
 }
 
-template <typename... Args> constexpr auto product_fold_init(Args... args)
+template <typename... Args>
+constexpr auto product_fold_init(Args... args)
 {
     // Con valor inicial 1
     return (uint128_t(1) * ... * args.eval());
@@ -115,17 +128,20 @@ template <typename... Args> constexpr auto product_fold_init(Args... args)
 // FOLD EXPRESSIONS PARA OPERACIONES BITWISE
 // ============================================================================
 
-template <typename... Args> constexpr auto bitwise_or_fold(Args... args)
+template <typename... Args>
+constexpr auto bitwise_or_fold(Args... args)
 {
     return (... | args.eval());
 }
 
-template <typename... Args> constexpr auto bitwise_and_fold(Args... args)
+template <typename... Args>
+constexpr auto bitwise_and_fold(Args... args)
 {
     return (... & args.eval());
 }
 
-template <typename... Args> constexpr auto bitwise_xor_fold(Args... args)
+template <typename... Args>
+constexpr auto bitwise_xor_fold(Args... args)
 {
     return (... ^ args.eval());
 }
@@ -137,7 +153,9 @@ template <typename... Args> constexpr auto bitwise_xor_fold(Args... args)
 /**
  * @brief Implementación MANUAL (complicada, innecesaria)
  */
-template <typename... Args> struct SumManual {
+template <typename... Args>
+struct SumManual
+{
     tuple<Args...> args;
 
     constexpr explicit SumManual(Args... a) : args(a...) {}
@@ -147,14 +165,16 @@ template <typename... Args> struct SumManual {
         return eval_impl(std::index_sequence_for<Args...>{});
     }
 
-  private:
-    template <size_t... Is> constexpr uint128_t eval_impl(std::index_sequence<Is...>) const
+private:
+    template <size_t... Is>
+    constexpr uint128_t eval_impl(std::index_sequence<Is...>) const
     {
         return fold_left(std::get<Is>(args).eval()...);
     }
 
     // Caso base
-    template <typename T> static constexpr uint128_t fold_left(T arg)
+    template <typename T>
+    static constexpr uint128_t fold_left(T arg)
     {
         return arg;
     }
@@ -170,7 +190,9 @@ template <typename... Args> struct SumManual {
 /**
  * @brief Implementación con FOLD EXPRESSION nativo (simple, elegante)
  */
-template <typename... Args> struct SumNative {
+template <typename... Args>
+struct SumNative
+{
     tuple<Args...> args;
 
     constexpr explicit SumNative(Args... a) : args(a...) {}
@@ -180,8 +202,9 @@ template <typename... Args> struct SumNative {
         return eval_impl(std::index_sequence_for<Args...>{});
     }
 
-  private:
-    template <size_t... Is> constexpr uint128_t eval_impl(std::index_sequence<Is...>) const
+private:
+    template <size_t... Is>
+    constexpr uint128_t eval_impl(std::index_sequence<Is...>) const
     {
         // ¡UNA SOLA LÍNEA con fold expression!
         return (... + std::get<Is>(args).eval());
@@ -198,7 +221,8 @@ void demo_basic_fold()
 
     Terminal a(100), b(200), c(300), d(400), e(500);
 
-    cout << "Valores: a=100, b=200, c=300, d=400, e=500\n" << endl;
+    cout << "Valores: a=100, b=200, c=300, d=400, e=500\n"
+         << endl;
 
     // Left fold sin valor inicial
     auto result1 = sum_fold(a, b, c, d, e);
@@ -228,7 +252,8 @@ void demo_different_operations()
 
     Terminal a(2), b(3), c(4), d(5);
 
-    cout << "Valores: a=2, b=3, c=4, d=5\n" << endl;
+    cout << "Valores: a=2, b=3, c=4, d=5\n"
+         << endl;
 
     // Suma
     auto sum = sum_fold(a, b, c, d);
@@ -288,7 +313,8 @@ void demo_constexpr()
 {
     cout << "\n=== EVALUACIÓN EN COMPILE-TIME ===" << endl;
 
-    cout << "Las fold expressions funcionan perfectamente con constexpr:\n" << endl;
+    cout << "Las fold expressions funcionan perfectamente con constexpr:\n"
+         << endl;
 
     // Todo evaluado en compile-time
     constexpr Terminal a(10);
@@ -306,17 +332,20 @@ void demo_constexpr()
 // BENCHMARKS
 // ============================================================================
 
-template <typename Func> double benchmark(const string& name, Func&& f, int iterations = 1000000)
+template <typename Func>
+double benchmark(const string &name, Func &&f, int iterations = 1000000)
 {
     auto start = high_resolution_clock::now();
 
     uint128_t sink{0};
-    for (int i = 0; i < iterations; ++i) {
+    for (int i = 0; i < iterations; ++i)
+    {
         auto result = f();
         sink = sink + result;
     }
 
-    if (sink == uint128_t(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)) {
+    if (sink == uint128_t(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL))
+    {
         cout << "impossible";
     }
 
@@ -333,23 +362,25 @@ template <typename Func> double benchmark(const string& name, Func&& f, int iter
 void benchmark_fold_expressions()
 {
     cout << "\n=== BENCHMARKS: FOLD EXPRESSIONS ===" << endl;
-    cout << "Iteraciones: 1,000,000\n" << endl;
+    cout << "Iteraciones: 1,000,000\n"
+         << endl;
 
     Terminal a(100), b(200), c(300), d(400), e(500);
 
     cout << "Suma de 5 operandos (a+b+c+d+e):" << endl;
 
-    benchmark("Fold manual (recursivo)", [&]() {
+    benchmark("Fold manual (recursivo)", [&]()
+              {
         SumManual<Terminal, Terminal, Terminal, Terminal, Terminal> manual(a, b, c, d, e);
-        return manual.eval();
-    });
+        return manual.eval(); });
 
-    benchmark("Fold nativo C++17", [&]() {
+    benchmark("Fold nativo C++17", [&]()
+              {
         SumNative<Terminal, Terminal, Terminal, Terminal, Terminal> native(a, b, c, d, e);
-        return native.eval();
-    });
+        return native.eval(); });
 
-    benchmark("Fold directo (sin struct)", [&]() { return sum_fold(a, b, c, d, e); });
+    benchmark("Fold directo (sin struct)", [&]()
+              { return sum_fold(a, b, c, d, e); });
 
     cout << "\n→ Los tres métodos tienen rendimiento similar" << endl;
     cout << "  (el compilador optimiza agresivamente todos los casos)" << endl;
@@ -429,26 +460,30 @@ int main()
     cout << "║  nativamente con fold expressions                           ║" << endl;
     cout << "╚══════════════════════════════════════════════════════════════╝" << endl;
 
-    try {
+    try
+    {
         demo_basic_fold();
         demo_different_operations();
         demo_comparison();
         demo_constexpr();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "ANÁLISIS DE PERFORMANCE" << endl;
         cout << string(65, '=') << endl;
 
         benchmark_fold_expressions();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "DOCUMENTACIÓN TÉCNICA" << endl;
         cout << string(65, '=') << endl;
 
         explain_fold_syntax();
         explain_advantages();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "RESUMEN" << endl;
         cout << string(65, '=') << endl;
         cout << "\nFold expressions (C++17) son la forma CORRECTA y SIMPLE" << endl;
@@ -460,12 +495,12 @@ int main()
         cout << "  5. Funciona con constexpr para compile-time" << endl;
         cout << "\n✓ Tenías razón: el compilador lo trata nativamente" << endl;
         cout << "✓ Demo completado exitosamente" << endl;
-
-    } catch (const exception& e) {
+    }
+    catch (const exception &e)
+    {
         cerr << "\n✗ Error: " << e.what() << endl;
         return 1;
     }
 
     return 0;
 }
-

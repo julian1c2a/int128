@@ -1,17 +1,17 @@
 /**
  * @file example_thread_safety.cpp
- * @brief Comprehensive examples of using uint128_thread_safety.hpp
+ * @brief Comprehensive examples of using int128_base_thread_safety.hpp
  */
 
-#include <chrono>
 #include <int128_simple.hpp>
+#include <int128_base_thread_safety.hpp>
+#include <chrono>
 #include <iostream>
 #include <thread>
 #include <vector>
 
 using namespace nstd;
-
-using namespace nstd;
+using namespace nstd::int128_threadsafe;
 
 // ========================= Example 1: Global Counter =========================
 
@@ -29,15 +29,17 @@ void example_global_counter()
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        threads.emplace_back([&global_counter]() {
+    for (int i = 0; i < NUM_THREADS; ++i)
+    {
+        threads.emplace_back([&global_counter]()
+                             {
             for (int j = 0; j < INCREMENTS; ++j) {
                 global_counter.add(uint128_t(0, 1));
-            }
-        });
+            } });
     }
 
-    for (auto& t : threads) {
+    for (auto &t : threads)
+    {
         t.join();
     }
 
@@ -69,26 +71,29 @@ void example_statistics()
     auto start = std::chrono::high_resolution_clock::now();
 
     // Many readers
-    for (int i = 0; i < NUM_READERS; ++i) {
-        threads.emplace_back([&statistics]() {
+    for (int i = 0; i < NUM_READERS; ++i)
+    {
+        threads.emplace_back([&statistics]()
+                             {
             for (int j = 0; j < OPERATIONS; ++j) {
                 uint128_t val = statistics.get();
                 // Simulate some read operation
                 (void)val;
-            }
-        });
+            } });
     }
 
     // Few writers
-    for (int i = 0; i < NUM_WRITERS; ++i) {
-        threads.emplace_back([&statistics]() {
+    for (int i = 0; i < NUM_WRITERS; ++i)
+    {
+        threads.emplace_back([&statistics]()
+                             {
             for (int j = 0; j < OPERATIONS; ++j) {
                 statistics.add(uint128_t(0, 1));
-            }
-        });
+            } });
     }
 
-    for (auto& t : threads) {
+    for (auto &t : threads)
+    {
         t.join();
     }
 
@@ -150,15 +155,17 @@ void example_spinlock()
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        threads.emplace_back([&fast_counter]() {
+    for (int i = 0; i < NUM_THREADS; ++i)
+    {
+        threads.emplace_back([&fast_counter]()
+                             {
             for (int j = 0; j < INCREMENTS; ++j) {
                 fast_counter.add(uint128_t(0, 1));
-            }
-        });
+            } });
     }
 
-    for (auto& t : threads) {
+    for (auto &t : threads)
+    {
         t.join();
     }
 
@@ -211,9 +218,10 @@ void example_custom_operation()
     ThreadSafeUint128 value(uint128_t(0, 10));
 
     // Apply custom operation atomically
-    value.apply([](uint128_t v) {
-        return v * uint128_t(0, 2) + uint128_t(0, 5); // v*2 + 5
-    });
+    value.apply([](uint128_t v)
+                {
+                    return v * uint128_t(0, 2) + uint128_t(0, 5); // v*2 + 5
+                });
 
     uint128_t result = value.get();
     std::cout << "After apply (10*2 + 5): " << result.low() << std::endl;
@@ -252,4 +260,3 @@ int main()
 
     return 0;
 }
-

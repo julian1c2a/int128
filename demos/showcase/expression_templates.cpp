@@ -36,7 +36,6 @@
 #include <iostream>
 #include <sstream>
 #include <type_traits>
-#include <uint128/uint128_iostreams.hpp> // operator<< para cout
 
 using namespace nstd;
 
@@ -53,11 +52,13 @@ using namespace std::chrono;
  * Usa el patrón CRTP (Curiously Recurring Template Pattern) para
  * polimorfismo estático sin overhead de funciones virtuales.
  */
-template <typename E> struct Expr {
+template <typename E>
+struct Expr
+{
     // Cast al tipo derivado (CRTP)
-    constexpr const E& derived() const noexcept
+    constexpr const E &derived() const noexcept
     {
-        return static_cast<const E&>(*this);
+        return static_cast<const E &>(*this);
     }
 
     // Evaluación de la expresión
@@ -83,10 +84,11 @@ template <typename E> struct Expr {
  * Este es un nodo hoja en el árbol de expresiones.
  * Almacena el valor directamente (no referencia) para evitar problemas con temporales.
  */
-struct Uint128Expr : public Expr<Uint128Expr> {
+struct Uint128Expr : public Expr<Uint128Expr>
+{
     uint128_t value; // Copia el valor, no almacena referencia
 
-    constexpr explicit Uint128Expr(const uint128_t& v) noexcept : value(v) {}
+    constexpr explicit Uint128Expr(const uint128_t &v) noexcept : value(v) {}
 
     constexpr uint128_t eval() const
     {
@@ -108,11 +110,13 @@ struct Uint128Expr : public Expr<Uint128Expr> {
  * @tparam E2 Tipo de la expresión derecha
  * @tparam Op Operación a aplicar (suma, resta, multiplicación, etc.)
  */
-template <typename E1, typename E2, typename Op> struct BinOp : public Expr<BinOp<E1, E2, Op>> {
-    const E1& left;
-    const E2& right;
+template <typename E1, typename E2, typename Op>
+struct BinOp : public Expr<BinOp<E1, E2, Op>>
+{
+    const E1 &left;
+    const E2 &right;
 
-    constexpr BinOp(const E1& l, const E2& r) noexcept : left(l), right(r) {}
+    constexpr BinOp(const E1 &l, const E2 &r) noexcept : left(l), right(r) {}
 
     constexpr uint128_t eval() const
     {
@@ -130,10 +134,12 @@ template <typename E1, typename E2, typename Op> struct BinOp : public Expr<BinO
  * @tparam E Tipo de la expresión
  * @tparam Op Operación a aplicar (negación, complemento, etc.)
  */
-template <typename E, typename Op> struct UnOp : public Expr<UnOp<E, Op>> {
-    const E& expr;
+template <typename E, typename Op>
+struct UnOp : public Expr<UnOp<E, Op>>
+{
+    const E &expr;
 
-    constexpr explicit UnOp(const E& e) noexcept : expr(e) {}
+    constexpr explicit UnOp(const E &e) noexcept : expr(e) {}
 
     constexpr uint128_t eval() const
     {
@@ -145,36 +151,41 @@ template <typename E, typename Op> struct UnOp : public Expr<UnOp<E, Op>> {
 // DEFINICIÓN DE OPERACIONES
 // ============================================================================
 
-struct AddOp {
-    static constexpr uint128_t apply(const uint128_t& a, const uint128_t& b)
+struct AddOp
+{
+    static constexpr uint128_t apply(const uint128_t &a, const uint128_t &b)
     {
         return a + b;
     }
 };
 
-struct SubOp {
-    static constexpr uint128_t apply(const uint128_t& a, const uint128_t& b)
+struct SubOp
+{
+    static constexpr uint128_t apply(const uint128_t &a, const uint128_t &b)
     {
         return a - b;
     }
 };
 
-struct MulOp {
-    static constexpr uint128_t apply(const uint128_t& a, const uint128_t& b)
+struct MulOp
+{
+    static constexpr uint128_t apply(const uint128_t &a, const uint128_t &b)
     {
         return a * b;
     }
 };
 
-struct DivOp {
-    static constexpr uint128_t apply(const uint128_t& a, const uint128_t& b)
+struct DivOp
+{
+    static constexpr uint128_t apply(const uint128_t &a, const uint128_t &b)
     {
         return a / b;
     }
 };
 
-struct ModOp {
-    static constexpr uint128_t apply(const uint128_t& a, const uint128_t& b)
+struct ModOp
+{
+    static constexpr uint128_t apply(const uint128_t &a, const uint128_t &b)
     {
         return a % b;
     }
@@ -183,8 +194,9 @@ struct ModOp {
 // NOTA: uint128_t no tiene operador unario -, así que lo eliminamos
 // struct NegOp eliminada
 
-struct BitNotOp {
-    static constexpr uint128_t apply(const uint128_t& a)
+struct BitNotOp
+{
+    static constexpr uint128_t apply(const uint128_t &a)
     {
         return ~a;
     }
@@ -195,55 +207,64 @@ struct BitNotOp {
 // ============================================================================
 
 // Suma: Expr + Expr
-template <typename E1, typename E2> constexpr auto operator+(const Expr<E1>& a, const Expr<E2>& b)
+template <typename E1, typename E2>
+constexpr auto operator+(const Expr<E1> &a, const Expr<E2> &b)
 {
     return BinOp<E1, E2, AddOp>(a.derived(), b.derived());
 }
 
 // Suma: Expr + uint128_t
-template <typename E> constexpr auto operator+(const Expr<E>& a, const uint128_t& b)
+template <typename E>
+constexpr auto operator+(const Expr<E> &a, const uint128_t &b)
 {
     return BinOp<E, Uint128Expr, AddOp>(a.derived(), Uint128Expr(b));
 }
 
 // Suma: uint128_t + Expr
-template <typename E> constexpr auto operator+(const uint128_t& a, const Expr<E>& b)
+template <typename E>
+constexpr auto operator+(const uint128_t &a, const Expr<E> &b)
 {
     return BinOp<Uint128Expr, E, AddOp>(Uint128Expr(a), b.derived());
 }
 
 // Resta: Expr - Expr
-template <typename E1, typename E2> constexpr auto operator-(const Expr<E1>& a, const Expr<E2>& b)
+template <typename E1, typename E2>
+constexpr auto operator-(const Expr<E1> &a, const Expr<E2> &b)
 {
     return BinOp<E1, E2, SubOp>(a.derived(), b.derived());
 }
 
 // Resta: Expr - uint128_t
-template <typename E> constexpr auto operator-(const Expr<E>& a, const uint128_t& b)
+template <typename E>
+constexpr auto operator-(const Expr<E> &a, const uint128_t &b)
 {
     return BinOp<E, Uint128Expr, SubOp>(a.derived(), Uint128Expr(b));
 }
 
 // Resta: uint128_t - Expr
-template <typename E> constexpr auto operator-(const uint128_t& a, const Expr<E>& b)
+template <typename E>
+constexpr auto operator-(const uint128_t &a, const Expr<E> &b)
 {
     return BinOp<Uint128Expr, E, SubOp>(Uint128Expr(a), b.derived());
 }
 
 // Multiplicación: Expr * Expr
-template <typename E1, typename E2> constexpr auto operator*(const Expr<E1>& a, const Expr<E2>& b)
+template <typename E1, typename E2>
+constexpr auto operator*(const Expr<E1> &a, const Expr<E2> &b)
 {
     return BinOp<E1, E2, MulOp>(a.derived(), b.derived());
 }
 
 // División: Expr / Expr
-template <typename E1, typename E2> constexpr auto operator/(const Expr<E1>& a, const Expr<E2>& b)
+template <typename E1, typename E2>
+constexpr auto operator/(const Expr<E1> &a, const Expr<E2> &b)
 {
     return BinOp<E1, E2, DivOp>(a.derived(), b.derived());
 }
 
 // Módulo: Expr % Expr
-template <typename E1, typename E2> constexpr auto operator%(const Expr<E1>& a, const Expr<E2>& b)
+template <typename E1, typename E2>
+constexpr auto operator%(const Expr<E1> &a, const Expr<E2> &b)
 {
     return BinOp<E1, E2, ModOp>(a.derived(), b.derived());
 }
@@ -251,7 +272,8 @@ template <typename E1, typename E2> constexpr auto operator%(const Expr<E1>& a, 
 // Nota: Operador unario - eliminado porque uint128_t no lo soporta
 
 // Complemento: ~Expr
-template <typename E> constexpr auto operator~(const Expr<E>& a)
+template <typename E>
+constexpr auto operator~(const Expr<E> &a)
 {
     return UnOp<E, BitNotOp>(a.derived());
 }
@@ -271,20 +293,22 @@ template <typename E> constexpr auto operator~(const Expr<E>& a)
  */
 class UInt128ET : public Expr<UInt128ET>
 {
-  private:
+private:
     uint128_t value_;
 
-  public:
+public:
     // Constructores
     constexpr UInt128ET() noexcept : value_(0) {}
     constexpr UInt128ET(uint64_t v) noexcept : value_(v) {}
-    constexpr UInt128ET(const uint128_t& v) noexcept : value_(v) {}
+    constexpr UInt128ET(const uint128_t &v) noexcept : value_(v) {}
 
     // Constructor desde expresión (aquí ocurre la evaluación)
-    template <typename E> constexpr UInt128ET(const Expr<E>& expr) : value_(expr.eval()) {}
+    template <typename E>
+    constexpr UInt128ET(const Expr<E> &expr) : value_(expr.eval()) {}
 
     // Asignación desde expresión
-    template <typename E> constexpr UInt128ET& operator=(const Expr<E>& expr)
+    template <typename E>
+    constexpr UInt128ET &operator=(const Expr<E> &expr)
     {
         value_ = expr.eval();
         return *this;
@@ -307,19 +331,19 @@ class UInt128ET : public Expr<UInt128ET>
     }
 
     // Operadores de asignación compuesta
-    constexpr UInt128ET& operator+=(const UInt128ET& other)
+    constexpr UInt128ET &operator+=(const UInt128ET &other)
     {
         value_ += other.value_;
         return *this;
     }
 
-    constexpr UInt128ET& operator-=(const UInt128ET& other)
+    constexpr UInt128ET &operator-=(const UInt128ET &other)
     {
         value_ -= other.value_;
         return *this;
     }
 
-    constexpr UInt128ET& operator*=(const UInt128ET& other)
+    constexpr UInt128ET &operator*=(const UInt128ET &other)
     {
         value_ *= other.value_;
         return *this;
@@ -337,7 +361,8 @@ void demo_basic_usage()
 {
     cout << "\n=== DEMOSTRACIÓN BÁSICA ===" << endl;
     cout << "Sin Expression Templates, 'e = a + b + c + d' crea 3 temporales." << endl;
-    cout << "Con Expression Templates, se evalúa en una sola pasada.\n" << endl;
+    cout << "Con Expression Templates, se evalúa en una sola pasada.\n"
+         << endl;
 
     uint128_t a{1000};
     uint128_t b{2000};
@@ -417,11 +442,13 @@ void demo_type_deduction()
 // BENCHMARKS
 // ============================================================================
 
-template <typename Func> double benchmark(const string& name, Func&& f, int iterations = 1000000)
+template <typename Func>
+double benchmark(const string &name, Func &&f, int iterations = 1000000)
 {
     auto start = high_resolution_clock::now();
 
-    for (int i = 0; i < iterations; ++i) {
+    for (int i = 0; i < iterations; ++i)
+    {
         f();
     }
 
@@ -438,7 +465,8 @@ template <typename Func> double benchmark(const string& name, Func&& f, int iter
 void benchmark_simple_addition()
 {
     cout << "\n=== BENCHMARK: SUMA SIMPLE (a + b + c + d) ===" << endl;
-    cout << "Iteraciones: 1,000,000\n" << endl;
+    cout << "Iteraciones: 1,000,000\n"
+         << endl;
 
     uint128_t a = 12345678901234567890ULL;
     uint128_t b = 98765432109876543210ULL;
@@ -448,24 +476,31 @@ void benchmark_simple_addition()
     uint128_t result{0};
 
     // Sin Expression Templates
-    auto time_no_et = benchmark("Sin ET (temporales)", [&]() { result = a + b + c + d; });
+    auto time_no_et = benchmark("Sin ET (temporales)", [&]()
+                                { result = a + b + c + d; });
 
     // Con Expression Templates usando wrapper
     UInt128ET a_et(a), b_et(b), c_et(c), d_et(d);
     UInt128ET result_et;
 
     auto time_with_et =
-        benchmark("Con ET (sin temporales)", [&]() { result_et = a_et + b_et + c_et + d_et; });
+        benchmark("Con ET (sin temporales)", [&]()
+                  { result_et = a_et + b_et + c_et + d_et; });
 
     double speedup = time_no_et / time_with_et;
     cout << "\nSpeedup: " << fixed << setprecision(2) << speedup << "x" << endl;
 
-    if (speedup > 1.0) {
+    if (speedup > 1.0)
+    {
         cout << "Expression Templates son " << ((speedup - 1.0) * 100) << "% más rápidos" << endl;
-    } else if (speedup < 1.0) {
+    }
+    else if (speedup < 1.0)
+    {
         cout << "Sin ET es " << ((1.0 / speedup - 1.0) * 100)
              << "% más rápido (overhead de ET no vale la pena para expresiones simples)" << endl;
-    } else {
+    }
+    else
+    {
         cout << "Rendimiento similar (compilador optimizó ambos casos)" << endl;
     }
 }
@@ -474,14 +509,16 @@ void benchmark_complex_expression()
 {
     cout << "\n=== BENCHMARK: EXPRESIÓN COMPLEJA ===" << endl;
     cout << "e = (a + b) * (c - d) + (e / f) - g" << endl;
-    cout << "Iteraciones: 1,000,000\n" << endl;
+    cout << "Iteraciones: 1,000,000\n"
+         << endl;
 
     uint128_t a = 1000, b = 2000, c = 5000, d = 3000;
     uint128_t e = 100000, f = 10, g = 500;
     uint128_t result{0};
 
     // Sin Expression Templates
-    auto time_no_et = benchmark("Sin ET", [&]() { result = (a + b) * (c - d) + (e / f) - g; });
+    auto time_no_et = benchmark("Sin ET", [&]()
+                                { result = (a + b) * (c - d) + (e / f) - g; });
 
     // Con Expression Templates
     UInt128ET a_et(a), b_et(b), c_et(c), d_et(d);
@@ -489,7 +526,8 @@ void benchmark_complex_expression()
     UInt128ET result_et;
 
     auto time_with_et = benchmark(
-        "Con ET", [&]() { result_et = (a_et + b_et) * (c_et - d_et) + (e_et / f_et) - g_et; });
+        "Con ET", [&]()
+        { result_et = (a_et + b_et) * (c_et - d_et) + (e_et / f_et) - g_et; });
 
     double speedup = time_no_et / time_with_et;
     cout << "\nSpeedup: " << fixed << setprecision(2) << speedup << "x" << endl;
@@ -499,32 +537,33 @@ void benchmark_large_expressions()
 {
     cout << "\n=== BENCHMARK: EXPRESIÓN GRANDE (10 operandos) ===" << endl;
     cout << "e = a + b + c + d + e + f + g + h + i + j" << endl;
-    cout << "Iteraciones: 1,000,000\n" << endl;
+    cout << "Iteraciones: 1,000,000\n"
+         << endl;
 
     uint128_t vals[10];
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i)
+    {
         vals[i] = 1000 + i * 100;
     }
 
     uint128_t result{0};
 
     // Sin Expression Templates (9 temporales)
-    auto time_no_et = benchmark("Sin ET (9 temporales)", [&]() {
-        result = vals[0] + vals[1] + vals[2] + vals[3] + vals[4] + vals[5] + vals[6] + vals[7] +
-                 vals[8] + vals[9];
-    });
+    auto time_no_et = benchmark("Sin ET (9 temporales)", [&]()
+                                { result = vals[0] + vals[1] + vals[2] + vals[3] + vals[4] + vals[5] + vals[6] + vals[7] +
+                                           vals[8] + vals[9]; });
 
     // Con Expression Templates
     UInt128ET vals_et[10];
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i)
+    {
         vals_et[i] = UInt128ET(vals[i]);
     }
     UInt128ET result_et;
 
-    auto time_with_et = benchmark("Con ET (sin temporales)", [&]() {
-        result_et = vals_et[0] + vals_et[1] + vals_et[2] + vals_et[3] + vals_et[4] + vals_et[5] +
-                    vals_et[6] + vals_et[7] + vals_et[8] + vals_et[9];
-    });
+    auto time_with_et = benchmark("Con ET (sin temporales)", [&]()
+                                  { result_et = vals_et[0] + vals_et[1] + vals_et[2] + vals_et[3] + vals_et[4] + vals_et[5] +
+                                                vals_et[6] + vals_et[7] + vals_et[8] + vals_et[9]; });
 
     double speedup = time_no_et / time_with_et;
     cout << "\nSpeedup: " << fixed << setprecision(2) << speedup << "x" << endl;
@@ -577,12 +616,14 @@ int main()
     cout << "║  intermedios en expresiones aritméticas complejas            ║" << endl;
     cout << "╚══════════════════════════════════════════════════════════════╝" << endl;
 
-    try {
+    try
+    {
         demo_basic_usage();
         demo_complex_expressions();
         demo_type_deduction();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "BENCHMARKS" << endl;
         cout << string(65, '=') << endl;
 
@@ -592,7 +633,8 @@ int main()
 
         explain_assembly_optimization();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "CONCLUSIONES" << endl;
         cout << string(65, '=') << endl;
         cout << "\n1. Expression Templates eliminan copias innecesarias" << endl;
@@ -603,12 +645,12 @@ int main()
         cout << "6. Trade-off: tiempo de compilación vs tiempo de ejecución" << endl;
 
         cout << "\n✓ Demo completado exitosamente" << endl;
-
-    } catch (const exception& e) {
+    }
+    catch (const exception &e)
+    {
         cerr << "Error: " << e.what() << endl;
         return 1;
     }
 
     return 0;
 }
-

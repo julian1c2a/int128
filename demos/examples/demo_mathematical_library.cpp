@@ -1,204 +1,206 @@
-#include <int128_simple.hpp>
-#include <iostream>
-using namespace nstd;
+/**
+ * @file demo_mathematical_library.cpp
+ * @brief Demostración de funciones matemáticas para int128_t/uint128_t
+ *
+ * Compilar:
+ *   g++ -std=c++20 -O2 -Iinclude demos/examples/demo_mathematical_library.cpp \
+ *       -o demo_mathematical_library
+ */
 
+#include <int128_simple.hpp>
+#include <int128_base_cmath.hpp>
+#include <iostream>
+
+using namespace nstd;
 using namespace nstd::int128_literals;
 
 void demo_basic_math()
 {
-    std::cout << "\n=== DEMO: Funciones Matemáticas Básicas ===" << std::endl;
+    std::cout << "\n=== DEMO: Funciones Matematicas Basicas ===" << std::endl;
 
     // Demostrar GCD y LCM
-    uint128_t a = 48_u128;
-    uint128_t b = 18_u128;
-    auto gcd_result = nstd::gcd(a, b);
-    auto lcm_result = nstd::lcm(a, b);
+    const uint128_t a{48};
+    const uint128_t b{18};
+    const auto gcd_result = nstd::gcd(a, b);
+    const auto lcm_result = nstd::lcm(a, b);
 
     std::cout << "GCD(48, 18) = " << gcd_result.to_string() << std::endl;
     std::cout << "LCM(48, 18) = " << lcm_result.to_string() << std::endl;
-    std::cout << "Verificación: GCD × LCM = " << (gcd_result * lcm_result).to_string()
-              << ", a × b = " << (a * b).to_string() << std::endl;
+    std::cout << "Verificacion: GCD x LCM = " << (gcd_result * lcm_result).to_string()
+              << ", a x b = " << (a * b).to_string() << std::endl;
 
     // Potenciación
-    auto power_result = nstd::pow(2_u128, 32_u128);
+    const auto power_result = nstd::pow(uint128_t{2}, uint128_t{32});
     std::cout << "2^32 = " << power_result.to_string() << std::endl;
 
-    auto power_large = nstd::pow(3_u128, 50_u128);
+    // Potenciación con números grandes
+    const auto power_large = nstd::pow(uint128_t{3}, uint128_t{50});
     std::cout << "3^50 = " << power_large.to_string() << std::endl;
 
     // Raíz cuadrada
-    auto sqrt_result = nstd::sqrt(1000000_u128);
-    std::cout << "√1000000 = " << sqrt_result.to_string() << std::endl;
+    const auto sqrt_result = nstd::sqrt(uint128_t{1000000});
+    std::cout << "sqrt(1000000) = " << sqrt_result.to_string() << std::endl;
 
-    auto sqrt_large = nstd::sqrt(power_result);
-    std::cout << "√(2^32) = √" << power_result.to_string() << " = " << sqrt_large.to_string()
-              << std::endl;
+    const auto sqrt_large = nstd::sqrt(power_result);
+    std::cout << "sqrt(2^32) = " << sqrt_large.to_string() << std::endl;
 }
 
-void demo_cryptographic_functions()
+void demo_signed_math()
 {
-    std::cout << "\n=== DEMO: Funciones Criptográficas ===" << std::endl;
-    std::cout
-        << "NOTA: Funciones avanzadas (is_prime, powmod, is_perfect_square) no implementadas aún"
-        << std::endl;
+    std::cout << "\n=== DEMO: Operaciones con Signed (int128_t) ===" << std::endl;
 
-    // Números primos grandes
-    auto mersenne_31 = nstd::pow(2_u128, 31_u128) - 1_u128; // 2^31 - 1
-    std::cout << "2^31 - 1 = " << mersenne_31.to_string() << std::endl;
-    // std::cout << " es primo: " << (std::is_prime(mersenne_31) ? "Sí" : "No") << std::endl;
+    // Valor absoluto
+    const int128_t neg_val{-12345};
+    const auto abs_result = nstd::abs(neg_val);
+    std::cout << "abs(-12345) = " << abs_result.to_string() << std::endl;
 
-    // Exponenciación modular (usado en RSA)
-    // uint128_t base = 12345_u128;
-    // uint128_t exponent = 65537_u128; // Exponente público común en RSA
-    // uint128_t modulus = mersenne_31;
+    // GCD con valores signed
+    const int128_t x{-48};
+    const int128_t y{18};
+    const auto gcd_signed = nstd::gcd(x, y);
+    std::cout << "GCD(-48, 18) = " << gcd_signed.to_string() << std::endl;
 
-    // auto powmod_result = std::powmod(base, exponent, modulus);
-    // std::cout << "Exponenciación modular: " << base.to_string() << "^" << exponent.to_string()
-    //           << " mod " << modulus.to_string() << " = " << powmod_result.to_string() <<
-    //           std::endl;
+    // min, max, clamp
+    const int128_t a{-100};
+    const int128_t b{50};
+    std::cout << "min(-100, 50) = " << nstd::min(a, b).to_string() << std::endl;
+    std::cout << "max(-100, 50) = " << nstd::max(a, b).to_string() << std::endl;
 
-    // Verificar si números grandes son cuadrados perfectos
-    uint128_t perfect_square = 123456789_u128 * 123456789_u128;
-    std::cout << "Número: " << perfect_square.to_string() << std::endl;
-    // std::cout << "¿Es " << perfect_square.to_string() << " un cuadrado perfecto? "
-    //           << (std::is_perfect_square(perfect_square) ? "Sí" : "No") << std::endl;
+    const int128_t val{-150};
+    const int128_t lo{-100};
+    const int128_t hi{100};
+    std::cout << "clamp(-150, -100, 100) = " << nstd::clamp(val, lo, hi).to_string() << std::endl;
 
-    // uint128_t not_perfect = perfect_square + 1_u128;
-    // std::cout << "¿Es " << not_perfect.to_string() << " un cuadrado perfecto? "
-    //           << (std::is_perfect_square(not_perfect) ? "Sí" : "No") << std::endl;
+    // sign function
+    std::cout << "sign(-100) = " << nstd::sign(a) << std::endl;
+    std::cout << "sign(50) = " << nstd::sign(b) << std::endl;
+    std::cout << "sign(0) = " << nstd::sign(int128_t{0}) << std::endl;
 }
 
-void demo_combinatorics()
+void demo_large_numbers()
 {
-    std::cout << "\n=== DEMO: Combinatoria y Estadística ===" << std::endl;
-    std::cout << "NOTA: Funciones de combinatoria (factorial, binomial) no implementadas aún"
-              << std::endl;
+    std::cout << "\n=== DEMO: Numeros Muy Grandes ===" << std::endl;
 
-    // Factoriales
-    // std::cout << "Factoriales:" << std::endl;
-    // for (unsigned i = 0; i <= 15; i += 5) {
-    //     auto fact = uint128_math::factorial(i);
-    //     std::cout << "  " << i << "! = " << fact.to_string() << std::endl;
-    // }
+    // Potencias de 2 grandes
+    const auto pow_64 = nstd::pow(uint128_t{2}, uint128_t{64});
+    std::cout << "2^64 = " << pow_64.to_string() << std::endl;
 
-    // Coeficientes binomiales (combinaciones)
-    // std::cout << "\nCoeficientes binomiales C(n,k):" << std::endl;
+    const auto pow_100 = nstd::pow(uint128_t{2}, uint128_t{100});
+    std::cout << "2^100 = " << pow_100.to_string() << std::endl;
+    std::cout << "Este numero tiene " << pow_100.to_string().length() << " digitos" << std::endl;
 
-    // uint128_t n = 20_u128;
-    // for (uint128_t k = 0_u128; k <= 10_u128; k += 2_u128) {
-    //     auto binomial = uint128_math::binomial(n, k);
-    //     std::cout << "  C(20," << k.to_string() << ") = " << binomial.to_string() << std::endl;
-    // }
+    // Raíz cuadrada de potencias
+    const auto sqrt_pow_100 = nstd::sqrt(pow_100);
+    std::cout << "sqrt(2^100) = 2^50 = " << sqrt_pow_100.to_string() << std::endl;
 
-    // Coeficiente binomial muy grande
-    // auto large_binomial = uint128_math::binomial(100_u128, 50_u128);
-    // std::cout << "\nC(100,50) = " << large_binomial.to_string() << std::endl;
-    // std::cout << "Este es el coeficiente binomial más grande que puede calcular uint128_t!"
-    //           << std::endl;
+    // Verificar: sqrt(2^100)^2 debe ser aproximadamente 2^100
+    const auto verify = sqrt_pow_100 * sqrt_pow_100;
+    std::cout << "Verificacion: (2^50)^2 = " << verify.to_string() << std::endl;
+
+    // GCD de números grandes
+    const auto large1 = nstd::pow(uint128_t{2}, uint128_t{30}) * uint128_t{3};
+    const auto large2 = nstd::pow(uint128_t{2}, uint128_t{25}) * uint128_t{5};
+    const auto gcd_large = nstd::gcd(large1, large2);
+    std::cout << "\nNumero1 = 2^30 * 3 = " << large1.to_string() << std::endl;
+    std::cout << "Numero2 = 2^25 * 5 = " << large2.to_string() << std::endl;
+    std::cout << "GCD = 2^25 = " << gcd_large.to_string() << std::endl;
 }
 
-void demo_multiple_args()
+void demo_fibonacci()
 {
-    std::cout << "NOTA: Funciones con múltiples argumentos (gcd_multiple, lcm_multiple) no "
-                 "implementadas aún"
-              << std::endl;
+    std::cout << "\n=== DEMO: Fibonacci con uint128_t ===" << std::endl;
 
-    // GCD de múltiples números
-    // auto gcd_multi = uint128_math::gcd_multiple(48_u128, 18_u128, 24_u128, 36_u128);
-    // std::cout << "GCD(48, 18, 24, 36) = " << gcd_multi.to_string() << std::endl;
+    // Calcular Fibonacci hasta F(185) (máximo que cabe en 128 bits)
+    uint128_t fib_prev{0};
+    uint128_t fib_curr{1};
 
-    // LCM de múltiples números
-    // auto lcm_multi = uint128_math::lcm_multiple(4_u128, 6_u128, 8_u128, 12_u128);
-    // std::cout << "LCM(4, 6, 8, 12) = " << lcm_multi.to_string() << std::endl;
+    std::cout << "F(0) = " << fib_prev.to_string() << std::endl;
+    std::cout << "F(1) = " << fib_curr.to_string() << std::endl;
 
-    // Demostrar con números más grandes
-    // auto large_gcd =
-    //     uint128_math::gcd_multiple(nstd::pow(2_u128, 20_u128), nstd::pow(2_u128, 15_u128) * 3_u128,
-    //                                nstd::pow(2_u128, 12_u128) * 5_u128);
-    // std::cout << "GCD(2^20, 2^15×3, 2^12×5) = " << large_gcd.to_string() << std::endl;
+    // Calcular algunos valores clave
+    for (int i = 2; i <= 186; ++i)
+    {
+        const uint128_t fib_next = fib_prev + fib_curr;
+        fib_prev = fib_curr;
+        fib_curr = fib_next;
+
+        // Mostrar algunos hitos
+        if (i == 50 || i == 100 || i == 150 || i == 180 || i == 185 || i == 186)
+        {
+            std::cout << "F(" << i << ") = " << fib_curr.to_string()
+                      << " (" << fib_curr.to_string().length() << " digitos)" << std::endl;
+        }
+    }
+
+    // Propiedad: GCD(F(n), F(n-1)) = 1 siempre
+    const auto gcd_fib = nstd::gcd(fib_curr, fib_prev);
+    std::cout << "GCD(F(186), F(185)) = " << gcd_fib.to_string()
+              << " (siempre es 1 para Fibonacci consecutivos)" << std::endl;
 }
 
-void demo_mixed_types()
+void demo_midpoint()
 {
-    std::cout << "\n=== DEMO: Compatibilidad con Tipos Mixtos ===" << std::endl;
+    std::cout << "\n=== DEMO: Midpoint sin Overflow ===" << std::endl;
 
-    // Funciones estándar con tipos mixtos
-    uint128_t large_num = 123456789012345_u128;
+    // Midpoint de números grandes (evita overflow)
+    const uint128_t max_val = uint128_t::max();
+    const uint128_t almost_max = max_val - uint128_t{100};
 
-    auto gcd_mixed1 = nstd::gcd(large_num, 123456);
-    std::cout << "GCD(uint128_t, int): " << gcd_mixed1.to_string() << std::endl;
+    std::cout << "a = MAX_UINT128 = " << max_val.to_string() << std::endl;
+    std::cout << "b = MAX_UINT128 - 100 = " << almost_max.to_string() << std::endl;
 
-    auto lcm_mixed = nstd::lcm(1000000, large_num);
-    std::cout << "LCM(int, uint128_t): " << lcm_mixed.to_string() << std::endl;
+    // (a + b) / 2 causaría overflow, pero midpoint lo maneja correctamente
+    const auto mid = nstd::midpoint(almost_max, max_val);
+    std::cout << "midpoint(a, b) = " << mid.to_string() << std::endl;
 
-    auto pow_mixed1 = nstd::pow(large_num, 3);
-    std::cout << "POW(uint128_t, int): " << pow_mixed1.to_string() << std::endl;
-
-    auto pow_mixed2 = nstd::pow(987, large_num % 10_u128);
-    std::cout << "POW(int, uint128_t): " << pow_mixed2.to_string() << std::endl;
-
-    std::cout << "\n✅ Todas las operaciones funcionan perfectamente con tipos mixtos!"
-              << std::endl;
+    // Verificar
+    const auto expected = almost_max + uint128_t{50};
+    std::cout << "Esperado (b + 50) = " << expected.to_string() << std::endl;
+    std::cout << "Correcto?: " << (mid == expected ? "SI" : "NO") << std::endl;
 }
 
-void demo_performance_showcase()
+void demo_divmod()
 {
-    std::cout << "\n=== DEMO: Showcase de Performance ===" << std::endl;
+    std::cout << "\n=== DEMO: Division y Modulo Simultaneos ===" << std::endl;
 
-    // Números grandes para demostrar optimizaciones
-    auto large1 = uint128_t::from_string("123456789012345678901234567890");
-    auto large2 = uint128_t::from_string("987654321098765432109876543210");
+    const int128_t dividend{12345};
+    const int128_t divisor{100};
 
-    std::cout << "Calculando con números de ~30 dígitos..." << std::endl;
-    std::cout << "Número 1: " << large1.to_string() << std::endl;
-    std::cout << "Número 2: " << large2.to_string() << std::endl;
+    const auto result = nstd::divmod(dividend, divisor);
 
-    auto gcd_large = nstd::gcd(large1, large2);
-    std::cout << "GCD: " << gcd_large.to_string() << std::endl;
+    std::cout << dividend.to_string() << " / " << divisor.to_string()
+              << " = " << result.first.to_string() << std::endl;
+    std::cout << dividend.to_string() << " % " << divisor.to_string()
+              << " = " << result.second.to_string() << std::endl;
 
-    auto lcm_large = nstd::lcm(large1, large2);
-    std::cout << "LCM: " << lcm_large.to_string() << std::endl;
-
-    auto sqrt_large = nstd::sqrt(large1);
-    std::cout << "√(número1): " << sqrt_large.to_string() << std::endl;
-
-    // Exponenciación muy grande
-    auto very_large_power = nstd::pow(2_u128, 100_u128);
-    std::cout << "\n2^100 = " << very_large_power.to_string() << std::endl;
-    std::cout << "Este número tiene " << very_large_power.to_string().length() << " dígitos!"
-              << std::endl;
-
-    auto sqrt_power = nstd::sqrt(very_large_power);
-    std::cout << "√(2^100) = √" << very_large_power.to_string() << " = " << sqrt_power.to_string()
-              << std::endl;
+    // Verificar: quotient * divisor + remainder = dividend
+    const auto verify = result.first * divisor + result.second;
+    std::cout << "Verificacion: " << result.first.to_string() << " * " << divisor.to_string()
+              << " + " << result.second.to_string() << " = " << verify.to_string() << std::endl;
 }
 
 int main()
 {
-    std::cout << "🧮 DEMOSTRACIÓN: FUNCIONES MATEMÁTICAS AVANZADAS UINT128_T" << std::endl;
-    std::cout << "=============================================================" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|  DEMO: Funciones Matematicas int128/uint128  |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
 
     demo_basic_math();
-    demo_cryptographic_functions();
-    demo_combinatorics();
-    demo_multiple_args();
-    demo_mixed_types();
-    demo_performance_showcase();
+    demo_signed_math();
+    demo_large_numbers();
+    demo_fibonacci();
+    demo_midpoint();
+    demo_divmod();
 
-    std::cout << "\n🎉 RESUMEN DE CAPACIDADES DEMOSTRADAS:" << std::endl;
-    std::cout << "✅ Funciones matemáticas estándar (std::gcd, std::lcm, std::pow, std::sqrt)"
-              << std::endl;
-    std::cout << "✅ Funciones criptográficas (powmod, is_prime, is_perfect_square)" << std::endl;
-    std::cout << "✅ Combinatoria avanzada (factorial, coeficientes binomiales)" << std::endl;
-    std::cout << "✅ Operaciones con múltiples argumentos (gcd_multiple, lcm_multiple)"
-              << std::endl;
-    std::cout << "✅ Compatibilidad perfecta con tipos estándar de C++" << std::endl;
-    std::cout << "✅ Performance optimizado para números muy grandes" << std::endl;
-    std::cout
-        << "✅ Algoritmos de grado industrial (Binary GCD, Newton, exponentiation by squaring)"
-        << std::endl;
-
-    std::cout << "\n🚀 uint128_t ahora cuenta con una biblioteca matemática completa!" << std::endl;
+    std::cout << "\n+==============================================+" << std::endl;
+    std::cout << "|  Capacidades demostradas:                    |" << std::endl;
+    std::cout << "|  - gcd, lcm (Algoritmo de Stein)             |" << std::endl;
+    std::cout << "|  - pow (exponenciacion por cuadrados)        |" << std::endl;
+    std::cout << "|  - sqrt (Newton-Raphson)                     |" << std::endl;
+    std::cout << "|  - abs, min, max, clamp, sign                |" << std::endl;
+    std::cout << "|  - midpoint (sin overflow)                   |" << std::endl;
+    std::cout << "|  - divmod (division + modulo)                |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
 
     return 0;
 }

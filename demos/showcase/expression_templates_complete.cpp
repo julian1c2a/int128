@@ -43,15 +43,17 @@ using namespace std::chrono;
 /**
  * @brief Clase base CRTP para todas las expresiones
  */
-template <typename E> struct Expr {
-    constexpr const E& cast() const noexcept
+template <typename E>
+struct Expr
+{
+    constexpr const E &cast() const noexcept
     {
-        return static_cast<const E&>(*this);
+        return static_cast<const E &>(*this);
     }
 
-    constexpr E& cast() noexcept
+    constexpr E &cast() noexcept
     {
-        return static_cast<E&>(*this);
+        return static_cast<E &>(*this);
     }
 
     constexpr uint128_t eval() const
@@ -68,13 +70,17 @@ template <typename E> struct Expr {
 /**
  * @brief Tag para identificar tipos de expresión
  */
-struct ExprTag {
+struct ExprTag
+{
 };
 
-template <typename T> struct is_expr : std::is_base_of<ExprTag, T> {
+template <typename T>
+struct is_expr : std::is_base_of<ExprTag, T>
+{
 };
 
-template <typename T> constexpr bool is_expr_v = is_expr<T>::value;
+template <typename T>
+constexpr bool is_expr_v = is_expr<T>::value;
 
 // ============================================================================
 // NODO TERMINAL (HOJA DEL ÁRBOL)
@@ -83,7 +89,8 @@ template <typename T> constexpr bool is_expr_v = is_expr<T>::value;
 /**
  * @brief Nodo terminal que almacena un valor uint128_t
  */
-struct Terminal : public Expr<Terminal>, ExprTag {
+struct Terminal : public Expr<Terminal>, ExprTag
+{
     uint128_t value;
 
     constexpr explicit Terminal(uint128_t v) noexcept : value(v) {}
@@ -102,7 +109,8 @@ struct Terminal : public Expr<Terminal>, ExprTag {
  * @brief Plantilla para operaciones binarias
  */
 template <typename L, typename R, typename Op>
-struct BinaryOp : public Expr<BinaryOp<L, R, Op>>, ExprTag {
+struct BinaryOp : public Expr<BinaryOp<L, R, Op>>, ExprTag
+{
     L left;
     R right;
 
@@ -115,111 +123,121 @@ struct BinaryOp : public Expr<BinaryOp<L, R, Op>>, ExprTag {
 };
 
 // Definición de operaciones binarias
-struct AddOp {
+struct AddOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a + b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "+";
     }
 };
 
-struct SubOp {
+struct SubOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a - b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "-";
     }
 };
 
-struct MulOp {
+struct MulOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a * b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "*";
     }
 };
 
-struct DivOp {
+struct DivOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a / b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "/";
     }
 };
 
-struct ModOp {
+struct ModOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a % b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "%";
     }
 };
 
-struct AndOp {
+struct AndOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a & b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "&";
     }
 };
 
-struct OrOp {
+struct OrOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a | b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "|";
     }
 };
 
-struct XorOp {
+struct XorOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a ^ b;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "^";
     }
 };
 
-struct ShlOp {
+struct ShlOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a << static_cast<int>(b);
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "<<";
     }
 };
 
-struct ShrOp {
+struct ShrOp
+{
     static constexpr uint128_t apply(uint128_t a, uint128_t b) noexcept
     {
         return a >> static_cast<int>(b);
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return ">>";
     }
@@ -232,7 +250,9 @@ struct ShrOp {
 /**
  * @brief Plantilla para operaciones unarias
  */
-template <typename E, typename Op> struct UnaryOp : public Expr<UnaryOp<E, Op>>, ExprTag {
+template <typename E, typename Op>
+struct UnaryOp : public Expr<UnaryOp<E, Op>>, ExprTag
+{
     E expr;
 
     constexpr explicit UnaryOp(E e) noexcept : expr(e) {}
@@ -244,45 +264,49 @@ template <typename E, typename Op> struct UnaryOp : public Expr<UnaryOp<E, Op>>,
 };
 
 // Definición de operaciones unarias
-struct NotOp {
+struct NotOp
+{
     static constexpr uint128_t apply(uint128_t a) noexcept
     {
         return ~a;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "~";
     }
 };
 
-struct LogicalNotOp {
+struct LogicalNotOp
+{
     static constexpr uint128_t apply(uint128_t a) noexcept
     {
-        return a == 0 ? 1 : 0;
+        return a == 0 ? uint128_t{1} : uint128_t{0};
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "!";
     }
 };
 
-struct IncrementOp {
+struct IncrementOp
+{
     static constexpr uint128_t apply(uint128_t a) noexcept
     {
         return a + 1;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "++";
     }
 };
 
-struct DecrementOp {
+struct DecrementOp
+{
     static constexpr uint128_t apply(uint128_t a) noexcept
     {
         return a - 1;
     }
-    static constexpr const char* name()
+    static constexpr const char *name()
     {
         return "--";
     }
@@ -299,7 +323,8 @@ struct DecrementOp {
  * usando variadic templates y fold expressions.
  */
 template <typename Op, typename... Args>
-struct AssocMultiOp : public Expr<AssocMultiOp<Op, Args...>>, ExprTag {
+struct AssocMultiOp : public Expr<AssocMultiOp<Op, Args...>>, ExprTag
+{
     tuple<Args...> args;
 
     constexpr explicit AssocMultiOp(Args... a) noexcept : args(a...) {}
@@ -309,15 +334,17 @@ struct AssocMultiOp : public Expr<AssocMultiOp<Op, Args...>>, ExprTag {
         return eval_impl(std::index_sequence_for<Args...>{});
     }
 
-  private:
-    template <size_t... Is> constexpr uint128_t eval_impl(std::index_sequence<Is...>) const
+private:
+    template <size_t... Is>
+    constexpr uint128_t eval_impl(std::index_sequence<Is...>) const
     {
         // Desenrolla en tiempo de compilación: Op(arg0, Op(arg1, Op(arg2, ...)))
         return fold_left(std::get<Is>(args).eval()...);
     }
 
     // Caso base: un solo argumento
-    template <typename T> static constexpr uint128_t fold_left(T arg)
+    template <typename T>
+    static constexpr uint128_t fold_left(T arg)
     {
         return arg;
     }
@@ -333,7 +360,8 @@ struct AssocMultiOp : public Expr<AssocMultiOp<Op, Args...>>, ExprTag {
 /**
  * @brief Helper para construir operaciones multi-asociativas
  */
-template <typename Op, typename... Args> constexpr auto make_assoc_op(Args... args)
+template <typename Op, typename... Args>
+constexpr auto make_assoc_op(Args... args)
 {
     return AssocMultiOp<Op, Args...>(args...);
 }
@@ -347,7 +375,9 @@ template <typename Op, typename... Args> constexpr auto make_assoc_op(Args... ar
  *
  * Cachea el resultado de la evaluación para evitar re-cálculos.
  */
-template <typename E> struct CachedExpr : public Expr<CachedExpr<E>>, ExprTag {
+template <typename E>
+struct CachedExpr : public Expr<CachedExpr<E>>, ExprTag
+{
     E expr;
     mutable bool cached;
     mutable uint128_t cache_value;
@@ -356,7 +386,8 @@ template <typename E> struct CachedExpr : public Expr<CachedExpr<E>>, ExprTag {
 
     constexpr uint128_t eval() const
     {
-        if (!cached) {
+        if (!cached)
+        {
             cache_value = expr.eval();
             cached = true;
         }
@@ -370,7 +401,8 @@ template <typename E> struct CachedExpr : public Expr<CachedExpr<E>>, ExprTag {
     }
 };
 
-template <typename E> constexpr auto cache(E expr)
+template <typename E>
+constexpr auto cache(E expr)
 {
     return CachedExpr<E>(expr);
 }
@@ -380,19 +412,21 @@ template <typename E> constexpr auto cache(E expr)
 // ============================================================================
 
 // Operadores binarios
-#define DEFINE_BINARY_OP(op, OpType)                                                               \
-    template <typename L, typename R>                                                              \
-    constexpr auto operator op(const Expr<L>& l, const Expr<R>& r)                                 \
-    {                                                                                              \
-        return BinaryOp<L, R, OpType>(l.cast(), r.cast());                                         \
-    }                                                                                              \
-    template <typename E> constexpr auto operator op(const Expr<E>& e, uint128_t v)                \
-    {                                                                                              \
-        return BinaryOp<E, Terminal, OpType>(e.cast(), Terminal(v));                               \
-    }                                                                                              \
-    template <typename E> constexpr auto operator op(uint128_t v, const Expr<E>& e)                \
-    {                                                                                              \
-        return BinaryOp<Terminal, E, OpType>(Terminal(v), e.cast());                               \
+#define DEFINE_BINARY_OP(op, OpType)                                 \
+    template <typename L, typename R>                                \
+    constexpr auto operator op(const Expr<L> &l, const Expr<R> &r)   \
+    {                                                                \
+        return BinaryOp<L, R, OpType>(l.cast(), r.cast());           \
+    }                                                                \
+    template <typename E>                                            \
+    constexpr auto operator op(const Expr<E> &e, uint128_t v)        \
+    {                                                                \
+        return BinaryOp<E, Terminal, OpType>(e.cast(), Terminal(v)); \
+    }                                                                \
+    template <typename E>                                            \
+    constexpr auto operator op(uint128_t v, const Expr<E> &e)        \
+    {                                                                \
+        return BinaryOp<Terminal, E, OpType>(Terminal(v), e.cast()); \
     }
 
 DEFINE_BINARY_OP(+, AddOp)
@@ -409,10 +443,11 @@ DEFINE_BINARY_OP(>>, ShrOp)
 #undef DEFINE_BINARY_OP
 
 // Operadores unarios
-#define DEFINE_UNARY_OP(op, OpType)                                                                \
-    template <typename E> constexpr auto operator op(const Expr<E>& e)                             \
-    {                                                                                              \
-        return UnaryOp<E, OpType>(e.cast());                                                       \
+#define DEFINE_UNARY_OP(op, OpType)              \
+    template <typename E>                        \
+    constexpr auto operator op(const Expr<E> &e) \
+    {                                            \
+        return UnaryOp<E, OpType>(e.cast());     \
     }
 
 DEFINE_UNARY_OP(~, NotOp)
@@ -429,25 +464,25 @@ DEFINE_UNARY_OP(!, LogicalNotOp)
  */
 class UInt128ET : public Expr<UInt128ET>, ExprTag
 {
-  private:
+private:
     uint128_t value_;
 
-  public:
+public:
     // Constructores
     constexpr UInt128ET() noexcept : value_(0) {}
     constexpr UInt128ET(uint64_t v) noexcept : value_(v) {}
-    constexpr UInt128ET(const uint128_t& v) noexcept : value_(v) {}
+    constexpr UInt128ET(const uint128_t &v) noexcept : value_(v) {}
     constexpr UInt128ET(uint64_t high, uint64_t low) noexcept : value_(high, low) {}
 
     // Constructor desde expresión
     template <typename E, typename = std::enable_if_t<is_expr_v<E>>>
-    constexpr UInt128ET(const Expr<E>& expr) : value_(expr.eval())
+    constexpr UInt128ET(const Expr<E> &expr) : value_(expr.eval())
     {
     }
 
     // Asignación desde expresión
     template <typename E, typename = std::enable_if_t<is_expr_v<E>>>
-    constexpr UInt128ET& operator=(const Expr<E>& expr)
+    constexpr UInt128ET &operator=(const Expr<E> &expr)
     {
         value_ = expr.eval();
         return *this;
@@ -468,32 +503,36 @@ class UInt128ET : public Expr<UInt128ET>, ExprTag
     }
 
     // Operadores de asignación compuesta
-    template <typename E> constexpr UInt128ET& operator+=(const Expr<E>& expr)
+    template <typename E>
+    constexpr UInt128ET &operator+=(const Expr<E> &expr)
     {
         value_ += expr.eval();
         return *this;
     }
 
-    template <typename E> constexpr UInt128ET& operator-=(const Expr<E>& expr)
+    template <typename E>
+    constexpr UInt128ET &operator-=(const Expr<E> &expr)
     {
         value_ -= expr.eval();
         return *this;
     }
 
-    template <typename E> constexpr UInt128ET& operator*=(const Expr<E>& expr)
+    template <typename E>
+    constexpr UInt128ET &operator*=(const Expr<E> &expr)
     {
         value_ *= expr.eval();
         return *this;
     }
 
-    template <typename E> constexpr UInt128ET& operator/=(const Expr<E>& expr)
+    template <typename E>
+    constexpr UInt128ET &operator/=(const Expr<E> &expr)
     {
         value_ /= expr.eval();
         return *this;
     }
 
     // Operadores de incremento/decremento
-    constexpr UInt128ET& operator++()
+    constexpr UInt128ET &operator++()
     {
         ++value_;
         return *this;
@@ -506,7 +545,7 @@ class UInt128ET : public Expr<UInt128ET>, ExprTag
         return tmp;
     }
 
-    constexpr UInt128ET& operator--()
+    constexpr UInt128ET &operator--()
     {
         --value_;
         return *this;
@@ -527,7 +566,8 @@ class UInt128ET : public Expr<UInt128ET>, ExprTag
 /**
  * @brief Crea una operación multi-asociativa de suma
  */
-template <typename... Args> constexpr auto sum(Args... args)
+template <typename... Args>
+constexpr auto sum(Args... args)
 {
     return make_assoc_op<AddOp>(args...);
 }
@@ -535,7 +575,8 @@ template <typename... Args> constexpr auto sum(Args... args)
 /**
  * @brief Crea una operación multi-asociativa de multiplicación
  */
-template <typename... Args> constexpr auto product(Args... args)
+template <typename... Args>
+constexpr auto product(Args... args)
 {
     return make_assoc_op<MulOp>(args...);
 }
@@ -543,7 +584,8 @@ template <typename... Args> constexpr auto product(Args... args)
 /**
  * @brief Crea una operación multi-asociativa de OR
  */
-template <typename... Args> constexpr auto bitwise_or(Args... args)
+template <typename... Args>
+constexpr auto bitwise_or(Args... args)
 {
     return make_assoc_op<OrOp>(args...);
 }
@@ -551,7 +593,8 @@ template <typename... Args> constexpr auto bitwise_or(Args... args)
 /**
  * @brief Crea una operación multi-asociativa de AND
  */
-template <typename... Args> constexpr auto bitwise_and(Args... args)
+template <typename... Args>
+constexpr auto bitwise_and(Args... args)
 {
     return make_assoc_op<AndOp>(args...);
 }
@@ -566,7 +609,8 @@ void demo_basic_operations()
 
     UInt128ET a(1000), b(500), c(250);
 
-    cout << "Valores: a=1000, b=500, c=250\n" << endl;
+    cout << "Valores: a=1000, b=500, c=250\n"
+         << endl;
 
     // Operaciones binarias
     cout << "Operaciones binarias:" << endl;
@@ -597,7 +641,8 @@ void demo_complex_expressions()
 
     UInt128ET a(100), b(200), c(300), d(50), e(10);
 
-    cout << "Valores: a=100, b=200, c=300, d=50, e=10\n" << endl;
+    cout << "Valores: a=100, b=200, c=300, d=50, e=10\n"
+         << endl;
 
     // Expresión compleja anidada
     auto expr1 = (a + b) * (c - d) / e;
@@ -622,12 +667,14 @@ void demo_multi_assoc_operations()
 
     UInt128ET a(10), b(20), c(30), d(40), e(50);
 
-    cout << "Valores: a=10, b=20, c=30, d=40, e=50\n" << endl;
+    cout << "Valores: a=10, b=20, c=30, d=40, e=50\n"
+         << endl;
 
     // Suma multi-operando (desenrollada en compile-time)
     auto s = sum(a, b, c, d, e);
     cout << "sum(a, b, c, d, e) = " << s.eval() << endl;
-    cout << "  → Desenrollado en compile-time sin temporales\n" << endl;
+    cout << "  → Desenrollado en compile-time sin temporales\n"
+         << endl;
 
     // Producto multi-operando
     UInt128ET x(2), y(3), z(4);
@@ -653,13 +700,15 @@ void demo_cse_optimization()
 
     UInt128ET a(100), b(200);
 
-    cout << "Valores: a=100, b=200\n" << endl;
+    cout << "Valores: a=100, b=200\n"
+         << endl;
 
     // Sin CSE: calcula (a+b) dos veces
     cout << "Sin CSE:" << endl;
     auto expr1 = (a + b) * (a + b); // (a+b) calculado 2 veces
     cout << "  (a + b) * (a + b) = " << expr1.eval() << endl;
-    cout << "  → Subexpresión (a+b) calculada 2 veces\n" << endl;
+    cout << "  → Subexpresión (a+b) calculada 2 veces\n"
+         << endl;
 
     // Con CSE: calcula (a+b) una vez y cachea
     cout << "Con CSE:" << endl;
@@ -676,7 +725,8 @@ void demo_assignment_operators()
 
     UInt128ET a(100), b(50);
 
-    cout << "Inicial: a=100, b=50\n" << endl;
+    cout << "Inicial: a=100, b=50\n"
+         << endl;
 
     // +=
     a += b + UInt128ET(10);
@@ -706,7 +756,8 @@ void demo_constexpr_evaluation()
 {
     cout << "\n=== EVALUACIÓN CONSTEXPR ===" << endl;
 
-    cout << "Todas las operaciones pueden evaluarse en compile-time:\n" << endl;
+    cout << "Todas las operaciones pueden evaluarse en compile-time:\n"
+         << endl;
 
     // Expresiones constexpr
     constexpr UInt128ET a(100);
@@ -723,18 +774,21 @@ void demo_constexpr_evaluation()
 // BENCHMARKS
 // ============================================================================
 
-template <typename Func> double benchmark(const string& name, Func&& f, int iterations = 1000000)
+template <typename Func>
+double benchmark(const string &name, Func &&f, int iterations = 1000000)
 {
     auto start = high_resolution_clock::now();
 
     uint128_t sink{0}; // Evitar optimización agresiva
-    for (int i = 0; i < iterations; ++i) {
+    for (int i = 0; i < iterations; ++i)
+    {
         auto result = f();
         sink = sink + result; // Uso para evitar optimización
     }
 
     // Usar sink para evitar que se optimice completamente
-    if (sink == uint128_t(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL)) {
+    if (sink == uint128_t(0xFFFFFFFFFFFFFFFFULL, 0xFFFFFFFFFFFFFFFFULL))
+    {
         cout << "impossible";
     }
 
@@ -751,7 +805,8 @@ template <typename Func> double benchmark(const string& name, Func&& f, int iter
 void benchmark_operations()
 {
     cout << "\n=== BENCHMARKS ===" << endl;
-    cout << "Iteraciones: 1,000,000\n" << endl;
+    cout << "Iteraciones: 1,000,000\n"
+         << endl;
 
     uint128_t a_raw{12345};
     uint128_t b_raw{67890};
@@ -762,23 +817,30 @@ void benchmark_operations()
 
     cout << "Expresión simple (4 operandos):" << endl;
 
-    benchmark("Sin ET: a+b+c+d", [&]() { return a_raw + b_raw + c_raw + d_raw; });
+    benchmark("Sin ET: a+b+c+d", [&]()
+              { return a_raw + b_raw + c_raw + d_raw; });
 
-    benchmark("Con ET: a+b+c+d", [&]() { return (a + b + c + d).eval(); });
+    benchmark("Con ET: a+b+c+d", [&]()
+              { return (a + b + c + d).eval(); });
 
-    benchmark("Multi-assoc: sum(a,b,c,d)", [&]() { return sum(a, b, c, d).eval(); });
+    benchmark("Multi-assoc: sum(a,b,c,d)", [&]()
+              { return sum(a, b, c, d).eval(); });
 
     cout << "\nExpresión compleja:" << endl;
 
-    benchmark("Sin ET: (a+b)*(c-d)", [&]() { return (a_raw + b_raw) * (c_raw - d_raw); });
+    benchmark("Sin ET: (a+b)*(c-d)", [&]()
+              { return (a_raw + b_raw) * (c_raw - d_raw); });
 
-    benchmark("Con ET: (a+b)*(c-d)", [&]() { return ((a + b) * (c - d)).eval(); });
+    benchmark("Con ET: (a+b)*(c-d)", [&]()
+              { return ((a + b) * (c - d)).eval(); });
 
     cout << "\nOperaciones bitwise:" << endl;
 
-    benchmark("Sin ET: (a&b)|(c^d)", [&]() { return (a_raw & b_raw) | (c_raw ^ d_raw); });
+    benchmark("Sin ET: (a&b)|(c^d)", [&]()
+              { return (a_raw & b_raw) | (c_raw ^ d_raw); });
 
-    benchmark("Con ET: (a&b)|(c^d)", [&]() { return ((a & b) | (c ^ d)).eval(); });
+    benchmark("Con ET: (a&b)|(c^d)", [&]()
+              { return ((a & b) | (c ^ d)).eval(); });
 }
 
 // ============================================================================
@@ -852,7 +914,8 @@ int main()
     cout << "║  ✓ CSE         ✓ constexpr  ✓ Type-safe                    ║" << endl;
     cout << "╚══════════════════════════════════════════════════════════════╝" << endl;
 
-    try {
+    try
+    {
         demo_basic_operations();
         demo_complex_expressions();
         demo_multi_assoc_operations();
@@ -860,20 +923,23 @@ int main()
         demo_assignment_operators();
         demo_constexpr_evaluation();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "ANÁLISIS DE PERFORMANCE" << endl;
         cout << string(65, '=') << endl;
 
         benchmark_operations();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "DOCUMENTACIÓN TÉCNICA" << endl;
         cout << string(65, '=') << endl;
 
         explain_architecture();
         explain_benefits();
 
-        cout << "\n" << string(65, '=') << endl;
+        cout << "\n"
+             << string(65, '=') << endl;
         cout << "RESUMEN" << endl;
         cout << string(65, '=') << endl;
         cout << "\nEste sistema de Expression Templates proporciona:" << endl;
@@ -885,12 +951,12 @@ int main()
         cout << "  6. Soporte constexpr para compile-time" << endl;
         cout << "  7. Type-safe con SFINAE" << endl;
         cout << "\n✓ Demo completado exitosamente" << endl;
-
-    } catch (const exception& e) {
+    }
+    catch (const exception &e)
+    {
         cerr << "\n✗ Error: " << e.what() << endl;
         return 1;
     }
 
     return 0;
 }
-

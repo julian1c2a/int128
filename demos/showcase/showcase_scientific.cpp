@@ -25,16 +25,17 @@ using namespace nstd;
 using namespace nstd::int128_literals;
 
 // Colores ANSI
-const char* RESET = "\033[0m";
-const char* CYAN = "\033[36m";
-const char* GREEN = "\033[32m";
-const char* YELLOW = "\033[33m";
-const char* MAGENTA = "\033[35m";
-const char* BLUE = "\033[34m";
+const char *RESET = "\033[0m";
+const char *CYAN = "\033[36m";
+const char *GREEN = "\033[32m";
+const char *YELLOW = "\033[33m";
+const char *MAGENTA = "\033[35m";
+const char *BLUE = "\033[34m";
 
-void print_header(const std::string& title)
+void print_header(const std::string &title)
 {
-    std::cout << "\n" << CYAN << "╔═══════════════════════════════════════════════════════╗\n";
+    std::cout << "\n"
+              << CYAN << "╔═══════════════════════════════════════════════════════╗\n";
     std::cout << "║ " << title;
     for (size_t i = title.length(); i < 54; ++i)
         std::cout << " ";
@@ -48,9 +49,10 @@ void print_header(const std::string& title)
 uint128_t factorial(int n)
 {
     if (n <= 1)
-        return 1;
+        return uint128_t{1};
     uint128_t result{1};
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; ++i)
+    {
         result *= i;
     }
     return result;
@@ -62,14 +64,15 @@ uint128_t factorial(int n)
 uint128_t binomial(int n, int k)
 {
     if (k > n)
-        return 0;
+        return uint128_t{0};
     if (k == 0 || k == n)
-        return 1;
+        return uint128_t{1};
     if (k > n - k)
         k = n - k; // Optimización
 
     uint128_t result{1};
-    for (int i = 0; i < k; ++i) {
+    for (int i = 0; i < k; ++i)
+    {
         result *= (n - i);
         result /= (i + 1);
     }
@@ -91,7 +94,8 @@ void demo_combinatorics()
     std::cout << YELLOW << ">>> Factoriales grandes" << RESET << "\n\n";
 
     std::vector<int> fact_tests = {10, 20, 25, 30, 34};
-    for (int n : fact_tests) {
+    for (int n : fact_tests)
+    {
         uint128_t fact = factorial(n);
         std::cout << "  " << n << "! = " << GREEN << fact << RESET;
 
@@ -100,37 +104,44 @@ void demo_combinatorics()
         std::cout << " (" << str.length() << " dígitos)\n";
     }
 
-    std::cout << "\n" << YELLOW << ">>> Coeficientes binomiales" << RESET << "\n\n";
+    std::cout << "\n"
+              << YELLOW << ">>> Coeficientes binomiales" << RESET << "\n\n";
     std::cout << "  Triángulo de Pascal (primeras 10 filas):\n\n";
 
-    for (int n = 0; n < 10; ++n) {
+    for (int n = 0; n < 10; ++n)
+    {
         std::cout << "  ";
         for (int spaces = 0; spaces < (10 - n) * 3; ++spaces)
             std::cout << " ";
 
-        for (int k = 0; k <= n; ++k) {
+        for (int k = 0; k <= n; ++k)
+        {
             uint128_t coef = binomial(n, k);
             std::cout << GREEN << std::setw(5) << coef << RESET << " ";
         }
         std::cout << "\n";
     }
 
-    std::cout << "\n" << YELLOW << ">>> Coeficientes binomiales grandes" << RESET << "\n\n";
+    std::cout << "\n"
+              << YELLOW << ">>> Coeficientes binomiales grandes" << RESET << "\n\n";
 
     std::vector<std::pair<int, int>> bin_tests = {{50, 25}, {60, 30}, {70, 35}, {80, 40}};
 
-    for (const auto& [n, k] : bin_tests) {
+    for (const auto &[n, k] : bin_tests)
+    {
         uint128_t coef = binomial(n, k);
         std::cout << "  C(" << n << ", " << k << ") = " << GREEN << coef << RESET << "\n";
     }
 
-    std::cout << "\n" << YELLOW << ">>> Números de Catalan" << RESET << "\n\n";
+    std::cout << "\n"
+              << YELLOW << ">>> Números de Catalan" << RESET << "\n\n";
     std::cout << "  Los números de Catalan aparecen en:\n";
     std::cout << "    - Árboles binarios\n";
     std::cout << "    - Expresiones con paréntesis\n";
     std::cout << "    - Caminos en cuadrículas\n\n";
 
-    for (int n = 0; n <= 20; ++n) {
+    for (int n = 0; n <= 20; ++n)
+    {
         uint128_t cat = catalan(n);
         std::cout << "  C_" << std::setw(2) << n << " = " << GREEN << cat << RESET << "\n";
     }
@@ -146,28 +157,33 @@ void demo_sequences()
 
     std::cout << "  Calculando hasta que exceda 10^30...\n\n";
 
-    while (fib.back() < 1000000000000000000000000000000_u128) {
+    while (fib.back() < 1000000000000000000000000000000_u128)
+    {
         uint128_t next = fib[fib.size() - 1] + fib[fib.size() - 2];
         fib.push_back(next);
     }
 
     // Mostrar los últimos 10
     std::cout << "  Últimos 10 términos:\n";
-    for (size_t i = fib.size() - 10; i < fib.size(); ++i) {
+    for (size_t i = fib.size() - 10; i < fib.size(); ++i)
+    {
         std::cout << "  F_" << std::setw(3) << i << " = " << GREEN << fib[i] << RESET << "\n";
     }
 
     std::cout << "\n  Total de términos calculados: " << MAGENTA << fib.size() << RESET << "\n";
 
-    std::cout << "\n" << YELLOW << ">>> Secuencia de Lucas" << RESET << "\n\n";
+    std::cout << "\n"
+              << YELLOW << ">>> Secuencia de Lucas" << RESET << "\n\n";
     std::cout << "  Similar a Fibonacci, pero L_0=2, L_1=1\n\n";
 
     std::vector<uint128_t> lucas = {2, 1};
-    for (int i = 2; i < 30; ++i) {
+    for (int i = 2; i < 30; ++i)
+    {
         lucas.push_back(lucas[i - 1] + lucas[i - 2]);
     }
 
-    for (size_t i = 0; i < 15; ++i) {
+    for (size_t i = 0; i < 15; ++i)
+    {
         std::cout << "  L_" << std::setw(2) << i << " = " << GREEN << lucas[i] << RESET << "\n";
     }
 
@@ -180,8 +196,10 @@ void demo_sequences()
     std::cout << "  φ (phi) ≈ " << BLUE << std::setprecision(15) << phi << RESET << "\n\n";
     std::cout << "  Límite de F_(n+1)/F_n cuando n→∞ es φ:\n\n";
 
-    for (size_t i = 10; i < 20; ++i) {
-        if (fib[i] > 0) {
+    for (size_t i = 10; i < 20; ++i)
+    {
+        if (fib[i] > 0)
+        {
             double ratio =
                 static_cast<double>(fib[i + 1].low()) / static_cast<double>(fib[i].low());
             std::cout << "  F_" << std::setw(2) << (i + 1) << "/F_" << i << " ≈ " << BLUE
@@ -198,23 +216,28 @@ void demo_partitions()
     std::cout << YELLOW << ">>> Potencias de 2 (exponencial)" << RESET << "\n\n";
     std::cout << "  Útiles en análisis de algoritmos y estructuras de datos\n\n";
 
-    for (int i = 0; i <= 100; i += 10) {
+    for (int i = 0; i <= 100; i += 10)
+    {
         uint128_t power = uint128_t(1) << i;
         std::cout << "  2^" << std::setw(3) << i << " = " << GREEN << power << RESET << "\n";
     }
 
-    std::cout << "\n" << YELLOW << ">>> Números triangulares" << RESET << "\n\n";
+    std::cout << "\n"
+              << YELLOW << ">>> Números triangulares" << RESET << "\n\n";
     std::cout << "  T_n = n(n+1)/2 - suma de primeros n enteros\n\n";
 
-    auto triangular = [](uint128_t n) -> uint128_t { return n * (n + 1) / 2; };
+    auto triangular = [](uint128_t n) -> uint128_t
+    { return n * (n + 1) / 2; };
 
     std::vector<uint128_t> t_tests = {10, 100, 1000, 10000, 100000, 1000000, 10000000};
-    for (const auto& n : t_tests) {
+    for (const auto &n : t_tests)
+    {
         uint128_t t = triangular(n);
         std::cout << "  T_" << std::setw(8) << n << " = " << GREEN << t << RESET << "\n";
     }
 
-    std::cout << "\n" << YELLOW << ">>> Números perfectos" << RESET << "\n\n";
+    std::cout << "\n"
+              << YELLOW << ">>> Números perfectos" << RESET << "\n\n";
     std::cout << "  Un número perfecto es igual a la suma de sus divisores propios\n\n";
 
     // Números perfectos conocidos pequeños
@@ -225,7 +248,8 @@ void demo_partitions()
         8128_u128, // 2^6 * (2^7 - 1)
     };
 
-    for (size_t i = 0; i < perfect.size(); ++i) {
+    for (size_t i = 0; i < perfect.size(); ++i)
+    {
         std::cout << "  Perfecto #" << (i + 1) << ": " << GREEN << perfect[i] << RESET << "\n";
     }
 
@@ -241,7 +265,8 @@ void demo_approximations()
     std::cout << YELLOW << ">>> Aproximación de π usando fracciones" << RESET << "\n\n";
 
     // Aproximaciones racionales famosas de π
-    struct Fraction {
+    struct Fraction
+    {
         uint128_t num, den;
         std::string name;
     };
@@ -253,13 +278,15 @@ void demo_approximations()
 
     double pi = 3.141592653589793238;
 
-    for (const auto& frac : pi_approx) {
+    for (const auto &frac : pi_approx)
+    {
         double approx = static_cast<double>(frac.num.low()) / static_cast<double>(frac.den.low());
         double error = std::abs(approx - pi);
 
         std::cout << "  " << frac.name << ": " << GREEN << frac.num << "/" << frac.den << RESET;
         std::cout << " ≈ " << BLUE << std::setprecision(12) << approx << RESET;
-        std::cout << "  (error: " << std::scientific << error << ")\n" << std::defaultfloat;
+        std::cout << "  (error: " << std::scientific << error << ")\n"
+                  << std::defaultfloat;
     }
 
     std::cout << "\n"
@@ -270,7 +297,8 @@ void demo_approximations()
     uint128_t numerator{1};
     uint128_t denominator{1};
 
-    for (int n = 1; n <= 20; ++n) {
+    for (int n = 1; n <= 20; ++n)
+    {
         uint128_t fact = factorial(n);
         numerator = numerator * fact + denominator;
         denominator = denominator * fact;

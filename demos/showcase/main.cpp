@@ -20,6 +20,7 @@
 #include <chrono>
 #include <cmath>
 #include <int128_simple.hpp>
+#include <int128_base_cmath.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -39,38 +40,41 @@ using namespace nstd::int128_literals;
 #define MAGENTA "\033[35m"
 #define CYAN "\033[36m"
 
-void print_header(const std::string& title)
+void print_header(const std::string &title)
 {
-    std::cout << "\n" << BOLD << CYAN;
+    std::cout << "\n"
+              << BOLD << CYAN;
     std::cout << "╔══════════════════════════════════════════════════════════════╗\n";
     std::cout << "║ " << std::setw(60) << std::left << title << " ║\n";
     std::cout << "╚══════════════════════════════════════════════════════════════╝\n";
     std::cout << RESET << "\n";
 }
 
-void print_section(const std::string& section)
+void print_section(const std::string &section)
 {
-    std::cout << "\n" << BOLD << YELLOW << ">>> " << section << RESET << "\n\n";
+    std::cout << "\n"
+              << BOLD << YELLOW << ">>> " << section << RESET << "\n\n";
 }
 
-void print_result(const std::string& label, const auto& value)
+void print_result(const std::string &label, const auto &value)
 {
     std::cout << GREEN << "  ✓ " << RESET << label << ": " << BOLD << value << RESET << "\n";
 }
 
-void print_warning(const std::string& msg)
+void print_warning(const std::string &msg)
 {
     std::cout << YELLOW << "  ⚠  " << msg << RESET << "\n";
 }
 
-void print_error(const std::string& msg)
+void print_error(const std::string &msg)
 {
     std::cout << RED << "  ✗ " << msg << RESET << "\n";
 }
 
 void pause()
 {
-    std::cout << "\n" << BLUE << "Presiona Enter para continuar..." << RESET;
+    std::cout << "\n"
+              << BLUE << "Presiona Enter para continuar..." << RESET;
     std::cin.ignore();
     std::cin.get();
 }
@@ -87,7 +91,8 @@ void demo_huge_numbers()
 
     // Factorial de 34 (el más grande que cabe en uint128_t)
     uint128_t factorial{1};
-    for (int i = 2; i <= 34; ++i) {
+    for (int i = 2; i <= 34; ++i)
+    {
         factorial *= i;
     }
 
@@ -99,7 +104,8 @@ void demo_huge_numbers()
     // Fibonacci hasta que no quepa en uint128_t
     std::vector<uint128_t> fib = {0_u128, 1_u128};
 
-    while (fib.size() < 186) { // F(186) es el último que cabe
+    while (fib.size() < 186)
+    { // F(186) es el último que cabe
         auto next = fib[fib.size() - 1] + fib[fib.size() - 2];
         if (next < fib[fib.size() - 1])
             break; // Overflow
@@ -128,9 +134,11 @@ void demo_bitwise_magic()
 
     print_section("Contar bits activados (popcount)");
 
-    auto popcount = [](uint128_t n) -> int {
+    auto popcount = [](uint128_t n) -> int
+    {
         int count = 0;
-        while (n) {
+        while (n)
+        {
             count += (n & 1) != 0;
             n >>= 1;
         }
@@ -144,7 +152,8 @@ void demo_bitwise_magic()
 
     print_section("Encontrar el bit más alto (MSB)");
 
-    auto msb_position = [](uint128_t n) -> int {
+    auto msb_position = [](uint128_t n) -> int
+    {
         if (n == 0)
             return -1;
         int pos = 0;
@@ -203,12 +212,14 @@ void demo_math_functions()
 
     print_section("Raíz cuadrada");
 
-    auto sqrt_impl = [](uint128_t n) -> uint128_t {
+    auto sqrt_impl = [](uint128_t n) -> uint128_t
+    {
         if (n == 0)
             return 0;
         uint128_t x = n;
         uint128_t y = (x + 1) / 2;
-        while (y < x) {
+        while (y < x)
+        {
             x = y;
             y = (x + n / x) / 2;
         }
@@ -238,14 +249,14 @@ void demo_stl_algorithms()
                                       750000000000_u128, 100000000000_u128};
 
     std::cout << "  Antes:   ";
-    for (const auto& n : numbers)
+    for (const auto &n : numbers)
         std::cout << n << " ";
     std::cout << "\n";
 
     std::sort(numbers.begin(), numbers.end());
 
     std::cout << "  Después: ";
-    for (const auto& n : numbers)
+    for (const auto &n : numbers)
         std::cout << n << " ";
     std::cout << "\n";
 
@@ -258,10 +269,11 @@ void demo_stl_algorithms()
 
     std::vector<uint128_t> doubled;
     std::transform(numbers.begin(), numbers.end(), std::back_inserter(doubled),
-                   [](uint128_t n) { return n * 2; });
+                   [](uint128_t n)
+                   { return n * 2; });
 
     std::cout << "  Doblados: ";
-    for (const auto& n : doubled)
+    for (const auto &n : doubled)
         std::cout << n << " ";
     std::cout << "\n";
 
@@ -278,7 +290,8 @@ void demo_safe_operations()
 
     print_section("Detección de Overflow");
 
-    auto safe_mul = [](uint128_t a, uint128_t b) -> std::optional<uint128_t> {
+    auto safe_mul = [](uint128_t a, uint128_t b) -> std::optional<uint128_t>
+    {
         if (a == 0 || b == 0)
             return uint128_t(0);
         uint128_t result = a * b;
@@ -292,17 +305,20 @@ void demo_safe_operations()
     auto result1 = safe_mul(1000_u128, 2000_u128);
     auto result2 = safe_mul(max, 2_u128);
 
-    if (result1) {
+    if (result1)
+    {
         print_result("1000 × 2000", *result1);
     }
 
-    if (!result2) {
+    if (!result2)
+    {
         print_error("max × 2 = OVERFLOW detectado!");
     }
 
     print_section("División segura");
 
-    auto safe_div = [](uint128_t a, uint128_t b) -> std::optional<uint128_t> {
+    auto safe_div = [](uint128_t a, uint128_t b) -> std::optional<uint128_t>
+    {
         if (b == 0)
             return std::nullopt;
         return a / b;
@@ -311,11 +327,13 @@ void demo_safe_operations()
     auto div1 = safe_div(1000_u128, 10_u128);
     auto div2 = safe_div(1000_u128, 0_u128);
 
-    if (div1) {
+    if (div1)
+    {
         print_result("1000 ÷ 10", *div1);
     }
 
-    if (!div2) {
+    if (!div2)
+    {
         print_error("1000 ÷ 0 = División por cero detectada!");
     }
 
@@ -338,7 +356,8 @@ void demo_performance()
     {
         auto start = std::chrono::high_resolution_clock::now();
         uint128_t sum{0};
-        for (int i = 0; i < iterations; ++i) {
+        for (int i = 0; i < iterations; ++i)
+        {
             sum += i;
         }
         auto end = std::chrono::high_resolution_clock::now();
@@ -353,7 +372,8 @@ void demo_performance()
     {
         auto start = std::chrono::high_resolution_clock::now();
         uint128_t product{1};
-        for (int i = 1; i < 100; ++i) {
+        for (int i = 1; i < 100; ++i)
+        {
             product = (product * i) % 1000000007;
         }
         auto end = std::chrono::high_resolution_clock::now();
@@ -384,7 +404,8 @@ void demo_formatting()
 
     print_section("Tabla formateada");
 
-    struct Entry {
+    struct Entry
+    {
         std::string name;
         uint128_t value;
     };
@@ -397,7 +418,8 @@ void demo_formatting()
               << "Valor" << "\n";
     std::cout << "  " << std::string(42, '-') << "\n";
 
-    for (const auto& entry : table) {
+    for (const auto &entry : table)
+    {
         std::cout << "  " << std::left << std::setw(12) << entry.name << std::right << std::setw(30)
                   << entry.value << "\n";
     }
@@ -429,7 +451,8 @@ int main()
 )" << RESET << "\n";
 
     std::cout << BOLD << "Esta demo muestra las capacidades completas de la biblioteca int128.\n";
-    std::cout << "Cada sección demuestra características diferentes.\n" << RESET;
+    std::cout << "Cada sección demuestra características diferentes.\n"
+              << RESET;
 
     pause();
 
@@ -443,7 +466,8 @@ int main()
     demo_formatting();
 
     // Final
-    std::cout << "\n" << BOLD << GREEN;
+    std::cout << "\n"
+              << BOLD << GREEN;
     std::cout << "╔════════════════════════════════════════════════════════════════╗\n";
     std::cout << "║                   🎉 DEMO COMPLETADA 🎉                        ║\n";
     std::cout << "╚════════════════════════════════════════════════════════════════╝\n";
@@ -456,4 +480,3 @@ int main()
 
     return 0;
 }
-
