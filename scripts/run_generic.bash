@@ -5,42 +5,43 @@
 # Ejecuta benchmarks o demos compilados con todos los compiladores y modos
 # 
 # Uso:
-#   # Para benchs (sintaxis clásica):
-#   run_generic.bash <type> <feature> [compiler] [mode]
+#   # Para benchs (sintaxis simplificada - template unificado):
+#   run_generic.bash <feature> [compiler] [mode]
 #   
-#   # Para demos (nueva sintaxis):
+#   # Para demos:
 #   run_generic.bash demos <category> <demo_name> [compiler] [mode] [args...]
 #
 # Argumentos:
-#   type     : uint128 | int128 | demos
-#   feature  : bits | numeric | algorithm | etc. (o <category> si type=demos)
+#   feature  : tt | bits | numeric | algorithm | etc. (o "demos" para demos)
 #   compiler : gcc | clang | intel | msvc | all (default: all)
 #   mode     : debug | release | all (default: all)
 #   args     : (solo demos) argumentos adicionales para pasar al demo
 #
 # Ejemplos Benchs:
-#   run_generic.bash uint128 bits
-#   run_generic.bash int128 numeric gcc release
-#   run_generic.bash uint128 algorithm all all
+#   run_generic.bash bits
+#   run_generic.bash numeric gcc release
+#   run_generic.bash algorithm all all
 #
 # Ejemplos Demos:
 #   run_generic.bash demos tutorials 01_basic_operations gcc release
 #   run_generic.bash demos examples ipv6_address clang debug
 #   run_generic.bash demos showcase main gcc release --verbose
+#
+# NOTA: El tipo "int128" se usa implícitamente (template unificado int128_base_t<S>)
 # ==============================================================================
 
 set -euo pipefail
 
 # ========================= Parse Arguments =========================
 
-if [[ $# -lt 2 ]]; then
-    echo "Error: Se requieren al menos 2 argumentos"
-    echo "Uso: $0 <type> <feature> [compiler] [mode] [args...]"
+if [[ $# -lt 1 ]]; then
+    echo "Error: Se requiere al menos 1 argumento"
+    echo "Uso: $0 <feature> [compiler] [mode] [args...]"
     echo ""
     echo "Benchs:"
-    echo "  $0 uint128 bits"
-    echo "  $0 int128 numeric gcc release"
-    echo "  $0 uint128 algorithm all all"
+    echo "  $0 bits"
+    echo "  $0 numeric gcc release"
+    echo "  $0 algorithm all all"
     echo ""
     echo "Demos:"
     echo "  $0 demos tutorials 01_basic_operations gcc release"
@@ -48,20 +49,33 @@ if [[ $# -lt 2 ]]; then
     exit 1
 fi
 
-TYPE="$1"
-FEATURE="$2"
+# Compatibilidad hacia atrás: detectar sintaxis vieja (uint128/int128 como primer arg)
+if [[ "$1" == "uint128" || "$1" == "int128" ]]; then
+    echo "-> NOTA: Sintaxis vieja detectada. TYPE '$1' ignorado (template unificado)."
+    shift  # Eliminar el primer argumento (TYPE)
+fi
+
+FEATURE="$1"
+
+# TYPE siempre es int128 con el template unificado
+TYPE="int128"
 
 # Determine if this is a demo or benchmark
 IS_DEMO=false
-if [[ "$TYPE" == "demos" ]]; then
+if [[ "$FEATURE" == "demos" ]]; then
     IS_DEMO=true
-    CATEGORY="$FEATURE"
+    CATEGORY="${2:-}"
     DEMO_NAME="${3:-}"
     COMPILER="${4:-all}"
     MODE="${5:-all}"
     # Remaining arguments are extra args for the demo
     shift 5 2>/dev/null || true
     DEMO_ARGS=("$@")
+    
+    if [[ -z "$CATEGORY" ]]; then
+        echo "Error: Se requiere la categoría del demo"
+        exit 1
+    fi
     
     if [[ -z "$DEMO_NAME" ]]; then
         echo "Error: Se requiere el nombre del demo"
@@ -75,13 +89,14 @@ if [[ "$TYPE" == "demos" ]]; then
         exit 1
     fi
 else
-    COMPILER="${3:-all}"
-    MODE="${4:-all}"
+    COMPILER="${2:-all}"
+    MODE="${3:-all}"
     DEMO_ARGS=()
     
-    # Validate type for benchmarks
-    if [[ "$TYPE" != "uint128" && "$TYPE" != "int128" ]]; then
-        echo "Error: TYPE debe ser 'uint128', 'int128' o 'demos'"
+    # Validate feature for benchmarks
+    VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+    if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
+        echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
         exit 1
     fi
 fi

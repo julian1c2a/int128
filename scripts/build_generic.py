@@ -18,7 +18,7 @@ Argumentos:
     feature  : bits | numeric | algorithm | etc. (o <category> si type=demos)
     target   : tests | benchs | <demo_name> (si type=demos)
     compiler : gcc | clang | intel | msvc | all (default: all)
-    mode     : debug | release | all (default: all)
+    mode     : debug | debug-asan | debug-ubsan | release | release-O1 | release-O2 | release-O3 | release-Ofast | all (default: all)
     print    : yes | no (default: no) - Imprime comandos de compilación
 
 Ejemplos Tests/Benchs:
@@ -138,9 +138,6 @@ def compile_with_compiler(
         if compiler_name in ["msvc", "intel"]:
             output = output.with_suffix(".exe")
         
-        # Define compilation flags
-        common_flags = ["-std=c++20", "-I./include"]
-        
         # Check if source file uses threading (for pthread flag)
         needs_pthread = False
         needs_atomic = False
@@ -156,25 +153,74 @@ def compile_with_compiler(
         except:
             pass
         
-        if needs_pthread and compiler_name in ["gcc", "clang", "intel"]:
-            common_flags.append("-pthread")
-        
-        if mode == "debug":
-            mode_flags = ["-O0", "-g", "-DDEBUG"]
-        else:
-            mode_flags = ["-O3", "-DNDEBUG"]
-        
-        echo_info(f"  Compiling [{mode}]...")
-        
         # Build command - convert paths to forward slashes for compatibility
         source_str = str(source_file).replace("\\", "/")
         output_str = str(output).replace("\\", "/")
         
-        cmd = [compiler_cmd] + common_flags + mode_flags + [source_str, "-o", output_str]
+        # Set compiler-specific flags
+        if compiler_name == "msvc":
+            # MSVC flags
+            common_flags = ["/std:c++20", "/W4", "/EHsc", "/I./include"]
+            
+            if mode == "debug":
+                mode_flags = ["/Od", "/Zi", "/DDEBUG"]
+            elif mode == "debug-asan":
+                mode_flags = ["/Od", "/Zi", "/DDEBUG", "/fsanitize=address"]
+            elif mode == "debug-ubsan":
+                # MSVC doesn't have UBSan, use RTC instead
+                mode_flags = ["/Od", "/Zi", "/DDEBUG", "/RTC1"]
+            elif mode == "release-O1":
+                mode_flags = ["/O1", "/DNDEBUG"]
+            elif mode == "release-O2":
+                mode_flags = ["/O2", "/DNDEBUG"]
+            elif mode == "release-O3":
+                mode_flags = ["/Ox", "/GL", "/DNDEBUG"]
+            elif mode == "release-Ofast":
+                mode_flags = ["/Ox", "/GL", "/fp:fast", "/DNDEBUG"]
+            else:
+                # Default release
+                mode_flags = ["/O2", "/DNDEBUG"]
+            
+            # MSVC uses /Fe: for output
+            cmd = [compiler_cmd] + common_flags + mode_flags + [source_str, f"/Fe:{output_str}"]
+        else:
+            # GCC/Clang/Intel flags
+            common_flags = ["-std=c++20", "-Wall", "-Wextra", "-pedantic", "-I./include"]
+            
+            if needs_pthread and compiler_name in ["gcc", "clang", "intel"]:
+                common_flags.append("-pthread")
+            
+            if mode == "debug":
+                mode_flags = ["-O0", "-g", "-DDEBUG"]
+            elif mode == "debug-asan":
+                mode_flags = ["-O0", "-g", "-DDEBUG", "-fsanitize=address", "-fno-omit-frame-pointer"]
+            elif mode == "debug-ubsan":
+                mode_flags = ["-O0", "-g", "-DDEBUG", "-fsanitize=undefined", "-fno-omit-frame-pointer"]
+            elif mode == "release-O1":
+                mode_flags = ["-O1", "-DNDEBUG"]
+            elif mode == "release-O2":
+                mode_flags = ["-O2", "-DNDEBUG"]
+            elif mode == "release-O3":
+                mode_flags = ["-O3", "-fexpensive-optimizations", "-funroll-loops", "-ftree-vectorize", "-march=native", "-DNDEBUG"]
+            elif mode == "release-Ofast":
+                mode_flags = ["-Ofast", "-fexpensive-optimizations", "-funroll-loops", "-ftree-vectorize", "-ffast-math", "-march=native", "-DNDEBUG"]
+            else:
+                # Default release
+                mode_flags = ["-O3", "-DNDEBUG"]
+            
+            cmd = [compiler_cmd] + common_flags + mode_flags + [source_str, "-o", output_str]
+            
+            # Add linker flags after -o output
+            if needs_atomic and compiler_name in ["gcc", "clang"]:
+                cmd.append("-latomic")
+            
+            # Add sanitizer linker flags
+            if mode == "debug-asan" and compiler_name in ["gcc", "clang"]:
+                cmd.append("-fsanitize=address")
+            elif mode == "debug-ubsan" and compiler_name in ["gcc", "clang"]:
+                cmd.append("-fsanitize=undefined")
         
-        # Add linker flags after -o output
-        if needs_atomic and compiler_name in ["gcc", "clang"]:
-            cmd.append("-latomic")
+        echo_info(f"  Compiling [{mode}]...")
         
         # Print command if requested
         if print_commands:
@@ -251,6 +297,13 @@ def main():
             print("Error: TYPE debe ser 'uint128' o 'int128'")
             sys.exit(1)
         
+        valid_features = ["t", "tt", "traits", "limits", "concepts", "algorithm", "algorithms", "iostreams",
+                          "bits", "cmath", "numeric", "ranges", "format", "safe",
+                          "thread_safety", "comparison_boost", "interop"]
+        if feature not in valid_features:
+            print(f"Error: FEATURE debe ser uno de: {', '.join(valid_features)}")
+            sys.exit(1)
+        
         if target not in ["tests", "benchs"]:
             print("Error: TARGET debe ser 'tests' o 'benchs'")
             sys.exit(1)
@@ -261,7 +314,7 @@ def main():
         print(f"Error: COMPILER debe ser uno de: {', '.join(valid_compilers)}")
         sys.exit(1)
     
-    valid_modes = ["debug", "release", "all"]
+    valid_modes = ["debug", "debug-asan", "debug-ubsan", "release", "release-O1", "release-O2", "release-O3", "release-Ofast", "all"]
     if mode not in valid_modes:
         print(f"Error: MODE debe ser uno de: {', '.join(valid_modes)}")
         sys.exit(1)
@@ -295,7 +348,7 @@ def main():
     print()
     
     # Define modes to compile
-    modes_to_compile = ["debug", "release"] if mode == "all" else [mode]
+    modes_to_compile = ["debug", "debug-asan", "debug-ubsan", "release", "release-O1", "release-O2", "release-O3", "release-Ofast"] if mode == "all" else [mode]
     
     # Get compiler commands from environment or use defaults
     gcc_cmd = os.environ.get("GCC_CXX", "g++")

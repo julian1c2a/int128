@@ -301,6 +301,13 @@ def main():
             print("Error: TYPE debe ser 'uint128' o 'int128'")
             sys.exit(1)
         
+        valid_features = ["t", "tt", "traits", "limits", "concepts", "algorithms", "iostreams",
+                          "bits", "cmath", "numeric", "ranges", "format", "safe",
+                          "thread_safety", "comparison_boost", "interop"]
+        if feature not in valid_features:
+            print(f"Error: FEATURE debe ser uno de: {', '.join(valid_features)}")
+            sys.exit(1)
+        
         build_dir = project_root / "build" / "build_tests"
         
         # Determine compilers and modes to test

@@ -2,7 +2,83 @@
 
 > 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_TT.md](API_INT128_BASE_TT.md) | [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md)
 >
-> ⏰ **Última actualización:** 2026-01-10 12:10 (ver CHANGELOG.md para historial horario)
+> ⏰ **Última actualización:** 2026-01-10 16:00 (ver CHANGELOG.md para historial horario)
+
+---
+
+## 📁 FASE 1.66 - Validación Multi-Compilador ✅ **COMPLETADA**
+
+**Estado:** ✅ **COMPLETADA (10 ene 2026)**  
+**Documentación:** Ver [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md) para detalles
+
+### Objetivo
+
+Validar el template unificado `int128_base_t<S>` en múltiples compiladores y plataformas.
+
+### Resultados de Validación
+
+#### Windows (MSYS2) - 24/24 ✅
+
+| Compilador | Debug | Release | Versión |
+|------------|-------|---------|---------|
+| GCC (UCRT64) | ✅ PASS | ✅ PASS | 15.2 |
+| Clang (CLANG64) | ✅ PASS | ✅ PASS | 19.1 |
+| Intel ICX | ✅ PASS | ✅ PASS | 2025 |
+| MSVC | ✅ PASS | ✅ PASS | 2026 (v18) |
+
+#### WSL (Ubuntu) - 16/16 ✅
+
+| Compilador | Debug | Release | Versión |
+|------------|-------|---------|---------|
+| GCC 13 | ✅ PASS | ✅ PASS | 13.3.0 |
+| GCC 14 | ✅ PASS | ✅ PASS | 14.2.0 |
+| GCC 15 | ✅ PASS | ✅ PASS | 15.0.1 |
+| Clang 18 | ✅ PASS | ✅ PASS | 18.1.8 |
+| Clang 19 | ✅ PASS | ✅ PASS | 19.1.7 |
+| Clang 20 | ✅ PASS | ✅ PASS | 20.1.2 |
+| Clang 21 | ✅ PASS | ✅ PASS | 21.1.8 |
+| Intel ICPX | ✅ PASS | ✅ PASS | 2025.3.1 |
+
+### Scripts Reorganizados
+
+#### Estructura Modular WSL
+
+```
+scripts/
+├── wsl/                           # Scripts modulares por compilador
+│   ├── common.bash               # Funciones compartidas Bash
+│   ├── common.py                 # Funciones compartidas Python
+│   ├── build_gcc13.bash
+│   ├── build_gcc14.bash
+│   ├── build_gcc15.bash
+│   ├── build_clang18.bash
+│   ├── build_clang19.bash
+│   ├── build_clang20.bash
+│   ├── build_clang21.bash
+│   └── build_icpx.bash
+├── wsl_build_and_test.bash       # Script maestro Bash
+├── wsl_build_and_test.py         # Script maestro Python
+└── run_wsl_tests.py              # Puente Windows→WSL
+```
+
+#### Nueva Sintaxis Simplificada
+
+```bash
+# Antes (TYPE redundante con template unificado):
+bash scripts/wsl_build_and_test.bash int128 tt all all
+
+# Ahora (solo FEATURE):
+bash scripts/wsl_build_and_test.bash tt all all
+bash scripts/wsl_build_and_test.bash bits gcc-15 release
+bash scripts/wsl_build_and_test.bash cmath clang-21 debug
+
+# Desde Windows (PowerShell):
+python scripts/run_wsl_tests.py tt all all
+```
+
+### Bug Fixes
+
+- ✅ **`((passed++))` con `set -e`**: Cuando `passed=0`, `((passed++))` retorna exit code 1, matando el script. Corregido a `passed=$((passed + 1))`.
 
 ---
 

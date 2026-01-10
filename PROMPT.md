@@ -1,12 +1,38 @@
 # PROMPT.md - Especificación Técnica del Proyecto int128
 
-> 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [TODO.md](TODO.md) | [README.md](README.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
+> 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [TODO.md](TODO.md) | [README.md](README.md) | [API_INT128_BASE_TT.md](API_INT128_BASE_TT.md)
 >
-> ⏰ **Última actualización:** 2026-01-07 23:30
+> ⏰ **Última actualización:** 2026-01-10 16:00
 
 ---
 
-## 🔄 FASE 1.5: Arquitectura Template Unificada (EN PROGRESO)
+## 🔄 FASE 1.66: Validación Multi-Compilador ✅ COMPLETADA
+
+**Estado:** ✅ **COMPLETADA (10 ene 2026)**
+
+### Resultados de Validación
+
+- **Windows (MSYS2):** 24/24 configuraciones ✅
+  - GCC 15.2, Clang 19.1, Intel ICX 2025, MSVC 2026
+- **WSL (Ubuntu):** 16/16 configuraciones ✅
+  - GCC 13/14/15, Clang 18/19/20/21, Intel ICPX
+
+**Total:** 40/40 (100%)
+
+### Sintaxis Simplificada de Scripts
+
+```bash
+# ANTES (TYPE redundante):
+bash scripts/wsl_build_and_test.bash int128 tt all all
+
+# AHORA (simplificado):
+bash scripts/wsl_build_and_test.bash tt all all
+bash scripts/wsl_build_and_test.bash <feature> [compiler] [mode]
+```
+
+---
+
+## 🔄 FASE 1.5: Arquitectura Template Unificada ✅ COMPLETADA
 
 **Rama actual:** `phase-1.5-template-unification`
 
@@ -15,7 +41,7 @@
 A partir de Fase 1.5, los tipos `uint128_t` e `int128_t` se definen como **type aliases** de un template unificado:
 
 ```cpp
-// include_new/int128_base_tt.hpp
+// include/int128_base_tt.hpp
 namespace nstd {
     enum class signedness : bool { unsigned_type = false, signed_type = true };
     
@@ -35,16 +61,16 @@ namespace nstd {
 | **[limbs]** (futuro) | `2` \| `4` \| `8` | Número de palabras de 64 bits (128/256/512 bits) |
 | **[feature]** | Ver lista | Característica específica |
 
-**Nomenclatura de headers nueva (Fase 1.5):**
+**Nomenclatura de headers (canónica):**
 
 ```
 include/
-├── int128_base.hpp              # Template unificado principal
+├── int128_base_tt.hpp           # Template unificado principal
 ├── int128_base_[feature].hpp    # Features del template unificado
 └── type_traits.hpp              # Concepts y traits
 ```
 
-**Nomenclatura legacy (pre-1.5, deprecada pero mantenida):**
+**Nomenclatura legacy (pre-1.5, deprecada):**
 
 ```
 include/

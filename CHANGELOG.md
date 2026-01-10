@@ -60,9 +60,34 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ---
 
-## [Unreleased] - Fase 1.6 Completada
+## [Unreleased] - Fase 1.66 Validación Multi-Compilador
 
 ### 🔄 Sesión Actual
+
+#### [16:00] 2026-01-10 - FASE 1.66 COMPLETADA: Validación Multi-Compilador WSL
+
+- ✅ **Validación Windows (MSYS2):** 24/24 configuraciones
+  - GCC 15.2 (UCRT64): debug ✅, release ✅
+  - Clang 19.1 (CLANG64): debug ✅, release ✅
+  - Intel ICX 2025: debug ✅, release ✅
+  - MSVC 2026: debug ✅, release ✅
+- ✅ **Validación WSL (Ubuntu):** 16/16 configuraciones
+  - GCC 13.3, 14.2, 15.0.1: debug ✅, release ✅
+  - Clang 18.1.8, 19.1.7, 20.1.2, 21.1.8: debug ✅, release ✅
+  - Intel ICPX 2025.3.1: debug ✅, release ✅
+- ✅ **Reorganización scripts WSL:**
+  - `scripts/wsl/` - Scripts modulares por compilador
+  - `scripts/wsl/common.bash` - Funciones compartidas
+  - `scripts/wsl_build_and_test.bash` - Script maestro simplificado
+- ✅ **Nueva sintaxis simplificada:**
+  - Antes: `bash wsl_build_and_test.bash int128 tt all all` (TYPE redundante)
+  - Ahora: `bash wsl_build_and_test.bash tt all all` (solo FEATURE)
+- ✅ **Scripts Python actualizados:**
+  - `scripts/wsl/common.py` - Módulo común Python
+  - `scripts/wsl_build_and_test.py` - Script maestro Python
+  - `scripts/run_wsl_tests.py` - Puente Windows→WSL actualizado
+- ✅ **Bug fix:** `((passed++))` → `passed=$((passed + 1))` (evita exit 1 con set -e)
+- 📋 **Total validaciones:** 40/40 (100%)
 
 #### [14:30] 2026-01-10 - FASE 1.6 COMPLETADA: Limpieza total de directorios
 

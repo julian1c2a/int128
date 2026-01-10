@@ -6,44 +6,54 @@
 # Muestra resultados en una matriz resumen
 # 
 # Uso:
-#   check_generic.bash <type> <feature> [compiler] [mode]
+#   check_generic.bash <feature> [compiler] [mode]
 #
 # Argumentos:
-#   type     : uint128 | int128
-#   feature  : bits | numeric | algorithm | iostreams | cmath | etc.
+#   feature  : tt | bits | numeric | algorithm | iostreams | cmath | etc.
 #   compiler : gcc | clang | intel | msvc | all (default: all)
 #   mode     : debug | release | all (default: all)
 #
 # Ejemplos:
-#   check_generic.bash uint128 bits
-#   check_generic.bash int128 numeric gcc release
-#   check_generic.bash uint128 algorithm all all
+#   check_generic.bash bits
+#   check_generic.bash numeric gcc release
+#   check_generic.bash algorithm all all
+#
+# NOTA: El tipo "int128" se usa implícitamente (template unificado int128_base_t<S>)
 # ==============================================================================
 
 set -euo pipefail
 
 # ========================= Parse Arguments =========================
 
-if [[ $# -lt 2 ]]; then
-    echo "Error: Se requieren al menos 2 argumentos"
-    echo "Uso: $0 <type> <feature> [compiler] [mode]"
+if [[ $# -lt 1 ]]; then
+    echo "Error: Se requiere al menos 1 argumento"
+    echo "Uso: $0 <feature> [compiler] [mode]"
     echo ""
     echo "Ejemplos:"
-    echo "  $0 uint128 bits"
-    echo "  $0 int128 numeric gcc release"
-    echo "  $0 uint128 algorithm all all"
+    echo "  $0 bits"
+    echo "  $0 numeric gcc release"
+    echo "  $0 algorithm all all"
     exit 1
 fi
 
-TYPE="$1"
-FEATURE="$2"
-COMPILER="${3:-all}"
-MODE="${4:-all}"
+# Compatibilidad hacia atrás: detectar sintaxis vieja (uint128/int128 como primer arg)
+if [[ "$1" == "uint128" || "$1" == "int128" ]]; then
+    echo "-> NOTA: Sintaxis vieja detectada. TYPE '$1' ignorado (template unificado)."
+    shift  # Eliminar el primer argumento (TYPE)
+fi
+
+FEATURE="$1"
+COMPILER="${2:-all}"
+MODE="${3:-all}"
+
+# TYPE siempre es int128 con el template unificado
+TYPE="int128"
 
 # ========================= Validation =========================
 
-if [[ "$TYPE" != "uint128" && "$TYPE" != "int128" ]]; then
-    echo "Error: TYPE debe ser 'uint128' o 'int128'"
+VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
+    echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
     exit 1
 fi
 

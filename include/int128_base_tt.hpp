@@ -76,2177 +76,2343 @@
 namespace nstd
 {
 
-/**
- * @brief Enum para distinguir entre tipos signed y unsigned en el template unificado
- *
- * @details Este enum permite al template int128_base_t<S> adaptar su comportamiento
- * según si el tipo es signed o unsigned, usando `if constexpr (is_signed)`.
- *
- * @see int128_base_t
- */
-enum class signedness : bool {
-    unsigned_type = false, ///< Tipo unsigned (uint128_t)
-    signed_type = true     ///< Tipo signed (int128_t)
-};
-
-/**
- * @brief Enum para clasificar errores de parsing de strings
- */
-enum class parse_error : uint8_t {
-    success = 0,       ///< Parsing exitoso
-    null_pointer,      ///< Puntero null proporcionado
-    empty_string,      ///< String vacío
-    invalid_base,      ///< Base fuera de rango [2, 36]
-    invalid_character, ///< Carácter inválido para la base especificada
-    overflow,          ///< El resultado excede el rango del tipo
-    unknown_error      ///< Error desconocido
-};
-
-/**
- * @brief Clase template unificada para enteros de 128 bits signed/unsigned
- *
- * @tparam S Parámetro de signedness:
- *           - signedness::unsigned_type → uint128_t (0 a 2^128-1)
- *           - signedness::signed_type → int128_t (-2^127 a 2^127-1)
- *
- * @details Esta clase implementa todas las operaciones aritméticas, bitwise y de
- * comparación para enteros de 128 bits, utilizando internamente dos uint64_t en
- * formato little-endian (data[LSULL]=low, data[MSULL]=high).
- *
- * **Características de diseño:**
- * - Representación: Two's complement para signed, binario puro para unsigned
- * - Overflow behavior: Wrap-around (modular arithmetic) para ambos tipos
- * - Constexpr: Todas las operaciones son evaluables en compile-time
- * - Portable: Usa std::numeric_limits en lugar de constantes hexadecimales
- * - Eficiente: Usa intrínsecos del compilador cuando están disponibles
- *
- * **Operaciones soportadas:**
- * - Aritméticas: +, -, *, /, %, negación unaria
- * - Comparación: ==, !=, <, <=, >, >=, <=> (C++20)
- * - Bitwise: &, |, ^, ~, <<, >>
- * - Conversiones: to/from string, to/from floating point
- * - Parsing: bases 2-36 con separadores de dígitos
- * - Literales UDL: 42_u128, 0xFF_u128, "12345"_U128
- *
- * @note Fix Fase 17: operator~() ahora usa orden correcto (high, low) para constructor
- * @see uint128_t, int128_t
- */
-template <signedness S> class int128_base_t
-{
-  public:
-    // ============================================================================
-    // CONSTANTES DE LÍMITES DE uint64_t e int64_t (PÚBLICAS)
-    // ============================================================================
-    // Estas constantes evitan usar literales hexadecimales "mágicos" como 0xFFFFFFFFFFFFFFFF
-    // Son más legibles, portables y self-documenting
-
-    /// Máximo valor de uint64_t: 2^64 - 1 = 18446744073709551615
-    static constexpr uint64_t UI64_MAX = std::numeric_limits<uint64_t>::max();
-
-    /// Máximo valor de int64_t: 2^63 - 1 = 9223372036854775807
-    static constexpr int64_t I64_MAX = std::numeric_limits<int64_t>::max();
-
-    /// Máximo valor de int64_t: 2^63 - 1 CON tipo uint64_t para operaciones sin signo
-    static constexpr uint64_t UI_I64_MAX = static_cast<uint64_t>(I64_MAX);
-
-    /// Máximo valor de int64_t: -2^63 = -9223372036854775808
-    static constexpr int64_t I64_MIN = std::numeric_limits<int64_t>::min();
-
-    /// Mínimo valor de int64_t representado como uint64_t: 2^63 = 9223372036854775808
-    /// (es el bit de signo = 0x8000000000000000)
-    static constexpr uint64_t UI_I64_MIN = static_cast<uint64_t>(I64_MIN);
-
-  private:
-    // ============================================================================
-    // CONSTANTES Y TIPOS (PRIVADAS)
-    // ============================================================================
-
-    static constexpr bool is_signed = (S == signedness::signed_type);
-    static constexpr int BITS = 128;
-    static constexpr int BYTES = BITS / CHAR_BIT;
-
-    // ============================================================================
-    // CONSTANTES DE TAMAÑO (Preparación para template<size_t N>)
-    // ============================================================================
-
-    /// Número de "limbs" (uint64_t) en la representación (2 para 128 bits)
-    /// Término estándar en aritmética de multiprecisión (GMP, Boost.Multiprecision)
-    static constexpr size_t LIMBS = 2;
-
-    /// Índice del uint64_t más significativo (Most Significant ULongLong)
-    static constexpr size_t MSULL = LIMBS - 1; // = 1 actualmente
-
-    /// Índice del uint64_t menos significativo (Least Significant ULongLong)
-    static constexpr size_t LSULL = 0;
-
-    uint64_t data[LIMBS]; // data[LSULL] = low, data[MSULL] = high (little-endian)
-
-  public:
-    // ============================================================================
-    // CONSTRUCTORES
-    // ============================================================================
-
-    // Constructor por defecto
-    constexpr int128_base_t() noexcept : data{0ull, 0ull} {}
-    // data[LSULL] = 0, data[MSULL] = 0
-
-    // Constructor desde tipos integrales builtin
-    template <integral_builtin T>
-    explicit constexpr int128_base_t(T value) noexcept : data{static_cast<uint64_t>(value), 0ull}
+    /**
+     * @brief Enum para distinguir entre tipos signed y unsigned en el template unificado
+     *
+     * @details Este enum permite al template int128_base_t<S> adaptar su comportamiento
+     * según si el tipo es signed o unsigned, usando `if constexpr (is_signed)`.
+     *
+     * @see int128_base_t
+     */
+    enum class signedness : bool
     {
-        if constexpr (is_signed && std::is_signed_v<T>) {
-            // Sign extension para signed types
-            if (value < 0) {
-                data[MSULL] = ~0ull;
+        unsigned_type = false, ///< Tipo unsigned (uint128_t)
+        signed_type = true     ///< Tipo signed (int128_t)
+    };
+
+    /**
+     * @brief Enum para clasificar errores de parsing de strings
+     */
+    enum class parse_error : uint8_t
+    {
+        success = 0,       ///< Parsing exitoso
+        null_pointer,      ///< Puntero null proporcionado
+        empty_string,      ///< String vacío
+        invalid_base,      ///< Base fuera de rango [2, 36]
+        invalid_character, ///< Carácter inválido para la base especificada
+        overflow,          ///< El resultado excede el rango del tipo
+        unknown_error      ///< Error desconocido
+    };
+
+    /**
+     * @brief Clase template unificada para enteros de 128 bits signed/unsigned
+     *
+     * @tparam S Parámetro de signedness:
+     *           - signedness::unsigned_type → uint128_t (0 a 2^128-1)
+     *           - signedness::signed_type → int128_t (-2^127 a 2^127-1)
+     *
+     * @details Esta clase implementa todas las operaciones aritméticas, bitwise y de
+     * comparación para enteros de 128 bits, utilizando internamente dos uint64_t en
+     * formato little-endian (data[LSULL]=low, data[MSULL]=high).
+     *
+     * **Características de diseño:**
+     * - Representación: Two's complement para signed, binario puro para unsigned
+     * - Overflow behavior: Wrap-around (modular arithmetic) para ambos tipos
+     * - Constexpr: Todas las operaciones son evaluables en compile-time
+     * - Portable: Usa std::numeric_limits en lugar de constantes hexadecimales
+     * - Eficiente: Usa intrínsecos del compilador cuando están disponibles
+     *
+     * **Operaciones soportadas:**
+     * - Aritméticas: +, -, *, /, %, negación unaria
+     * - Comparación: ==, !=, <, <=, >, >=, <=> (C++20)
+     * - Bitwise: &, |, ^, ~, <<, >>
+     * - Conversiones: to/from string, to/from floating point
+     * - Parsing: bases 2-36 con separadores de dígitos
+     * - Literales UDL: 42_u128, 0xFF_u128, "12345"_U128
+     *
+     * @note Fix Fase 17: operator~() ahora usa orden correcto (high, low) para constructor
+     * @see uint128_t, int128_t
+     */
+    template <signedness S>
+    class int128_base_t
+    {
+    public:
+        // ============================================================================
+        // CONSTANTES DE LÍMITES DE uint64_t e int64_t (PÚBLICAS)
+        // ============================================================================
+        // Estas constantes evitan usar literales hexadecimales "mágicos" como 0xFFFFFFFFFFFFFFFF
+        // Son más legibles, portables y self-documenting
+
+        /// Máximo valor de uint64_t: 2^64 - 1 = 18446744073709551615
+        static constexpr uint64_t UI64_MAX = std::numeric_limits<uint64_t>::max();
+
+        /// Máximo valor de int64_t: 2^63 - 1 = 9223372036854775807
+        static constexpr int64_t I64_MAX = std::numeric_limits<int64_t>::max();
+
+        /// Máximo valor de int64_t: 2^63 - 1 CON tipo uint64_t para operaciones sin signo
+        static constexpr uint64_t UI_I64_MAX = static_cast<uint64_t>(I64_MAX);
+
+        /// Máximo valor de int64_t: -2^63 = -9223372036854775808
+        static constexpr int64_t I64_MIN = std::numeric_limits<int64_t>::min();
+
+        /// Mínimo valor de int64_t representado como uint64_t: 2^63 = 9223372036854775808
+        /// (es el bit de signo = 0x8000000000000000)
+        static constexpr uint64_t UI_I64_MIN = static_cast<uint64_t>(I64_MIN);
+
+    private:
+        // ============================================================================
+        // CONSTANTES Y TIPOS (PRIVADAS)
+        // ============================================================================
+
+        static constexpr bool is_signed = (S == signedness::signed_type);
+        static constexpr int BITS = 128;
+        static constexpr int BYTES = BITS / CHAR_BIT;
+
+        // ============================================================================
+        // CONSTANTES DE TAMAÑO (Preparación para template<size_t N>)
+        // ============================================================================
+
+        /// Número de "limbs" (uint64_t) en la representación (2 para 128 bits)
+        /// Término estándar en aritmética de multiprecisión (GMP, Boost.Multiprecision)
+        static constexpr size_t LIMBS = 2;
+
+        /// Índice del uint64_t más significativo (Most Significant ULongLong)
+        static constexpr size_t MSULL = LIMBS - 1; // = 1 actualmente
+
+        /// Índice del uint64_t menos significativo (Least Significant ULongLong)
+        static constexpr size_t LSULL = 0;
+
+        uint64_t data[LIMBS]; // data[LSULL] = low, data[MSULL] = high (little-endian)
+
+    public:
+        // ============================================================================
+        // CONSTRUCTORES
+        // ============================================================================
+
+        // Constructor por defecto
+        constexpr int128_base_t() noexcept : data{0ull, 0ull} {}
+        // data[LSULL] = 0, data[MSULL] = 0
+
+        // Constructor desde tipos integrales builtin
+        template <integral_builtin T>
+        explicit constexpr int128_base_t(T value) noexcept : data{static_cast<uint64_t>(value), 0ull}
+        {
+            if constexpr (is_signed && std::is_signed_v<T>)
+            {
+                // Sign extension para signed types
+                if (value < 0)
+                {
+                    data[MSULL] = ~0ull;
+                }
             }
         }
-    }
 
-    // Constructor desde high y low
-    template <integral_builtin T1, integral_builtin T2>
-    explicit constexpr int128_base_t(T1 high, T2 low) noexcept
-        : data{static_cast<uint64_t>(low), static_cast<uint64_t>(high)}
-    {
-        // data[LSULL] = low, data[MSULL] = high
-    }
+        // Constructor desde high y low
+        template <integral_builtin T1, integral_builtin T2>
+        explicit constexpr int128_base_t(T1 high, T2 low) noexcept
+            : data{static_cast<uint64_t>(low), static_cast<uint64_t>(high)}
+        {
+            // data[LSULL] = low, data[MSULL] = high
+        }
 
-    // Constructor desde tipos floating point (float, double, long double)
-    template <floating_point_builtin T>
-    explicit constexpr int128_base_t(T value) noexcept : data{0ull, 0ull}
-    {
-        // Conversión de floating point a entero de 128 bits
-        // Maneja valores negativos solo si is_signed
-        if constexpr (is_signed) {
-            const bool is_negative = (value < 0);
-            const T abs_value = is_negative ? -value : value;
+        // Constructor desde tipos floating point (float, double, long double)
+        template <floating_point_builtin T>
+        explicit constexpr int128_base_t(T value) noexcept : data{0ull, 0ull}
+        {
+            // Conversión de floating point a entero de 128 bits
+            // Maneja valores negativos solo si is_signed
+            if constexpr (is_signed)
+            {
+                const bool is_negative = (value < 0);
+                const T abs_value = is_negative ? -value : value;
 
-            // Convertir la parte entera
-            if (abs_value >= 18446744073709551616.0L) {
-                // Valor >= 2^64, necesitamos ambas partes
-                const T high_part = abs_value / 18446744073709551616.0L;
-                data[MSULL] = static_cast<uint64_t>(high_part);
-                const T low_part = abs_value - (high_part * 18446744073709551616.0L);
-                data[LSULL] = static_cast<uint64_t>(low_part);
-            } else {
-                // Valor < 2^64, solo parte baja
-                data[LSULL] = static_cast<uint64_t>(abs_value);
+                // Convertir la parte entera
+                if (abs_value >= 18446744073709551616.0L)
+                {
+                    // Valor >= 2^64, necesitamos ambas partes
+                    const T high_part = abs_value / 18446744073709551616.0L;
+                    data[MSULL] = static_cast<uint64_t>(high_part);
+                    const T low_part = abs_value - (high_part * 18446744073709551616.0L);
+                    data[LSULL] = static_cast<uint64_t>(low_part);
+                }
+                else
+                {
+                    // Valor < 2^64, solo parte baja
+                    data[LSULL] = static_cast<uint64_t>(abs_value);
+                }
+
+                // Si era negativo, aplicar complemento a 2
+                if (is_negative)
+                {
+                    // Negar usando complemento a 2: ~value + 1
+                    data[LSULL] = ~data[LSULL];
+                    data[MSULL] = ~data[MSULL];
+                    uint64_t temp = 0;
+                    const unsigned char carry = intrinsics::add_u64(data[LSULL], 1ull, &temp);
+                    data[LSULL] = temp;
+                    intrinsics::addcarry_u64(carry, data[MSULL], 0ull, &temp);
+                    data[MSULL] = temp;
+                }
+            }
+            else
+            {
+                // Unsigned: solo manejar valores no negativos
+                if (value < 0)
+                {
+                    // Valor negativo para unsigned → cero
+                    data[LSULL] = 0ull;
+                    data[MSULL] = 0ull;
+                }
+                else if (value >= 18446744073709551616.0L)
+                {
+                    // Valor >= 2^64
+                    const T high_part = value / 18446744073709551616.0L;
+                    data[MSULL] = static_cast<uint64_t>(high_part);
+                    const T low_part = value - (high_part * 18446744073709551616.0L);
+                    data[LSULL] = static_cast<uint64_t>(low_part);
+                }
+                else
+                {
+                    // Valor < 2^64
+                    data[LSULL] = static_cast<uint64_t>(value);
+                }
+            }
+        }
+
+        // Copy/move constructors (trivial)
+        constexpr int128_base_t(const int128_base_t &) = default;
+        constexpr int128_base_t(int128_base_t &&) = default;
+        constexpr int128_base_t &operator=(const int128_base_t &) = default;
+        constexpr int128_base_t &operator=(int128_base_t &&) = default;
+
+        // Constructor de conversión desde signedness diferente
+        template <signedness S2>
+        explicit constexpr int128_base_t(const int128_base_t<S2> &other) noexcept
+            : data{other.low(), other.high()}
+        {
+            // Conversión directa de bits, sin sign extension
+            // uint128_t(int128_t(-1)) = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF (interpreta como unsigned)
+            // int128_t(uint128_t(MAX)) = -1 (interpreta como signed)
+        }
+        template <signedness S2>
+        explicit constexpr int128_base_t(int128_base_t<S2> &&other) noexcept
+            : data{std::move(other.low()), std::move(other.high())}
+        {
+            // Movimiento directo de bits, sin sign extension
+        }
+
+        // ============================================================================
+        // CONSTRUCTORES DESDE STRINGS
+        // ============================================================================
+
+        // Constructor desde const char* con auto-detección de base
+        // Usa parse() que detecta automáticamente el formato (0x, 0b, 0, decimal)
+        // Lanza std::invalid_argument si el string no es válido
+        explicit int128_base_t(const char *str)
+        {
+            if (str == nullptr)
+            {
+                throw std::invalid_argument("Cannot parse null pointer");
             }
 
-            // Si era negativo, aplicar complemento a 2
-            if (is_negative) {
-                // Negar usando complemento a 2: ~value + 1
-                data[LSULL] = ~data[LSULL];
-                data[MSULL] = ~data[MSULL];
-                uint64_t temp = 0;
-                const unsigned char carry = intrinsics::add_u64(data[LSULL], 1ull, &temp);
-                data[LSULL] = temp;
-                intrinsics::addcarry_u64(carry, data[MSULL], 0ull, &temp);
-                data[MSULL] = temp;
+            auto [error, value] = parse(str);
+            if (error != parse_error::success)
+            {
+                // Construir mensaje de error descriptivo
+                const char *error_msg = "Unknown error";
+                switch (error)
+                {
+                case parse_error::empty_string:
+                    error_msg = "Empty string";
+                    break;
+                case parse_error::invalid_base:
+                    error_msg = "Invalid base";
+                    break;
+                case parse_error::invalid_character:
+                    error_msg = "Invalid character";
+                    break;
+                case parse_error::overflow:
+                    error_msg = "Overflow";
+                    break;
+                default:
+                    break;
+                }
+                throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
             }
-        } else {
-            // Unsigned: solo manejar valores no negativos
-            if (value < 0) {
-                // Valor negativo para unsigned → cero
-                data[LSULL] = 0ull;
+            *this = value;
+        }
+
+        // Constructor desde const char* con base explícita
+        // Usa parse_base() con la base especificada (2-36)
+        // Lanza std::invalid_argument si el string o la base no son válidos
+        explicit int128_base_t(const char *str, int base)
+        {
+            if (str == nullptr)
+            {
+                throw std::invalid_argument("Cannot parse null pointer");
+            }
+            if (base < 2 || base > 36)
+            {
+                throw std::invalid_argument("Invalid base: must be between 2 and 36");
+            }
+
+            auto [error, value] = parse_base(str, base);
+            if (error != parse_error::success)
+            {
+                // Construir mensaje de error descriptivo
+                const char *error_msg = "Unknown error";
+                switch (error)
+                {
+                case parse_error::empty_string:
+                    error_msg = "Empty string";
+                    break;
+                case parse_error::invalid_base:
+                    error_msg = "Invalid base";
+                    break;
+                case parse_error::invalid_character:
+                    error_msg = "Invalid character";
+                    break;
+                case parse_error::overflow:
+                    error_msg = "Overflow";
+                    break;
+                default:
+                    break;
+                }
+                throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
+            }
+            *this = value;
+        }
+
+        // Constructor desde std::string con auto-detección de base
+        // Delega al constructor de const char*
+        explicit int128_base_t(const std::string &str) : int128_base_t(str.c_str()) {}
+
+        // Constructor desde std::string con base explícita
+        // Delega al constructor de const char* con base
+        explicit int128_base_t(const std::string &str, int base) : int128_base_t(str.c_str(), base) {}
+
+        // Constructor desde std::string_view con auto-detección de base
+        // std::string_view no garantiza null-termination, así que convertimos a std::string primero
+        explicit int128_base_t(std::string_view str) : int128_base_t(std::string(str)) {}
+
+        // Constructor desde std::string_view con base explícita
+        // std::string_view no garantiza null-termination, así que convertimos a std::string primero
+        explicit int128_base_t(std::string_view str, int base) : int128_base_t(std::string(str), base)
+        {
+        }
+
+        // ============================================================================
+        // SOBRECARGA DEL OPERADOR DE ASIGNACIÓN
+        // ============================================================================
+
+        template <signedness S2>
+        constexpr int128_base_t &operator=(const int128_base_t<S2> &other) noexcept
+        {
+            if (this != &other)
+            {
+                data[LSULL] = other.low();
+                data[MSULL] = other.high();
+            } // IDÉNTICO A UN MEMCPY
+            return *this;
+        }
+        template <signedness S2>
+        constexpr int128_base_t &operator=(int128_base_t<S2> &&other) noexcept
+        {
+            if (this != &other)
+            {
+                data[LSULL] = std::move(other.low());
+                data[MSULL] = std::move(other.high());
+            } // CEDE LA PROPIEDAD
+            return *this;
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t &operator=(T other) noexcept
+        {
+            data[LSULL] = static_cast<uint64_t>(other);
+
+            if constexpr (std::is_signed_v<T>)
+            {
+                if (other < 0)
+                {
+                    data[MSULL] = ~0ull; // Extensión de signo correcta para negativos
+                }
+                else
+                {
+                    data[MSULL] = 0ull;
+                }
+            }
+            else
+            {
                 data[MSULL] = 0ull;
-            } else if (value >= 18446744073709551616.0L) {
-                // Valor >= 2^64
-                const T high_part = value / 18446744073709551616.0L;
-                data[MSULL] = static_cast<uint64_t>(high_part);
-                const T low_part = value - (high_part * 18446744073709551616.0L);
-                data[LSULL] = static_cast<uint64_t>(low_part);
-            } else {
-                // Valor < 2^64
-                data[LSULL] = static_cast<uint64_t>(value);
             }
-        }
-    }
 
-    // Copy/move constructors (trivial)
-    constexpr int128_base_t(const int128_base_t&) = default;
-    constexpr int128_base_t(int128_base_t&&) = default;
-    constexpr int128_base_t& operator=(const int128_base_t&) = default;
-    constexpr int128_base_t& operator=(int128_base_t&&) = default;
-
-    // Constructor de conversión desde signedness diferente
-    template <signedness S2>
-    explicit constexpr int128_base_t(const int128_base_t<S2>& other) noexcept
-        : data{other.low(), other.high()}
-    {
-        // Conversión directa de bits, sin sign extension
-        // uint128_t(int128_t(-1)) = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF (interpreta como unsigned)
-        // int128_t(uint128_t(MAX)) = -1 (interpreta como signed)
-    }
-    template <signedness S2>
-    explicit constexpr int128_base_t(int128_base_t<S2>&& other) noexcept
-        : data{std::move(other.low()), std::move(other.high())}
-    {
-        // Movimiento directo de bits, sin sign extension
-    }
-
-    // ============================================================================
-    // CONSTRUCTORES DESDE STRINGS
-    // ============================================================================
-
-    // Constructor desde const char* con auto-detección de base
-    // Usa parse() que detecta automáticamente el formato (0x, 0b, 0, decimal)
-    // Lanza std::invalid_argument si el string no es válido
-    explicit int128_base_t(const char* str)
-    {
-        if (str == nullptr) {
-            throw std::invalid_argument("Cannot parse null pointer");
+            return *this;
         }
 
-        auto [error, value] = parse(str);
-        if (error != parse_error::success) {
-            // Construir mensaje de error descriptivo
-            const char* error_msg = "Unknown error";
-            switch (error) {
-            case parse_error::empty_string:
-                error_msg = "Empty string";
-                break;
-            case parse_error::invalid_base:
-                error_msg = "Invalid base";
-                break;
-            case parse_error::invalid_character:
-                error_msg = "Invalid character";
-                break;
-            case parse_error::overflow:
-                error_msg = "Overflow";
-                break;
-            default:
-                break;
-            }
-            throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
-        }
-        *this = value;
-    }
-
-    // Constructor desde const char* con base explícita
-    // Usa parse_base() con la base especificada (2-36)
-    // Lanza std::invalid_argument si el string o la base no son válidos
-    explicit int128_base_t(const char* str, int base)
-    {
-        if (str == nullptr) {
-            throw std::invalid_argument("Cannot parse null pointer");
-        }
-        if (base < 2 || base > 36) {
-            throw std::invalid_argument("Invalid base: must be between 2 and 36");
-        }
-
-        auto [error, value] = parse_base(str, base);
-        if (error != parse_error::success) {
-            // Construir mensaje de error descriptivo
-            const char* error_msg = "Unknown error";
-            switch (error) {
-            case parse_error::empty_string:
-                error_msg = "Empty string";
-                break;
-            case parse_error::invalid_base:
-                error_msg = "Invalid base";
-                break;
-            case parse_error::invalid_character:
-                error_msg = "Invalid character";
-                break;
-            case parse_error::overflow:
-                error_msg = "Overflow";
-                break;
-            default:
-                break;
-            }
-            throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
-        }
-        *this = value;
-    }
-
-    // Constructor desde std::string con auto-detección de base
-    // Delega al constructor de const char*
-    explicit int128_base_t(const std::string& str) : int128_base_t(str.c_str()) {}
-
-    // Constructor desde std::string con base explícita
-    // Delega al constructor de const char* con base
-    explicit int128_base_t(const std::string& str, int base) : int128_base_t(str.c_str(), base) {}
-
-    // Constructor desde std::string_view con auto-detección de base
-    // std::string_view no garantiza null-termination, así que convertimos a std::string primero
-    explicit int128_base_t(std::string_view str) : int128_base_t(std::string(str)) {}
-
-    // Constructor desde std::string_view con base explícita
-    // std::string_view no garantiza null-termination, así que convertimos a std::string primero
-    explicit int128_base_t(std::string_view str, int base) : int128_base_t(std::string(str), base)
-    {
-    }
-
-    // ============================================================================
-    // SOBRECARGA DEL OPERADOR DE ASIGNACIÓN
-    // ============================================================================
-
-    template <signedness S2>
-    constexpr int128_base_t& operator=(const int128_base_t<S2>& other) noexcept
-    {
-        if (this != &other) {
-            data[LSULL] = other.low();
-            data[MSULL] = other.high();
-        } // IDÉNTICO A UN MEMCPY
-        return *this;
-    }
-    template <signedness S2> constexpr int128_base_t& operator=(int128_base_t<S2>&& other) noexcept
-    {
-        if (this != &other) {
-            data[LSULL] = std::move(other.low());
-            data[MSULL] = std::move(other.high());
-        } // CEDE LA PROPIEDAD
-        return *this;
-    }
-
-    template <integral_builtin T> constexpr int128_base_t& operator=(T other) noexcept
-    {
-        data[LSULL] = static_cast<uint64_t>(other);
-
-        if constexpr (std::is_signed_v<T>) {
-            if (other < 0) {
-                data[MSULL] = ~0ull; // Extensión de signo correcta para negativos
-            } else {
-                data[MSULL] = 0ull;
-            }
-        } else {
+        // Operador de asignación desde tipos floating point
+        template <floating_point_builtin T>
+        constexpr int128_base_t &operator=(T value) noexcept
+        {
+            // Conversión de floating point a entero de 128 bits
+            data[LSULL] = 0ull;
             data[MSULL] = 0ull;
-        }
 
-        return *this;
-    }
+            if constexpr (is_signed)
+            {
+                const bool is_negative = (value < 0);
+                const T abs_value = is_negative ? -value : value;
 
-    // Operador de asignación desde tipos floating point
-    template <floating_point_builtin T> constexpr int128_base_t& operator=(T value) noexcept
-    {
-        // Conversión de floating point a entero de 128 bits
-        data[LSULL] = 0ull;
-        data[MSULL] = 0ull;
+                // Convertir la parte entera
+                if (abs_value >= 18446744073709551616.0L)
+                {
+                    // Valor >= 2^64
+                    const T high_part = abs_value / 18446744073709551616.0L;
+                    data[MSULL] = static_cast<uint64_t>(high_part);
+                    const T low_part = abs_value - (high_part * 18446744073709551616.0L);
+                    data[LSULL] = static_cast<uint64_t>(low_part);
+                }
+                else
+                {
+                    // Valor < 2^64
+                    data[LSULL] = static_cast<uint64_t>(abs_value);
+                }
 
-        if constexpr (is_signed) {
-            const bool is_negative = (value < 0);
-            const T abs_value = is_negative ? -value : value;
-
-            // Convertir la parte entera
-            if (abs_value >= 18446744073709551616.0L) {
-                // Valor >= 2^64
-                const T high_part = abs_value / 18446744073709551616.0L;
-                data[MSULL] = static_cast<uint64_t>(high_part);
-                const T low_part = abs_value - (high_part * 18446744073709551616.0L);
-                data[LSULL] = static_cast<uint64_t>(low_part);
-            } else {
-                // Valor < 2^64
-                data[LSULL] = static_cast<uint64_t>(abs_value);
+                // Si era negativo, aplicar complemento a 2
+                if (is_negative)
+                {
+                    data[LSULL] = ~data[LSULL];
+                    data[MSULL] = ~data[MSULL];
+                    uint64_t temp = 0;
+                    const unsigned char carry = intrinsics::add_u64(data[LSULL], 1ull, &temp);
+                    data[LSULL] = temp;
+                    intrinsics::addcarry_u64(carry, data[MSULL], 0ull, &temp);
+                    data[MSULL] = temp;
+                }
+            }
+            else
+            {
+                // Unsigned: solo manejar valores no negativos
+                if (value < 0)
+                {
+                    // Valor negativo para unsigned → cero
+                    data[LSULL] = 0ull;
+                    data[MSULL] = 0ull;
+                }
+                else if (value >= 18446744073709551616.0L)
+                {
+                    // Valor >= 2^64
+                    const T high_part = value / 18446744073709551616.0L;
+                    data[MSULL] = static_cast<uint64_t>(high_part);
+                    const T low_part = value - (high_part * 18446744073709551616.0L);
+                    data[LSULL] = static_cast<uint64_t>(low_part);
+                }
+                else
+                {
+                    // Valor < 2^64
+                    data[LSULL] = static_cast<uint64_t>(value);
+                }
             }
 
-            // Si era negativo, aplicar complemento a 2
-            if (is_negative) {
-                data[LSULL] = ~data[LSULL];
-                data[MSULL] = ~data[MSULL];
-                uint64_t temp = 0;
-                const unsigned char carry = intrinsics::add_u64(data[LSULL], 1ull, &temp);
-                data[LSULL] = temp;
-                intrinsics::addcarry_u64(carry, data[MSULL], 0ull, &temp);
-                data[MSULL] = temp;
+            return *this;
+        }
+
+        // Operador de asignación desde const char*
+        // Usa parse() para auto-detección de formato (0x, 0b, 0, decimal)
+        // Lanza std::invalid_argument si el string no es válido
+        int128_base_t &operator=(const char *str)
+        {
+            if (str == nullptr)
+            {
+                throw std::invalid_argument("Cannot parse null pointer");
             }
-        } else {
-            // Unsigned: solo manejar valores no negativos
-            if (value < 0) {
-                // Valor negativo para unsigned → cero
-                data[LSULL] = 0ull;
-                data[MSULL] = 0ull;
-            } else if (value >= 18446744073709551616.0L) {
-                // Valor >= 2^64
-                const T high_part = value / 18446744073709551616.0L;
-                data[MSULL] = static_cast<uint64_t>(high_part);
-                const T low_part = value - (high_part * 18446744073709551616.0L);
-                data[LSULL] = static_cast<uint64_t>(low_part);
-            } else {
-                // Valor < 2^64
-                data[LSULL] = static_cast<uint64_t>(value);
+
+            auto [error, value] = parse(str);
+            if (error != parse_error::success)
+            {
+                // Construir mensaje de error descriptivo
+                const char *error_msg = "Unknown error";
+                switch (error)
+                {
+                case parse_error::empty_string:
+                    error_msg = "Empty string";
+                    break;
+                case parse_error::invalid_base:
+                    error_msg = "Invalid base";
+                    break;
+                case parse_error::invalid_character:
+                    error_msg = "Invalid character";
+                    break;
+                case parse_error::overflow:
+                    error_msg = "Overflow";
+                    break;
+                default:
+                    break;
+                }
+                throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
+            }
+            *this = value;
+            return *this;
+        }
+
+        // ============================================================================
+        // ACCESSORS
+        // ============================================================================
+
+        constexpr uint64_t high() const noexcept
+        {
+            return data[MSULL];
+        }
+        constexpr uint64_t low() const noexcept
+        {
+            return data[LSULL];
+        }
+
+        template <typename T>
+        constexpr void set_high(T value) noexcept
+        {
+            data[MSULL] = static_cast<uint64_t>(value);
+        }
+
+        template <typename T>
+        constexpr void set_low(T value) noexcept
+        {
+            data[LSULL] = static_cast<uint64_t>(value);
+        }
+
+        // ============================================================================
+        // BIT MANIPULATION FUNCTIONS
+        // ============================================================================
+
+        /**
+         * @brief Cuenta los ceros finales (trailing zeros) en la representación binaria
+         * @return Número de bits en 0 desde el LSB hasta el primer bit en 1
+         *         Retorna 128 si el valor es 0
+         * @note Útil para factorización de potencias de 2 y optimizaciones de división
+         * @example
+         *   uint128_t(8).trailing_zeros() == 3   // 8 = 0b1000
+         *   uint128_t(12).trailing_zeros() == 2  // 12 = 0b1100
+         *   uint128_t(0).trailing_zeros() == 128
+         */
+        constexpr int trailing_zeros() const noexcept
+        {
+            if (data[LSULL] != 0)
+            {
+                // Contar trailing zeros en la parte baja
+                uint64_t v = data[LSULL];
+                int count = 0;
+                while ((v & 1) == 0 && count < 64)
+                {
+                    v >>= 1;
+                    ++count;
+                }
+                return count;
+            }
+            else if (data[MSULL] != 0)
+            {
+                // Parte baja es 0, contar en parte alta + 64
+                uint64_t v = data[MSULL];
+                int count = 0;
+                while ((v & 1) == 0 && count < 64)
+                {
+                    v >>= 1;
+                    ++count;
+                }
+                return 64 + count;
+            }
+            return 128; // Valor es 0
+        }
+
+        /**
+         * @brief Cuenta los ceros iniciales (leading zeros) en la representación binaria
+         * @return Número de bits en 0 desde el MSB hasta el primer bit en 1
+         *         Retorna 128 si el valor es 0
+         * @note Útil para determinar el número efectivo de bits significativos
+         * @example
+         *   uint128_t(8).leading_zeros() == 124  // 8 = 0b1000, necesita 4 bits
+         *   uint128_t(255).leading_zeros() == 120 // 255 = 0xFF, necesita 8 bits
+         *   uint128_t(0).leading_zeros() == 128
+         */
+        constexpr int leading_zeros() const noexcept
+        {
+            if (data[MSULL] != 0)
+            {
+                return intrinsics::clz64(data[MSULL]);
+            }
+            else if (data[LSULL] != 0)
+            {
+                return 64 + intrinsics::clz64(data[LSULL]);
+            }
+            else
+            {
+                return 128;
             }
         }
 
-        return *this;
-    }
-
-    // Operador de asignación desde const char*
-    // Usa parse() para auto-detección de formato (0x, 0b, 0, decimal)
-    // Lanza std::invalid_argument si el string no es válido
-    int128_base_t& operator=(const char* str)
-    {
-        if (str == nullptr) {
-            throw std::invalid_argument("Cannot parse null pointer");
+        /**
+         * @brief Retorna el número de bits significativos (bit width)
+         * @return 128 - leading_zeros(), o sea, el número de bits necesarios para representar el valor
+         * @example
+         *   uint128_t(8).bit_width() == 4   // 8 = 0b1000
+         *   uint128_t(255).bit_width() == 8 // 255 = 0xFF
+         *   uint128_t(0).bit_width() == 0
+         */
+        constexpr int bit_width() const noexcept
+        {
+            return 128 - leading_zeros();
         }
 
-        auto [error, value] = parse(str);
-        if (error != parse_error::success) {
-            // Construir mensaje de error descriptivo
-            const char* error_msg = "Unknown error";
-            switch (error) {
-            case parse_error::empty_string:
-                error_msg = "Empty string";
-                break;
-            case parse_error::invalid_base:
-                error_msg = "Invalid base";
-                break;
-            case parse_error::invalid_character:
-                error_msg = "Invalid character";
-                break;
-            case parse_error::overflow:
-                error_msg = "Overflow";
-                break;
-            default:
-                break;
+        /**
+         * @brief Verifica si el valor es una potencia de 2
+         * @return true si el valor es una potencia de 2 (1, 2, 4, 8, ...), false en caso contrario
+         * @note Un número es potencia de 2 si tiene exactamente un bit en 1
+         * @example
+         *   uint128_t(8).is_power_of_2() == true
+         *   uint128_t(12).is_power_of_2() == false
+         *   uint128_t(0).is_power_of_2() == false
+         */
+        constexpr bool is_power_of_2() const noexcept
+        {
+            // Un número n es potencia de 2 si n != 0 && (n & (n-1)) == 0
+            if (data[LSULL] == 0 && data[MSULL] == 0)
+                return false;
+
+            // Calcular n - 1
+            int128_base_t n_minus_1 = *this;
+            if (n_minus_1.data[LSULL] == 0)
+            {
+                n_minus_1.data[MSULL] -= 1;
+                n_minus_1.data[LSULL] = UI64_MAX;
             }
-            throw std::invalid_argument(std::string("Failed to parse string: ") + error_msg);
-        }
-        *this = value;
-        return *this;
-    }
-
-    // ============================================================================
-    // ACCESSORS
-    // ============================================================================
-
-    constexpr uint64_t high() const noexcept
-    {
-        return data[MSULL];
-    }
-    constexpr uint64_t low() const noexcept
-    {
-        return data[LSULL];
-    }
-
-    template <typename T> constexpr void set_high(T value) noexcept
-    {
-        data[MSULL] = static_cast<uint64_t>(value);
-    }
-
-    template <typename T> constexpr void set_low(T value) noexcept
-    {
-        data[LSULL] = static_cast<uint64_t>(value);
-    }
-
-    // ============================================================================
-    // BIT MANIPULATION FUNCTIONS
-    // ============================================================================
-
-    /**
-     * @brief Cuenta los ceros finales (trailing zeros) en la representación binaria
-     * @return Número de bits en 0 desde el LSB hasta el primer bit en 1
-     *         Retorna 128 si el valor es 0
-     * @note Útil para factorización de potencias de 2 y optimizaciones de división
-     * @example
-     *   uint128_t(8).trailing_zeros() == 3   // 8 = 0b1000
-     *   uint128_t(12).trailing_zeros() == 2  // 12 = 0b1100
-     *   uint128_t(0).trailing_zeros() == 128
-     */
-    constexpr int trailing_zeros() const noexcept
-    {
-        if (data[LSULL] != 0) {
-            // Contar trailing zeros en la parte baja
-            uint64_t v = data[LSULL];
-            int count = 0;
-            while ((v & 1) == 0 && count < 64) {
-                v >>= 1;
-                ++count;
+            else
+            {
+                n_minus_1.data[LSULL] -= 1;
             }
-            return count;
-        } else if (data[MSULL] != 0) {
-            // Parte baja es 0, contar en parte alta + 64
-            uint64_t v = data[MSULL];
-            int count = 0;
-            while ((v & 1) == 0 && count < 64) {
-                v >>= 1;
-                ++count;
+
+            // n & (n-1) debe ser 0
+            return ((data[LSULL] & n_minus_1.data[LSULL]) == 0) &&
+                   ((data[MSULL] & n_minus_1.data[MSULL]) == 0);
+        }
+
+        // ============================================================================
+        // OPERADORES ARITMÉTICOS
+        // ============================================================================
+
+        /**
+         * @brief Operador de negación bitwise (NOT bit a bit)
+         *
+         * @return Nuevo int128_base_t con todos los bits invertidos
+         *
+         * @details Invierte todos los bits del número. Es el operador base para
+         * implementar la negación aritmética mediante complemento a 2: -x = ~x + 1
+         *
+         * @note FIX CRÍTICO (Fase 17): Corregido orden de argumentos del constructor.
+         *       Antes: int128_base_t(~data[LSULL], ~data[MSULL]) pasaba (~low, ~high) ❌
+         *       Ahora: int128_base_t(~data[MSULL], ~data[LSULL]) pasa (high, low) ✅
+         *       Este bug rompía operator-(), abs() y to_string() para valores negativos.
+         *
+         * @par Ejemplo:
+         * @code
+         * uint128_t x(0xFFFF'FFFF'FFFF'FFFF, 0x0000'0000'0000'0000);
+         * uint128_t y = ~x; // y = (0x0000'0000'0000'0000, 0xFFFF'FFFF'FFFF'FFFF)
+         * @endcode
+         */
+        constexpr int128_base_t operator~() const noexcept
+        {
+            // Constructor(high, low) - orden correcto con constantes
+            return int128_base_t(~data[MSULL], ~data[LSULL]);
+        }
+
+        /**
+         * @brief Operador de negación unaria (complemento a 2)
+         *
+         * @return Negativo del valor actual usando aritmética modular
+         *
+         * @details Implementa la negación mediante complemento a 2: -x = ~x + 1
+         * Este operador funciona idénticamente para signed y unsigned (wrap-around).
+         *
+         * **Para int128_t (signed):**
+         * - -42 → -42 (representación two's complement)
+         * - -INT128_MIN → INT128_MIN (overflow, comportamiento definido)
+         *
+         * **Para uint128_t (unsigned):**
+         * - -42 → 2^128 - 42 (aritmética modular)
+         * - -0 → 0
+         *
+         * @note Depende de operator~(), que fue corregido en Fase 17
+         *
+         * @par Ejemplo:
+         * @code
+         * int128_t x(42);
+         * int128_t y = -x;        // y = -42
+         * int128_t z = -(-x);     // z = 42
+         * @endcode
+         */
+        constexpr int128_base_t operator-() const noexcept
+        {
+            return ~(*this) + int128_base_t(1);
+        }
+
+        // Operador suma: templates S2 manejan todos los casos (incluyendo S2==S)
+
+        // Operador resta: templates S2 manejan todos los casos (incluyendo S2==S)
+
+        // Sobrecargas para tipos builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator+=(T other) noexcept
+        {
+            return *this += int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator+(T other) const noexcept
+        {
+            int128_base_t result(*this);
+            result += other;
+            return result;
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t &operator-=(T other) noexcept
+        {
+            return *this -= int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator-(T other) const noexcept
+        {
+            int128_base_t result(*this);
+            result -= other;
+            return result;
+        }
+
+        // Sobrecargas para signedness diferente
+        template <signedness S2>
+        constexpr int128_base_t &operator+=(const int128_base_t<S2> &other) noexcept
+        {
+            uint64_t temp_low = 0;
+            const unsigned char carry = intrinsics::add_u64(data[LSULL], other.low(), &temp_low);
+            data[LSULL] = temp_low;
+            uint64_t temp_high = 0;
+            intrinsics::addcarry_u64(carry, data[MSULL], other.high(), &temp_high);
+            data[MSULL] = temp_high;
+            return *this;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator+(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result += other;
+            return result;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t &operator-=(const int128_base_t<S2> &other) noexcept
+        {
+            uint64_t temp_low = 0;
+            const unsigned char borrow = intrinsics::sub_u64(data[LSULL], other.low(), &temp_low);
+            data[LSULL] = temp_low;
+            uint64_t temp_high = 0;
+            intrinsics::subborrow_u64(borrow, data[MSULL], other.high(), &temp_high);
+            data[MSULL] = temp_high;
+            return *this;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator-(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result -= other;
+            return result;
+        }
+
+        // Multiplicación: templates S2 manejan todos los casos (incluyendo S2==S)
+
+        // Operador multiplicación (FASE 0.5 optimizado)
+        // CORRECCIÓN DE COMPLEMENTO A 2:
+        // Cuando multiplicamos A (128 bits) × b (64 bits signed negativo):
+        // - b como unsigned = 2^64 + b_signed
+        // - A × b_unsigned = A × 2^64 + A × b_signed
+        // - Queremos solo A × b_signed, entonces: high -= A.low (original)
+        template <integral_builtin T>
+        constexpr int128_base_t &operator*=(T other) noexcept
+        {
+            const uint64_t original_low = data[LSULL]; // Guardar para corrección
+            const uint64_t b = static_cast<uint64_t>(other);
+
+            // Fast path: valor cabe en 64 bits
+            if (data[MSULL] == 0)
+            {
+                const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &data[MSULL]);
+                data[LSULL] = low_part;
+
+                // Corrección para signed negativos
+                if constexpr (std::is_signed_v<T>)
+                {
+                    if (other < 0)
+                    {
+                        data[MSULL] -= original_low;
+                    }
+                }
+                return *this;
             }
-            return 64 + count;
-        }
-        return 128; // Valor es 0
-    }
 
-    /**
-     * @brief Cuenta los ceros iniciales (leading zeros) en la representación binaria
-     * @return Número de bits en 0 desde el MSB hasta el primer bit en 1
-     *         Retorna 128 si el valor es 0
-     * @note Útil para determinar el número efectivo de bits significativos
-     * @example
-     *   uint128_t(8).leading_zeros() == 124  // 8 = 0b1000, necesita 4 bits
-     *   uint128_t(255).leading_zeros() == 120 // 255 = 0xFF, necesita 8 bits
-     *   uint128_t(0).leading_zeros() == 128
-     */
-    constexpr int leading_zeros() const noexcept
-    {
-        if (data[MSULL] != 0) {
-            return intrinsics::clz64(data[MSULL]);
-        } else if (data[LSULL] != 0) {
-            return 64 + intrinsics::clz64(data[LSULL]);
-        } else {
-            return 128;
-        }
-    }
+            // General case: multiplicación 128×64
+            uint64_t high_part;
+            const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &high_part);
+            const uint64_t cross_product = data[MSULL] * b;
 
-    /**
-     * @brief Retorna el número de bits significativos (bit width)
-     * @return 128 - leading_zeros(), o sea, el número de bits necesarios para representar el valor
-     * @example
-     *   uint128_t(8).bit_width() == 4   // 8 = 0b1000
-     *   uint128_t(255).bit_width() == 8 // 255 = 0xFF
-     *   uint128_t(0).bit_width() == 0
-     */
-    constexpr int bit_width() const noexcept
-    {
-        return 128 - leading_zeros();
-    }
-
-    /**
-     * @brief Verifica si el valor es una potencia de 2
-     * @return true si el valor es una potencia de 2 (1, 2, 4, 8, ...), false en caso contrario
-     * @note Un número es potencia de 2 si tiene exactamente un bit en 1
-     * @example
-     *   uint128_t(8).is_power_of_2() == true
-     *   uint128_t(12).is_power_of_2() == false
-     *   uint128_t(0).is_power_of_2() == false
-     */
-    constexpr bool is_power_of_2() const noexcept
-    {
-        // Un número n es potencia de 2 si n != 0 && (n & (n-1)) == 0
-        if (data[LSULL] == 0 && data[MSULL] == 0)
-            return false;
-
-        // Calcular n - 1
-        int128_base_t n_minus_1 = *this;
-        if (n_minus_1.data[LSULL] == 0) {
-            n_minus_1.data[MSULL] -= 1;
-            n_minus_1.data[LSULL] = UI64_MAX;
-        } else {
-            n_minus_1.data[LSULL] -= 1;
-        }
-
-        // n & (n-1) debe ser 0
-        return ((data[LSULL] & n_minus_1.data[LSULL]) == 0) &&
-               ((data[MSULL] & n_minus_1.data[MSULL]) == 0);
-    }
-
-    // ============================================================================
-    // OPERADORES ARITMÉTICOS
-    // ============================================================================
-
-    /**
-     * @brief Operador de negación bitwise (NOT bit a bit)
-     *
-     * @return Nuevo int128_base_t con todos los bits invertidos
-     *
-     * @details Invierte todos los bits del número. Es el operador base para
-     * implementar la negación aritmética mediante complemento a 2: -x = ~x + 1
-     *
-     * @note FIX CRÍTICO (Fase 17): Corregido orden de argumentos del constructor.
-     *       Antes: int128_base_t(~data[LSULL], ~data[MSULL]) pasaba (~low, ~high) ❌
-     *       Ahora: int128_base_t(~data[MSULL], ~data[LSULL]) pasa (high, low) ✅
-     *       Este bug rompía operator-(), abs() y to_string() para valores negativos.
-     *
-     * @par Ejemplo:
-     * @code
-     * uint128_t x(0xFFFF'FFFF'FFFF'FFFF, 0x0000'0000'0000'0000);
-     * uint128_t y = ~x; // y = (0x0000'0000'0000'0000, 0xFFFF'FFFF'FFFF'FFFF)
-     * @endcode
-     */
-    constexpr int128_base_t operator~() const noexcept
-    {
-        // Constructor(high, low) - orden correcto con constantes
-        return int128_base_t(~data[MSULL], ~data[LSULL]);
-    }
-
-    /**
-     * @brief Operador de negación unaria (complemento a 2)
-     *
-     * @return Negativo del valor actual usando aritmética modular
-     *
-     * @details Implementa la negación mediante complemento a 2: -x = ~x + 1
-     * Este operador funciona idénticamente para signed y unsigned (wrap-around).
-     *
-     * **Para int128_t (signed):**
-     * - -42 → -42 (representación two's complement)
-     * - -INT128_MIN → INT128_MIN (overflow, comportamiento definido)
-     *
-     * **Para uint128_t (unsigned):**
-     * - -42 → 2^128 - 42 (aritmética modular)
-     * - -0 → 0
-     *
-     * @note Depende de operator~(), que fue corregido en Fase 17
-     *
-     * @par Ejemplo:
-     * @code
-     * int128_t x(42);
-     * int128_t y = -x;        // y = -42
-     * int128_t z = -(-x);     // z = 42
-     * @endcode
-     */
-    constexpr int128_base_t operator-() const noexcept
-    {
-        return ~(*this) + int128_base_t(1);
-    }
-
-    // Operador suma: templates S2 manejan todos los casos (incluyendo S2==S)
-
-    // Operador resta: templates S2 manejan todos los casos (incluyendo S2==S)
-
-    // Sobrecargas para tipos builtin
-    template <integral_builtin T> constexpr int128_base_t& operator+=(T other) noexcept
-    {
-        return *this += int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator+(T other) const noexcept
-    {
-        int128_base_t result(*this);
-        result += other;
-        return result;
-    }
-
-    template <integral_builtin T> constexpr int128_base_t& operator-=(T other) noexcept
-    {
-        return *this -= int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator-(T other) const noexcept
-    {
-        int128_base_t result(*this);
-        result -= other;
-        return result;
-    }
-
-    // Sobrecargas para signedness diferente
-    template <signedness S2>
-    constexpr int128_base_t& operator+=(const int128_base_t<S2>& other) noexcept
-    {
-        uint64_t temp_low = 0;
-        const unsigned char carry = intrinsics::add_u64(data[LSULL], other.low(), &temp_low);
-        data[LSULL] = temp_low;
-        uint64_t temp_high = 0;
-        intrinsics::addcarry_u64(carry, data[MSULL], other.high(), &temp_high);
-        data[MSULL] = temp_high;
-        return *this;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator+(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result += other;
-        return result;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t& operator-=(const int128_base_t<S2>& other) noexcept
-    {
-        uint64_t temp_low = 0;
-        const unsigned char borrow = intrinsics::sub_u64(data[LSULL], other.low(), &temp_low);
-        data[LSULL] = temp_low;
-        uint64_t temp_high = 0;
-        intrinsics::subborrow_u64(borrow, data[MSULL], other.high(), &temp_high);
-        data[MSULL] = temp_high;
-        return *this;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator-(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result -= other;
-        return result;
-    }
-
-    // Multiplicación: templates S2 manejan todos los casos (incluyendo S2==S)
-
-    // Operador multiplicación (FASE 0.5 optimizado)
-    // CORRECCIÓN DE COMPLEMENTO A 2:
-    // Cuando multiplicamos A (128 bits) × b (64 bits signed negativo):
-    // - b como unsigned = 2^64 + b_signed
-    // - A × b_unsigned = A × 2^64 + A × b_signed
-    // - Queremos solo A × b_signed, entonces: high -= A.low (original)
-    template <integral_builtin T> constexpr int128_base_t& operator*=(T other) noexcept
-    {
-        const uint64_t original_low = data[LSULL]; // Guardar para corrección
-        const uint64_t b = static_cast<uint64_t>(other);
-
-        // Fast path: valor cabe en 64 bits
-        if (data[MSULL] == 0) {
-            const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &data[MSULL]);
             data[LSULL] = low_part;
+            data[MSULL] = high_part + cross_product;
 
             // Corrección para signed negativos
-            if constexpr (std::is_signed_v<T>) {
-                if (other < 0) {
+            if constexpr (std::is_signed_v<T>)
+            {
+                if (other < 0)
+                {
                     data[MSULL] -= original_low;
                 }
             }
             return *this;
         }
 
-        // General case: multiplicación 128×64
-        uint64_t high_part;
-        const uint64_t low_part = intrinsics::umul128(data[LSULL], b, &high_part);
-        const uint64_t cross_product = data[MSULL] * b;
+        // Operador *= para int128_base_t del MISMO tipo (evita recursión infinita)
+        constexpr int128_base_t &operator*=(const int128_base_t &other) noexcept
+        {
+            // Multiplicación 128×128 completa
+            // result = this->low * other.low
+            //        + (this->low * other.high) << 64
+            //        + (this->high * other.low) << 64
+            // (this->high * other.high va más allá de 128 bits, se descarta)
 
-        data[LSULL] = low_part;
-        data[MSULL] = high_part + cross_product;
+            uint64_t hi_lo;
+            uint64_t low_low = intrinsics::umul128(data[LSULL], other.data[LSULL], &hi_lo);
 
-        // Corrección para signed negativos
-        if constexpr (std::is_signed_v<T>) {
-            if (other < 0) {
-                data[MSULL] -= original_low;
+            uint64_t lo_hi = data[LSULL] * other.data[MSULL];
+            uint64_t hi_lo_2 = data[MSULL] * other.data[LSULL];
+
+            data[LSULL] = low_low;
+            data[MSULL] = hi_lo + lo_hi + hi_lo_2;
+            return *this;
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator*(T other) const noexcept
+        {
+            int128_base_t result(*this);
+            result *= other;
+            return result;
+        }
+
+        // Operador * para int128_base_t del MISMO tipo
+        constexpr int128_base_t operator*(const int128_base_t &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result *= other;
+            return result;
+        }
+
+        // Sobrecarga para signedness diferente
+        template <signedness S2>
+            requires(S2 != S) // Solo cuando S2 es DIFERENTE de S
+        constexpr int128_base_t &operator*=(const int128_base_t<S2> &other) noexcept
+        {
+            // Convertimos a nuestro tipo y usamos el operador del mismo tipo
+            return *this *= int128_base_t(other);
+        }
+
+        template <signedness S2>
+            requires(S2 != S) // Solo cuando S2 es DIFERENTE de S
+        constexpr int128_base_t operator*(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result *= other;
+            return result;
+        }
+
+        // ============================================================================
+        // OPERADORES DE DIVISIÓN Y MÓDULO
+        // ============================================================================
+
+        // División entre dos int128_base_t (mismo signedness)
+        constexpr int128_base_t &operator/=(const int128_base_t &other) noexcept
+        {
+            auto [quotient, remainder] = divrem(other);
+            *this = quotient;
+            return *this;
+        }
+
+        constexpr int128_base_t operator/(const int128_base_t &other) const noexcept
+        {
+            auto [quotient, remainder] = divrem(other);
+            return quotient;
+        }
+
+        constexpr int128_base_t &operator%=(const int128_base_t &other) noexcept
+        {
+            auto [quotient, remainder] = divrem(other);
+            *this = remainder;
+            return *this;
+        }
+
+        constexpr int128_base_t operator%(const int128_base_t &other) const noexcept
+        {
+            auto [quotient, remainder] = divrem(other);
+            return remainder;
+        }
+
+        // Sobrecargas para tipos builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator/=(T other) noexcept
+        {
+            return *this /= int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator/(T other) const noexcept
+        {
+            int128_base_t result(*this);
+            result /= other;
+            return result;
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t &operator%=(T other) noexcept
+        {
+            return *this %= int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator%(T other) const noexcept
+        {
+            int128_base_t result(*this);
+            result %= other;
+            return result;
+        }
+
+        // Sobrecargas para signedness diferente
+        template <signedness S2>
+        constexpr int128_base_t &operator/=(const int128_base_t<S2> &other) noexcept
+        {
+            return *this /= int128_base_t(other);
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator/(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result /= other;
+            return result;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t &operator%=(const int128_base_t<S2> &other) noexcept
+        {
+            return *this %= int128_base_t(other);
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator%(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result %= other;
+            return result;
+        }
+
+        // ============================================================================
+        // OPERADORES BITWISE
+        // ============================================================================
+
+        constexpr int128_base_t &operator&=(const int128_base_t &other) noexcept
+        {
+            data[LSULL] &= other.data[LSULL];
+            data[MSULL] &= other.data[MSULL];
+            return *this;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t &operator&=(const int128_base_t<S2> &other) noexcept
+        {
+            data[LSULL] &= other.low();
+            data[MSULL] &= other.high();
+            return *this;
+        }
+
+        constexpr int128_base_t operator&(const int128_base_t &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result &= other;
+            return result;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator&(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result &= other;
+            return result;
+        }
+
+        // Operadores bitwise AND con integral_builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator&=(T other) noexcept
+        {
+            return *this &= int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator&(T other) const noexcept
+        {
+            return *this & int128_base_t(other);
+        }
+
+        constexpr int128_base_t &operator|=(const int128_base_t &other) noexcept
+        {
+            data[LSULL] |= other.data[LSULL];
+            data[MSULL] |= other.data[MSULL];
+            return *this;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t &operator|=(const int128_base_t<S2> &other) noexcept
+        {
+            data[LSULL] |= other.low();
+            data[MSULL] |= other.high();
+            return *this;
+        }
+
+        constexpr int128_base_t operator|(const int128_base_t &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result |= other;
+            return result;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator|(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result |= other;
+            return result;
+        }
+
+        // Operadores bitwise OR con integral_builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator|=(T other) noexcept
+        {
+            return *this |= int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator|(T other) const noexcept
+        {
+            return *this | int128_base_t(other);
+        }
+
+        constexpr int128_base_t &operator^=(const int128_base_t &other) noexcept
+        {
+            data[LSULL] ^= other.data[LSULL];
+            data[MSULL] ^= other.data[MSULL];
+            return *this;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t &operator^=(const int128_base_t<S2> &other) noexcept
+        {
+            data[LSULL] ^= other.low();
+            data[MSULL] ^= other.high();
+            return *this;
+        }
+
+        constexpr int128_base_t operator^(const int128_base_t &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result ^= other;
+            return result;
+        }
+
+        template <signedness S2>
+        constexpr int128_base_t operator^(const int128_base_t<S2> &other) const noexcept
+        {
+            int128_base_t result(*this);
+            result ^= other;
+            return result;
+        }
+
+        // Operadores bitwise XOR con integral_builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator^=(T other) noexcept
+        {
+            return *this ^= int128_base_t(other);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator^(T other) const noexcept
+        {
+            return *this ^ int128_base_t(other);
+        }
+
+        // Left shift (idéntico para signed/unsigned)
+        constexpr int128_base_t &operator<<=(int shift) noexcept
+        {
+            if (shift <= 0)
+            {
+                return *this;
             }
-        }
-        return *this;
-    }
-
-    // Operador *= para int128_base_t del MISMO tipo (evita recursión infinita)
-    constexpr int128_base_t& operator*=(const int128_base_t& other) noexcept
-    {
-        // Multiplicación 128×128 completa
-        // result = this->low * other.low
-        //        + (this->low * other.high) << 64
-        //        + (this->high * other.low) << 64
-        // (this->high * other.high va más allá de 128 bits, se descarta)
-
-        uint64_t hi_lo;
-        uint64_t low_low = intrinsics::umul128(data[LSULL], other.data[LSULL], &hi_lo);
-
-        uint64_t lo_hi = data[LSULL] * other.data[MSULL];
-        uint64_t hi_lo_2 = data[MSULL] * other.data[LSULL];
-
-        data[LSULL] = low_low;
-        data[MSULL] = hi_lo + lo_hi + hi_lo_2;
-        return *this;
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator*(T other) const noexcept
-    {
-        int128_base_t result(*this);
-        result *= other;
-        return result;
-    }
-
-    // Operador * para int128_base_t del MISMO tipo
-    constexpr int128_base_t operator*(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result *= other;
-        return result;
-    }
-
-    // Sobrecarga para signedness diferente
-    template <signedness S2>
-        requires(S2 != S) // Solo cuando S2 es DIFERENTE de S
-    constexpr int128_base_t& operator*=(const int128_base_t<S2>& other) noexcept
-    {
-        // Convertimos a nuestro tipo y usamos el operador del mismo tipo
-        return *this *= int128_base_t(other);
-    }
-
-    template <signedness S2>
-        requires(S2 != S) // Solo cuando S2 es DIFERENTE de S
-    constexpr int128_base_t operator*(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result *= other;
-        return result;
-    }
-
-    // ============================================================================
-    // OPERADORES DE DIVISIÓN Y MÓDULO
-    // ============================================================================
-
-    // División entre dos int128_base_t (mismo signedness)
-    constexpr int128_base_t& operator/=(const int128_base_t& other) noexcept
-    {
-        auto [quotient, remainder] = divrem(other);
-        *this = quotient;
-        return *this;
-    }
-
-    constexpr int128_base_t operator/(const int128_base_t& other) const noexcept
-    {
-        auto [quotient, remainder] = divrem(other);
-        return quotient;
-    }
-
-    constexpr int128_base_t& operator%=(const int128_base_t& other) noexcept
-    {
-        auto [quotient, remainder] = divrem(other);
-        *this = remainder;
-        return *this;
-    }
-
-    constexpr int128_base_t operator%(const int128_base_t& other) const noexcept
-    {
-        auto [quotient, remainder] = divrem(other);
-        return remainder;
-    }
-
-    // Sobrecargas para tipos builtin
-    template <integral_builtin T> constexpr int128_base_t& operator/=(T other) noexcept
-    {
-        return *this /= int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator/(T other) const noexcept
-    {
-        int128_base_t result(*this);
-        result /= other;
-        return result;
-    }
-
-    template <integral_builtin T> constexpr int128_base_t& operator%=(T other) noexcept
-    {
-        return *this %= int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator%(T other) const noexcept
-    {
-        int128_base_t result(*this);
-        result %= other;
-        return result;
-    }
-
-    // Sobrecargas para signedness diferente
-    template <signedness S2>
-    constexpr int128_base_t& operator/=(const int128_base_t<S2>& other) noexcept
-    {
-        return *this /= int128_base_t(other);
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator/(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result /= other;
-        return result;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t& operator%=(const int128_base_t<S2>& other) noexcept
-    {
-        return *this %= int128_base_t(other);
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator%(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result %= other;
-        return result;
-    }
-
-    // ============================================================================
-    // OPERADORES BITWISE
-    // ============================================================================
-
-    constexpr int128_base_t& operator&=(const int128_base_t& other) noexcept
-    {
-        data[LSULL] &= other.data[LSULL];
-        data[MSULL] &= other.data[MSULL];
-        return *this;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t& operator&=(const int128_base_t<S2>& other) noexcept
-    {
-        data[LSULL] &= other.low();
-        data[MSULL] &= other.high();
-        return *this;
-    }
-
-    constexpr int128_base_t operator&(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result &= other;
-        return result;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator&(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result &= other;
-        return result;
-    }
-
-    // Operadores bitwise AND con integral_builtin
-    template <integral_builtin T> constexpr int128_base_t& operator&=(T other) noexcept
-    {
-        return *this &= int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator&(T other) const noexcept
-    {
-        return *this & int128_base_t(other);
-    }
-
-    constexpr int128_base_t& operator|=(const int128_base_t& other) noexcept
-    {
-        data[LSULL] |= other.data[LSULL];
-        data[MSULL] |= other.data[MSULL];
-        return *this;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t& operator|=(const int128_base_t<S2>& other) noexcept
-    {
-        data[LSULL] |= other.low();
-        data[MSULL] |= other.high();
-        return *this;
-    }
-
-    constexpr int128_base_t operator|(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result |= other;
-        return result;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator|(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result |= other;
-        return result;
-    }
-
-    // Operadores bitwise OR con integral_builtin
-    template <integral_builtin T> constexpr int128_base_t& operator|=(T other) noexcept
-    {
-        return *this |= int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator|(T other) const noexcept
-    {
-        return *this | int128_base_t(other);
-    }
-
-    constexpr int128_base_t& operator^=(const int128_base_t& other) noexcept
-    {
-        data[LSULL] ^= other.data[LSULL];
-        data[MSULL] ^= other.data[MSULL];
-        return *this;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t& operator^=(const int128_base_t<S2>& other) noexcept
-    {
-        data[LSULL] ^= other.low();
-        data[MSULL] ^= other.high();
-        return *this;
-    }
-
-    constexpr int128_base_t operator^(const int128_base_t& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result ^= other;
-        return result;
-    }
-
-    template <signedness S2>
-    constexpr int128_base_t operator^(const int128_base_t<S2>& other) const noexcept
-    {
-        int128_base_t result(*this);
-        result ^= other;
-        return result;
-    }
-
-    // Operadores bitwise XOR con integral_builtin
-    template <integral_builtin T> constexpr int128_base_t& operator^=(T other) noexcept
-    {
-        return *this ^= int128_base_t(other);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator^(T other) const noexcept
-    {
-        return *this ^ int128_base_t(other);
-    }
-
-    // Left shift (idéntico para signed/unsigned)
-    constexpr int128_base_t& operator<<=(int shift) noexcept
-    {
-        if (shift <= 0) {
-            return *this;
-        }
-        if (shift >= 128) {
-            data[LSULL] = 0;
-            data[MSULL] = 0;
-            return *this;
-        }
-
-        if (shift >= 64) {
-            const uint64_t new_high = data[LSULL] << (shift - 64);
-            data[LSULL] = 0;
-            data[MSULL] = new_high;
-        } else {
-            const uint64_t new_high = (data[MSULL] << shift) | (data[LSULL] >> (64 - shift));
-            const uint64_t new_low = data[LSULL] << shift;
-            data[LSULL] = new_low;
-            data[MSULL] = new_high;
-        }
-
-        return *this;
-    }
-
-    constexpr int128_base_t operator<<(int shift) const noexcept
-    {
-        int128_base_t result(*this);
-        result <<= shift;
-        return result;
-    }
-
-    // Left shift con integral_builtin
-    template <integral_builtin T> constexpr int128_base_t& operator<<=(T shift) noexcept
-    {
-        return *this <<= static_cast<int>(shift);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator<<(T shift) const noexcept
-    {
-        return *this << static_cast<int>(shift);
-    }
-
-    // Right shift: arithmetic (signed) vs logical (unsigned)
-    constexpr int128_base_t& operator>>=(int shift) noexcept
-    {
-        if (shift <= 0) {
-            return *this;
-        }
-        if (shift >= 128) {
-            if constexpr (is_signed) {
-                // Arithmetic shift: propagar signo
-                const bool is_negative = (static_cast<int64_t>(data[MSULL]) < 0);
-                data[LSULL] = is_negative ? ~0ull : 0ull;
-                data[MSULL] = is_negative ? ~0ull : 0ull;
-            } else {
-                // Logical shift: rellenar con ceros
+            if (shift >= 128)
+            {
                 data[LSULL] = 0;
                 data[MSULL] = 0;
+                return *this;
             }
+
+            if (shift >= 64)
+            {
+                const uint64_t new_high = data[LSULL] << (shift - 64);
+                data[LSULL] = 0;
+                data[MSULL] = new_high;
+            }
+            else
+            {
+                const uint64_t new_high = (data[MSULL] << shift) | (data[LSULL] >> (64 - shift));
+                const uint64_t new_low = data[LSULL] << shift;
+                data[LSULL] = new_low;
+                data[MSULL] = new_high;
+            }
+
             return *this;
         }
 
-        if (shift >= 64) {
-            if constexpr (is_signed) {
-                // Arithmetic shift
-                const uint64_t new_low =
-                    static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> (shift - 64));
-                const uint64_t new_high =
-                    static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> 63);
-                data[LSULL] = new_low;
-                data[MSULL] = new_high;
-            } else {
-                // Logical shift
-                const uint64_t new_low = data[MSULL] >> (shift - 64);
-                data[LSULL] = new_low;
-                data[MSULL] = 0;
+        constexpr int128_base_t operator<<(int shift) const noexcept
+        {
+            int128_base_t result(*this);
+            result <<= shift;
+            return result;
+        }
+
+        // Left shift con integral_builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator<<=(T shift) noexcept
+        {
+            return *this <<= static_cast<int>(shift);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator<<(T shift) const noexcept
+        {
+            return *this << static_cast<int>(shift);
+        }
+
+        // Right shift: arithmetic (signed) vs logical (unsigned)
+        constexpr int128_base_t &operator>>=(int shift) noexcept
+        {
+            if (shift <= 0)
+            {
+                return *this;
             }
-        } else {
-            const uint64_t new_low = (data[LSULL] >> shift) | (data[MSULL] << (64 - shift));
-            if constexpr (is_signed) {
-                const uint64_t new_high =
-                    static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> shift);
-                data[LSULL] = new_low;
-                data[MSULL] = new_high;
-            } else {
-                const uint64_t new_high = data[MSULL] >> shift;
-                data[LSULL] = new_low;
-                data[MSULL] = new_high;
+            if (shift >= 128)
+            {
+                if constexpr (is_signed)
+                {
+                    // Arithmetic shift: propagar signo
+                    const bool is_negative = (static_cast<int64_t>(data[MSULL]) < 0);
+                    data[LSULL] = is_negative ? ~0ull : 0ull;
+                    data[MSULL] = is_negative ? ~0ull : 0ull;
+                }
+                else
+                {
+                    // Logical shift: rellenar con ceros
+                    data[LSULL] = 0;
+                    data[MSULL] = 0;
+                }
+                return *this;
+            }
+
+            if (shift >= 64)
+            {
+                if constexpr (is_signed)
+                {
+                    // Arithmetic shift
+                    const uint64_t new_low =
+                        static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> (shift - 64));
+                    const uint64_t new_high =
+                        static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> 63);
+                    data[LSULL] = new_low;
+                    data[MSULL] = new_high;
+                }
+                else
+                {
+                    // Logical shift
+                    const uint64_t new_low = data[MSULL] >> (shift - 64);
+                    data[LSULL] = new_low;
+                    data[MSULL] = 0;
+                }
+            }
+            else
+            {
+                const uint64_t new_low = (data[LSULL] >> shift) | (data[MSULL] << (64 - shift));
+                if constexpr (is_signed)
+                {
+                    const uint64_t new_high =
+                        static_cast<uint64_t>(static_cast<int64_t>(data[MSULL]) >> shift);
+                    data[LSULL] = new_low;
+                    data[MSULL] = new_high;
+                }
+                else
+                {
+                    const uint64_t new_high = data[MSULL] >> shift;
+                    data[LSULL] = new_low;
+                    data[MSULL] = new_high;
+                }
+            }
+
+            return *this;
+        }
+
+        constexpr int128_base_t operator>>(int shift) const noexcept
+        {
+            int128_base_t result(*this);
+            result >>= shift;
+            return result;
+        }
+
+        // Right shift con integral_builtin
+        template <integral_builtin T>
+        constexpr int128_base_t &operator>>=(T shift) noexcept
+        {
+            return *this >>= static_cast<int>(shift);
+        }
+
+        template <integral_builtin T>
+        constexpr int128_base_t operator>>(T shift) const noexcept
+        {
+            return *this >> static_cast<int>(shift);
+        }
+
+        // ============================================================================
+        // COMPARACIONES (idénticas para signed/unsigned entre mismo tipo)
+        // ============================================================================
+
+        constexpr bool operator==(const int128_base_t &other) const noexcept
+        {
+            return (data[LSULL] == other.data[LSULL]) && (data[MSULL] == other.data[MSULL]);
+        }
+
+        constexpr bool operator!=(const int128_base_t &other) const noexcept
+        {
+            return !(*this == other);
+        }
+
+        constexpr bool operator<(const int128_base_t &other) const noexcept
+        {
+            if constexpr (is_signed)
+            {
+                // Comparación signed
+                const int64_t this_high = static_cast<int64_t>(data[MSULL]);
+                const int64_t other_high = static_cast<int64_t>(other.data[MSULL]);
+                if (this_high != other_high)
+                {
+                    return this_high < other_high;
+                }
+                return data[LSULL] < other.data[LSULL];
+            }
+            else
+            {
+                // Comparación unsigned
+                if (data[MSULL] != other.data[MSULL])
+                {
+                    return data[MSULL] < other.data[MSULL];
+                }
+                return data[LSULL] < other.data[LSULL];
             }
         }
 
-        return *this;
-    }
-
-    constexpr int128_base_t operator>>(int shift) const noexcept
-    {
-        int128_base_t result(*this);
-        result >>= shift;
-        return result;
-    }
-
-    // Right shift con integral_builtin
-    template <integral_builtin T> constexpr int128_base_t& operator>>=(T shift) noexcept
-    {
-        return *this >>= static_cast<int>(shift);
-    }
-
-    template <integral_builtin T> constexpr int128_base_t operator>>(T shift) const noexcept
-    {
-        return *this >> static_cast<int>(shift);
-    }
-
-    // ============================================================================
-    // COMPARACIONES (idénticas para signed/unsigned entre mismo tipo)
-    // ============================================================================
-
-    constexpr bool operator==(const int128_base_t& other) const noexcept
-    {
-        return (data[LSULL] == other.data[LSULL]) && (data[MSULL] == other.data[MSULL]);
-    }
-
-    constexpr bool operator!=(const int128_base_t& other) const noexcept
-    {
-        return !(*this == other);
-    }
-
-    constexpr bool operator<(const int128_base_t& other) const noexcept
-    {
-        if constexpr (is_signed) {
-            // Comparación signed
-            const int64_t this_high = static_cast<int64_t>(data[MSULL]);
-            const int64_t other_high = static_cast<int64_t>(other.data[MSULL]);
-            if (this_high != other_high) {
-                return this_high < other_high;
-            }
-            return data[LSULL] < other.data[LSULL];
-        } else {
-            // Comparación unsigned
-            if (data[MSULL] != other.data[MSULL]) {
-                return data[MSULL] < other.data[MSULL];
-            }
-            return data[LSULL] < other.data[LSULL];
+        constexpr std::strong_ordering operator<=>(const int128_base_t &other) const noexcept
+        {
+            if (*this < other)
+                return std::strong_ordering::less;
+            if (*this == other)
+                return std::strong_ordering::equal;
+            return std::strong_ordering::greater;
         }
-    }
 
-    constexpr std::strong_ordering operator<=>(const int128_base_t& other) const noexcept
-    {
-        if (*this < other)
-            return std::strong_ordering::less;
-        if (*this == other)
-            return std::strong_ordering::equal;
-        return std::strong_ordering::greater;
-    }
+        // ============================================================================
+        // COMPARACIONES CON TIPOS BUILTIN
+        // ============================================================================
 
-    // ============================================================================
-    // COMPARACIONES CON TIPOS BUILTIN
-    // ============================================================================
+        // Comparaciones con integral_builtin
+        template <integral_builtin T>
+        friend constexpr bool operator==(const int128_base_t &lhs, T rhs) noexcept
+        {
+            // Convertir rhs a int128_base_t con sign extension apropiada
+            int128_base_t rhs_converted{};
+            rhs_converted.data[LSULL] = static_cast<uint64_t>(rhs);
+            if constexpr (std::is_signed_v<T>)
+            {
+                if (rhs < 0)
+                {
+                    rhs_converted.data[MSULL] = ~0ull;
+                }
+            }
+            return lhs == rhs_converted;
+        }
 
-    // Comparaciones con integral_builtin
-    template <integral_builtin T>
-    friend constexpr bool operator==(const int128_base_t& lhs, T rhs) noexcept
-    {
-        // Convertir rhs a int128_base_t con sign extension apropiada
-        int128_base_t rhs_converted{};
-        rhs_converted.data[LSULL] = static_cast<uint64_t>(rhs);
-        if constexpr (std::is_signed_v<T>) {
-            if (rhs < 0) {
-                rhs_converted.data[MSULL] = ~0ull;
+        template <integral_builtin T>
+        friend constexpr bool operator==(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return rhs == lhs;
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator!=(const int128_base_t &lhs, T rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator!=(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return !(rhs == lhs);
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator<(const int128_base_t &lhs, T rhs) noexcept
+        {
+            int128_base_t rhs_converted{};
+            rhs_converted.data[LSULL] = static_cast<uint64_t>(rhs);
+            if constexpr (std::is_signed_v<T>)
+            {
+                if (rhs < 0)
+                {
+                    rhs_converted.data[MSULL] = ~0ull;
+                }
+            }
+            return lhs < rhs_converted;
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator<(T lhs, const int128_base_t &rhs) noexcept
+        {
+            int128_base_t lhs_converted{};
+            lhs_converted.data[LSULL] = static_cast<uint64_t>(lhs);
+            if constexpr (std::is_signed_v<T>)
+            {
+                if (lhs < 0)
+                {
+                    lhs_converted.data[MSULL] = ~0ull;
+                }
+            }
+            return lhs_converted < rhs;
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator<=(const int128_base_t &lhs, T rhs) noexcept
+        {
+            return !(lhs > rhs);
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator<=(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return !(lhs > rhs);
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator>(const int128_base_t &lhs, T rhs) noexcept
+        {
+            return rhs < lhs;
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator>(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return rhs < lhs;
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator>=(const int128_base_t &lhs, T rhs) noexcept
+        {
+            return !(lhs < rhs);
+        }
+
+        template <integral_builtin T>
+        friend constexpr bool operator>=(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return !(lhs < rhs);
+        }
+
+        // Comparaciones con floating_point (solo == y != por NaN/Inf)
+        template <floating_point_builtin T>
+        friend constexpr bool operator==(const int128_base_t &lhs, T rhs) noexcept
+        {
+            // NaN nunca es igual a nada
+            if (rhs != rhs)
+                return false; // NaN check
+            // Inf no es igual a ningún entero finito
+            if (rhs == std::numeric_limits<T>::infinity() || rhs == -std::numeric_limits<T>::infinity())
+                return false;
+            // Convertir int128 a floating y comparar
+            return static_cast<T>(lhs) == rhs;
+        }
+
+        template <floating_point_builtin T>
+        friend constexpr bool operator==(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return rhs == lhs;
+        }
+
+        template <floating_point_builtin T>
+        friend constexpr bool operator!=(const int128_base_t &lhs, T rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
+
+        template <floating_point_builtin T>
+        friend constexpr bool operator!=(T lhs, const int128_base_t &rhs) noexcept
+        {
+            return !(rhs == lhs);
+        }
+
+        // ============================================================================
+        // PURE INCREMENT/DECREMENT (Value semantics - no mutation)
+        // ============================================================================
+
+        /**
+         * @brief Pure increment function (value semantics)
+         *
+         * Returns a new int128_base_t with value incremented by 1.
+         * This is a pure function - it does NOT modify the current object.
+         *
+         * @return New int128_base_t with value + 1
+         *
+         * @note Optimized via intrinsics (delegates to operator+=)
+         * @note For both signed and unsigned, uses two's complement arithmetic
+         * @note Prefer this over operator++ when value semantics are needed
+         *
+         * @par Performance:
+         * Delegates to operator+= which uses intrinsics::add_u64 and addcarry_u64.
+         * On x86-64: Uses ADC (add with carry) instruction.
+         * On ARM64: Uses ADDS instruction.
+         * On RISC-V: Uses ADD + SLTU sequence.
+         *
+         * @par Example:
+         * @code
+         * int128_t x(42);
+         * int128_t y = x.incr();  // y = 43, x unchanged
+         * // Equivalent to: y = x + 1, but more explicit intent
+         * @endcode
+         */
+        constexpr int128_base_t incr() const noexcept
+        {
+            return *this + int128_base_t(1);
+        }
+
+        /**
+         * @brief Pure decrement function (value semantics)
+         *
+         * Returns a new int128_base_t with value decremented by 1.
+         * This is a pure function - it does NOT modify the current object.
+         *
+         * @return New int128_base_t with value - 1
+         *
+         * @note Optimized via intrinsics (delegates to operator-=)
+         * @note For both signed and unsigned, uses two's complement arithmetic
+         * @note Prefer this over operator-- when value semantics are needed
+         *
+         * @par Performance:
+         * Delegates to operator-= which uses intrinsics::sub_u64 and subborrow_u64.
+         * Same intrinsic optimization as incr() but for subtraction.
+         *
+         * @par Example:
+         * @code
+         * uint128_t x(100);
+         * uint128_t y = x.decr();  // y = 99, x unchanged
+         * // Equivalent to: y = x - 1, but more explicit intent
+         * @endcode
+         */
+        constexpr int128_base_t decr() const noexcept
+        {
+            return *this - int128_base_t(1);
+        }
+
+        // ============================================================================
+        // INCREMENT/DECREMENT (Mutation semantics - modifies object)
+        // ============================================================================
+
+        // Pre-incremento
+        constexpr int128_base_t &operator++() noexcept
+        {
+            *this += int128_base_t(1);
+            return *this;
+        }
+
+        // Post-incremento
+        constexpr int128_base_t operator++(int) noexcept
+        {
+            int128_base_t temp(*this);
+            ++(*this);
+            return temp;
+        }
+
+        // Pre-decremento
+        constexpr int128_base_t &operator--() noexcept
+        {
+            *this -= int128_base_t(1);
+            return *this;
+        }
+
+        // Post-decremento
+        constexpr int128_base_t operator--(int) noexcept
+        {
+            int128_base_t temp(*this);
+            --(*this);
+            return temp;
+        }
+
+        // ============================================================================
+        // CONVERSIONES
+        // ============================================================================
+
+        explicit constexpr operator bool() const noexcept
+        {
+            return (data[LSULL] != 0) || (data[MSULL] != 0);
+        }
+
+        template <arithmetic_builtin T>
+        explicit constexpr operator T() const noexcept
+        {
+            if constexpr (floating_point_builtin<T>)
+            {
+                // Si es int128_t y es negativo, necesitamos manejar correctamente
+                if constexpr (is_signed)
+                {
+                    if (is_negative())
+                    {
+                        // Calcular el valor positivo (complemento a 2 invertido)
+                        uint64_t temp_low = ~data[LSULL];
+                        uint64_t temp_high = ~data[MSULL];
+
+                        // Sumar 1 para obtener el valor absoluto
+                        uint64_t abs_low = temp_low + 1ull;
+                        uint64_t abs_high = temp_high;
+                        if (abs_low == 0ull)
+                        {
+                            abs_high += 1ull;
+                        }
+
+                        // Convertir a floating point y negar
+                        const T abs_value = static_cast<T>(abs_high) * 18446744073709551616.0L +
+                                            static_cast<T>(abs_low);
+                        return -abs_value;
+                    }
+                }
+                return static_cast<T>(data[MSULL]) * 18446744073709551616.0L +
+                       static_cast<T>(data[LSULL]);
+            }
+            else
+            {
+                return static_cast<T>(data[LSULL]);
             }
         }
-        return lhs == rhs_converted;
-    }
 
-    template <integral_builtin T>
-    friend constexpr bool operator==(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return rhs == lhs;
-    }
+        // ============================================================================
+        // CONVERSIONES A STRING
+        // ============================================================================
 
-    template <integral_builtin T>
-    friend constexpr bool operator!=(const int128_base_t& lhs, T rhs) noexcept
-    {
-        return !(lhs == rhs);
-    }
+        /**
+         * @brief Convierte el valor a string decimal (base 10)
+         *
+         * @return String representando el valor en base 10
+         *
+         * @details Implementación optimizada que usa divrem_by_10() para extraer
+         * dígitos de forma eficiente. Maneja correctamente valores negativos en int128_t.
+         *
+         * **Proceso:**
+         * 1. Si es cero, devuelve "0"
+         * 2. Si es negativo (signed), calcula abs() y marca flag
+         * 3. Extrae dígitos en reversa usando división por 10
+         * 4. Añade signo '-' si era negativo
+         * 5. Invierte el string completo
+         *
+         * **Complejidad:** O(log n) donde n es el valor
+         *
+         * @note FIX Fase 17: Ahora usa abs() correctamente (dependía de operator~() bugueado)
+         * @note Para otras bases (2-36), usa to_string(int base)
+         *
+         * @par Ejemplo:
+         * @code
+         * int128_t x(42);
+         * std::string s1 = x.to_string();           // "42"
+         *
+         * int128_t y(-12345);
+         * std::string s2 = y.to_string();           // "-12345"
+         *
+         * uint128_t big = UINT128_MAX;
+         * std::string s3 = big.to_string();         // "340282366920938463463374607431768211455"
+         * @endcode
+         *
+         * @see to_string(int base), parse(), abs(), divrem_by_10()
+         */
+        std::string to_string() const
+        {
+            // Caso especial: cero
+            if (data[LSULL] == 0 && data[MSULL] == 0)
+            {
+                return "0";
+            }
 
-    template <integral_builtin T>
-    friend constexpr bool operator!=(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return !(rhs == lhs);
-    }
+            std::string result;
+            result.reserve(40); // Reservar espacio (~39 dígitos para 2^128)
 
-    template <integral_builtin T>
-    friend constexpr bool operator<(const int128_base_t& lhs, T rhs) noexcept
-    {
-        int128_base_t rhs_converted{};
-        rhs_converted.data[LSULL] = static_cast<uint64_t>(rhs);
-        if constexpr (std::is_signed_v<T>) {
-            if (rhs < 0) {
-                rhs_converted.data[MSULL] = ~0ull;
+            // Manejar signo para tipos signed
+            bool negative = false;
+            int128_base_t temp = *this;
+            if constexpr (is_signed)
+            {
+                if (is_negative())
+                {
+                    negative = true;
+                    temp = abs(); // Obtener valor absoluto
+                }
+            }
+
+            // Extraer dígitos usando divrem_by_10()
+            while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0)
+            {
+                auto [quotient, remainder] = temp.divrem_by_10();
+                result += static_cast<char>('0' + remainder); // Construir en reversa
+                temp = quotient;
+            }
+
+            // Añadir signo si es negativo
+            if (negative)
+            {
+                result += '-';
+            }
+
+            // Invertir el string (lo construimos al revés)
+            std::reverse(result.begin(), result.end());
+            return result;
+        }
+
+        /**
+         * @brief Convierte el valor a string en la base especificada (2-36)
+         *
+         * @param base Base numérica para la conversión (2 a 36)
+         *             - 2: binario (0-1)
+         *             - 8: octal (0-7)
+         *             - 10: decimal (0-9)
+         *             - 16: hexadecimal (0-9, a-f)
+         *             - 36: máximo (0-9, a-z)
+         *
+         * @return String representando el valor en la base especificada
+         *
+         * @throws std::invalid_argument Si base < 2 o base > 36
+         *
+         * @details Implementación general que extrae dígitos mediante división sucesiva.
+         * Para base 10, delega a to_string() optimizado. Para signed, maneja negativos.
+         *
+         * **Dígitos usados:**
+         * - 0-9: valores 0-9
+         * - a-z: valores 10-35 (lowercase)
+         *
+         * @par Ejemplo:
+         * @code
+         * uint128_t x(255);
+         * std::string bin = x.to_string(2);    // "11111111"
+         * std::string oct = x.to_string(8);    // "377"
+         * std::string hex = x.to_string(16);   // "ff"
+         *
+         * int128_t y(-42);
+         * std::string dec = y.to_string(10);   // "-42"
+         * std::string hex_neg = y.to_string(16); // two's complement en hex
+         * @endcode
+         *
+         * @see to_string(), parse()
+         */
+        std::string to_string(int base) const
+        {
+            if (base < 2 || base > 36)
+            {
+                throw std::invalid_argument("Invalid base: must be between 2 and 36");
+            }
+
+            // Optimización: delegar a to_string() para base 10
+            if (base == 10)
+            {
+                return to_string();
+            }
+
+            // Caso especial: cero
+            if (data[LSULL] == 0 && data[MSULL] == 0)
+            {
+                return "0";
+            }
+
+            // Tabla de dígitos
+            static constexpr char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+            std::string result;
+            result.reserve(128); // Reservar espacio generoso (128 bits en binario)
+
+            // Manejar signo para tipos signed
+            bool negative = false;
+            int128_base_t temp = *this;
+            if constexpr (is_signed)
+            {
+                if (is_negative())
+                {
+                    negative = true;
+                    temp = abs(); // Obtener valor absoluto
+                }
+            }
+
+            // Extraer dígitos usando divrem()
+            int128_base_t base_val(0ull, static_cast<uint64_t>(base));
+            while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0)
+            {
+                auto [quotient, remainder] = temp.divrem(base_val);
+                result += digits[remainder.data[LSULL]]; // Construir en reversa
+                temp = quotient;
+            }
+
+            // Añadir signo si es negativo
+            if (negative)
+            {
+                result += '-';
+            }
+
+            // Invertir el string (lo construimos al revés)
+            std::reverse(result.begin(), result.end());
+            return result;
+        }
+
+        // ============================================================================
+        // HELPERS
+        // ============================================================================
+
+        /**
+         * @brief Verifica si el valor es cero
+         * @return true si ambas partes son 0
+         */
+        constexpr bool is_zero() const noexcept
+        {
+            return (data[0] == 0) && (data[1] == 0);
+        }
+
+        /**
+         * @brief Verifica si el valor es negativo (solo para tipos signed)
+         * @return true si el bit de signo está establecido (solo para signed), siempre false para
+         * unsigned
+         */
+        constexpr bool is_negative() const noexcept
+        {
+            if constexpr (!is_signed)
+            {
+                return false;
+            }
+            else
+            {
+                return static_cast<int64_t>(data[MSULL]) < 0;
             }
         }
-        return lhs < rhs_converted;
-    }
 
-    template <integral_builtin T>
-    friend constexpr bool operator<(T lhs, const int128_base_t& rhs) noexcept
-    {
-        int128_base_t lhs_converted{};
-        lhs_converted.data[LSULL] = static_cast<uint64_t>(lhs);
-        if constexpr (std::is_signed_v<T>) {
-            if (lhs < 0) {
-                lhs_converted.data[MSULL] = ~0ull;
+        /**
+         * @brief Calcula el valor absoluto
+         *
+         * @return Valor absoluto del número actual
+         *
+         * @details Implementación eficiente según signedness:
+         * - **Para uint128_t (unsigned):** Devuelve el mismo valor (identidad)
+         * - **Para int128_t (signed):** Devuelve -x si x < 0, sino x
+         *
+         * **Casos especiales:**
+         * - abs(0) = 0
+         * - abs(INT128_MAX) = INT128_MAX
+         * - abs(INT128_MIN) = INT128_MIN (overflow, comportamiento definido)
+         *
+         * @note FIXED en Fase 17: Dependía de operator-() que usaba operator~() bugueado
+         * @note Para unsigned, esta función es constexpr y no hace nada (optimizable por el compilador)
+         *
+         * @par Ejemplo:
+         * @code
+         * int128_t x(-42);
+         * int128_t y = x.abs();           // y = 42
+         *
+         * int128_t z(100);
+         * int128_t w = z.abs();           // w = 100
+         *
+         * uint128_t u(42);
+         * uint128_t v = u.abs();          // v = 42 (identidad)
+         * @endcode
+         *
+         * @see operator-(), is_negative()
+         */
+        constexpr int128_base_t abs() const noexcept
+        {
+            if constexpr (!is_signed)
+            {
+                return (*this);
+            }
+            else
+            {
+                return (is_negative() ? (-(*this)) : (*this));
             }
         }
-        return lhs_converted < rhs;
-    }
 
-    template <integral_builtin T>
-    friend constexpr bool operator<=(const int128_base_t& lhs, T rhs) noexcept
-    {
-        return !(lhs > rhs);
-    }
+        // ============================================================================
+        // DIVISIÓN OPTIMIZADA POR 10 (para conversiones string)
+        // ============================================================================
 
-    template <integral_builtin T>
-    friend constexpr bool operator<=(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return !(lhs > rhs);
-    }
+        /**
+         * @brief División rápida por 10 para parsing de strings
+         * @return std::pair<cociente, resto> donde resto ∈ [0, 9]
+         * @note O(1) para valores <= 64 bits, O(64) para valores mayores
+         */
+        constexpr std::pair<int128_base_t, uint64_t> divrem_by_10() const noexcept
+        {
+            const uint64_t low = data[LSULL];
+            const uint64_t high = data[MSULL];
 
-    template <integral_builtin T>
-    friend constexpr bool operator>(const int128_base_t& lhs, T rhs) noexcept
-    {
-        return rhs < lhs;
-    }
+            // Fast path: valor cabe en 64 bits
+            if (high == 0)
+            {
+                const uint64_t quotient = low / 10;
+                const uint64_t remainder = low % 10;
+                return {int128_base_t(0ull, quotient), remainder}; // Constructor(high=0, low=quotient)
+            }
 
-    template <integral_builtin T>
-    friend constexpr bool operator>(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return rhs < lhs;
-    }
+            // Caso general: división de 128 bits por 10
+            // Algoritmo: división escolar bit a bit con divisor pequeño
+            uint64_t q_low = 0;
+            uint64_t q_high = high / 10;
+            uint64_t rem = high % 10;
 
-    template <integral_builtin T>
-    friend constexpr bool operator>=(const int128_base_t& lhs, T rhs) noexcept
-    {
-        return !(lhs < rhs);
-    }
+            // Procesar cada bit del low desde el MSB
+            for (int i = 63; i >= 0; --i)
+            {
+                rem = (rem << 1) | ((low >> i) & 1);
+                if (rem >= 10)
+                {
+                    rem -= 10;
+                    q_low |= (1ULL << i);
+                }
+            }
 
-    template <integral_builtin T>
-    friend constexpr bool operator>=(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return !(lhs < rhs);
-    }
+            return {int128_base_t(q_high, q_low), rem}; // Constructor(high, low)
+        }
 
-    // Comparaciones con floating_point (solo == y != por NaN/Inf)
-    template <floating_point_builtin T>
-    friend constexpr bool operator==(const int128_base_t& lhs, T rhs) noexcept
-    {
-        // NaN nunca es igual a nada
-        if (rhs != rhs)
-            return false; // NaN check
-        // Inf no es igual a ningún entero finito
-        if (rhs == std::numeric_limits<T>::infinity() || rhs == -std::numeric_limits<T>::infinity())
-            return false;
-        // Convertir int128 a floating y comparar
-        return static_cast<T>(lhs) == rhs;
-    }
+        /**
+         * @brief División y módulo principal con manejo correcto de signos
+         * @param divisor El divisor (debe ser != 0)
+         * @return std::pair<cociente, resto>
+         *
+         * @details Para tipos signed:
+         * - Cociente: negativo si signos diferentes
+         * - Resto: mismo signo que el dividendo (C++ truncated division)
+         *
+         * Para tipos unsigned: delega directamente a big_bin_divrem()
+         *
+         * @warning Si divisor == 0, comportamiento indefinido
+         */
+        constexpr std::pair<int128_base_t, int128_base_t>
+        divrem(const int128_base_t &divisor) const noexcept
+        {
+            if constexpr (is_signed)
+            {
+                // Manejo de signos para tipos signed
+                const bool dividend_negative = is_negative();
+                const bool divisor_negative = divisor.is_negative();
 
-    template <floating_point_builtin T>
-    friend constexpr bool operator==(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return rhs == lhs;
-    }
+                // Convertir a valores absolutos
+                int128_base_t abs_dividend = dividend_negative ? (-*this) : *this;
+                int128_base_t abs_divisor = divisor_negative ? (-divisor) : divisor;
 
-    template <floating_point_builtin T>
-    friend constexpr bool operator!=(const int128_base_t& lhs, T rhs) noexcept
-    {
-        return !(lhs == rhs);
-    }
+                // Hacer división unsigned
+                auto [quotient, remainder] = abs_dividend.big_bin_divrem(abs_divisor);
 
-    template <floating_point_builtin T>
-    friend constexpr bool operator!=(T lhs, const int128_base_t& rhs) noexcept
-    {
-        return !(rhs == lhs);
-    }
+                // Ajustar signo del cociente: negativo si signos diferentes
+                if (dividend_negative != divisor_negative)
+                {
+                    quotient = -quotient;
+                }
 
-    // ============================================================================
-    // PURE INCREMENT/DECREMENT (Value semantics - no mutation)
-    // ============================================================================
+                // Ajustar signo del resto: mismo signo que dividendo
+                if (dividend_negative && !(remainder.data[LSULL] == 0 && remainder.data[MSULL] == 0))
+                {
+                    remainder = -remainder;
+                }
 
-    /**
-     * @brief Pure increment function (value semantics)
-     *
-     * Returns a new int128_base_t with value incremented by 1.
-     * This is a pure function - it does NOT modify the current object.
-     *
-     * @return New int128_base_t with value + 1
-     *
-     * @note Optimized via intrinsics (delegates to operator+=)
-     * @note For both signed and unsigned, uses two's complement arithmetic
-     * @note Prefer this over operator++ when value semantics are needed
-     *
-     * @par Performance:
-     * Delegates to operator+= which uses intrinsics::add_u64 and addcarry_u64.
-     * On x86-64: Uses ADC (add with carry) instruction.
-     * On ARM64: Uses ADDS instruction.
-     * On RISC-V: Uses ADD + SLTU sequence.
-     *
-     * @par Example:
-     * @code
-     * int128_t x(42);
-     * int128_t y = x.incr();  // y = 43, x unchanged
-     * // Equivalent to: y = x + 1, but more explicit intent
-     * @endcode
-     */
-    constexpr int128_base_t incr() const noexcept
-    {
-        return *this + int128_base_t(1);
-    }
+                return {quotient, remainder};
+            }
+            else
+            {
+                // Para unsigned, usar directamente big_bin_divrem
+                return big_bin_divrem(divisor);
+            }
+        }
 
-    /**
-     * @brief Pure decrement function (value semantics)
-     *
-     * Returns a new int128_base_t with value decremented by 1.
-     * This is a pure function - it does NOT modify the current object.
-     *
-     * @return New int128_base_t with value - 1
-     *
-     * @note Optimized via intrinsics (delegates to operator-=)
-     * @note For both signed and unsigned, uses two's complement arithmetic
-     * @note Prefer this over operator-- when value semantics are needed
-     *
-     * @par Performance:
-     * Delegates to operator-= which uses intrinsics::sub_u64 and subborrow_u64.
-     * Same intrinsic optimization as incr() but for subtraction.
-     *
-     * @par Example:
-     * @code
-     * uint128_t x(100);
-     * uint128_t y = x.decr();  // y = 99, x unchanged
-     * // Equivalent to: y = x - 1, but more explicit intent
-     * @endcode
-     */
-    constexpr int128_base_t decr() const noexcept
-    {
-        return *this - int128_base_t(1);
-    }
+        /**
+         * @brief División binaria larga con múltiples optimizaciones (UNSIGNED ONLY)
+         * @param divisor El divisor (debe ser != 0, tratado como unsigned)
+         * @return std::pair<cociente, resto> donde 0 <= resto < divisor
+         *
+         * @details Optimizaciones implementadas (orden de evaluación [1]→[3]→[2]→[0]):
+         *
+         * **[1] Fast paths para divisores pequeños optimizados (hasta 15 = un nibble):**
+         * - Potencias de 2 (2,4,8,16,...): shift right optimizado
+         * - Potencias de 3 (3,9): algoritmo modular optimizado
+         * - Potencias de 5 (5): algoritmo modular optimizado
+         * - Divisores comunes: 6,7,10,11,12,13,14,15
+         *
+         * **[3] Check si ambos valores caben en 64 bits:**
+         * - Si dividendo y divisor son ≤ 64 bits: usar división nativa del CPU
+         *
+         * **[2] Optimización para divisor de 64 bits:**
+         * - Si solo divisor cabe en 64 bits: algoritmo híbrido
+         *
+         * **[0] Caso general:**
+         * - División binaria larga (128 bits / 128 bits) O(128)
+         *
+         * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
+         * @note Expuesto públicamente para benchmarks
+         * @warning Si divisor == 0, comportamiento indefinido
+         */
+        constexpr std::pair<int128_base_t, int128_base_t>
+        big_bin_divrem(const int128_base_t &divisor) const noexcept
+        {
+            // [0.a] Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
+            if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0)
+            {
+                int128_base_t zero;
+                zero.data[LSULL] = 0;
+                zero.data[MSULL] = 0;
+                return {zero, zero};
+            }
 
-    // ============================================================================
-    // INCREMENT/DECREMENT (Mutation semantics - modifies object)
-    // ============================================================================
+            // [0.b] Fast path: dividendo es 0
+            if (data[LSULL] == 0 && data[MSULL] == 0)
+            {
+                int128_base_t zero;
+                zero.data[LSULL] = 0;
+                zero.data[MSULL] = 0;
+                return {zero, zero};
+            }
 
-    // Pre-incremento
-    constexpr int128_base_t& operator++() noexcept
-    {
-        *this += int128_base_t(1);
-        return *this;
-    }
+            // [0.c] Fast path: divisor > dividendo (comparación UNSIGNED)
+            // Nota: big_bin_divrem trata todos los valores como unsigned
+            // Para comparación unsigned usamos comparación de datos directa
+            const bool divisor_greater =
+                (divisor.data[MSULL] > data[MSULL]) ||
+                (divisor.data[MSULL] == data[MSULL] && divisor.data[LSULL] > data[LSULL]);
+            if (divisor_greater)
+            {
+                int128_base_t zero;
+                zero.data[LSULL] = 0;
+                zero.data[MSULL] = 0;
+                return {zero, *this};
+            }
 
-    // Post-incremento
-    constexpr int128_base_t operator++(int) noexcept
-    {
-        int128_base_t temp(*this);
-        ++(*this);
-        return temp;
-    }
+            // [0.d] Fast path: divisor == dividendo
+            if (*this == divisor)
+            {
+                int128_base_t one;
+                one.data[LSULL] = 1;
+                one.data[MSULL] = 0;
+                int128_base_t zero;
+                zero.data[LSULL] = 0;
+                zero.data[MSULL] = 0;
+                return {one, zero};
+            }
 
-    // Pre-decremento
-    constexpr int128_base_t& operator--() noexcept
-    {
-        *this -= int128_base_t(1);
-        return *this;
-    }
+            // [0.e] Fast path: divisor == 1
+            if (divisor.data[LSULL] == 1ull && divisor.data[MSULL] == 0ull)
+            {
+                int128_base_t zero;
+                zero.data[LSULL] = 0;
+                zero.data[MSULL] = 0;
+                return {*this, zero};
+            }
 
-    // Post-decremento
-    constexpr int128_base_t operator--(int) noexcept
-    {
-        int128_base_t temp(*this);
-        --(*this);
-        return temp;
-    }
+            // ========================================================================
+            // [1] OPTIMIZACIONES PARA DIVISORES PEQUEÑOS ESPECÍFICOS (hasta 15)
+            // ========================================================================
 
-    // ============================================================================
-    // CONVERSIONES
-    // ============================================================================
+            // Solo aplicar si divisor cabe en 64 bits
+            if (divisor.data[MSULL] == 0)
+            {
+                const uint64_t d = divisor.data[LSULL];
 
-    explicit constexpr operator bool() const noexcept
-    {
-        return (data[LSULL] != 0) || (data[MSULL] != 0);
-    }
-
-    template <arithmetic_builtin T> explicit constexpr operator T() const noexcept
-    {
-        if constexpr (floating_point_builtin<T>) {
-            // Si es int128_t y es negativo, necesitamos manejar correctamente
-            if constexpr (is_signed) {
-                if (is_negative()) {
-                    // Calcular el valor positivo (complemento a 2 invertido)
-                    uint64_t temp_low = ~data[LSULL];
-                    uint64_t temp_high = ~data[MSULL];
-
-                    // Sumar 1 para obtener el valor absoluto
-                    uint64_t abs_low = temp_low + 1ull;
-                    uint64_t abs_high = temp_high;
-                    if (abs_low == 0ull) {
-                        abs_high += 1ull;
+                // [1.1] Potencias de 2: shift derecho optimizado
+                // Detectar si d es potencia de 2: d != 0 && (d & (d-1)) == 0
+                if (d != 0 && (d & (d - 1)) == 0)
+                {
+                    // Contar trailing zeros para obtener el exponente
+                    int shift = 0;
+                    uint64_t temp = d;
+                    while ((temp & 1) == 0)
+                    {
+                        temp >>= 1;
+                        ++shift;
                     }
 
-                    // Convertir a floating point y negar
-                    const T abs_value = static_cast<T>(abs_high) * 18446744073709551616.0L +
-                                        static_cast<T>(abs_low);
-                    return -abs_value;
-                }
-            }
-            return static_cast<T>(data[MSULL]) * 18446744073709551616.0L +
-                   static_cast<T>(data[LSULL]);
-        } else {
-            return static_cast<T>(data[LSULL]);
-        }
-    }
+                    // Cociente = *this >> shift
+                    // Resto = *this & (d - 1)
+                    const uint64_t mask = d - 1;
+                    const uint64_t remainder = data[LSULL] & mask;
 
-    // ============================================================================
-    // CONVERSIONES A STRING
-    // ============================================================================
+                    int128_base_t quotient;
+                    if (shift >= 64)
+                    {
+                        // Shift >= 64: mover high a low
+                        quotient.data[LSULL] = data[MSULL] >> (shift - 64);
+                        quotient.data[MSULL] = 0;
+                    }
+                    else if (shift > 0)
+                    {
+                        // Shift normal
+                        quotient.data[LSULL] = (data[LSULL] >> shift) | (data[MSULL] << (64 - shift));
+                        quotient.data[MSULL] = data[MSULL] >> shift;
+                    }
+                    else
+                    {
+                        quotient = *this;
+                    }
 
-    /**
-     * @brief Convierte el valor a string decimal (base 10)
-     *
-     * @return String representando el valor en base 10
-     *
-     * @details Implementación optimizada que usa divrem_by_10() para extraer
-     * dígitos de forma eficiente. Maneja correctamente valores negativos en int128_t.
-     *
-     * **Proceso:**
-     * 1. Si es cero, devuelve "0"
-     * 2. Si es negativo (signed), calcula abs() y marca flag
-     * 3. Extrae dígitos en reversa usando división por 10
-     * 4. Añade signo '-' si era negativo
-     * 5. Invierte el string completo
-     *
-     * **Complejidad:** O(log n) donde n es el valor
-     *
-     * @note FIX Fase 17: Ahora usa abs() correctamente (dependía de operator~() bugueado)
-     * @note Para otras bases (2-36), usa to_string(int base)
-     *
-     * @par Ejemplo:
-     * @code
-     * int128_t x(42);
-     * std::string s1 = x.to_string();           // "42"
-     *
-     * int128_t y(-12345);
-     * std::string s2 = y.to_string();           // "-12345"
-     *
-     * uint128_t big = UINT128_MAX;
-     * std::string s3 = big.to_string();         // "340282366920938463463374607431768211455"
-     * @endcode
-     *
-     * @see to_string(int base), parse(), abs(), divrem_by_10()
-     */
-    std::string to_string() const
-    {
-        // Caso especial: cero
-        if (data[LSULL] == 0 && data[MSULL] == 0) {
-            return "0";
-        }
-
-        std::string result;
-        result.reserve(40); // Reservar espacio (~39 dígitos para 2^128)
-
-        // Manejar signo para tipos signed
-        bool negative = false;
-        int128_base_t temp = *this;
-        if constexpr (is_signed) {
-            if (is_negative()) {
-                negative = true;
-                temp = abs(); // Obtener valor absoluto
-            }
-        }
-
-        // Extraer dígitos usando divrem_by_10()
-        while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0) {
-            auto [quotient, remainder] = temp.divrem_by_10();
-            result += static_cast<char>('0' + remainder); // Construir en reversa
-            temp = quotient;
-        }
-
-        // Añadir signo si es negativo
-        if (negative) {
-            result += '-';
-        }
-
-        // Invertir el string (lo construimos al revés)
-        std::reverse(result.begin(), result.end());
-        return result;
-    }
-
-    /**
-     * @brief Convierte el valor a string en la base especificada (2-36)
-     *
-     * @param base Base numérica para la conversión (2 a 36)
-     *             - 2: binario (0-1)
-     *             - 8: octal (0-7)
-     *             - 10: decimal (0-9)
-     *             - 16: hexadecimal (0-9, a-f)
-     *             - 36: máximo (0-9, a-z)
-     *
-     * @return String representando el valor en la base especificada
-     *
-     * @throws std::invalid_argument Si base < 2 o base > 36
-     *
-     * @details Implementación general que extrae dígitos mediante división sucesiva.
-     * Para base 10, delega a to_string() optimizado. Para signed, maneja negativos.
-     *
-     * **Dígitos usados:**
-     * - 0-9: valores 0-9
-     * - a-z: valores 10-35 (lowercase)
-     *
-     * @par Ejemplo:
-     * @code
-     * uint128_t x(255);
-     * std::string bin = x.to_string(2);    // "11111111"
-     * std::string oct = x.to_string(8);    // "377"
-     * std::string hex = x.to_string(16);   // "ff"
-     *
-     * int128_t y(-42);
-     * std::string dec = y.to_string(10);   // "-42"
-     * std::string hex_neg = y.to_string(16); // two's complement en hex
-     * @endcode
-     *
-     * @see to_string(), parse()
-     */
-    std::string to_string(int base) const
-    {
-        if (base < 2 || base > 36) {
-            throw std::invalid_argument("Invalid base: must be between 2 and 36");
-        }
-
-        // Optimización: delegar a to_string() para base 10
-        if (base == 10) {
-            return to_string();
-        }
-
-        // Caso especial: cero
-        if (data[LSULL] == 0 && data[MSULL] == 0) {
-            return "0";
-        }
-
-        // Tabla de dígitos
-        static constexpr char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-
-        std::string result;
-        result.reserve(128); // Reservar espacio generoso (128 bits en binario)
-
-        // Manejar signo para tipos signed
-        bool negative = false;
-        int128_base_t temp = *this;
-        if constexpr (is_signed) {
-            if (is_negative()) {
-                negative = true;
-                temp = abs(); // Obtener valor absoluto
-            }
-        }
-
-        // Extraer dígitos usando divrem()
-        int128_base_t base_val(0ull, static_cast<uint64_t>(base));
-        while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0) {
-            auto [quotient, remainder] = temp.divrem(base_val);
-            result += digits[remainder.data[LSULL]]; // Construir en reversa
-            temp = quotient;
-        }
-
-        // Añadir signo si es negativo
-        if (negative) {
-            result += '-';
-        }
-
-        // Invertir el string (lo construimos al revés)
-        std::reverse(result.begin(), result.end());
-        return result;
-    }
-
-    // ============================================================================
-    // HELPERS
-    // ============================================================================
-
-    /**
-     * @brief Verifica si el valor es cero
-     * @return true si ambas partes son 0
-     */
-    constexpr bool is_zero() const noexcept
-    {
-        return (data[0] == 0) && (data[1] == 0);
-    }
-
-    /**
-     * @brief Verifica si el valor es negativo (solo para tipos signed)
-     * @return true si el bit de signo está establecido (solo para signed), siempre false para
-     * unsigned
-     */
-    constexpr bool is_negative() const noexcept
-    {
-        if constexpr (!is_signed) {
-            return false;
-        } else {
-            return static_cast<int64_t>(data[MSULL]) < 0;
-        }
-    }
-
-    /**
-     * @brief Calcula el valor absoluto
-     *
-     * @return Valor absoluto del número actual
-     *
-     * @details Implementación eficiente según signedness:
-     * - **Para uint128_t (unsigned):** Devuelve el mismo valor (identidad)
-     * - **Para int128_t (signed):** Devuelve -x si x < 0, sino x
-     *
-     * **Casos especiales:**
-     * - abs(0) = 0
-     * - abs(INT128_MAX) = INT128_MAX
-     * - abs(INT128_MIN) = INT128_MIN (overflow, comportamiento definido)
-     *
-     * @note FIXED en Fase 17: Dependía de operator-() que usaba operator~() bugueado
-     * @note Para unsigned, esta función es constexpr y no hace nada (optimizable por el compilador)
-     *
-     * @par Ejemplo:
-     * @code
-     * int128_t x(-42);
-     * int128_t y = x.abs();           // y = 42
-     *
-     * int128_t z(100);
-     * int128_t w = z.abs();           // w = 100
-     *
-     * uint128_t u(42);
-     * uint128_t v = u.abs();          // v = 42 (identidad)
-     * @endcode
-     *
-     * @see operator-(), is_negative()
-     */
-    constexpr int128_base_t abs() const noexcept
-    {
-        if constexpr (!is_signed) {
-            return (*this);
-        } else {
-            return (is_negative() ? (-(*this)) : (*this));
-        }
-    }
-
-    // ============================================================================
-    // DIVISIÓN OPTIMIZADA POR 10 (para conversiones string)
-    // ============================================================================
-
-    /**
-     * @brief División rápida por 10 para parsing de strings
-     * @return std::pair<cociente, resto> donde resto ∈ [0, 9]
-     * @note O(1) para valores <= 64 bits, O(64) para valores mayores
-     */
-    constexpr std::pair<int128_base_t, uint64_t> divrem_by_10() const noexcept
-    {
-        const uint64_t low = data[LSULL];
-        const uint64_t high = data[MSULL];
-
-        // Fast path: valor cabe en 64 bits
-        if (high == 0) {
-            const uint64_t quotient = low / 10;
-            const uint64_t remainder = low % 10;
-            return {int128_base_t(0ull, quotient), remainder}; // Constructor(high=0, low=quotient)
-        }
-
-        // Caso general: división de 128 bits por 10
-        // Algoritmo: división escolar bit a bit con divisor pequeño
-        uint64_t q_low = 0;
-        uint64_t q_high = high / 10;
-        uint64_t rem = high % 10;
-
-        // Procesar cada bit del low desde el MSB
-        for (int i = 63; i >= 0; --i) {
-            rem = (rem << 1) | ((low >> i) & 1);
-            if (rem >= 10) {
-                rem -= 10;
-                q_low |= (1ULL << i);
-            }
-        }
-
-        return {int128_base_t(q_high, q_low), rem}; // Constructor(high, low)
-    }
-
-    /**
-     * @brief División y módulo principal con manejo correcto de signos
-     * @param divisor El divisor (debe ser != 0)
-     * @return std::pair<cociente, resto>
-     *
-     * @details Para tipos signed:
-     * - Cociente: negativo si signos diferentes
-     * - Resto: mismo signo que el dividendo (C++ truncated division)
-     *
-     * Para tipos unsigned: delega directamente a big_bin_divrem()
-     *
-     * @warning Si divisor == 0, comportamiento indefinido
-     */
-    constexpr std::pair<int128_base_t, int128_base_t>
-    divrem(const int128_base_t& divisor) const noexcept
-    {
-        if constexpr (is_signed) {
-            // Manejo de signos para tipos signed
-            const bool dividend_negative = is_negative();
-            const bool divisor_negative = divisor.is_negative();
-
-            // Convertir a valores absolutos
-            int128_base_t abs_dividend = dividend_negative ? (-*this) : *this;
-            int128_base_t abs_divisor = divisor_negative ? (-divisor) : divisor;
-
-            // Hacer división unsigned
-            auto [quotient, remainder] = abs_dividend.big_bin_divrem(abs_divisor);
-
-            // Ajustar signo del cociente: negativo si signos diferentes
-            if (dividend_negative != divisor_negative) {
-                quotient = -quotient;
-            }
-
-            // Ajustar signo del resto: mismo signo que dividendo
-            if (dividend_negative && !(remainder.data[LSULL] == 0 && remainder.data[MSULL] == 0)) {
-                remainder = -remainder;
-            }
-
-            return {quotient, remainder};
-        } else {
-            // Para unsigned, usar directamente big_bin_divrem
-            return big_bin_divrem(divisor);
-        }
-    }
-
-    /**
-     * @brief División binaria larga con múltiples optimizaciones (UNSIGNED ONLY)
-     * @param divisor El divisor (debe ser != 0, tratado como unsigned)
-     * @return std::pair<cociente, resto> donde 0 <= resto < divisor
-     *
-     * @details Optimizaciones implementadas (orden de evaluación [1]→[3]→[2]→[0]):
-     *
-     * **[1] Fast paths para divisores pequeños optimizados (hasta 15 = un nibble):**
-     * - Potencias de 2 (2,4,8,16,...): shift right optimizado
-     * - Potencias de 3 (3,9): algoritmo modular optimizado
-     * - Potencias de 5 (5): algoritmo modular optimizado
-     * - Divisores comunes: 6,7,10,11,12,13,14,15
-     *
-     * **[3] Check si ambos valores caben en 64 bits:**
-     * - Si dividendo y divisor son ≤ 64 bits: usar división nativa del CPU
-     *
-     * **[2] Optimización para divisor de 64 bits:**
-     * - Si solo divisor cabe en 64 bits: algoritmo híbrido
-     *
-     * **[0] Caso general:**
-     * - División binaria larga (128 bits / 128 bits) O(128)
-     *
-     * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
-     * @note Expuesto públicamente para benchmarks
-     * @warning Si divisor == 0, comportamiento indefinido
-     */
-    constexpr std::pair<int128_base_t, int128_base_t>
-    big_bin_divrem(const int128_base_t& divisor) const noexcept
-    {
-        // [0.a] Fast path: divisor es 0 (comportamiento indefinido, retornar 0)
-        if (divisor.data[LSULL] == 0 && divisor.data[MSULL] == 0) {
-            int128_base_t zero;
-            zero.data[LSULL] = 0;
-            zero.data[MSULL] = 0;
-            return {zero, zero};
-        }
-
-        // [0.b] Fast path: dividendo es 0
-        if (data[LSULL] == 0 && data[MSULL] == 0) {
-            int128_base_t zero;
-            zero.data[LSULL] = 0;
-            zero.data[MSULL] = 0;
-            return {zero, zero};
-        }
-
-        // [0.c] Fast path: divisor > dividendo (comparación UNSIGNED)
-        // Nota: big_bin_divrem trata todos los valores como unsigned
-        // Para comparación unsigned usamos comparación de datos directa
-        const bool divisor_greater =
-            (divisor.data[MSULL] > data[MSULL]) ||
-            (divisor.data[MSULL] == data[MSULL] && divisor.data[LSULL] > data[LSULL]);
-        if (divisor_greater) {
-            int128_base_t zero;
-            zero.data[LSULL] = 0;
-            zero.data[MSULL] = 0;
-            return {zero, *this};
-        }
-
-        // [0.d] Fast path: divisor == dividendo
-        if (*this == divisor) {
-            int128_base_t one;
-            one.data[LSULL] = 1;
-            one.data[MSULL] = 0;
-            int128_base_t zero;
-            zero.data[LSULL] = 0;
-            zero.data[MSULL] = 0;
-            return {one, zero};
-        }
-
-        // [0.e] Fast path: divisor == 1
-        if (divisor.data[LSULL] == 1ull && divisor.data[MSULL] == 0ull) {
-            int128_base_t zero;
-            zero.data[LSULL] = 0;
-            zero.data[MSULL] = 0;
-            return {*this, zero};
-        }
-
-        // ========================================================================
-        // [1] OPTIMIZACIONES PARA DIVISORES PEQUEÑOS ESPECÍFICOS (hasta 15)
-        // ========================================================================
-
-        // Solo aplicar si divisor cabe en 64 bits
-        if (divisor.data[MSULL] == 0) {
-            const uint64_t d = divisor.data[LSULL];
-
-            // [1.1] Potencias de 2: shift derecho optimizado
-            // Detectar si d es potencia de 2: d != 0 && (d & (d-1)) == 0
-            if (d != 0 && (d & (d - 1)) == 0) {
-                // Contar trailing zeros para obtener el exponente
-                int shift = 0;
-                uint64_t temp = d;
-                while ((temp & 1) == 0) {
-                    temp >>= 1;
-                    ++shift;
+                    int128_base_t rem_obj;
+                    rem_obj.data[LSULL] = remainder;
+                    rem_obj.data[MSULL] = 0;
+                    return {quotient, rem_obj};
                 }
 
-                // Cociente = *this >> shift
-                // Resto = *this & (d - 1)
-                const uint64_t mask = d - 1;
-                const uint64_t remainder = data[LSULL] & mask;
+                // [1.2-1.11] Divisores específicos comunes (no potencias de 2)
+                switch (d)
+                {
+                case 3:  // [1.2] División por 3
+                case 5:  // [1.3] División por 5
+                case 6:  // [1.4] División por 6
+                case 7:  // [1.5] División por 7
+                case 9:  // [1.6] División por 9 (potencia de 3)
+                case 10: // [1.7] División por 10
+                case 11: // [1.8] División por 11
+                case 12: // [1.9] División por 12
+                case 13: // [1.10] División por 13
+                case 14: // [1.11] División por 14
+                case 15: // [1.12] División por 15
+                    // Para estos casos, si el dividendo cabe en 64 bits, usar división nativa
+                    if (data[MSULL] == 0)
+                    {
+                        const uint64_t q = data[LSULL] / d;
+                        const uint64_t r = data[LSULL] % d;
+                        int128_base_t quot, rem;
+                        quot.data[LSULL] = q;
+                        quot.data[MSULL] = 0;
+                        rem.data[LSULL] = r;
+                        rem.data[MSULL] = 0;
+                        return {quot, rem};
+                    }
+                    // Si no cabe en 64 bits, continuar al caso [2]
+                    break;
 
-                int128_base_t quotient;
-                if (shift >= 64) {
-                    // Shift >= 64: mover high a low
-                    quotient.data[LSULL] = data[MSULL] >> (shift - 64);
-                    quotient.data[MSULL] = 0;
-                } else if (shift > 0) {
-                    // Shift normal
-                    quotient.data[LSULL] = (data[LSULL] >> shift) | (data[MSULL] << (64 - shift));
-                    quotient.data[MSULL] = data[MSULL] >> shift;
-                } else {
-                    quotient = *this;
-                }
-
-                int128_base_t rem_obj;
-                rem_obj.data[LSULL] = remainder;
-                rem_obj.data[MSULL] = 0;
-                return {quotient, rem_obj};
-            }
-
-            // [1.2-1.11] Divisores específicos comunes (no potencias de 2)
-            switch (d) {
-            case 3:  // [1.2] División por 3
-            case 5:  // [1.3] División por 5
-            case 6:  // [1.4] División por 6
-            case 7:  // [1.5] División por 7
-            case 9:  // [1.6] División por 9 (potencia de 3)
-            case 10: // [1.7] División por 10
-            case 11: // [1.8] División por 11
-            case 12: // [1.9] División por 12
-            case 13: // [1.10] División por 13
-            case 14: // [1.11] División por 14
-            case 15: // [1.12] División por 15
-                // Para estos casos, si el dividendo cabe en 64 bits, usar división nativa
-                if (data[MSULL] == 0) {
-                    const uint64_t q = data[LSULL] / d;
-                    const uint64_t r = data[LSULL] % d;
-                    int128_base_t quot, rem;
-                    quot.data[LSULL] = q;
-                    quot.data[MSULL] = 0;
-                    rem.data[LSULL] = r;
-                    rem.data[MSULL] = 0;
-                    return {quot, rem};
-                }
-                // Si no cabe en 64 bits, continuar al caso [2]
-                break;
-
-            default:
-                break;
-            }
-        }
-
-        // ========================================================================
-        // [3] CHECK SI AMBOS VALORES CABEN EN 64 BITS
-        // ========================================================================
-
-        // Si dividendo Y divisor caben en 64 bits: usar división nativa del CPU
-        if (data[MSULL] == 0 && divisor.data[MSULL] == 0) {
-            const uint64_t q = data[LSULL] / divisor.data[LSULL];
-            const uint64_t r = data[LSULL] % divisor.data[LSULL];
-            int128_base_t quot, rem;
-            quot.data[LSULL] = q;
-            quot.data[MSULL] = 0;
-            rem.data[LSULL] = r;
-            rem.data[MSULL] = 0;
-            return {quot, rem};
-        }
-
-        // ========================================================================
-        // [2] OPTIMIZACIÓN PARA DIVISOR DE 64 BITS (dividendo de 128 bits)
-        // ========================================================================
-
-        if (divisor.data[MSULL] == 0) {
-            const uint64_t divisor_64 = divisor.data[LSULL];
-
-            // Dividendo de 128 bits / divisor de 64 bits
-            // Algoritmo híbrido: dividir high primero, luego procesar low bit a bit
-            uint64_t quotient_low = 0;
-            uint64_t quotient_high = data[MSULL] / divisor_64;
-            uint64_t remainder = data[MSULL] % divisor_64;
-
-            // Dividir parte baja bit a bit (procesar desde MSB)
-            for (int i = 63; i >= 0; --i) {
-                remainder = (remainder << 1) | ((data[LSULL] >> i) & 1);
-                if (remainder >= divisor_64) {
-                    remainder -= divisor_64;
-                    quotient_low |= (1ULL << i);
+                default:
+                    break;
                 }
             }
 
-            int128_base_t quot, rem;
-            quot.data[LSULL] = quotient_low;
-            quot.data[MSULL] = quotient_high;
-            rem.data[LSULL] = remainder;
-            rem.data[MSULL] = 0;
-            return {quot, rem};
-        }
+            // ========================================================================
+            // [3] CHECK SI AMBOS VALORES CABEN EN 64 BITS
+            // ========================================================================
 
-        // ========================================================================
-        // [3] OPTIMIZACIÓN: FACTORIZACIÓN DE POTENCIAS DE 2 COMUNES
-        // ========================================================================
-        // Si n = n' * 2^k y m = m' * 2^h (donde n', m' son impares o tienen menos 2s)
-        // Entonces: n / m = n' / m'  (el cociente no cambia si dividimos ambos por 2^s)
-        //           n % m = (n' % m') * 2^s  donde s = min(k, h)
-        //
-        // Beneficio: Reduce el número de bits efectivos en la división
-        // Especialmente útil cuando ambos números tienen muchos trailing zeros
-
-        const int tz_n = this->trailing_zeros();
-        const int tz_m = divisor.trailing_zeros();
-
-        // Solo optimizar si ambos tienen trailing zeros y al menos uno tiene muchos
-        // Umbral: al menos 4 bits de trailing zeros en común
-        const int common_tz = (tz_n < tz_m) ? tz_n : tz_m;
-
-        if (common_tz >= 4) {
-            // Dividir ambos por 2^common_tz
-            int128_base_t n_reduced = *this >> common_tz;
-            int128_base_t m_reduced = divisor >> common_tz;
-
-            // Hacer la división con los valores reducidos (recursión)
-            auto [q_reduced, r_reduced] = n_reduced.big_bin_divrem(m_reduced);
-
-            // El cociente es el mismo, el resto se multiplica por 2^common_tz
-            return {q_reduced, r_reduced << common_tz};
-        }
-
-        // ========================================================================
-        // [0] CASO GENERAL: DIVISIÓN BINARIA LARGA (128 bits / 128 bits)
-        // ========================================================================
-
-        int128_base_t quotient;
-        quotient.data[LSULL] = 0;
-        quotient.data[MSULL] = 0;
-        int128_base_t remainder;
-        remainder.data[LSULL] = 0;
-        remainder.data[MSULL] = 0;
-
-        // División binaria larga (algoritmo escolar)
-        // Procesar bits desde el MSB hasta el LSB
-        for (int i = 127; i >= 0; --i) {
-            remainder <<= 1;
-            const int word = i / 64;
-            const int bit = i % 64;
-            if ((data[word] & (1ULL << bit)) != 0) {
-                remainder.data[LSULL] |= 1;
+            // Si dividendo Y divisor caben en 64 bits: usar división nativa del CPU
+            if (data[MSULL] == 0 && divisor.data[MSULL] == 0)
+            {
+                const uint64_t q = data[LSULL] / divisor.data[LSULL];
+                const uint64_t r = data[LSULL] % divisor.data[LSULL];
+                int128_base_t quot, rem;
+                quot.data[LSULL] = q;
+                quot.data[MSULL] = 0;
+                rem.data[LSULL] = r;
+                rem.data[MSULL] = 0;
+                return {quot, rem};
             }
 
-            // Si remainder >= divisor, restar y añadir 1 al cociente
-            if (remainder >= divisor) {
-                remainder -= divisor;
-                const int q_word = i / 64;
-                const int q_bit = i % 64;
-                quotient.data[q_word] |= (1ULL << q_bit);
+            // ========================================================================
+            // [2] OPTIMIZACIÓN PARA DIVISOR DE 64 BITS (dividendo de 128 bits)
+            // ========================================================================
+
+            if (divisor.data[MSULL] == 0)
+            {
+                const uint64_t divisor_64 = divisor.data[LSULL];
+
+                // Dividendo de 128 bits / divisor de 64 bits
+                // Algoritmo híbrido: dividir high primero, luego procesar low bit a bit
+                uint64_t quotient_low = 0;
+                uint64_t quotient_high = data[MSULL] / divisor_64;
+                uint64_t remainder = data[MSULL] % divisor_64;
+
+                // Dividir parte baja bit a bit (procesar desde MSB)
+                for (int i = 63; i >= 0; --i)
+                {
+                    remainder = (remainder << 1) | ((data[LSULL] >> i) & 1);
+                    if (remainder >= divisor_64)
+                    {
+                        remainder -= divisor_64;
+                        quotient_low |= (1ULL << i);
+                    }
+                }
+
+                int128_base_t quot, rem;
+                quot.data[LSULL] = quotient_low;
+                quot.data[MSULL] = quotient_high;
+                rem.data[LSULL] = remainder;
+                rem.data[MSULL] = 0;
+                return {quot, rem};
             }
-        }
 
-        return {quotient, remainder};
-    }
+            // ========================================================================
+            // [3] OPTIMIZACIÓN: FACTORIZACIÓN DE POTENCIAS DE 2 COMUNES
+            // ========================================================================
+            // Si n = n' * 2^k y m = m' * 2^h (donde n', m' son impares o tienen menos 2s)
+            // Entonces: n / m = n' / m'  (el cociente no cambia si dividimos ambos por 2^s)
+            //           n % m = (n' % m') * 2^s  donde s = min(k, h)
+            //
+            // Beneficio: Reduce el número de bits efectivos en la división
+            // Especialmente útil cuando ambos números tienen muchos trailing zeros
 
-    // ============================================================================
-    // HELPERS PRIVADOS PARA KNUTH_D_DIVREM
-    // ============================================================================
+            const int tz_n = this->trailing_zeros();
+            const int tz_m = divisor.trailing_zeros();
 
-    /**
-     * @brief Helper para división cuando el divisor cabe en 64 bits.
-     * @details Encapsula la lógica del preprocesador para elegir entre:
-     *   - intrinsics::div128_64 (disponible en GCC/Clang/Intel en Linux con __uint128_t)
-     *   - Fallback a big_bin_divrem() genérico (MSVC, Intel en Windows, sin __uint128_t)
-     * @param divisor El divisor (garantizado que divisor.data[MSULL] == 0)
-     * @return Par {cociente, resto} de la división
-     * @property Es constexpr y noexcept.
-     */
-    constexpr std::pair<int128_base_t, int128_base_t>
-    divrem_64bit_divisor(const int128_base_t& divisor) const noexcept
-    {
-        // Lógica de selección de implementación según plataforma
-#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
-        // GCC/Clang/Intel icpx en Linux: usar intrinsic div128_64 optimizado
-        uint64_t r = 0;
-        const uint64_t q_lo =
-            intrinsics::div128_64(data[MSULL], data[LSULL], divisor.data[LSULL], &r);
-        int128_base_t quotient;
-        quotient.data[LSULL] = q_lo;
-        quotient.data[MSULL] = 0;
-        int128_base_t remainder;
-        remainder.data[LSULL] = r;
-        remainder.data[MSULL] = 0;
-        return {quotient, remainder};
-#else
-        // Fallback portable para compiladores sin __uint128_t o Intel ICX en Windows
-        return big_bin_divrem(divisor);
-#endif
-    }
+            // Solo optimizar si ambos tienen trailing zeros y al menos uno tiene muchos
+            // Umbral: al menos 4 bits de trailing zeros en común
+            const int common_tz = (tz_n < tz_m) ? tz_n : tz_m;
 
-    /**
-     * @brief Helper para el algoritmo D de Knuth completo.
-     * @details Encapsula la lógica del preprocesador para elegir entre:
-     *   - intrinsics::knuth_division_step (disponible con __uint128_t)
-     *   - Fallback a big_bin_divrem() genérico (sin __uint128_t)
-     * @param u_extension Dígito extra del dividendo (bits que se salieron del shift)
-     * @param u_shifted Dividendo normalizado (desplazado)
-     * @param v Divisor normalizado (desplazado)
-     * @param s Cantidad de desplazamiento aplicado (normalización)
-     * @param original_divisor Divisor original (sin normalizar)
-     * @return Par {cociente, resto} de la división
-     * @property Es constexpr y noexcept.
-     */
-    constexpr std::pair<int128_base_t, int128_base_t>
-    knuth_D_algorithm(uint64_t u_extension, const int128_base_t& u_shifted, const int128_base_t& v,
-                      int s, const int128_base_t& original_divisor) const noexcept
-    {
-        // Lógica de selección de implementación según plataforma
-#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
-        // GCC/Clang/Intel icpx en Linux: usar algoritmo D de Knuth optimizado
-        uint64_t remainder_hi, remainder_lo;
-        const uint64_t q = intrinsics::knuth_division_step(
-            u_extension, u_shifted.data[MSULL], u_shifted.data[LSULL], v.data[MSULL], v.data[LSULL],
-            s, &remainder_hi, &remainder_lo);
+            if (common_tz >= 4)
+            {
+                // Dividir ambos por 2^common_tz
+                int128_base_t n_reduced = *this >> common_tz;
+                int128_base_t m_reduced = divisor >> common_tz;
 
-        int128_base_t quotient;
-        quotient.data[LSULL] = q;
-        quotient.data[MSULL] = 0;
-        int128_base_t remainder;
-        remainder.data[LSULL] = remainder_lo;
-        remainder.data[MSULL] = remainder_hi;
-        return {quotient, remainder};
-#else
-        // Fallback portable sin __uint128_t - usar algoritmo binario
-        (void)u_extension; // Evitar warning de parámetro no usado
-        (void)u_shifted;
-        (void)v;
-        (void)s;
-        return big_bin_divrem(original_divisor);
-#endif
-    }
+                // Hacer la división con los valores reducidos (recursión)
+                auto [q_reduced, r_reduced] = n_reduced.big_bin_divrem(m_reduced);
 
-    /**
-     * @brief Helpers para optimizaciones de Knuth
-     */
-    static constexpr int count_trailing_zeros_knuth(const int128_base_t& n) noexcept
-    {
-        return n.trailing_zeros();
-    }
+                // El cociente es el mismo, el resto se multiplica por 2^common_tz
+                return {q_reduced, r_reduced << common_tz};
+            }
 
-    static constexpr bool fits_in_64_bits_knuth(const int128_base_t& n) noexcept
-    {
-        return n.data[MSULL] == 0;
-    }
+            // ========================================================================
+            // [0] CASO GENERAL: DIVISIÓN BINARIA LARGA (128 bits / 128 bits)
+            // ========================================================================
 
-    // ============================================================================
-    // KNUTH_D_DIVREM (Algoritmo D de Knuth con optimizaciones)
-    // ============================================================================
-
-  public:
-    /**
-     * @brief División avanzada de 128 bits usando el Algoritmo D de Knuth con optimizaciones.
-     * @details Implementa una división precisa de 128 por 128 bits. Incluye múltiples rutas
-     * rápidas para casos comunes:
-     * - División por cero.
-     * - Divisor mayor que dividendo.
-     * - Divisor es potencia de 2.
-     * - Ambos operandos caben en 64 bits.
-     * - Divisor cabe en 64 bits (usando `__uint128_t` nativo si está disponible).
-     * Si ninguna optimización aplica, recurre al Algoritmo D completo.
-     *
-     * @param divisor El divisor de 128 bits (tratado como UNSIGNED)
-     * @return std::pair{cociente, resto}
-     *
-     * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
-     * @note Expuesto públicamente para benchmarks comparativos con big_bin_divrem
-     * @warning Si divisor == 0, retorna {0, 0} (undefined behavior evitado)
-     */
-    constexpr std::pair<int128_base_t, int128_base_t>
-    knuth_D_divrem(const int128_base_t& v_in) const noexcept
-    {
-        // 0. Casos triviales
-        int128_base_t zero;
-        zero.data[LSULL] = 0;
-        zero.data[MSULL] = 0;
-
-        if (v_in.data[LSULL] == 0 && v_in.data[MSULL] == 0) {
-            return {zero, zero}; // División por cero
-        }
-
-        // Comparación unsigned: *this < v_in
-        const bool this_less_than_divisor =
-            (data[MSULL] < v_in.data[MSULL]) ||
-            (data[MSULL] == v_in.data[MSULL] && data[LSULL] < v_in.data[LSULL]);
-
-        if (this_less_than_divisor) {
-            return {zero, *this};
-        }
-
-        // === OPTIMIZACIONES RÁPIDAS ===
-
-        // 1. OPTIMIZACIÓN: División por potencias de 2 (usar shift)
-        if (v_in.is_power_of_2()) {
-            const int shift_amount = count_trailing_zeros_knuth(v_in);
-            const int128_base_t quotient = *this >> shift_amount;
-            const int128_base_t mask = v_in - int128_base_t(1ull);
-            const int128_base_t remainder = *this & mask;
-            return {quotient, remainder};
-        }
-
-        // 2. OPTIMIZACIÓN: Ambos números caben efectivamente en 64 bits
-        if (fits_in_64_bits_knuth(*this) && fits_in_64_bits_knuth(v_in)) {
-            const uint64_t dividend_64 = data[LSULL];
-            const uint64_t divisor_64 = v_in.data[LSULL];
-            const uint64_t q_64 = dividend_64 / divisor_64;
-            const uint64_t r_64 = dividend_64 % divisor_64;
-            int128_base_t quotient, remainder;
-            quotient.data[LSULL] = q_64;
+            int128_base_t quotient;
+            quotient.data[LSULL] = 0;
             quotient.data[MSULL] = 0;
-            remainder.data[LSULL] = r_64;
+            int128_base_t remainder;
+            remainder.data[LSULL] = 0;
+            remainder.data[MSULL] = 0;
+
+            // División binaria larga (algoritmo escolar)
+            // Procesar bits desde el MSB hasta el LSB
+            for (int i = 127; i >= 0; --i)
+            {
+                remainder <<= 1;
+                const int word = i / 64;
+                const int bit = i % 64;
+                if ((data[word] & (1ULL << bit)) != 0)
+                {
+                    remainder.data[LSULL] |= 1;
+                }
+
+                // Si remainder >= divisor, restar y añadir 1 al cociente
+                if (remainder >= divisor)
+                {
+                    remainder -= divisor;
+                    const int q_word = i / 64;
+                    const int q_bit = i % 64;
+                    quotient.data[q_word] |= (1ULL << q_bit);
+                }
+            }
+
+            return {quotient, remainder};
+        }
+
+        // ============================================================================
+        // HELPERS PRIVADOS PARA KNUTH_D_DIVREM
+        // ============================================================================
+
+        /**
+         * @brief Helper para división cuando el divisor cabe en 64 bits.
+         * @details Encapsula la lógica del preprocesador para elegir entre:
+         *   - intrinsics::div128_64 (disponible en GCC/Clang/Intel en Linux con __uint128_t)
+         *   - Fallback a big_bin_divrem() genérico (MSVC, Intel en Windows, sin __uint128_t)
+         * @param divisor El divisor (garantizado que divisor.data[MSULL] == 0)
+         * @return Par {cociente, resto} de la división
+         * @property Es constexpr y noexcept.
+         */
+        constexpr std::pair<int128_base_t, int128_base_t>
+        divrem_64bit_divisor(const int128_base_t &divisor) const noexcept
+        {
+            // Lógica de selección de implementación según plataforma
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+            // GCC/Clang/Intel icpx en Linux: usar intrinsic div128_64 optimizado
+            uint64_t r = 0;
+            const uint64_t q_lo =
+                intrinsics::div128_64(data[MSULL], data[LSULL], divisor.data[LSULL], &r);
+            int128_base_t quotient;
+            quotient.data[LSULL] = q_lo;
+            quotient.data[MSULL] = 0;
+            int128_base_t remainder;
+            remainder.data[LSULL] = r;
             remainder.data[MSULL] = 0;
             return {quotient, remainder};
+#else
+            // Fallback portable para compiladores sin __uint128_t o Intel ICX en Windows
+            return big_bin_divrem(divisor);
+#endif
         }
 
-        // === RUTAS ESTÁNDAR ===
+        /**
+         * @brief Helper para el algoritmo D de Knuth completo.
+         * @details Encapsula la lógica del preprocesador para elegir entre:
+         *   - intrinsics::knuth_division_step (disponible con __uint128_t)
+         *   - Fallback a big_bin_divrem() genérico (sin __uint128_t)
+         * @param u_extension Dígito extra del dividendo (bits que se salieron del shift)
+         * @param u_shifted Dividendo normalizado (desplazado)
+         * @param v Divisor normalizado (desplazado)
+         * @param s Cantidad de desplazamiento aplicado (normalización)
+         * @param original_divisor Divisor original (sin normalizar)
+         * @return Par {cociente, resto} de la división
+         * @property Es constexpr y noexcept.
+         */
+        constexpr std::pair<int128_base_t, int128_base_t>
+        knuth_D_algorithm(uint64_t u_extension, const int128_base_t &u_shifted, const int128_base_t &v,
+                          int s, [[maybe_unused]] const int128_base_t &original_divisor) const noexcept
+        {
+            // Lógica de selección de implementación según plataforma
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+            // GCC/Clang/Intel icpx en Linux: usar algoritmo D de Knuth optimizado
+            uint64_t remainder_hi, remainder_lo;
+            const uint64_t q = intrinsics::knuth_division_step(
+                u_extension, u_shifted.data[MSULL], u_shifted.data[LSULL], v.data[MSULL], v.data[LSULL],
+                s, &remainder_hi, &remainder_lo);
 
-        // Si el divisor cabe en 64 bits (data[MSULL] == 0), usamos una ruta rápida.
-        if (v_in.data[MSULL] == 0) {
-            return divrem_64bit_divisor(v_in);
-        }
-
-        // 3. OPTIMIZACIÓN: V0 = 0 Y U0 = 0 (caso degenerado muy raro)
-        // Tanto dividendo como divisor son múltiplos de 2^64
-        if (v_in.data[LSULL] == 0 && data[LSULL] == 0) {
-            const uint64_t q = data[MSULL] / v_in.data[MSULL];
-            const uint64_t r = data[MSULL] % v_in.data[MSULL];
-            int128_base_t quotient, remainder;
+            int128_base_t quotient;
             quotient.data[LSULL] = q;
             quotient.data[MSULL] = 0;
-            remainder.data[LSULL] = 0;
-            remainder.data[MSULL] = r;
+            int128_base_t remainder;
+            remainder.data[LSULL] = remainder_lo;
+            remainder.data[MSULL] = remainder_hi;
             return {quotient, remainder};
+#else
+            // Fallback portable sin __uint128_t - usar algoritmo binario
+            (void)u_extension; // Evitar warning de parámetro no usado
+            (void)u_shifted;
+            (void)v;
+            (void)s;
+            return big_bin_divrem(original_divisor);
+#endif
         }
 
-        // 4. OPTIMIZACIÓN: V0 = 0 (divisor es múltiplo de 2^64)
-        if (v_in.data[LSULL] == 0) {
-            const uint64_t divisor_high = v_in.data[MSULL];
+        /**
+         * @brief Helpers para optimizaciones de Knuth
+         */
+        static constexpr int count_trailing_zeros_knuth(const int128_base_t &n) noexcept
+        {
+            return n.trailing_zeros();
+        }
 
-            // Caso especial: dividendo cabe en parte alta
-            if (data[LSULL] == 0) {
-                const uint64_t q = data[MSULL] / divisor_high;
-                const uint64_t r = data[MSULL] % divisor_high;
+        static constexpr bool fits_in_64_bits_knuth(const int128_base_t &n) noexcept
+        {
+            return n.data[MSULL] == 0;
+        }
+
+        // ============================================================================
+        // KNUTH_D_DIVREM (Algoritmo D de Knuth con optimizaciones)
+        // ============================================================================
+
+    public:
+        /**
+         * @brief División avanzada de 128 bits usando el Algoritmo D de Knuth con optimizaciones.
+         * @details Implementa una división precisa de 128 por 128 bits. Incluye múltiples rutas
+         * rápidas para casos comunes:
+         * - División por cero.
+         * - Divisor mayor que dividendo.
+         * - Divisor es potencia de 2.
+         * - Ambos operandos caben en 64 bits.
+         * - Divisor cabe en 64 bits (usando `__uint128_t` nativo si está disponible).
+         * Si ninguna optimización aplica, recurre al Algoritmo D completo.
+         *
+         * @param divisor El divisor de 128 bits (tratado como UNSIGNED)
+         * @return std::pair{cociente, resto}
+         *
+         * @note Este método trata todos los valores como UNSIGNED (no verifica signos)
+         * @note Expuesto públicamente para benchmarks comparativos con big_bin_divrem
+         * @warning Si divisor == 0, retorna {0, 0} (undefined behavior evitado)
+         */
+        constexpr std::pair<int128_base_t, int128_base_t>
+        knuth_D_divrem(const int128_base_t &v_in) const noexcept
+        {
+            // 0. Casos triviales
+            int128_base_t zero;
+            zero.data[LSULL] = 0;
+            zero.data[MSULL] = 0;
+
+            if (v_in.data[LSULL] == 0 && v_in.data[MSULL] == 0)
+            {
+                return {zero, zero}; // División por cero
+            }
+
+            // Comparación unsigned: *this < v_in
+            const bool this_less_than_divisor =
+                (data[MSULL] < v_in.data[MSULL]) ||
+                (data[MSULL] == v_in.data[MSULL] && data[LSULL] < v_in.data[LSULL]);
+
+            if (this_less_than_divisor)
+            {
+                return {zero, *this};
+            }
+
+            // === OPTIMIZACIONES RÁPIDAS ===
+
+            // 1. OPTIMIZACIÓN: División por potencias de 2 (usar shift)
+            if (v_in.is_power_of_2())
+            {
+                const int shift_amount = count_trailing_zeros_knuth(v_in);
+                const int128_base_t quotient = *this >> shift_amount;
+                const int128_base_t mask = v_in - int128_base_t(1ull);
+                const int128_base_t remainder = *this & mask;
+                return {quotient, remainder};
+            }
+
+            // 2. OPTIMIZACIÓN: Ambos números caben efectivamente en 64 bits
+            if (fits_in_64_bits_knuth(*this) && fits_in_64_bits_knuth(v_in))
+            {
+                const uint64_t dividend_64 = data[LSULL];
+                const uint64_t divisor_64 = v_in.data[LSULL];
+                const uint64_t q_64 = dividend_64 / divisor_64;
+                const uint64_t r_64 = dividend_64 % divisor_64;
+                int128_base_t quotient, remainder;
+                quotient.data[LSULL] = q_64;
+                quotient.data[MSULL] = 0;
+                remainder.data[LSULL] = r_64;
+                remainder.data[MSULL] = 0;
+                return {quotient, remainder};
+            }
+
+            // === RUTAS ESTÁNDAR ===
+
+            // Si el divisor cabe en 64 bits (data[MSULL] == 0), usamos una ruta rápida.
+            if (v_in.data[MSULL] == 0)
+            {
+                return divrem_64bit_divisor(v_in);
+            }
+
+            // 3. OPTIMIZACIÓN: V0 = 0 Y U0 = 0 (caso degenerado muy raro)
+            // Tanto dividendo como divisor son múltiplos de 2^64
+            if (v_in.data[LSULL] == 0 && data[LSULL] == 0)
+            {
+                const uint64_t q = data[MSULL] / v_in.data[MSULL];
+                const uint64_t r = data[MSULL] % v_in.data[MSULL];
                 int128_base_t quotient, remainder;
                 quotient.data[LSULL] = q;
                 quotient.data[MSULL] = 0;
@@ -2255,661 +2421,768 @@ template <signedness S> class int128_base_t
                 return {quotient, remainder};
             }
 
-            // Caso general: u = u1 * 2^64 + u0, v = v1 * 2^64
-            uint64_t q = data[MSULL] / divisor_high;
+            // 4. OPTIMIZACIÓN: V0 = 0 (divisor es múltiplo de 2^64)
+            if (v_in.data[LSULL] == 0)
+            {
+                const uint64_t divisor_high = v_in.data[MSULL];
 
-            // Calcular resto: r = u - q * v
-            int128_base_t remainder(*this);
-            int128_base_t product;
-            product.data[LSULL] = 0;
-            product.data[MSULL] = q * divisor_high;
+                // Caso especial: dividendo cabe en parte alta
+                if (data[LSULL] == 0)
+                {
+                    const uint64_t q = data[MSULL] / divisor_high;
+                    const uint64_t r = data[MSULL] % divisor_high;
+                    int128_base_t quotient, remainder;
+                    quotient.data[LSULL] = q;
+                    quotient.data[MSULL] = 0;
+                    remainder.data[LSULL] = 0;
+                    remainder.data[MSULL] = r;
+                    return {quotient, remainder};
+                }
 
-            // Ajustar si el producto es mayor que el dividendo
-            while ((product.data[MSULL] > remainder.data[MSULL]) ||
-                   (product.data[MSULL] == remainder.data[MSULL] &&
-                    product.data[LSULL] > remainder.data[LSULL])) {
-                --q;
+                // Caso general: u = u1 * 2^64 + u0, v = v1 * 2^64
+                uint64_t q = data[MSULL] / divisor_high;
+
+                // Calcular resto: r = u - q * v
+                int128_base_t remainder(*this);
+                int128_base_t product;
+                product.data[LSULL] = 0;
                 product.data[MSULL] = q * divisor_high;
+
+                // Ajustar si el producto es mayor que el dividendo
+                while ((product.data[MSULL] > remainder.data[MSULL]) ||
+                       (product.data[MSULL] == remainder.data[MSULL] &&
+                        product.data[LSULL] > remainder.data[LSULL]))
+                {
+                    --q;
+                    product.data[MSULL] = q * divisor_high;
+                }
+
+                remainder -= product;
+                int128_base_t quotient;
+                quotient.data[LSULL] = q;
+                quotient.data[MSULL] = 0;
+                return {quotient, remainder};
             }
 
-            remainder -= product;
-            int128_base_t quotient;
-            quotient.data[LSULL] = q;
-            quotient.data[MSULL] = 0;
-            return {quotient, remainder};
-        }
+            // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
 
-        // --- ALGORITMO D DE KNUTH (Para divisor > 64 bits) ---
+            // D1. Normalización
+            // Desplazamos u y v para que el MSB de v sea 1.
+            const int s = v_in.leading_zeros() > 0 ? v_in.leading_zeros() - 64 : 0;
+            [[maybe_unused]] const int128_base_t v = v_in << s;
+            [[maybe_unused]] const int128_base_t u_shifted = *this << s;
 
-        // D1. Normalización
-        // Desplazamos u y v para que el MSB de v sea 1.
-        const int s = v_in.leading_zeros() > 0 ? v_in.leading_zeros() - 64 : 0;
-        [[maybe_unused]] const int128_base_t v = v_in << s;
-        [[maybe_unused]] const int128_base_t u_shifted = *this << s;
-
-        // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
-        [[maybe_unused]] uint64_t u_extension = 0;
-        if (s > 0) {
-            u_extension = data[MSULL] >> (64 - s);
-        }
-
-        // D3-D8. Algoritmo completo de Knuth: estimar, multiplicar, restar, corregir y
-        // desnormalizar
-        return knuth_D_algorithm(u_extension, u_shifted, v, s, v_in);
-    }
-
-    /**
-     * @brief Sobrecarga de knuth_D_divrem para tipos integrales.
-     * @tparam T Tipo integral del divisor.
-     * @param divisor El valor integral a usar como divisor.
-     * @return El resultado de llamar a knuth_D_divrem con el divisor convertido
-     */
-    template <integral_builtin T>
-    constexpr std::pair<int128_base_t, int128_base_t> knuth_D_divrem(T divisor) const noexcept
-    {
-        return knuth_D_divrem(int128_base_t(divisor));
-    }
-
-    // ============================================================================
-    // STRING PARSING
-    // ============================================================================
-
-    /**
-     * @brief Parsea una cadena de caracteres en una base específica
-     * @details Realiza el parsing con validación completa de caracteres y detección de overflow
-     *
-     * @param str Puntero a la cadena de caracteres C-string
-     * @param base Base numérica (debe estar entre 2 y 36)
-     * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
-     *
-     * @note Si hay error, el int128_base_t retornado es cero
-     * @property Es static, constexpr y noexcept
-     */
-    static constexpr std::pair<parse_error, int128_base_t> parse_base(const char* str,
-                                                                      int base) noexcept
-    {
-        if (!str) {
-            return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
-        }
-
-        if (!*str) {
-            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
-        }
-
-        if (base < 2 || base > 36) {
-            return {parse_error::invalid_base, int128_base_t(0ull, 0ull)};
-        }
-
-        // parse_base() NO maneja signos - solo parsea dígitos
-        // El manejo de signos es responsabilidad de parse()
-        int128_base_t result(0ull, 0ull); // Constructor(high=0, low=0)
-        const int128_base_t base_val(0ull,
-                                     static_cast<uint64_t>(base)); // Constructor(high=0, low=base)
-
-        for (const char* p = str; *p; ++p) {
-            // Ignorar separadores de dígitos (C++14 digit separator)
-            if (*p == '\'') {
-                continue;
+            // Capturamos el dígito extra de u que se salió por la izquierda al hacer shift.
+            [[maybe_unused]] uint64_t u_extension = 0;
+            if (s > 0)
+            {
+                u_extension = data[MSULL] >> (64 - s);
             }
 
-            int digit_value = -1;
-
-            if (*p >= '0' && *p <= '9') {
-                digit_value = *p - '0';
-            } else if (*p >= 'A' && *p <= 'Z') {
-                digit_value = *p - 'A' + 10;
-            } else if (*p >= 'a' && *p <= 'z') {
-                digit_value = *p - 'a' + 10;
-            }
-
-            if (digit_value == -1 || digit_value >= base) {
-                // Carácter inválido para esta base
-                return {parse_error::invalid_character, int128_base_t(0ull, 0ull)};
-            }
-
-            // Verificar overflow ANTES de multiplicar
-            // NOTA: parse_base() usa aritmética UNSIGNED para overflow checking
-            // Reinterpretamos result, base_val como uint128_t temporalmente
-            // El overflow para signed se verifica después en parse() al aplicar el signo
-
-            // Crear versiones unsigned para las operaciones de overflow
-            using uint128_t = int128_base_t<signedness::unsigned_type>;
-            constexpr uint128_t max_val(uint128_t::UI64_MAX,
-                                        uint128_t::UI64_MAX); // UINT128_MAX
-
-            // Reinterpretar result y base_val como unsigned para operaciones
-            const uint128_t& result_u = reinterpret_cast<const uint128_t&>(result);
-            const uint128_t& base_val_u = reinterpret_cast<const uint128_t&>(base_val);
-
-            const uint128_t max_div_base = max_val / base_val_u;
-
-            if (result_u > max_div_base) {
-                return {parse_error::overflow, int128_base_t(0ull, 0ull)};
-            }
-
-            result *= base_val;
-
-            // Verificar overflow ANTES de sumar el dígito
-            // max_value - result < digit significa que result + digit > max_value
-            const int128_base_t digit_val(
-                0ull, static_cast<uint64_t>(digit_value)); // Constructor(high=0, low=digit)
-            const uint128_t& digit_val_u = reinterpret_cast<const uint128_t&>(digit_val);
-            const uint128_t max_minus_result = max_val - result_u;
-
-            if (digit_val_u > max_minus_result) {
-                return {parse_error::overflow, int128_base_t(0ull, 0ull)};
-            }
-
-            result += digit_val;
+            // D3-D8. Algoritmo completo de Knuth: estimar, multiplicar, restar, corregir y
+            // desnormalizar
+            return knuth_D_algorithm(u_extension, u_shifted, v, s, v_in);
         }
 
-        // parse_base() retorna el valor parseado SIN modificaciones de signo
-        // El manejo de signos es responsabilidad de parse()
-        return {parse_error::success, result};
-    }
-
-    /**
-     * @brief Parsea una cadena de caracteres con auto-detección de base
-     * @details Detecta automáticamente la base según el prefijo:
-     *          - "0x" o "0X" → hexadecimal (base 16)
-     *          - "0b" o "0B" → binario (base 2)
-     *          - "0" seguido de dígitos 0-7 → octal (base 8)
-     *          - Otros casos → decimal (base 10)
-     *
-     * @param str Puntero a la cadena de caracteres C-string
-     * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
-     *
-     * @note Soporta signos '+' y '-' para tipos signed al inicio de la cadena
-     * @property Es static, constexpr y noexcept
-     */
-    static constexpr std::pair<parse_error, int128_base_t> parse(const char* str) noexcept
-    {
-        if (!str) {
-            return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
+        /**
+         * @brief Sobrecarga de knuth_D_divrem para tipos integrales.
+         * @tparam T Tipo integral del divisor.
+         * @param divisor El valor integral a usar como divisor.
+         * @return El resultado de llamar a knuth_D_divrem con el divisor convertido
+         */
+        template <integral_builtin T>
+        constexpr std::pair<int128_base_t, int128_base_t> knuth_D_divrem(T divisor) const noexcept
+        {
+            return knuth_D_divrem(int128_base_t(divisor));
         }
 
-        if (!*str) {
-            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
-        }
+        // ============================================================================
+        // STRING PARSING
+        // ============================================================================
 
-        // Manejo de signo para tipos signed
-        bool is_negative_input = false;
-        const char* parse_start = str;
-
-        if constexpr (is_signed) {
-            if (*parse_start == '-') {
-                is_negative_input = true;
-                ++parse_start;
-            } else if (*parse_start == '+') {
-                ++parse_start;
+        /**
+         * @brief Parsea una cadena de caracteres en una base específica
+         * @details Realiza el parsing con validación completa de caracteres y detección de overflow
+         *
+         * @param str Puntero a la cadena de caracteres C-string
+         * @param base Base numérica (debe estar entre 2 y 36)
+         * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
+         *
+         * @note Si hay error, el int128_base_t retornado es cero
+         * @property Es static, constexpr y noexcept
+         */
+        static constexpr std::pair<parse_error, int128_base_t> parse_base(const char *str,
+                                                                          int base) noexcept
+        {
+            if (!str)
+            {
+                return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
             }
 
-            // Verificar que hay contenido después del signo
-            if (!*parse_start) {
+            if (!*str)
+            {
                 return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
             }
+
+            if (base < 2 || base > 36)
+            {
+                return {parse_error::invalid_base, int128_base_t(0ull, 0ull)};
+            }
+
+            // parse_base() NO maneja signos - solo parsea dígitos
+            // El manejo de signos es responsabilidad de parse()
+            int128_base_t result(0ull, 0ull); // Constructor(high=0, low=0)
+            const int128_base_t base_val(0ull,
+                                         static_cast<uint64_t>(base)); // Constructor(high=0, low=base)
+
+            for (const char *p = str; *p; ++p)
+            {
+                // Ignorar separadores de dígitos (C++14 digit separator)
+                if (*p == '\'')
+                {
+                    continue;
+                }
+
+                int digit_value = -1;
+
+                if (*p >= '0' && *p <= '9')
+                {
+                    digit_value = *p - '0';
+                }
+                else if (*p >= 'A' && *p <= 'Z')
+                {
+                    digit_value = *p - 'A' + 10;
+                }
+                else if (*p >= 'a' && *p <= 'z')
+                {
+                    digit_value = *p - 'a' + 10;
+                }
+
+                if (digit_value == -1 || digit_value >= base)
+                {
+                    // Carácter inválido para esta base
+                    return {parse_error::invalid_character, int128_base_t(0ull, 0ull)};
+                }
+
+                // Verificar overflow ANTES de multiplicar
+                // NOTA: parse_base() usa aritmética UNSIGNED para overflow checking
+                // Creamos copias unsigned explícitas para evitar violaciones de strict-aliasing
+
+                // Crear versiones unsigned para las operaciones de overflow
+                using uint128_t = int128_base_t<signedness::unsigned_type>;
+                constexpr uint128_t max_val(uint128_t::UI64_MAX,
+                                            uint128_t::UI64_MAX); // UINT128_MAX
+
+                // Crear copias unsigned explícitas (evita strict-aliasing violation)
+                const uint128_t result_u(result.high(), result.low());
+                const uint128_t base_val_u(base_val.high(), base_val.low());
+
+                const uint128_t max_div_base = max_val / base_val_u;
+
+                if (result_u > max_div_base)
+                {
+                    return {parse_error::overflow, int128_base_t(0ull, 0ull)};
+                }
+
+                result *= base_val;
+
+                // Verificar overflow ANTES de sumar el dígito
+                // max_value - result < digit significa que result + digit > max_value
+                const int128_base_t digit_val(
+                    0ull, static_cast<uint64_t>(digit_value)); // Constructor(high=0, low=digit)
+                const uint128_t digit_val_u(0ull, static_cast<uint64_t>(digit_value));
+                // Actualizar result_u después de la multiplicación
+                const uint128_t result_u_updated(result.high(), result.low());
+                const uint128_t max_minus_result = max_val - result_u_updated;
+
+                if (digit_val_u > max_minus_result)
+                {
+                    return {parse_error::overflow, int128_base_t(0ull, 0ull)};
+                }
+
+                result += digit_val;
+            }
+
+            // parse_base() retorna el valor parseado SIN modificaciones de signo
+            // El manejo de signos es responsabilidad de parse()
+            return {parse_error::success, result};
         }
 
-        // Detectar base y posición inicial
-        int base = 10;
-        const char* start = parse_start;
+        /**
+         * @brief Parsea una cadena de caracteres con auto-detección de base
+         * @details Detecta automáticamente la base según el prefijo:
+         *          - "0x" o "0X" → hexadecimal (base 16)
+         *          - "0b" o "0B" → binario (base 2)
+         *          - "0" seguido de dígitos 0-7 → octal (base 8)
+         *          - Otros casos → decimal (base 10)
+         *
+         * @param str Puntero a la cadena de caracteres C-string
+         * @return std::pair<parse_error, int128_base_t> con el código de error y el resultado
+         *
+         * @note Soporta signos '+' y '-' para tipos signed al inicio de la cadena
+         * @property Es static, constexpr y noexcept
+         */
+        static constexpr std::pair<parse_error, int128_base_t> parse(const char *str) noexcept
+        {
+            if (!str)
+            {
+                return {parse_error::null_pointer, int128_base_t(0ull, 0ull)};
+            }
 
-        if (parse_start[0] == '0' && parse_start[1]) {
-            if (parse_start[1] == 'x' || parse_start[1] == 'X') {
-                base = 16;
-                start = parse_start + 2;
-            } else if (parse_start[1] == 'b' || parse_start[1] == 'B') {
-                base = 2;
-                start = parse_start + 2;
-            } else {
-                // Verificar si es octal válido
-                bool is_octal = true;
-                for (const char* p = parse_start + 1; *p && is_octal; ++p) {
-                    if (*p < '0' || *p > '7') {
-                        is_octal = false;
+            if (!*str)
+            {
+                return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
+            }
+
+            // Manejo de signo para tipos signed
+            bool is_negative_input = false;
+            const char *parse_start = str;
+
+            if constexpr (is_signed)
+            {
+                if (*parse_start == '-')
+                {
+                    is_negative_input = true;
+                    ++parse_start;
+                }
+                else if (*parse_start == '+')
+                {
+                    ++parse_start;
+                }
+
+                // Verificar que hay contenido después del signo
+                if (!*parse_start)
+                {
+                    return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
+                }
+            }
+
+            // Detectar base y posición inicial
+            int base = 10;
+            const char *start = parse_start;
+
+            if (parse_start[0] == '0' && parse_start[1])
+            {
+                if (parse_start[1] == 'x' || parse_start[1] == 'X')
+                {
+                    base = 16;
+                    start = parse_start + 2;
+                }
+                else if (parse_start[1] == 'b' || parse_start[1] == 'B')
+                {
+                    base = 2;
+                    start = parse_start + 2;
+                }
+                else
+                {
+                    // Verificar si es octal válido
+                    bool is_octal = true;
+                    for (const char *p = parse_start + 1; *p && is_octal; ++p)
+                    {
+                        if (*p < '0' || *p > '7')
+                        {
+                            is_octal = false;
+                        }
+                    }
+                    if (is_octal && parse_start[1] >= '0' && parse_start[1] <= '7')
+                    {
+                        base = 8;
+                        start = parse_start + 1;
                     }
                 }
-                if (is_octal && parse_start[1] >= '0' && parse_start[1] <= '7') {
-                    base = 8;
-                    start = parse_start + 1;
+            }
+
+            // Validar que hay contenido después del prefijo
+            if (!*start)
+            {
+                return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
+            }
+
+            // Parsear sin signo (parse_base ya maneja el signo si viene en str)
+            // Pero necesitamos pasar el string sin el signo porque ya lo procesamos
+            auto [error, result] = parse_base(start, base);
+
+            // Aplicar signo si no hubo error
+            if constexpr (is_signed)
+            {
+                if (error == parse_error::success && is_negative_input)
+                {
+                    result = -result;
                 }
             }
+
+            return {error, result};
         }
 
-        // Validar que hay contenido después del prefijo
-        if (!*start) {
-            return {parse_error::empty_string, int128_base_t(0ull, 0ull)};
-        }
+        // ============================================================================
+        // CONSTANTES ESTÁTICAS
+        // ============================================================================
 
-        // Parsear sin signo (parse_base ya maneja el signo si viene en str)
-        // Pero necesitamos pasar el string sin el signo porque ya lo procesamos
-        auto [error, result] = parse_base(start, base);
-
-        // Aplicar signo si no hubo error
-        if constexpr (is_signed) {
-            if (error == parse_error::success && is_negative_input) {
-                result = -result;
+        static consteval int128_base_t min() noexcept
+        {
+            if constexpr (is_signed)
+            {
+                // INT128_MIN = -2^127 = 0x8000000000000000'0000000000000000
+                // Constructor(high, low): high=0x8000000000000000, low=0
+                return int128_base_t(static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), 0ull);
+            }
+            else
+            {
+                // UINT128_MIN = 0
+                return int128_base_t(0ull, 0ull);
             }
         }
 
-        return {error, result};
-    }
-
-    // ============================================================================
-    // CONSTANTES ESTÁTICAS
-    // ============================================================================
-
-    static consteval int128_base_t min() noexcept
-    {
-        if constexpr (is_signed) {
-            // INT128_MIN = -2^127 = 0x8000000000000000'0000000000000000
-            // Constructor(high, low): high=0x8000000000000000, low=0
-            return int128_base_t(static_cast<uint64_t>(std::numeric_limits<int64_t>::min()), 0ull);
-        } else {
-            // UINT128_MIN = 0
-            return int128_base_t(0ull, 0ull);
-        }
-    }
-
-    static consteval int128_base_t max() noexcept
-    {
-        if constexpr (is_signed) {
-            // INT128_MAX = 2^127-1 = 0x7FFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            // Constructor(high, low): high=INT64_MAX, low=UINT64_MAX
-            return int128_base_t(UI_I64_MAX, UI64_MAX);
-        } else {
-            // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
-            // Constructor(high, low): high=UINT64_MAX, low=UINT64_MAX
-            return int128_base_t(UI64_MAX, UI64_MAX);
-        }
-    }
-
-    // ============================================================================
-    // OPERADORES DE STREAM (FRIEND FUNCTIONS)
-    // ============================================================================
-
-    /**
-     * @brief Operador de insercion en stream con soporte completo de iomanip
-     *
-     * Soporta los siguientes manipuladores:
-     * - Bases: std::hex, std::oct, std::dec
-     * - Ancho: std::setw()
-     * - Relleno: std::setfill()
-     * - Alineacion: std::left, std::right, std::internal
-     * - Prefijos: std::showbase
-     * - Signo: std::showpos (solo para tipos signed)
-     * - Mayusculas: std::uppercase
-     *
-     * @param os Stream de salida
-     * @param value Valor a escribir
-     * @return Referencia al stream
-     */
-    friend std::ostream& operator<<(std::ostream& os, const int128_base_t& value)
-    {
-        const auto flags = os.flags();
-        const int base_flag = (flags & std::ios_base::basefield);
-        const bool show_base = (flags & std::ios_base::showbase);
-        const bool show_pos = (flags & std::ios_base::showpos);
-        const bool uppercase = (flags & std::ios_base::uppercase);
-        const auto width = os.width();
-        const auto fill_char = os.fill();
-        const auto alignment = (flags & std::ios_base::adjustfield);
-
-        std::string result;
-        bool is_negative = false;
-
-        // Detectar signo (solo para signed)
-        if constexpr (S == signedness::signed_type) {
-            is_negative = value.is_negative();
-        }
-
-        // Determinar base y generar string
-        int base = 10;
-        switch (base_flag) {
-        case std::ios_base::hex:
-            base = 16;
-            break;
-        case std::ios_base::oct:
-            base = 8;
-            break;
-        default:
-            base = 10;
-            break;
-        }
-
-        // Para bases no decimales con signed negativo, usar complemento a 2
-        if constexpr (S == signedness::signed_type) {
-            if ((base == 16 || base == 8) && is_negative) {
-                // Mostrar como unsigned (complemento a 2)
-                int128_base_t<signedness::unsigned_type> uval(value);
-                result = uval.to_string(base);
-            } else {
-                result = value.to_string(base);
+        static consteval int128_base_t max() noexcept
+        {
+            if constexpr (is_signed)
+            {
+                // INT128_MAX = 2^127-1 = 0x7FFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
+                // Constructor(high, low): high=INT64_MAX, low=UINT64_MAX
+                return int128_base_t(UI_I64_MAX, UI64_MAX);
             }
-        } else {
-            result = value.to_string(base);
-        }
-
-        // Convertir a mayusculas/minusculas para hex
-        if (base == 16) {
-            if (uppercase) {
-                for (char& c : result) {
-                    if (c >= 'a' && c <= 'f') {
-                        c = c - 'a' + 'A';
-                    }
-                }
-            } else {
-                for (char& c : result) {
-                    if (c >= 'A' && c <= 'F') {
-                        c = c - 'A' + 'a';
-                    }
-                }
+            else
+            {
+                // UINT128_MAX = 2^128-1 = 0xFFFFFFFFFFFFFFFF'FFFFFFFFFFFFFFFF
+                // Constructor(high, low): high=UINT64_MAX, low=UINT64_MAX
+                return int128_base_t(UI64_MAX, UI64_MAX);
             }
         }
 
-        // Agregar prefijo de base
-        std::string prefix;
-        if (show_base && result != "0") {
-            if (base == 16) {
-                prefix = uppercase ? "0X" : "0x";
-            } else if (base == 8) {
-                prefix = "0";
-            }
-        }
+        // ============================================================================
+        // OPERADORES DE STREAM (FRIEND FUNCTIONS)
+        // ============================================================================
 
-        // Agregar signo
-        std::string sign_str;
-        if (base == 10) {
-            if constexpr (S == signedness::signed_type) {
-                if (is_negative) {
-                    // El signo '-' ya esta en result
-                } else if (show_pos && value != int128_base_t(0)) {
-                    sign_str = "+";
-                }
-            } else {
-                if (show_pos && value != int128_base_t(0)) {
-                    sign_str = "+";
-                }
-            }
-        }
+        /**
+         * @brief Operador de insercion en stream con soporte completo de iomanip
+         *
+         * Soporta los siguientes manipuladores:
+         * - Bases: std::hex, std::oct, std::dec
+         * - Ancho: std::setw()
+         * - Relleno: std::setfill()
+         * - Alineacion: std::left, std::right, std::internal
+         * - Prefijos: std::showbase
+         * - Signo: std::showpos (solo para tipos signed)
+         * - Mayusculas: std::uppercase
+         *
+         * @param os Stream de salida
+         * @param value Valor a escribir
+         * @return Referencia al stream
+         */
+        friend std::ostream &operator<<(std::ostream &os, const int128_base_t &value)
+        {
+            const auto flags = os.flags();
+            const int base_flag = (flags & std::ios_base::basefield);
+            const bool show_base = (flags & std::ios_base::showbase);
+            const bool show_pos = (flags & std::ios_base::showpos);
+            const bool uppercase = (flags & std::ios_base::uppercase);
+            const auto width = os.width();
+            const auto fill_char = os.fill();
+            const auto alignment = (flags & std::ios_base::adjustfield);
 
-        // Construir resultado con prefijo y signo
-        result = sign_str + prefix + result;
+            std::string result;
+            bool is_negative = false;
 
-        // Aplicar ancho y alineacion
-        if (width > 0 && static_cast<std::streamsize>(result.length()) < width) {
-            const auto padding =
-                static_cast<size_t>(width - static_cast<std::streamsize>(result.length()));
-
-            switch (alignment) {
-            case std::ios_base::left:
-                result += std::string(padding, fill_char);
-                break;
-
-            case std::ios_base::internal: {
-                // Relleno despues del signo/prefijo
-                size_t insert_pos = sign_str.length() + prefix.length();
-                if constexpr (S == signedness::signed_type) {
-                    if (is_negative && base == 10) {
-                        insert_pos = 1; // Despues del '-'
-                    }
-                }
-                result = result.substr(0, insert_pos) + std::string(padding, fill_char) +
-                         result.substr(insert_pos);
-                break;
+            // Detectar signo (solo para signed)
+            if constexpr (S == signedness::signed_type)
+            {
+                is_negative = value.is_negative();
             }
 
-            default: // std::ios_base::right
-                result = std::string(padding, fill_char) + result;
-                break;
-            }
-        }
-
-        // Resetear width (comportamiento estandar)
-        os.width(0);
-
-        // Escribir resultado directamente sin usar operator<< de string
-        // para evitar recursion infinita
-        for (char c : result) {
-            os.put(c);
-        }
-        return os;
-    }
-
-    /**
-     * @brief Operador de extraccion desde stream con auto-deteccion de base
-     *
-     * Lee un string del stream y lo convierte al tipo int128_base_t.
-     * Respeta los manipuladores std::hex, std::oct, std::dec.
-     * Si no hay manipulador, auto-detecta la base:
-     * - "0x" o "0X" -> hexadecimal
-     * - "0" inicial -> octal
-     * - Otro -> decimal
-     *
-     * @param is Stream de entrada
-     * @param value Variable donde almacenar el valor leido
-     * @return Referencia al stream
-     */
-    friend std::istream& operator>>(std::istream& is, int128_base_t& value)
-    {
-        const auto flags = is.flags();
-        const int base_flags = (flags & std::ios_base::basefield);
-
-        std::string str;
-        is >> str;
-
-        if (str.empty()) {
-            is.setstate(std::ios::failbit);
-            return is;
-        }
-
-        if (is) {
-            int input_base = 10;
-            bool has_sign = false;
-            bool negative = false;
-            size_t start_pos = 0;
-
-            // Detectar signo
-            if (str[0] == '-') {
-                has_sign = true;
-                negative = true;
-                start_pos = 1;
-            } else if (str[0] == '+') {
-                has_sign = true;
-                start_pos = 1;
-            }
-
-            // Determinar base segun manipulador
-            switch (base_flags) {
+            // Determinar base y generar string
+            int base = 10;
+            switch (base_flag)
+            {
             case std::ios_base::hex:
-                input_base = 16;
-                // Saltar prefijo 0x si existe
-                if (str.length() > start_pos + 1 &&
-                    (str.substr(start_pos, 2) == "0x" || str.substr(start_pos, 2) == "0X")) {
-                    start_pos += 2;
-                }
+                base = 16;
                 break;
             case std::ios_base::oct:
-                input_base = 8;
-                // Saltar prefijo 0 si existe
-                if (str.length() > start_pos && str[start_pos] == '0') {
-                    start_pos += 1;
-                }
+                base = 8;
                 break;
             default:
-                // Auto-detectar
-                if (str.length() > start_pos + 1 &&
-                    (str.substr(start_pos, 2) == "0x" || str.substr(start_pos, 2) == "0X")) {
-                    input_base = 16;
-                    start_pos += 2;
-                } else if (str.length() > start_pos && str[start_pos] == '0' &&
-                           str.length() > start_pos + 1) {
-                    input_base = 8;
-                    start_pos += 1;
-                }
+                base = 10;
                 break;
             }
 
-            // Parsear
-            auto [error, parsed] = int128_base_t::parse_base(str.c_str() + start_pos, input_base);
+            // Para bases no decimales con signed negativo, usar complemento a 2
+            if constexpr (S == signedness::signed_type)
+            {
+                if ((base == 16 || base == 8) && is_negative)
+                {
+                    // Mostrar como unsigned (complemento a 2)
+                    int128_base_t<signedness::unsigned_type> uval(value);
+                    result = uval.to_string(base);
+                }
+                else
+                {
+                    result = value.to_string(base);
+                }
+            }
+            else
+            {
+                result = value.to_string(base);
+            }
 
-            if (error != parse_error::success) {
+            // Convertir a mayusculas/minusculas para hex
+            if (base == 16)
+            {
+                if (uppercase)
+                {
+                    for (char &c : result)
+                    {
+                        if (c >= 'a' && c <= 'f')
+                        {
+                            c = c - 'a' + 'A';
+                        }
+                    }
+                }
+                else
+                {
+                    for (char &c : result)
+                    {
+                        if (c >= 'A' && c <= 'F')
+                        {
+                            c = c - 'A' + 'a';
+                        }
+                    }
+                }
+            }
+
+            // Agregar prefijo de base
+            std::string prefix;
+            if (show_base && result != "0")
+            {
+                if (base == 16)
+                {
+                    prefix = uppercase ? "0X" : "0x";
+                }
+                else if (base == 8)
+                {
+                    prefix = "0";
+                }
+            }
+
+            // Agregar signo
+            std::string sign_str;
+            if (base == 10)
+            {
+                if constexpr (S == signedness::signed_type)
+                {
+                    if (is_negative)
+                    {
+                        // El signo '-' ya esta en result
+                    }
+                    else if (show_pos && value != int128_base_t(0))
+                    {
+                        sign_str = "+";
+                    }
+                }
+                else
+                {
+                    if (show_pos && value != int128_base_t(0))
+                    {
+                        sign_str = "+";
+                    }
+                }
+            }
+
+            // Construir resultado con prefijo y signo
+            result = sign_str + prefix + result;
+
+            // Aplicar ancho y alineacion
+            if (width > 0 && static_cast<std::streamsize>(result.length()) < width)
+            {
+                const auto padding =
+                    static_cast<size_t>(width - static_cast<std::streamsize>(result.length()));
+
+                switch (alignment)
+                {
+                case std::ios_base::left:
+                    result += std::string(padding, fill_char);
+                    break;
+
+                case std::ios_base::internal:
+                {
+                    // Relleno despues del signo/prefijo
+                    size_t insert_pos = sign_str.length() + prefix.length();
+                    if constexpr (S == signedness::signed_type)
+                    {
+                        if (is_negative && base == 10)
+                        {
+                            insert_pos = 1; // Despues del '-'
+                        }
+                    }
+                    result = result.substr(0, insert_pos) + std::string(padding, fill_char) +
+                             result.substr(insert_pos);
+                    break;
+                }
+
+                default: // std::ios_base::right
+                    result = std::string(padding, fill_char) + result;
+                    break;
+                }
+            }
+
+            // Resetear width (comportamiento estandar)
+            os.width(0);
+
+            // Escribir resultado directamente sin usar operator<< de string
+            // para evitar recursion infinita
+            for (char c : result)
+            {
+                os.put(c);
+            }
+            return os;
+        }
+
+        /**
+         * @brief Operador de extraccion desde stream con auto-deteccion de base
+         *
+         * Lee un string del stream y lo convierte al tipo int128_base_t.
+         * Respeta los manipuladores std::hex, std::oct, std::dec.
+         * Si no hay manipulador, auto-detecta la base:
+         * - "0x" o "0X" -> hexadecimal
+         * - "0" inicial -> octal
+         * - Otro -> decimal
+         *
+         * @param is Stream de entrada
+         * @param value Variable donde almacenar el valor leido
+         * @return Referencia al stream
+         */
+        friend std::istream &operator>>(std::istream &is, int128_base_t &value)
+        {
+            const auto flags = is.flags();
+            const int base_flags = (flags & std::ios_base::basefield);
+
+            std::string str;
+            is >> str;
+
+            if (str.empty())
+            {
                 is.setstate(std::ios::failbit);
                 return is;
             }
 
-            // Aplicar signo
-            if constexpr (S == signedness::signed_type) {
-                value = negative ? -parsed : parsed;
-            } else {
-                if (negative) {
+            if (is)
+            {
+                int input_base = 10;
+                bool negative = false;
+                size_t start_pos = 0;
+
+                // Detectar signo
+                if (str[0] == '-')
+                {
+                    negative = true;
+                    start_pos = 1;
+                }
+                else if (str[0] == '+')
+                {
+                    start_pos = 1;
+                }
+
+                // Determinar base segun manipulador
+                switch (base_flags)
+                {
+                case std::ios_base::hex:
+                    input_base = 16;
+                    // Saltar prefijo 0x si existe
+                    if (str.length() > start_pos + 1 &&
+                        (str.substr(start_pos, 2) == "0x" || str.substr(start_pos, 2) == "0X"))
+                    {
+                        start_pos += 2;
+                    }
+                    break;
+                case std::ios_base::oct:
+                    input_base = 8;
+                    // Saltar prefijo 0 si existe
+                    if (str.length() > start_pos && str[start_pos] == '0')
+                    {
+                        start_pos += 1;
+                    }
+                    break;
+                default:
+                    // Auto-detectar
+                    if (str.length() > start_pos + 1 &&
+                        (str.substr(start_pos, 2) == "0x" || str.substr(start_pos, 2) == "0X"))
+                    {
+                        input_base = 16;
+                        start_pos += 2;
+                    }
+                    else if (str.length() > start_pos && str[start_pos] == '0' &&
+                             str.length() > start_pos + 1)
+                    {
+                        input_base = 8;
+                        start_pos += 1;
+                    }
+                    break;
+                }
+
+                // Parsear
+                auto [error, parsed] = int128_base_t::parse_base(str.c_str() + start_pos, input_base);
+
+                if (error != parse_error::success)
+                {
                     is.setstate(std::ios::failbit);
                     return is;
                 }
-                value = parsed;
+
+                // Aplicar signo
+                if constexpr (S == signedness::signed_type)
+                {
+                    value = negative ? -parsed : parsed;
+                }
+                else
+                {
+                    if (negative)
+                    {
+                        is.setstate(std::ios::failbit);
+                        return is;
+                    }
+                    value = parsed;
+                }
             }
+
+            return is;
+        }
+    };
+
+    // ============================================================================
+    // TYPE ALIASES (reemplazan las clases originales)
+    // ============================================================================
+
+    using uint128_t = int128_base_t<signedness::unsigned_type>;
+    using int128_t = int128_base_t<signedness::signed_type>;
+
+    // ============================================================================
+    // CONSTANTES NUMÉRICAS GLOBALES
+    // ============================================================================
+
+    /// Máximo valor representable para uint128_t (2^128 - 1)
+    inline constexpr uint128_t UINT128_MAX = uint128_t(uint128_t::UI64_MAX, uint128_t::UI64_MAX);
+
+    /// Máximo valor representable para int128_t (2^127 - 1)
+    inline constexpr int128_t INT128_MAX = int128_t(int128_t::UI_I64_MAX, int128_t::UI64_MAX);
+
+    /// Mínimo valor representable para int128_t (-2^127)
+    inline constexpr int128_t INT128_MIN = int128_t(int128_t::UI_I64_MIN, 0ull);
+
+    // ============================================================================
+    // LITERALES DE USUARIO (User-Defined Literals)
+    // ============================================================================
+
+    /**
+     * @brief Namespace para literales de usuario de int128
+     * @note Uso: using namespace nstd::literals; o using namespace nstd::int128_literals;
+     */
+    namespace int128_literals
+    {
+        /**
+         * @brief Literal de usuario para uint128_t (lowercase)
+         * @param str Cadena de caracteres a parsear
+         * @return uint128_t parseado desde la cadena
+         * @note Soporta auto-detección de base (0x, 0b, 0) y digit separators (')
+         * @example auto x = 1'234'567_u128;
+         * @example auto y = 0xFF'AA'BB_u128;
+         */
+        constexpr uint128_t operator""_u128(const char *str) noexcept
+        {
+            auto [error, value] = uint128_t::parse(str);
+            return value; // Retorna 0 si hay error
         }
 
-        return is;
+        /**
+         * @brief Literal de usuario para uint128_t (uppercase)
+         * @param str Cadena de caracteres a parsear
+         * @return uint128_t parseado desde la cadena
+         * @note Alias de _u128 para consistencia
+         * @example auto x = 1234567_U128;
+         */
+        constexpr uint128_t operator""_U128(const char *str) noexcept
+        {
+            return operator""_u128(str);
+        }
+
+        /**
+         * @brief Literal de usuario para int128_t (lowercase)
+         * @param str Cadena de caracteres a parsear
+         * @return int128_t parseado desde la cadena
+         * @note Soporta signo '+'/'-', auto-detección de base y digit separators (')
+         * @example auto x = -1'234'567_i128;
+         * @example auto y = 0x7FFF'FFFF_i128;
+         */
+        constexpr int128_t operator""_i128(const char *str) noexcept
+        {
+            auto [error, value] = int128_t::parse(str);
+            return value; // Retorna 0 si hay error
+        }
+
+        /**
+         * @brief Literal de usuario para int128_t (uppercase)
+         * @param str Cadena de caracteres a parsear
+         * @return int128_t parseado desde la cadena
+         * @note Alias de _i128 para consistencia
+         * @example auto x = -1234567_I128;
+         */
+        constexpr int128_t operator""_I128(const char *str) noexcept
+        {
+            return operator""_i128(str);
+        }
+
+    } // namespace int128_literals
+
+    // Alias del namespace literals para compatibilidad
+    namespace literals
+    {
+        using namespace int128_literals;
     }
-};
 
-// ============================================================================
-// TYPE ALIASES (reemplazan las clases originales)
-// ============================================================================
+    // ============================================================================
+    // FUNCIONES FACTORY (make_int128)
+    // ============================================================================
 
-using uint128_t = int128_base_t<signedness::unsigned_type>;
-using int128_t = int128_base_t<signedness::signed_type>;
+    /**
+     * @brief Función factory type-safe para crear int128_base_t desde C-string
+     * @tparam S Signedness del tipo (unsigned_type o signed_type)
+     * @param str Cadena de caracteres a parsear
+     * @return int128_base_t<S> parseado desde la cadena
+     * @note Soporta digit separators ('), auto-detección de base y signos
+     * @example auto x = make_int128<unsigned_type>("1'234'567");
+     * @example auto y = make_int128<signed_type>("-0xFF'AA");
+     */
+    template <signedness S>
+    constexpr int128_base_t<S> make_int128(const char *str) noexcept
+    {
+        auto [error, value] = int128_base_t<S>::parse(str);
+        return value; // Retorna 0 si hay error
+    }
 
-// ============================================================================
-// CONSTANTES NUMÉRICAS GLOBALES
-// ============================================================================
+    /**
+     * @brief Función factory con verificación de errores
+     * @tparam S Signedness del tipo (unsigned_type o signed_type)
+     * @param str Cadena de caracteres a parsear
+     * @return std::pair<parse_error, int128_base_t<S>> con error y valor
+     * @note Permite verificar si hubo error en el parsing
+     * @example auto [err, val] = make_int128_checked<unsigned_type>("invalid");
+     * @example if (err != parse_error::success) { // manejar error }
+     */
+    template <signedness S>
+    constexpr std::pair<parse_error, int128_base_t<S>> make_int128_checked(const char *str) noexcept
+    {
+        return int128_base_t<S>::parse(str);
+    }
 
-/// Máximo valor representable para uint128_t (2^128 - 1)
-inline constexpr uint128_t UINT128_MAX = uint128_t(uint128_t::UI64_MAX, uint128_t::UI64_MAX);
+    /**
+     * @brief Shortcuts para tipos específicos
+     */
+    inline constexpr uint128_t make_uint128(const char *str) noexcept
+    {
+        return make_int128<signedness::unsigned_type>(str);
+    }
 
-/// Máximo valor representable para int128_t (2^127 - 1)
-inline constexpr int128_t INT128_MAX = int128_t(int128_t::UI_I64_MAX, int128_t::UI64_MAX);
-
-/// Mínimo valor representable para int128_t (-2^127)
-inline constexpr int128_t INT128_MIN = int128_t(int128_t::UI_I64_MIN, 0ull);
-
-// ============================================================================
-// LITERALES DE USUARIO (User-Defined Literals)
-// ============================================================================
-
-/**
- * @brief Namespace para literales de usuario de int128
- * @note Uso: using namespace nstd::literals; o using namespace nstd::int128_literals;
- */
-namespace int128_literals
-{
-/**
- * @brief Literal de usuario para uint128_t (lowercase)
- * @param str Cadena de caracteres a parsear
- * @return uint128_t parseado desde la cadena
- * @note Soporta auto-detección de base (0x, 0b, 0) y digit separators (')
- * @example auto x = 1'234'567_u128;
- * @example auto y = 0xFF'AA'BB_u128;
- */
-constexpr uint128_t operator""_u128(const char* str) noexcept
-{
-    auto [error, value] = uint128_t::parse(str);
-    return value; // Retorna 0 si hay error
-}
-
-/**
- * @brief Literal de usuario para uint128_t (uppercase)
- * @param str Cadena de caracteres a parsear
- * @return uint128_t parseado desde la cadena
- * @note Alias de _u128 para consistencia
- * @example auto x = 1234567_U128;
- */
-constexpr uint128_t operator""_U128(const char* str) noexcept
-{
-    return operator""_u128(str);
-}
-
-/**
- * @brief Literal de usuario para int128_t (lowercase)
- * @param str Cadena de caracteres a parsear
- * @return int128_t parseado desde la cadena
- * @note Soporta signo '+'/'-', auto-detección de base y digit separators (')
- * @example auto x = -1'234'567_i128;
- * @example auto y = 0x7FFF'FFFF_i128;
- */
-constexpr int128_t operator""_i128(const char* str) noexcept
-{
-    auto [error, value] = int128_t::parse(str);
-    return value; // Retorna 0 si hay error
-}
-
-/**
- * @brief Literal de usuario para int128_t (uppercase)
- * @param str Cadena de caracteres a parsear
- * @return int128_t parseado desde la cadena
- * @note Alias de _i128 para consistencia
- * @example auto x = -1234567_I128;
- */
-constexpr int128_t operator""_I128(const char* str) noexcept
-{
-    return operator""_i128(str);
-}
-
-} // namespace int128_literals
-
-// Alias del namespace literals para compatibilidad
-namespace literals
-{
-using namespace int128_literals;
-}
-
-// ============================================================================
-// FUNCIONES FACTORY (make_int128)
-// ============================================================================
-
-/**
- * @brief Función factory type-safe para crear int128_base_t desde C-string
- * @tparam S Signedness del tipo (unsigned_type o signed_type)
- * @param str Cadena de caracteres a parsear
- * @return int128_base_t<S> parseado desde la cadena
- * @note Soporta digit separators ('), auto-detección de base y signos
- * @example auto x = make_int128<unsigned_type>("1'234'567");
- * @example auto y = make_int128<signed_type>("-0xFF'AA");
- */
-template <signedness S> constexpr int128_base_t<S> make_int128(const char* str) noexcept
-{
-    auto [error, value] = int128_base_t<S>::parse(str);
-    return value; // Retorna 0 si hay error
-}
-
-/**
- * @brief Función factory con verificación de errores
- * @tparam S Signedness del tipo (unsigned_type o signed_type)
- * @param str Cadena de caracteres a parsear
- * @return std::pair<parse_error, int128_base_t<S>> con error y valor
- * @note Permite verificar si hubo error en el parsing
- * @example auto [err, val] = make_int128_checked<unsigned_type>("invalid");
- * @example if (err != parse_error::success) { // manejar error }
- */
-template <signedness S>
-constexpr std::pair<parse_error, int128_base_t<S>> make_int128_checked(const char* str) noexcept
-{
-    return int128_base_t<S>::parse(str);
-}
-
-/**
- * @brief Shortcuts para tipos específicos
- */
-inline constexpr uint128_t make_uint128(const char* str) noexcept
-{
-    return make_int128<signedness::unsigned_type>(str);
-}
-
-inline constexpr int128_t make_int128_signed(const char* str) noexcept
-{
-    return make_int128<signedness::signed_type>(str);
-}
+    inline constexpr int128_t make_int128_signed(const char *str) noexcept
+    {
+        return make_int128<signedness::signed_type>(str);
+    }
 
 } // namespace nstd
 

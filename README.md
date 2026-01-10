@@ -1,5 +1,9 @@
 # int128 - Implementación de enteros de 128 bits
 
+[![CI - Build & Test](https://github.com/YOUR_USERNAME/int128/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/int128/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Boost%201.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
+
 Una implementación completa y eficiente de enteros de 128 bits (signed y unsigned) para C++20, compatible con MSVC, GCC y Clang.
 
 ## 🎯 Dos Tipos Complementarios
@@ -9,13 +13,29 @@ Una implementación completa y eficiente de enteros de 128 bits (signed y unsign
 
 ## 🌍 Plataformas Soportadas
 
-### ✅ Plataforma Principal (Completamente Testeada)
+### ✅ Plataforma Principal - Windows (MSYS2) - 24/24 Validaciones
 
-- **Windows x86_64** (MSYS2)
-  - ✅ GCC 15.2+ (UCRT64) - Recomendado
-  - ✅ Clang 19.1+ (CLANG64)
-  - ✅ Intel OneAPI ICX
-  - ✅ MSVC 2022 (Visual Studio 17.12+)
+| Compilador | Debug | Release | Versión |
+|------------|-------|---------|---------|
+| **GCC (UCRT64)** | ✅ PASS | ✅ PASS | 15.2 |
+| **Clang (CLANG64)** | ✅ PASS | ✅ PASS | 19.1 |
+| **Intel ICX** | ✅ PASS | ✅ PASS | 2025 |
+| **MSVC** | ✅ PASS | ✅ PASS | 2026 (v18) |
+
+### ✅ WSL (Ubuntu) - 16/16 Validaciones
+
+| Compilador | Debug | Release | Versión |
+|------------|-------|---------|---------|
+| **GCC 13** | ✅ PASS | ✅ PASS | 13.3.0 |
+| **GCC 14** | ✅ PASS | ✅ PASS | 14.2.0 |
+| **GCC 15** | ✅ PASS | ✅ PASS | 15.0.1 |
+| **Clang 18** | ✅ PASS | ✅ PASS | 18.1.8 |
+| **Clang 19** | ✅ PASS | ✅ PASS | 19.1.7 |
+| **Clang 20** | ✅ PASS | ✅ PASS | 20.1.2 |
+| **Clang 21** | ✅ PASS | ✅ PASS | 21.1.8 |
+| **Intel ICPX** | ✅ PASS | ✅ PASS | 2025.3.1 |
+
+**Total validaciones: 40/40 (100%)** - Fase 1.66 completada ✅
 
 ### 📋 Otras Plataformas (Sin Testear - Debería Funcionar)
 
@@ -33,78 +53,59 @@ la biblioteca usa automáticamente implementaciones genéricas portables.
 
 ```
 int128/
-├── include/                   # Headers de la biblioteca
-│   ├── int128.hpp            # Header principal (incluye todo)
-│   ├── uint128/              # uint128_t (unsigned)
-│   │   ├── uint128_t.hpp             # Implementación principal
-│   │   ├── uint128_limits.hpp        # std::numeric_limits especializations
-│   │   ├── uint128_traits.hpp        # Type traits y std::hash
-│   │   ├── uint128_concepts.hpp      # C++20 concepts personalizados
-│   │   ├── uint128_algorithm.hpp     # Algoritmos optimizados
-│   │   ├── uint128_numeric.hpp       # Funciones numéricas C++20
-│   │   ├── uint128_ranges.hpp        # Operaciones con rangos STL
-│   │   ├── uint128_format.hpp        # Formateo avanzado (hex, oct, bin)
-│   │   ├── uint128_safe.hpp          # Operaciones con detección overflow
-│   │   ├── uint128_iostreams.hpp     # Operadores de stream
-│   │   ├── uint128_cmath.hpp         # Funciones matemáticas (sqrt, pow)
-│   │   └── uint128_simple_traits.hpp # Header de conveniencia
-│   └── int128/               # int128_t (signed)
-│       ├── int128_t.hpp              # Implementación principal signed
-│       ├── int128_format.hpp         # Formateo (incluye showpos)
-│       ├── int128_algorithm.hpp      # Algoritmos para signed
-│       ├── int128_arithmetic.hpp     # Operaciones aritméticas
-│       ├── int128_bitwise.hpp        # Operaciones bitwise
-│       ├── int128_comparison.hpp     # Comparaciones
-│       ├── int128_io.hpp             # Entrada/salida
-│       ├── int128_limits.hpp         # Límites numéricos
-│       ├── int128_traits.hpp         # Type traits signed
-│       └── int128_cmath.hpp          # Funciones matemáticas signed
-├── tests/                     # Tests unitarios
-│   ├── uint128_extracted_tests.cpp   # Suite completa uint128_t
-│   ├── int128_extracted_tests.cpp    # Suite completa int128_t
-│   ├── basic_test.cpp
-│   ├── final_traits_test.cpp         # Test type traits
-│   ├── test_numeric_functions.cpp    # Test funciones numéricas
-│   └── ...
+├── include/                   # Headers de la biblioteca (template unificado)
+│   ├── int128.hpp                        # Header principal (incluye todo)
+│   ├── int128_base_tt.hpp                # Template principal int128_base_t<S>
+│   ├── int128_base_limits.hpp            # std::numeric_limits especializado
+│   ├── int128_base_traits_specializations.hpp # Type traits STL
+│   ├── int128_base_traits.hpp            # common_type y verificaciones
+│   ├── int128_base_concepts.hpp          # Concepts C++20
+│   ├── int128_base_bits.hpp              # Operaciones de bits
+│   ├── int128_base_numeric.hpp           # Funciones numéricas
+│   ├── int128_base_algorithm.hpp         # Algoritmos STL-like
+│   ├── int128_base_cmath.hpp             # Funciones matemáticas
+│   ├── int128_base_iostreams.hpp         # Stream I/O
+│   ├── int128_base_format.hpp            # Formateo avanzado
+│   ├── type_traits.hpp                   # integral_builtin concept
+│   ├── intrinsics/                       # Operaciones de bajo nivel
+│   │   ├── arithmetic_operations.hpp     # umul128, div128, add/sub con carry
+│   │   ├── bit_operations.hpp            # clz, ctz, popcount
+│   │   ├── compiler_detection.hpp        # Detección MSVC/GCC/Clang/Intel
+│   │   └── fallback_portable.hpp         # Implementaciones portables
+│   └── specializations/                  # Optimizaciones modulares
+│       ├── uint128_div_const.hpp
+│       └── uint128_divisibility.hpp
+├── tests/                     # Tests unitarios (14 archivos por feature)
+│   ├── int128_base_tt_extracted_tests.cpp       # Tests template principal
+│   ├── int128_bits_extracted_tests.cpp
+│   ├── int128_cmath_extracted_tests.cpp
+│   ├── int128_concepts_extracted_tests.cpp
+│   ├── int128_format_extracted_tests.cpp
+│   └── ... (14 features total)
 ├── benchs/                    # Benchmarks de rendimiento
-│   ├── uint128_extracted_benchs.cpp  # Benchmarks uint128_t
-│   ├── int128_extracted_benchs.cpp   # Benchmarks int128_t
-│   └── ...
-├── sources/                   # Código fuente compilado
+├── demos/                     # Ejemplos ejecutables
+│   ├── tutorials/             # 16 tutoriales (01-13 + extras)
+│   ├── showcase/              # Demostraciones avanzadas
+│   ├── examples/              # Casos de uso reales
+│   └── general/               # Conceptos generales
+├── scripts/                   # Scripts de build
+│   ├── wsl/                   # Scripts modulares WSL
+│   │   ├── common.bash        # Funciones compartidas Bash
+│   │   ├── common.py          # Funciones compartidas Python
+│   │   ├── build_gcc13.bash ... build_icpx.bash
+│   │   └── ...
+│   ├── wsl_build_and_test.bash    # Script maestro WSL (Bash)
+│   ├── wsl_build_and_test.py      # Script maestro WSL (Python)
+│   ├── run_wsl_tests.py           # Puente Windows→WSL
+│   ├── build_generic.bash         # Build genérico Bash
+│   ├── build_generic.py           # Build genérico Python
+│   └── env_setup/                 # Entornos de compilación
+├── documentation/             # Documentación generada
 ├── build/                     # Archivos compilados
-│   ├── test/
-│   │   ├── debug/            # Tests en modo debug
-│   │   └── release/          # Tests en modo release
-│   └── lib/                  # Bibliotecas compiladas
-├── documentation/             # Documentación
-│   ├── doxygen/              # Páginas Doxygen
-│   │   └── pages/           # Quick Start, Examples, Architecture
-│   ├── generated/            # HTML generado por Doxygen (10.68 MB, 1346 archivos)
-│   └── benchmarks/           # Resultados de benchmarks guardados
-├── demos/                     # Ejemplos ejecutables interactivos
-│   ├── tutorials/            # 13 tutoriales básicos (01-13)
-│   ├── showcase/             # Demostraciones avanzadas
-│   │   ├── main.cpp                     # Demo interactivo principal (7 secciones)
-│   │   ├── showcase_cryptography.cpp    # RSA toy, primos, Miller-Rabin
-│   │   ├── showcase_scientific.cpp      # Factoriales, Fibonacci, π, e
-│   │   └── showcase_performance.cpp     # Benchmarks uint128 vs uint64
-│   └── examples/             # Casos de uso reales
-│       ├── ipv6_address.cpp             # Gestión direcciones IPv6
-│       ├── uuid_generation.cpp          # UUID v4 (RFC 4122)
-│       ├── big_integer_calculator.cpp   # REPL interactivo
-│       ├── prime_factorization.cpp      # Factorización de primos
-│       └── mersenne_primes.cpp          # Búsqueda primos de Mersenne
-├── scripts/                   # Scripts de build y utilidades
-│   ├── generate_docs.bash    # Generación de documentación
-│   └── env_setup/            # Scripts de entorno de compilación
-├── CMakeLists.txt            # Configuración CMake
-├── Makefile                  # Build alternativo
-├── Doxyfile                  # Configuración Doxygen
-├── README.md                 # Este archivo
-├── LICENSE.txt               # Licencia Boost Software License 1.0
-└── TODO.md                   # Roadmap del proyecto
-```
-
+├── CMakeLists.txt
+├── Makefile
+├── make.py                    # Sistema de build Python
+└── README.md
 ```
 
 ## 🛠️ Sistema de Build
@@ -118,7 +119,8 @@ int128/
 
 ### Uso del Sistema de Build
 
-#### En PowerShell (Recomendado):
+#### En PowerShell (Recomendado)
+
 ```powershell
 # Compilar y ejecutar un test específico (debug)
 .\build_msvc.ps1 user_literals_test debug

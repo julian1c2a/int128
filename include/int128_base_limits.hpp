@@ -47,147 +47,149 @@
 namespace nstd
 {
 
-/**
- * @brief Template base de numeric_limits que hereda de std::numeric_limits
- *
- * Esto permite que nstd::numeric_limits<T> funcione para cualquier tipo T
- * que tenga especialización en std::numeric_limits (int, double, etc.)
- *
- * Solo especializamos para int128_base_t<S>.
- */
-template <typename T> class numeric_limits : public std::numeric_limits<T>
-{
-};
-
-/**
- * @brief Especialización de nstd::numeric_limits para int128_base_t<S>
- *
- * Este template especializado maneja automáticamente las diferencias entre
- * tipos signed y unsigned usando `if constexpr`.
- *
- * @tparam S signedness::unsigned_type o signedness::signed_type
- */
-template <signedness S> class numeric_limits<int128_base_t<S>>
-{
-  private:
-    static constexpr bool is_signed_type = (S == signedness::signed_type);
-    using value_type = int128_base_t<S>;
-
-  public:
-    // ===== PROPIEDADES DEL TIPO =====
-    static constexpr bool is_specialized = true;
-    static constexpr bool is_signed = is_signed_type;
-    static constexpr bool is_integer = true;
-    static constexpr bool is_exact = true;
-    static constexpr bool has_infinity = false;
-    static constexpr bool has_quiet_NaN = false;
-    static constexpr bool has_signaling_NaN = false;
-    static constexpr bool has_denorm_loss = false;
-    static constexpr bool is_iec559 = false;
-    static constexpr bool is_bounded = true;
-    static constexpr bool is_modulo = !is_signed_type; // unsigned es modulo, signed no
-    static constexpr bool traps = false;
-    static constexpr bool tinyness_before = false;
-
-    // Bits significativos: 128 para unsigned, 127 para signed (1 bit de signo)
-    static constexpr int digits = is_signed_type ? 127 : 128;
-    static constexpr int digits10 = 38;    // floor(digits * log10(2)) ~ 38
-    static constexpr int max_digits10 = 0; // No aplicable para enteros
-    static constexpr int radix = 2;        // Base binaria
-
-    static constexpr int min_exponent = 0;   // No aplicable para enteros
-    static constexpr int min_exponent10 = 0; // No aplicable para enteros
-    static constexpr int max_exponent = 0;   // No aplicable para enteros
-    static constexpr int max_exponent10 = 0; // No aplicable para enteros
-
-    static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
-    static constexpr std::float_round_style round_style = std::round_toward_zero;
-
-    // ===== METODOS DE VALORES ESPECIALES =====
+    /**
+     * @brief Template base de numeric_limits que hereda de std::numeric_limits
+     *
+     * Esto permite que nstd::numeric_limits<T> funcione para cualquier tipo T
+     * que tenga especialización en std::numeric_limits (int, double, etc.)
+     *
+     * Solo especializamos para int128_base_t<S>.
+     */
+    template <typename T>
+    class numeric_limits : public std::numeric_limits<T>
+    {
+    };
 
     /**
-     * @brief Valor minimo representable
-     * @return Para unsigned: 0, Para signed: -2^127
+     * @brief Especialización de nstd::numeric_limits para int128_base_t<S>
+     *
+     * Este template especializado maneja automáticamente las diferencias entre
+     * tipos signed y unsigned usando `if constexpr`.
+     *
+     * @tparam S signedness::unsigned_type o signedness::signed_type
      */
-    static constexpr value_type min() noexcept
+    template <signedness S>
+    class numeric_limits<int128_base_t<S>>
     {
-        return value_type::min();
-    }
+    private:
+        static constexpr bool is_signed_type = (S == signedness::signed_type);
+        using value_type = int128_base_t<S>;
 
-    /**
-     * @brief Valor mas bajo representable (igual a min para enteros)
-     */
-    static constexpr value_type lowest() noexcept
-    {
-        return value_type::min();
-    }
+    public:
+        // ===== PROPIEDADES DEL TIPO =====
+        static constexpr bool is_specialized = true;
+        static constexpr bool is_signed = is_signed_type;
+        static constexpr bool is_integer = true;
+        static constexpr bool is_exact = true;
+        static constexpr bool has_infinity = false;
+        static constexpr bool has_quiet_NaN = false;
+        static constexpr bool has_signaling_NaN = false;
+        static constexpr bool has_denorm_loss = false;
+        static constexpr bool is_iec559 = false;
+        static constexpr bool is_bounded = true;
+        static constexpr bool is_modulo = !is_signed_type; // unsigned es modulo, signed no
+        static constexpr bool traps = false;
+        static constexpr bool tinyness_before = false;
 
-    /**
-     * @brief Valor maximo representable
-     * @return Para unsigned: 2^128 - 1, Para signed: 2^127 - 1
-     */
-    static constexpr value_type max() noexcept
-    {
-        return value_type::max();
-    }
+        // Bits significativos: 128 para unsigned, 127 para signed (1 bit de signo)
+        static constexpr int digits = is_signed_type ? 127 : 128;
+        static constexpr int digits10 = 38;    // floor(digits * log10(2)) ~ 38
+        static constexpr int max_digits10 = 0; // No aplicable para enteros
+        static constexpr int radix = 2;        // Base binaria
 
-    /**
-     * @brief Error de precision de maquina (no aplicable para enteros)
-     */
-    static constexpr value_type epsilon() noexcept
-    {
-        return value_type(0ULL, 0ULL);
-    }
+        static constexpr int min_exponent = 0;   // No aplicable para enteros
+        static constexpr int min_exponent10 = 0; // No aplicable para enteros
+        static constexpr int max_exponent = 0;   // No aplicable para enteros
+        static constexpr int max_exponent10 = 0; // No aplicable para enteros
 
-    /**
-     * @brief Error de redondeo (no aplicable para enteros)
-     */
-    static constexpr value_type round_error() noexcept
-    {
-        return value_type(0ULL, 0ULL);
-    }
+        static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
+        static constexpr std::float_round_style round_style = std::round_toward_zero;
 
-    /**
-     * @brief Representacion de infinito (no aplicable para enteros)
-     */
-    static constexpr value_type infinity() noexcept
-    {
-        return value_type(0ULL, 0ULL);
-    }
+        // ===== METODOS DE VALORES ESPECIALES =====
 
-    /**
-     * @brief Representacion de NaN silencioso (no aplicable para enteros)
-     */
-    static constexpr value_type quiet_NaN() noexcept
-    {
-        return value_type(0ULL, 0ULL);
-    }
+        /**
+         * @brief Valor minimo representable
+         * @return Para unsigned: 0, Para signed: -2^127
+         */
+        static constexpr value_type min() noexcept
+        {
+            return value_type::min();
+        }
 
-    /**
-     * @brief Representacion de NaN senalizante (no aplicable para enteros)
-     */
-    static constexpr value_type signaling_NaN() noexcept
-    {
-        return value_type(0ULL, 0ULL);
-    }
+        /**
+         * @brief Valor mas bajo representable (igual a min para enteros)
+         */
+        static constexpr value_type lowest() noexcept
+        {
+            return value_type::min();
+        }
 
-    /**
-     * @brief Valor desnormalizado minimo (igual a min para enteros)
-     */
-    static constexpr value_type denorm_min() noexcept
-    {
-        return min();
-    }
-};
+        /**
+         * @brief Valor maximo representable
+         * @return Para unsigned: 2^128 - 1, Para signed: 2^127 - 1
+         */
+        static constexpr value_type max() noexcept
+        {
+            return value_type::max();
+        }
 
-// ===== VERIFICACIONES ESTATICAS =====
-static_assert(numeric_limits<uint128_t>::is_signed == false, "uint128_t debe ser unsigned");
-static_assert(numeric_limits<int128_t>::is_signed == true, "int128_t debe ser signed");
-static_assert(numeric_limits<uint128_t>::digits == 128, "uint128_t debe tener 128 bits");
-static_assert(numeric_limits<int128_t>::digits == 127,
-              "int128_t debe tener 127 bits significativos");
-static_assert(numeric_limits<uint128_t>::is_modulo == true, "uint128_t debe ser modulo");
-static_assert(numeric_limits<int128_t>::is_modulo == false, "int128_t no debe ser modulo");
+        /**
+         * @brief Error de precision de maquina (no aplicable para enteros)
+         */
+        static constexpr value_type epsilon() noexcept
+        {
+            return value_type(0ULL, 0ULL);
+        }
+
+        /**
+         * @brief Error de redondeo (no aplicable para enteros)
+         */
+        static constexpr value_type round_error() noexcept
+        {
+            return value_type(0ULL, 0ULL);
+        }
+
+        /**
+         * @brief Representacion de infinito (no aplicable para enteros)
+         */
+        static constexpr value_type infinity() noexcept
+        {
+            return value_type(0ULL, 0ULL);
+        }
+
+        /**
+         * @brief Representacion de NaN silencioso (no aplicable para enteros)
+         */
+        static constexpr value_type quiet_NaN() noexcept
+        {
+            return value_type(0ULL, 0ULL);
+        }
+
+        /**
+         * @brief Representacion de NaN senalizante (no aplicable para enteros)
+         */
+        static constexpr value_type signaling_NaN() noexcept
+        {
+            return value_type(0ULL, 0ULL);
+        }
+
+        /**
+         * @brief Valor desnormalizado minimo (igual a min para enteros)
+         */
+        static constexpr value_type denorm_min() noexcept
+        {
+            return min();
+        }
+    };
+
+    // ===== VERIFICACIONES ESTATICAS =====
+    static_assert(numeric_limits<uint128_t>::is_signed == false, "uint128_t debe ser unsigned");
+    static_assert(numeric_limits<int128_t>::is_signed == true, "int128_t debe ser signed");
+    static_assert(numeric_limits<uint128_t>::digits == 128, "uint128_t debe tener 128 bits");
+    static_assert(numeric_limits<int128_t>::digits == 127,
+                  "int128_t debe tener 127 bits significativos");
+    static_assert(numeric_limits<uint128_t>::is_modulo == true, "uint128_t debe ser modulo");
+    static_assert(numeric_limits<int128_t>::is_modulo == false, "int128_t no debe ser modulo");
 
 } // namespace nstd
 

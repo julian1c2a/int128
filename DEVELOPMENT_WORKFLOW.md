@@ -556,34 +556,84 @@ Intel:
 
 ### Ejecutar Tests en WSL
 
-#### Desde Windows (MSYS2/PowerShell/CMD)
+#### Sintaxis Simplificada (Fase 1.66)
+
+El template unificado `int128_base_t<S>` elimina la necesidad del parámetro `TYPE`:
 
 ```bash
-# Pipeline completo (init + test + compare)
-python scripts/run_wsl_tests.py
+# ANTES (obsoleto):
+bash scripts/wsl_build_and_test.bash int128 tt all all
 
-# Solo tests con GCC 15
-python scripts/run_wsl_tests.py test gcc-15 release
+# AHORA (simplificado):
+bash scripts/wsl_build_and_test.bash tt all all
+bash scripts/wsl_build_and_test.bash <feature> [compiler] [mode]
+```
 
-# Tests con todos los compiladores
-python scripts/run_wsl_tests.py test all release
+#### Desde Windows (PowerShell/CMD/MSYS2)
 
-# Benchmark comparativo
-python scripts/run_wsl_tests.py compare gcc-15 release-O3
+```bash
+# Pipeline completo con todos los compiladores
+python scripts/run_wsl_tests.py tt all all
+
+# Solo GCC 15 en release
+python scripts/run_wsl_tests.py bits gcc-15 release
+
+# Clang 21 en todos los modos
+python scripts/run_wsl_tests.py cmath clang-21 all
 ```
 
 #### Desde WSL Directamente
 
 ```bash
-# Compilar y testear
-bash scripts/wsl_build_system.bash build uint128 bits tests gcc-15 release
-bash scripts/wsl_build_system.bash check uint128 bits gcc-15 release
+# Bash script maestro (recomendado)
+bash scripts/wsl_build_and_test.bash tt all all
 
-# Con sanitizers
-bash scripts/wsl_build_system.bash sanitize uint128 bits asan gcc-15
+# Con compilador específico
+bash scripts/wsl_build_and_test.bash bits gcc-15 release
+bash scripts/wsl_build_and_test.bash cmath clang-21 debug
 
-# Benchmark comparativo
-bash scripts/wsl_build_system.bash compare gcc-15 release-O3
+# Python script maestro (alternativa)
+python scripts/wsl_build_and_test.py tt all all
+python scripts/wsl_build_and_test.py numeric gcc-14 release
+```
+
+#### Features Disponibles
+
+```
+tt, t, algorithm, bits, cmath, concepts, format, iostreams,
+limits, numeric, ranges, safe, thread_safety, traits
+```
+
+#### Compiladores Disponibles
+
+```
+gcc-13, gcc-14, gcc-15, clang-18, clang-19, clang-20, clang-21, icpx, all
+```
+
+#### Modos Disponibles
+
+```
+debug, release, all
+```
+
+### Estructura de Scripts WSL (Fase 1.66)
+
+```
+scripts/
+├── wsl/                           # Scripts modulares por compilador
+│   ├── common.bash                # Funciones compartidas Bash
+│   ├── common.py                  # Funciones compartidas Python
+│   ├── build_gcc13.bash           # GCC 13
+│   ├── build_gcc14.bash           # GCC 14
+│   ├── build_gcc15.bash           # GCC 15
+│   ├── build_clang18.bash         # Clang 18
+│   ├── build_clang19.bash         # Clang 19
+│   ├── build_clang20.bash         # Clang 20
+│   ├── build_clang21.bash         # Clang 21
+│   └── build_icpx.bash            # Intel ICPX
+├── wsl_build_and_test.bash        # Script maestro Bash
+├── wsl_build_and_test.py          # Script maestro Python
+└── run_wsl_tests.py               # Puente Windows→WSL
 ```
 
 ### Estructura de Builds WSL

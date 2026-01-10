@@ -313,20 +313,21 @@ namespace intrinsics
      */
     inline constexpr uint64_t umulh(uint64_t a, uint64_t b) noexcept
     {
-#if defined(__x86_64__) && defined(__BMI2__)
-        // BMI2: usar _mulx_u64 (disponible desde Haswell 2013)
+#if defined(__SIZEOF_INT128__)
+        // __uint128_t: portable, eficiente y disponible en GCC/Clang
+        // Preferimos esto sobre _mulx_u64 porque es constexpr-friendly
+        const __uint128_t result = static_cast<__uint128_t>(a) * b;
+        return static_cast<uint64_t>(result >> 64);
+
+#elif INTRINSICS_USES_MSVC_ABI && defined(__BMI2__)
+        // MSVC con BMI2: usar _mulx_u64
         if (!INTRINSICS_IS_CONSTANT_EVALUATED())
         {
             unsigned long long high_part;
             (void)_mulx_u64(a, b, &high_part);
             return high_part;
         }
-#endif
-
-#if defined(__SIZEOF_INT128__)
-        // __uint128_t: portable y eficiente
-        const __uint128_t result = static_cast<__uint128_t>(a) * b;
-        return static_cast<uint64_t>(result >> 64);
+        // Fallthrough a implementación portable para constexpr
 
 #elif defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
         // Inline assembly: mapeo directo a instrucción mulq
