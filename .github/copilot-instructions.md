@@ -215,13 +215,27 @@ auto result = compute_value();           // Should be const
 for (auto& item : container) { ... }     // Should be const& if not modified
 ```
 
-### 2. Initialize Variables at Declaration
+### 2. Initialize Variables at Declaration (BRACE INITIALIZATION)
 **Variables MUST be initialized when declared using brace initialization `{}`:**
+
+> **📋 RULE:** Always use `{}` for initialization, never `()` or `=`.
+> This is mandatory for consistency and to work with explicit constructors.
+
 ```cpp
 // CORRECT - initialize at declaration with braces
 const uint64_t value{compute_something()};
 const auto result{(condition) ? option_a : option_b};
 const int128_t x{42};
+const uint128_t big{0xDEADBEEF};
+const auto pair{std::make_pair(a, b)};
+std::vector<int> vec{1, 2, 3, 4, 5};
+
+// CORRECT - function arguments with braces
+process_value(uint128_t{42});
+return int128_t{result};
+
+// CORRECT - member initialization in constructors
+MyClass() : member{0}, other{compute()} {}
 
 // WRONG - declare then assign
 uint64_t value;       // Uninitialized!
@@ -229,7 +243,10 @@ value = compute_something();
 
 // WRONG - parentheses instead of braces
 const uint64_t value(42);  // Use braces: {42}
-const auto result = 42;    // Use braces: {42}
+
+// WRONG - = initialization (fails with explicit constructors)
+const uint128_t x = 42;    // ERROR with explicit ctors!
+const auto result = 42;    // Prefer braces: {42}
 ```
 
 ### 3. Constexpr/Consteval Everywhere
@@ -343,12 +360,30 @@ Classes use `snake_case_t` (not `PascalCase`) to match C++ standard library styl
 - Compatible with STL algorithms, `std::numeric_limits`, type traits
 - Operator symmetry: `uint128_t + int` AND `int + uint128_t` must both work
 
-### 11. Explicit Conversions and Constructors
+### 11. Explicit Conversions and Constructors (DESIGN DECISION)
 **All conversions and eligible constructors MUST be explicit:**
+
+> **📋 DESIGN RATIONALE:**
+> Although the C++ standard permits implicit conversions and `= value` initialization
+> syntax (which is common in everyday code), this library enforces **explicit constructors**
+> as a deliberate design choice for the following reasons:
+>
+> 1. **Type Safety:** Prevents accidental conversions that could hide precision loss
+> 2. **Clarity of Intent:** `uint128_t x{42}` clearly shows construction intent
+> 3. **Consistency:** All numeric types in this library follow the same pattern
+> 4. **Bug Prevention:** Avoids silent narrowing conversions in arithmetic expressions
+> 5. **Modern C++ Style:** Aligns with C++ Core Guidelines (ES.23, ES.46)
+>
+> This means `uint128_t x = 42;` is **NOT allowed** - use `uint128_t x{42};` instead.
+
 ```cpp
-// CORRECT - explicit constructor
+// CORRECT - explicit constructor with brace initialization
 template <integral_builtin T>
 explicit constexpr int128_base_t(T value) noexcept;
+
+const uint128_t x{42};           // OK - explicit brace init
+const uint128_t y{some_value};   // OK - explicit brace init
+const auto z{uint128_t{100}};    // OK - explicit construction
 
 // CORRECT - explicit conversion operator
 explicit constexpr operator bool() const noexcept;
@@ -357,6 +392,10 @@ explicit constexpr operator uint64_t() const noexcept;
 // WRONG - implicit conversion (avoid)
 constexpr int128_base_t(int value) noexcept;  // Missing explicit!
 constexpr operator double() const noexcept;   // Missing explicit!
+
+// WRONG - = initialization syntax (not allowed with explicit constructors)
+const uint128_t x = 42;          // ERROR: implicit conversion
+const uint128_t y = some_value;  // ERROR: implicit conversion
 ```
 
 **Exceptions (implicit allowed):**
