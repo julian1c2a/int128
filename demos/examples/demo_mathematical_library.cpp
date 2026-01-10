@@ -1,7 +1,5 @@
 #include <int128_simple.hpp>
 #include <iostream>
-#include <uint128/uint128_cmath.hpp>
-
 using namespace nstd;
 
 using namespace uint128_literals;

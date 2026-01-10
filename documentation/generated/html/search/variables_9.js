@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['tinyness_5fbefore_0',['tinyness_before',['../classnstd_1_1numeric__limits_3_01int128__t_01_4.html#afa61896523c92f3470181ae5dba84038',1,'nstd::numeric_limits&lt; int128_t &gt;::tinyness_before'],['../classnstd_1_1numeric__limits_3_01uint128__t_01_4.html#a83914a5301bfcad038085fe03705bc7d',1,'nstd::numeric_limits&lt; uint128_t &gt;::tinyness_before']]],
-  ['traps_1',['traps',['../classnstd_1_1numeric__limits_3_01int128__t_01_4.html#a509ce3d1b6c5cb2e6d0faf98894401ac',1,'nstd::numeric_limits&lt; int128_t &gt;::traps'],['../classnstd_1_1numeric__limits_3_01uint128__t_01_4.html#a0aab2efff159a2aca817bec3ad416845',1,'nstd::numeric_limits&lt; uint128_t &gt;::traps']]]
+  ['ui64_5fmax_0',['UI64_MAX',['../classnstd_1_1int128__base__t.html#a3f37faeed66baaa2f6c6d4365f04f37a',1,'nstd::int128_base_t']]],
+  ['ui_5fi64_5fmax_1',['UI_I64_MAX',['../classnstd_1_1int128__base__t.html#af7e039b244e267fa05ec9448c17f8709',1,'nstd::int128_base_t']]],
+  ['ui_5fi64_5fmin_2',['UI_I64_MIN',['../classnstd_1_1int128__base__t.html#ad01dbb3ed9efe839c4e77b5aa65579c3',1,'nstd::int128_base_t']]],
+  ['uint128_5fbits_3',['UINT128_BITS',['../classnstd_1_1uint128__t.html#a5f02a24fc9e2c8b43f1df4b8544755de',1,'nstd::uint128_t']]],
+  ['uint128_5fmax_4',['UINT128_MAX',['../namespacenstd.html#a33166c11f4474ffe2543dd812bfc81e7',1,'nstd']]],
+  ['uint128_5ft_5fmax_5',['uint128_t_MAX',['../namespacenstd.html#a0320d0500ba8099a6a28396159280e3b',1,'nstd']]]
 ];

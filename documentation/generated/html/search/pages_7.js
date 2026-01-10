@@ -1,5 +1,29 @@
 var searchData=
 [
-  ['8_20example_5fthread_5fsafety_20cpp_20ejemplos_20thread_20safety_20254_20loc_0',['8. &lt;b&gt;example_thread_safety.cpp&lt;/b&gt; - Ejemplos Thread Safety (254 LOC)',['../index.html#autotoc_md53',1,'']]],
-  ['895_20loc_1',['&lt;a href=&quot;demos/showcase/expression_templates_complete.cpp&quot;&gt;expression_templates_complete.cpp&lt;/a&gt; (895 LOC)',['../index.html#autotoc_md42',1,'']]]
+  ['básica_0',['Calculadora Básica',['../examples.html#ex_basic_calc',1,'']]],
+  ['básicas_1',['✅ Funcionalidades Básicas',['../index.html#autotoc_md17',1,'']]],
+  ['básico_2',['Uso Básico',['../quickstart.html#qs_basic_usage',1,'']]],
+  ['básicos_3',['Ejemplos Básicos',['../examples.html#examples_basic',1,'']]],
+  ['backends_20boost_20gmp_20tommath_4',['Benchmark con todos los backends (Boost + GMP + tommath)',['../index.html#autotoc_md33',1,'']]],
+  ['bash_5',['En terminal MSYS2/Bash',['../index.html#autotoc_md11',1,'']]],
+  ['bash_6',['Scripts bash',['../index.html#autotoc_md41',1,'']]],
+  ['bash_20recomendado_7',['Usando scripts bash (recomendado)',['../index.html#autotoc_md37',1,'']]],
+  ['benchmark_20con_20todos_20los_20backends_20boost_20gmp_20tommath_8',['Benchmark con todos los backends (Boost + GMP + tommath)',['../index.html#autotoc_md33',1,'']]],
+  ['benchmark_20int128_5ft_20vs_20uint128_5ft_9',['🆚 Benchmark int128_t vs uint128_t',['../index.html#autotoc_md30',1,'']]],
+  ['benchmarks_10',['Benchmarks',['../index.html#autotoc_md27',1,'📊 Benchmarks'],['../architecture.html#arch_benchmarks',1,'Benchmarks']]],
+  ['benchmarks_2029_20archivos_11',['Benchmarks (29 archivos)',['../index.html#autotoc_md14',1,'']]],
+  ['benchmarks_20comparativos_20con_20boost_20multiprecision_12',['🆚 Benchmarks Comparativos con Boost.Multiprecision',['../index.html#autotoc_md29',1,'']]],
+  ['benchmarks_20completo_13',['Sistema de Benchmarks Completo',['../index.html#autotoc_md28',1,'']]],
+  ['benchmarks_20demos_14',['📦 Compilación Directa (Tests, Benchmarks, Demos)',['../index.html#autotoc_md12',1,'']]],
+  ['benchmarks_20internos_15',['�📈 Benchmarks Internos',['../index.html#autotoc_md32',1,'']]],
+  ['bit_16',['UUIDs (128-bit)',['../examples.html#ex_uuid',1,'']]],
+  ['bits_17',['Notas de Arquitectura para Operaciones de Bits',['../bit_ops_arch.html',1,'']]],
+  ['bits_18',['int128 - Implementación de enteros de 128 bits',['../index.html',1,'']]],
+  ['bitset_20std_3a_3abitset_19',['Conversión a/desde Bitset (std::bitset&amp;lt;128&amp;gt;)',['../index.html#autotoc_md24',1,'']]],
+  ['bitwise_20',['Operaciones Bitwise',['../quickstart.html#qs_bitwise',1,'']]],
+  ['boost_20gmp_20tommath_21',['Benchmark con todos los backends (Boost + GMP + tommath)',['../index.html#autotoc_md33',1,'']]],
+  ['boost_20multiprecision_22',['🆚 Benchmarks Comparativos con Boost.Multiprecision',['../index.html#autotoc_md29',1,'']]],
+  ['build_23',['Build',['../index.html#autotoc_md7',1,'🛠️ Sistema de Build'],['../index.html#autotoc_md8',1,'Scripts de Build'],['../architecture.html#arch_build',1,'Sistema de Build'],['../index.html#autotoc_md9',1,'Uso del Sistema de Build']]],
+  ['bytes_24',['Notas de Arquitectura para Operaciones de Bytes',['../byte_ops_arch.html',1,'']]],
+  ['bytes_20std_3a_3aarray_25',['Conversión a/desde Bytes (std::array&amp;lt;std::byte, 16&amp;gt;)',['../index.html#autotoc_md23',1,'']]]
 ];

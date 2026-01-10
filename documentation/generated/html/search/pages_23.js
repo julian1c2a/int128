@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['★_20nuevo_0',['5. &lt;b&gt;Expression Templates&lt;/b&gt; - Técnicas Avanzadas de Metaprogramación ★ NUEVO',['../index.html#autotoc_md38',1,'']]]
+  ['🎯_20dos_20tipos_20complementarios_0',['🎯 Dos Tipos Complementarios',['../index.html#autotoc_md1',1,'']]]
 ];

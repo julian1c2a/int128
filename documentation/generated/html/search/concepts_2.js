@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['promotable_5fto_5fint128_0',['promotable_to_int128',['../conceptnstd_1_1int128__concepts_1_1promotable__to__int128.html',1,'nstd::int128_concepts']]],
-  ['promotable_5fto_5fuint128_1',['promotable_to_uint128',['../conceptnstd_1_1uint128__concepts_1_1promotable__to__uint128.html',1,'nstd::uint128_concepts']]]
+  ['floating_5farithmetic_5fbuiltin_0',['floating_arithmetic_builtin',['../conceptnstd_1_1uint128__t_1_1floating__arithmetic__builtin.html',1,'nstd::uint128_t']]],
+  ['floating_5fpoint_5fbuiltin_1',['floating_point_builtin',['../conceptnstd_1_1floating__point__builtin.html',1,'nstd']]]
 ];

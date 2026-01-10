@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['windows_0',['Windows',['../index.html#autotoc_md117',1,'']]],
-  ['windows_20powershell_1',['En Windows PowerShell',['../index.html#autotoc_md116',1,'']]],
-  ['wrappers_20350_20loc_2',['6. &lt;b&gt;demo_int128_thread_safety.cpp&lt;/b&gt; - Thread Safety Wrappers (350 LOC)',['../index.html#autotoc_md51',1,'']]]
+  ['¿por_20qué_20nstd_3a_3anumeric_5flimits_20en_20lugar_20de_20std_3a_3anumeric_5flimits_0',['¿Por qué nstd::numeric_limits en lugar de std::numeric_limits?',['../int128__base__traits__specializations_8hpp.html#why_nstd',1,'']]]
 ];

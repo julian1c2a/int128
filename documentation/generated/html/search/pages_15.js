@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['números_0',['Creación de Números',['../quickstart.html#qs_creation',1,'']]],
-  ['números_20de_20fibonacci_1',['Números de Fibonacci',['../examples.html#ex_fibonacci',1,'']]],
-  ['navegador_3a_20http_3a_20localhost_3a8000_2',['Abrir en navegador: &lt;a href=&quot;http://localhost:8000&quot;&gt;http://localhost:8000&lt;/a&gt;',['../index.html#autotoc_md121',1,'']]],
-  ['no_20reinventar_20la_20rueda_3',['3. &lt;b&gt;No Reinventar la Rueda&lt;/b&gt;',['..//ucrt64/home/julian/CppProjects/int128/include/intrinsics/README.md#autotoc_md198',1,'']]],
-  ['normales_4',['Compilar demos normales',['../index.html#autotoc_md14',1,'']]],
-  ['notas_20de_20arquitectura_20para_20operaciones_20aritméticas_5',['Notas de Arquitectura para Operaciones Aritméticas',['../arithmetic_ops_arch.html',1,'']]],
-  ['notas_20de_20arquitectura_20para_20operaciones_20de_20bits_6',['Notas de Arquitectura para Operaciones de Bits',['../bit_ops_arch.html',1,'']]],
-  ['notas_20de_20arquitectura_20para_20operaciones_20de_20bytes_7',['Notas de Arquitectura para Operaciones de Bytes',['../byte_ops_arch.html',1,'']]],
-  ['nueva_20en_20diciembre_202025_8',['make.py - Interfaz Unificada (nueva en diciembre 2025)',['../index.html#autotoc_md68',1,'']]],
-  ['nuevo_9',['5. &lt;b&gt;Expression Templates&lt;/b&gt; - Técnicas Avanzadas de Metaprogramación ★ NUEVO',['../index.html#autotoc_md38',1,'']]],
-  ['numéricas_10',['Funciones Numéricas',['../quickstart.html#qs_numeric',1,'']]],
-  ['numérico_20uint128_5fnumeric_20hpp_20🆕_11',['Numérico (&lt;span class=&quot;tt&quot;&gt;uint128_numeric.hpp&lt;/span&gt;) 🆕',['../index.html#autotoc_md112',1,'']]]
+  ['rápido_0',['Guía de Inicio Rápido',['../quickstart.html',1,'']]],
+  ['rangos_20y_20algoritmos_1',['Rangos y Algoritmos',['../examples.html#ex_ranges',1,'']]],
+  ['reales_2',['Casos de Uso Reales',['../examples.html#examples_real_world',1,'']]],
+  ['recomendado_3',['Recomendado',['../index.html#autotoc_md10',1,'En PowerShell (Recomendado)'],['../compiler_detection.html#autotoc_md86',1,'Uso Recomendado']]],
+  ['recomendado_4',['recomendado',['../index.html#autotoc_md37',1,'Usando scripts bash (recomendado)'],['../int128__base__traits__specializations_8hpp.html#usage',1,'Uso recomendado']]],
+  ['rendimiento_5',['Optimización y Rendimiento',['../examples.html#examples_performance',1,'']]],
+  ['reportes_20separados_6',['Agregar y analizar resultados (genera reportes separados)',['../index.html#autotoc_md34',1,'']]],
+  ['representación_20interna_7',['Representación Interna',['../architecture.html#arch_storage',1,'']]],
+  ['resultados_8',['Ver resultados',['../index.html#autotoc_md36',1,'']]],
+  ['resultados_20genera_20reportes_20separados_9',['Agregar y analizar resultados (genera reportes separados)',['../index.html#autotoc_md34',1,'']]],
+  ['risc_20v_10',['RISC V',['../arithmetic_ops_arch.html#autotoc_md66',1,'RISC-V'],['../bit_ops_arch.html#autotoc_md72',1,'RISC-V'],['../byte_ops_arch.html#autotoc_md78',1,'RISC-V']]],
+  ['roadmap_20futuro_11',['Roadmap Futuro',['../architecture.html#arch_future',1,'']]]
 ];

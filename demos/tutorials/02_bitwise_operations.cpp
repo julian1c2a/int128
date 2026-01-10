@@ -12,19 +12,18 @@
  */
 
 #include <int128_simple.hpp>
-#include <uint128/uint128_iostreams.hpp>
-#include <int128/int128_iostreams.hpp>
 #include <iomanip>
 #include <iostream>
 
 using namespace nstd;
 
 // Helper para imprimir en binario (últimos 16 bits)
-void print_binary_low16(const uint128_t& n, const std::string& label)
+void print_binary_low16(const uint128_t &n, const std::string &label)
 {
     uint64_t low_word = static_cast<uint64_t>(n);
     std::cout << label << ": ";
-    for (int i = 15; i >= 0; --i) {
+    for (int i = 15; i >= 0; --i)
+    {
         std::cout << ((low_word >> i) & 1);
         if (i % 4 == 0 && i != 0)
             std::cout << "_";
@@ -44,8 +43,8 @@ int main()
     std::cout << "--- 1. AND bitwise (&) ---\n";
     std::cout << "Resultado: 1 solo si ambos bits son 1\n\n";
 
-    uint128_t a = 0b1111'0000; // 240
-    uint128_t b = 0b1010'1010; // 170
+    uint128_t a{0b1111'0000}; // 240
+    uint128_t b{0b1010'1010}; // 170
 
     print_binary_low16(a, "a        ");
     print_binary_low16(b, "b        ");
@@ -80,7 +79,7 @@ int main()
     std::cout << "--- 4. NOT bitwise (~) ---\n";
     std::cout << "Invierte todos los bits (0→1, 1→0)\n\n";
 
-    uint128_t small = 0b0000'1111; // 15
+    uint128_t small{0b0000'1111}; // 15
     auto not_result = ~small;
 
     print_binary_low16(small, "small    ");
@@ -121,8 +120,8 @@ int main()
     std::cout << "--- 7. Máscaras de bits ---\n";
 
     // Extraer los 8 bits inferiores
-    uint128_t value = 0xABCD; // 43981
-    uint128_t mask_low8 = 0xFF;
+    uint128_t value{0xABCD}; // 43981
+    uint128_t mask_low8{0xFF};
     auto low_byte = value & mask_low8;
 
     std::cout << std::hex << std::uppercase;
@@ -163,9 +162,9 @@ int main()
     // ============================================================
     std::cout << "--- 9. Aplicación: Sistema de flags ---\n";
 
-    const uint128_t FLAG_READ = 1 << 0;    // 0b001
-    const uint128_t FLAG_WRITE = 1 << 1;   // 0b010
-    const uint128_t FLAG_EXECUTE = 1 << 2; // 0b100
+    const uint128_t FLAG_READ{uint128_t{1} << 0};    // 0b001
+    const uint128_t FLAG_WRITE{uint128_t{1} << 1};   // 0b010
+    const uint128_t FLAG_EXECUTE{uint128_t{1} << 2}; // 0b100
 
     uint128_t permissions{0};
 
@@ -229,4 +228,3 @@ int main()
 
     return 0;
 }
-

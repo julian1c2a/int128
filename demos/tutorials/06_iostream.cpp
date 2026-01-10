@@ -11,8 +11,6 @@
 
 #include <fstream>
 #include <int128_simple.hpp>
-#include <uint128/uint128_iostreams.hpp>
-#include <int128/int128_iostreams.hpp>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -54,7 +52,7 @@ int main()
     // ============================================================
     std::cout << "--- 3. showbase y uppercase ---\n";
 
-    uint128_t num = 0xABC;
+    uint128_t num{0xABC};
 
     std::cout << std::showbase << std::uppercase;
     std::cout << "Hex: " << std::hex << num << "\n";

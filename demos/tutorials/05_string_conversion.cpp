@@ -9,8 +9,6 @@
  */
 
 #include <int128_simple.hpp>
-#include <uint128/uint128_iostreams.hpp>
-#include <int128/int128_iostreams.hpp>
 #include <iostream>
 #include <optional>
 #include <sstream>
@@ -54,7 +52,7 @@ int main()
     // ============================================================
     std::cout << "--- 3. Hexadecimal ---\n";
 
-    uint128_t hex_num = 0xDEADBEEF;
+    uint128_t hex_num{0xDEADBEEF};
 
     std::cout << std::hex << std::uppercase << std::showbase;
     std::cout << "Hexadecimal: " << hex_num << "\n";

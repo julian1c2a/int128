@@ -1,11 +1,15 @@
 var searchData=
 [
-  ['threadsafeint128_0',['ThreadSafeInt128',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_int128.html',1,'nstd::int128_threadsafe']]],
-  ['threadsafeint128atomic_1',['ThreadSafeInt128Atomic',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_int128_atomic.html',1,'nstd::int128_threadsafe']]],
-  ['threadsafeint128rw_2',['ThreadSafeInt128RW',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_int128_r_w.html',1,'nstd::int128_threadsafe']]],
-  ['threadsafeint128spinlock_3',['ThreadSafeInt128SpinLock',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_int128_spin_lock.html',1,'nstd::int128_threadsafe']]],
-  ['threadsafeuint128_4',['ThreadSafeUint128',['../classnstd_1_1uint128__threadsafe_1_1_thread_safe_uint128.html',1,'nstd::uint128_threadsafe']]],
-  ['threadsafeuint128atomic_5',['ThreadSafeUint128Atomic',['../classnstd_1_1uint128__threadsafe_1_1_thread_safe_uint128_atomic.html',1,'nstd::uint128_threadsafe']]],
-  ['threadsafeuint128rw_6',['ThreadSafeUint128RW',['../classnstd_1_1uint128__threadsafe_1_1_thread_safe_uint128_r_w.html',1,'nstd::uint128_threadsafe']]],
-  ['threadsafeuint128spinlock_7',['ThreadSafeUint128SpinLock',['../classnstd_1_1uint128__threadsafe_1_1_thread_safe_uint128_spin_lock.html',1,'nstd::uint128_threadsafe']]]
+  ['threadsafe_0',['ThreadSafe',['../classnstd_1_1int128__threadsafe_1_1_thread_safe.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafe_3c_20signedness_3a_3asigned_5ftype_20_3e_1',['ThreadSafe&lt; signedness::signed_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafe_3c_20signedness_3a_3aunsigned_5ftype_20_3e_2',['ThreadSafe&lt; signedness::unsigned_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafeatomic_3',['ThreadSafeAtomic',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_atomic.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafeatomic_3c_20signedness_3a_3asigned_5ftype_20_3e_4',['ThreadSafeAtomic&lt; signedness::signed_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_atomic.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafeatomic_3c_20signedness_3a_3aunsigned_5ftype_20_3e_5',['ThreadSafeAtomic&lt; signedness::unsigned_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_atomic.html',1,'nstd::int128_threadsafe']]],
+  ['threadsaferw_6',['ThreadSafeRW',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_r_w.html',1,'nstd::int128_threadsafe']]],
+  ['threadsaferw_3c_20signedness_3a_3asigned_5ftype_20_3e_7',['ThreadSafeRW&lt; signedness::signed_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_r_w.html',1,'nstd::int128_threadsafe']]],
+  ['threadsaferw_3c_20signedness_3a_3aunsigned_5ftype_20_3e_8',['ThreadSafeRW&lt; signedness::unsigned_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_r_w.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafespinlock_9',['ThreadSafeSpinLock',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_spin_lock.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafespinlock_3c_20signedness_3a_3asigned_5ftype_20_3e_10',['ThreadSafeSpinLock&lt; signedness::signed_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_spin_lock.html',1,'nstd::int128_threadsafe']]],
+  ['threadsafespinlock_3c_20signedness_3a_3aunsigned_5ftype_20_3e_11',['ThreadSafeSpinLock&lt; signedness::unsigned_type &gt;',['../classnstd_1_1int128__threadsafe_1_1_thread_safe_spin_lock.html',1,'nstd::int128_threadsafe']]]
 ];

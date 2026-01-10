@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['uint128_0',['uint128',['../namespacenstd.html#a2ae8bda99197f674a6277b596bdda4dc',1,'nstd']]],
-  ['uint128_5fto_5fint128_1',['uint128_to_int128',['../namespacenstd.html#a48578b183294da8c2839e0e3ec4d84bb',1,'nstd']]],
-  ['umul128_2',['umul128',['../namespaceintrinsics.html#a04b1ce46830179cef8d9b1451a624ebb',1,'intrinsics']]],
-  ['umulh_3',['umulh',['../namespaceintrinsics.html#a7d74dd18600e93f4a2824fa111ecd10d',1,'intrinsics']]],
-  ['unreachable_4',['unreachable',['../namespacestd__compat.html#abeccbfb136f4d16b1acd72b6d4f80d97',1,'std_compat']]]
+  ['uint128_5ft_0',['uint128_t',['../classnstd_1_1uint128__t.html#aa297489cbb111fcbba89fd77e2d46ed4',1,'nstd::uint128_t::uint128_t() noexcept'],['../classnstd_1_1uint128__t.html#a1d426f7c16b909df2267ead3f8b3a7c0',1,'nstd::uint128_t::uint128_t(T value) noexcept'],['../classnstd_1_1uint128__t.html#a0eb76455725b082a06b124b2e0143e29',1,'nstd::uint128_t::uint128_t(T1 high, T2 low) noexcept'],['../classnstd_1_1uint128__t.html#a292c36f9d26d92c101e6a63ef2d8eeb0',1,'nstd::uint128_t::uint128_t(const int128_t &amp;value) noexcept'],['../classnstd_1_1uint128__t.html#a4b9dc83d2885d714e4083f5a164c320a',1,'nstd::uint128_t::uint128_t(const char *str) noexcept'],['../classnstd_1_1uint128__t.html#af0724e5c19b49282c0c1ee71fdf2360e',1,'nstd::uint128_t::uint128_t(const uint128_t &amp;)=default'],['../classnstd_1_1uint128__t.html#a5b7c48399b0b8163ac09e6ebcd044f02',1,'nstd::uint128_t::uint128_t(uint128_t &amp;&amp;)=default']]],
+  ['umul128_1',['umul128',['../namespaceintrinsics.html#a04b1ce46830179cef8d9b1451a624ebb',1,'intrinsics']]],
+  ['umulh_2',['umulh',['../namespaceintrinsics.html#a7d74dd18600e93f4a2824fa111ecd10d',1,'intrinsics']]],
+  ['upper_5fbound_5f128_3',['upper_bound_128',['../namespacenstd.html#a0b89850b6b06a6886621ba09f98e71ed',1,'nstd::upper_bound_128()'],['../namespacenstd_1_1uint128__algorithm.html#a0b89850b6b06a6886621ba09f98e71ed',1,'nstd::uint128_algorithm::upper_bound_128()'],['../namespacenstd_1_1int128__algorithm.html#a0b89850b6b06a6886621ba09f98e71ed',1,'nstd::int128_algorithm::upper_bound_128()']]]
 ];
