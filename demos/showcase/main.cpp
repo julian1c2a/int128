@@ -26,8 +26,8 @@
 
 using namespace nstd;
 
-using namespace uint128_literals;
-using namespace int128_literals;
+using namespace nstd::int128_literals;
+using namespace nstd::int128_literals;
 
 // ANSI color codes para output atractivo
 #define RESET "\033[0m"

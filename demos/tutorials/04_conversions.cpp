@@ -16,6 +16,7 @@
 #include <int128_simple.hpp>
 #include <iostream>
 #include <limits>
+#include <optional>
 using namespace nstd;
 
 int main()
@@ -30,10 +31,10 @@ int main()
     std::cout << "--- 1. Conversión desde tipos nativos ---\n";
 
     // Conversión implícita (automática)
-    uint128_t from_int{42};
-    uint128_t from_uint = 100u;
-    uint128_t from_long = 500L;
-    uint128_t from_uint64 = UINT64_MAX;
+    const uint128_t from_int{42};
+    const uint128_t from_uint{100u};
+    const uint128_t from_long{500L};
+    const uint128_t from_uint64{UINT64_MAX};
 
     std::cout << "Desde int:      " << from_int << "\n";
     std::cout << "Desde unsigned: " << from_uint << "\n";
@@ -82,7 +83,8 @@ int main()
     uint128_t value2 = uint128_t(1) << 70;
 
     // Verificar si cabe en uint64_t
-    auto fits_in_u64 = [](const uint128_t& val) {
+    auto fits_in_u64 = [](const uint128_t &val)
+    {
         return val <= std::numeric_limits<uint64_t>::max();
     };
 
@@ -143,11 +145,11 @@ int main()
     // ============================================================
     std::cout << "--- 8. Conversión desde bool ---\n";
 
-    bool true_val = true;
-    bool false_val = false;
+    const bool true_val{true};
+    const bool false_val{false};
 
-    uint128_t from_true = true_val;
-    uint128_t from_false = false_val;
+    const uint128_t from_true{true_val ? 1u : 0u};
+    const uint128_t from_false{false_val ? 1u : 0u};
 
     std::cout << "bool true  → uint128_t " << from_true << "\n";
     std::cout << "bool false → uint128_t " << from_false << "\n\n";
@@ -220,30 +222,38 @@ int main()
     // ============================================================
     std::cout << "--- 13. Conversión segura ---\n";
 
-    auto safe_to_int = [](const uint128_t& val) -> std::optional<int> {
-        if (val > std::numeric_limits<int>::max()) {
+    auto safe_to_int = [](const uint128_t &val) -> std::optional<int>
+    {
+        if (val > std::numeric_limits<int>::max())
+        {
             return std::nullopt;
         }
         return static_cast<int>(val);
     };
 
-    uint128_t safe_value{100};
-    uint128_t unsafe_value = uint128_t(1) << 100;
+    const uint128_t safe_value{100};
+    const uint128_t unsafe_value{uint128_t{1} << 100};
 
     auto result1 = safe_to_int(safe_value);
     auto result2 = safe_to_int(unsafe_value);
 
     std::cout << "Convertir " << safe_value << ": ";
-    if (result1) {
+    if (result1)
+    {
         std::cout << "Éxito → " << *result1 << "\n";
-    } else {
+    }
+    else
+    {
         std::cout << "Fallo (valor muy grande)\n";
     }
 
     std::cout << "Convertir " << unsafe_value << ": ";
-    if (result2) {
+    if (result2)
+    {
         std::cout << "Éxito → " << *result2 << "\n";
-    } else {
+    }
+    else
+    {
         std::cout << "Fallo (valor muy grande)\n";
     }
     std::cout << "\n";
@@ -255,4 +265,3 @@ int main()
 
     return 0;
 }
-

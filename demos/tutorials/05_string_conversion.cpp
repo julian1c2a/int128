@@ -95,7 +95,8 @@ int main()
 
     // Factorial de 30
     uint128_t factorial{1};
-    for (int i = 2; i <= 30; ++i) {
+    for (int i = 2; i <= 30; ++i)
+    {
         factorial *= i;
     }
 
@@ -106,10 +107,11 @@ int main()
     // ============================================================
     std::cout << "--- 7. Formato personalizado ---\n";
 
-    uint128_t values[] = {1, 12, 123, 1234, 12345};
+    const uint128_t values[] = {\n uint128_t{1}, uint128_t{12}, uint128_t{123}, uint128_t{1234}, uint128_t{12345}\n};
 
     std::cout << "Con relleno de ceros:\n";
-    for (const auto& v : values) {
+    for (const auto &v : values)
+    {
         std::cout << std::setfill('0') << std::setw(10) << v << "\n";
     }
     std::cout << std::setfill(' ') << "\n";
@@ -121,4 +123,3 @@ int main()
 
     return 0;
 }
-

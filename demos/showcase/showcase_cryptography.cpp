@@ -20,7 +20,7 @@
 #include <random>
 using namespace nstd;
 
-using namespace uint128_literals;
+using namespace nstd::int128_literals;
 
 // Colores ANSI
 const char* RESET = "\033[0m";

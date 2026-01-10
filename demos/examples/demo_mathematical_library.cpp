@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace nstd;
 
-using namespace uint128_literals;
+using namespace nstd::int128_literals;
 
 void demo_basic_math()
 {

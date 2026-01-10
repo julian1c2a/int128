@@ -21,7 +21,7 @@
 
 using namespace nstd;
 
-using namespace uint128_literals;
+using namespace nstd::int128_literals;
 
 // Test de primalidad simple (para p pequeño)
 bool is_prime_simple(int n)

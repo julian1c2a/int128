@@ -98,10 +98,12 @@ int main()
     // ============================================================
     std::cout << "--- 6. Encontrar máximo y mínimo ---\n";
 
-    uint128_t x = 500, y = 1000, z = 750;
+    const uint128_t x{500};
+    const uint128_t y{1000};
+    const uint128_t z{750};
 
     // Usando std::max y std::min
-    auto maximum = std::max({x, y, z});
+    const auto maximum = std::max({x, y, z});
     auto minimum = std::min({x, y, z});
 
     std::cout << "Valores: " << x << ", " << y << ", " << z << "\n";
@@ -113,10 +115,12 @@ int main()
     // ============================================================
     std::cout << "--- 7. Ordenamiento ---\n";
 
-    std::vector<uint128_t> numbers = {500, 100, 1000, 250, 750};
+    std::vector<uint128_t> numbers{
+        uint128_t{500}, uint128_t{100}, uint128_t{1000}, uint128_t{250}, uint128_t{750}};
 
     std::cout << "Antes de ordenar: ";
-    for (const auto& n : numbers) {
+    for (const auto &n : numbers)
+    {
         std::cout << n << " ";
     }
     std::cout << "\n";
@@ -124,7 +128,8 @@ int main()
     std::sort(numbers.begin(), numbers.end());
 
     std::cout << "Después de ordenar: ";
-    for (const auto& n : numbers) {
+    for (const auto &n : numbers)
+    {
         std::cout << n << " ";
     }
     std::cout << "\n\n";
@@ -141,7 +146,8 @@ int main()
     std::cout << "¿" << target << " está en el vector? " << (found ? "Sí" : "No") << "\n";
 
     auto it = std::lower_bound(numbers.begin(), numbers.end(), target);
-    if (it != numbers.end()) {
+    if (it != numbers.end())
+    {
         std::cout << "Posición de " << target << ": " << std::distance(numbers.begin(), it)
                   << "\n\n";
     }
@@ -165,9 +171,9 @@ int main()
     // ============================================================
     std::cout << "--- 10. Comparación lexicográfica ---\n";
 
-    std::vector<uint128_t> vec1 = {1, 2, 3};
-    std::vector<uint128_t> vec2 = {1, 2, 4};
-    std::vector<uint128_t> vec3 = {1, 2, 3};
+    std::vector<uint128_t> vec1{uint128_t{1}, uint128_t{2}, uint128_t{3}};
+    std::vector<uint128_t> vec2{uint128_t{1}, uint128_t{2}, uint128_t{4}};
+    std::vector<uint128_t> vec3{uint128_t{1}, uint128_t{2}, uint128_t{3}};
 
     std::cout << "vec1 < vec2: "
               << (std::lexicographical_compare(vec1.begin(), vec1.end(), vec2.begin(), vec2.end())
@@ -190,19 +196,29 @@ int main()
 
     // Simulamos el comportamiento de operator<=>
     int cmp;
-    if (p < q) {
+    if (p < q)
+    {
         cmp = -1;
-    } else if (p > q) {
+    }
+    else if (p > q)
+    {
         cmp = 1;
-    } else {
+    }
+    else
+    {
         cmp = 0;
     }
 
-    if (cmp < 0) {
+    if (cmp < 0)
+    {
         std::cout << p << " < " << q << "\n";
-    } else if (cmp > 0) {
+    }
+    else if (cmp > 0)
+    {
         std::cout << p << " > " << q << "\n";
-    } else {
+    }
+    else
+    {
         std::cout << p << " == " << q << "\n";
     }
     std::cout << "\n";
@@ -225,7 +241,8 @@ int main()
               << " (¡parece mayor!)\n\n";
 
     std::cout << "Mejor comparar ANTES de restar:\n";
-    if (unsigned_a < unsigned_b) {
+    if (unsigned_a < unsigned_b)
+    {
         std::cout << "a es menor que b, no podemos restar sin wrap\n";
     }
     std::cout << "\n";
@@ -237,4 +254,3 @@ int main()
 
     return 0;
 }
-

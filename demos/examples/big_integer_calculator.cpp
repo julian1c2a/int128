@@ -21,7 +21,7 @@
 
 using namespace nstd;
 
-using namespace uint128_literals;
+using namespace nstd::int128_literals;
 
 // Cálculos matemáticos
 uint128_t factorial(int n)

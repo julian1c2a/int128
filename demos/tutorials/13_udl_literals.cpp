@@ -14,8 +14,8 @@
 using namespace nstd;
 
 // Importar los namespaces de literales
-using namespace uint128_literals;
-using namespace int128_literals;
+using namespace nstd::int128_literals;
+using namespace nstd::int128_literals;
 
 int main()
 {
@@ -128,7 +128,7 @@ int main()
     std::cout << "  - Usa literales para claridad del código\n\n";
 
     std::cout << "❌ DON'T:\n";
-    std::cout << "  - No olvides 'using namespace uint128_literals;'\n";
+    std::cout << "  - No olvides 'using namespace nstd::int128_literals;'\n";
     std::cout << "  - No uses _u128 con valores negativos\n";
     std::cout << "  - No mezcles signed/unsigned sin conversión explícita\n\n";
 

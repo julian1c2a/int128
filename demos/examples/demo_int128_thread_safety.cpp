@@ -18,7 +18,7 @@
 
 using namespace nstd;
 
-using namespace int128_threadsafe;
+using namespace nstd;
 
 // ========================= Demo 1: ThreadSafeInt128 (Mutex) =========================
 

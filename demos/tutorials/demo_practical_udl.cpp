@@ -5,7 +5,7 @@
 
 using namespace nstd;
 
-using namespace uint128_literals; // Importar literales UDL
+using namespace nstd::int128_literals; // Importar literales UDL
 
 void demo_crypto_like_operations()
 {

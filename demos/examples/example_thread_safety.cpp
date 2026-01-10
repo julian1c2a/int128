@@ -11,7 +11,7 @@
 
 using namespace nstd;
 
-using namespace uint128_threadsafe;
+using namespace nstd;
 
 // ========================= Example 1: Global Counter =========================
 

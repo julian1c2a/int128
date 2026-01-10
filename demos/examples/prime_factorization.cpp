@@ -19,7 +19,7 @@
 
 using namespace nstd;
 
-using namespace uint128_literals;
+using namespace nstd::int128_literals;
 
 // Verificar si un número es primo (test simple)
 bool is_prime_simple(const uint128_t& n)

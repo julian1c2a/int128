@@ -13,7 +13,7 @@
 
 using namespace nstd;
 
-using namespace uint128_literals;
+using namespace nstd::int128_literals;
 
 int main()
 {
