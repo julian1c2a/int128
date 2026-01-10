@@ -26,15 +26,15 @@ using namespace nstd;
 
 class IPv6Address
 {
-  private:
+private:
     uint128_t address;
 
-  public:
+public:
     // Constructor desde uint128_t
-    IPv6Address(uint128_t addr = 0) : address(addr) {}
+    IPv6Address(uint128_t addr = uint128_t{0}) : address(addr) {}
 
     // Constructor desde string
-    static IPv6Address from_string(const std::string& str)
+    static IPv6Address from_string(const std::string &str)
     {
         // Simplificación: parseo básico de formato completo
         // Ejemplo: "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
@@ -44,7 +44,8 @@ class IPv6Address
 
         // Expandir :: si existe
         size_t double_colon = temp.find("::");
-        if (double_colon != std::string::npos) {
+        if (double_colon != std::string::npos)
+        {
             // Simplificación: asumimos solo un :: y está al principio
             temp = "0000" + temp.substr(2);
         }
@@ -54,12 +55,13 @@ class IPv6Address
         std::string segment;
         int position = 7;
 
-        while (std::getline(iss, segment, ':') && position >= 0) {
+        while (std::getline(iss, segment, ':') && position >= 0)
+        {
             if (segment.empty())
                 segment = "0";
 
             uint64_t value = std::stoull(segment, nullptr, 16);
-            result |= (uint128_t(value) << (position * 16));
+            result |= (uint128_t{value} << (position * 16));
             position--;
         }
 
@@ -72,7 +74,8 @@ class IPv6Address
         std::ostringstream oss;
         oss << std::hex << std::setfill('0');
 
-        for (int i = 7; i >= 0; i--) {
+        for (int i = 7; i >= 0; i--)
+        {
             uint16_t segment = static_cast<uint16_t>((address >> (i * 16)).low() & 0xFFFF);
             oss << std::setw(4) << segment;
             if (i > 0)
@@ -89,7 +92,8 @@ class IPv6Address
         oss << std::hex;
 
         bool first = true;
-        for (int i = 7; i >= 0; i--) {
+        for (int i = 7; i >= 0; i--)
+        {
             uint16_t segment = static_cast<uint16_t>((address >> (i * 16)).low() & 0xFFFF);
             if (!first)
                 oss << ":";
@@ -106,9 +110,9 @@ class IPv6Address
         if (prefix_length >= 128)
             return *this;
         if (prefix_length <= 0)
-            return IPv6Address(0);
+            return IPv6Address{uint128_t{0}};
 
-        uint128_t mask = (~uint128_t(0)) << (128 - prefix_length);
+        uint128_t mask = (~uint128_t{0}) << (128 - prefix_length);
         return IPv6Address(address & mask);
     }
 
@@ -121,13 +125,13 @@ class IPv6Address
     // Obtener dirección de broadcast (último host en la subred)
     IPv6Address broadcast_address(int prefix_length) const
     {
-        uint128_t mask = (~uint128_t(0)) << (128 - prefix_length);
+        uint128_t mask = (~uint128_t{0}) << (128 - prefix_length);
         uint128_t host_mask = ~mask;
         return IPv6Address((address & mask) | host_mask);
     }
 
     // Verificar si está en una subred
-    bool in_subnet(const IPv6Address& network, int prefix_length) const
+    bool in_subnet(const IPv6Address &network, int prefix_length) const
     {
         IPv6Address my_network = apply_mask(prefix_length);
         IPv6Address other_network = network.apply_mask(prefix_length);
@@ -137,7 +141,7 @@ class IPv6Address
     // Tipos de direcciones IPv6
     bool is_loopback() const
     {
-        return address == 1; // ::1
+        return address == uint128_t{1}; // ::1
     }
 
     bool is_link_local() const
@@ -164,22 +168,22 @@ class IPv6Address
     // Obtener siguiente dirección
     IPv6Address next() const
     {
-        return IPv6Address(address + 1);
+        return IPv6Address{address + uint128_t{1}};
     }
 
     // Obtener dirección anterior
     IPv6Address prev() const
     {
-        return IPv6Address(address - 1);
+        return IPv6Address{address - uint128_t{1}};
     }
 
     // Operadores
-    bool operator==(const IPv6Address& other) const
+    bool operator==(const IPv6Address &other) const
     {
         return address == other.address;
     }
 
-    bool operator<(const IPv6Address& other) const
+    bool operator<(const IPv6Address &other) const
     {
         return address < other.address;
     }
@@ -240,7 +244,8 @@ void demo_range_iteration()
     std::cout << "Primeras 10 direcciones desde " << start.to_compressed_string() << ":\n\n";
 
     IPv6Address current = start;
-    for (int i = 0; i < 10 && current.get_raw() <= end.get_raw(); ++i) {
+    for (int i = 0; i < 10 && current.get_raw() <= end.get_raw(); ++i)
+    {
         std::cout << "  " << (i + 1) << ". " << current.to_compressed_string() << "\n";
         current = current.next();
     }
@@ -250,18 +255,22 @@ void demo_address_types()
 {
     std::cout << "\n=== Tipos de Direcciones IPv6 ===\n\n";
 
-    struct TestAddress {
+    struct TestAddress
+    {
         std::string addr;
         std::string type;
     };
 
     std::vector<TestAddress> addresses = {
-        {"::1", "Loopback"},         {"fe80::1", "Link-local"},
-        {"ff02::1", "Multicast"},    {"2001:db8::1", "Global Unicast"},
+        {"::1", "Loopback"},
+        {"fe80::1", "Link-local"},
+        {"ff02::1", "Multicast"},
+        {"2001:db8::1", "Global Unicast"},
         {"fd00::1", "Unique Local"},
     };
 
-    for (const auto& test : addresses) {
+    for (const auto &test : addresses)
+    {
         auto addr = IPv6Address::from_string(test.addr);
 
         std::cout << test.addr << " (" << test.type << "):\n";
@@ -283,11 +292,15 @@ void demo_subnet_membership()
     std::cout << "Red: " << network.to_compressed_string() << "/" << prefix << "\n\n";
 
     std::vector<std::string> test_addresses = {
-        "2001:db8::1", "2001:db8:1::1", "2001:db8:ffff:ffff:ffff:ffff:ffff:ffff",
-        "2001:db9::1", "2001:0:0:1::1",
+        "2001:db8::1",
+        "2001:db8:1::1",
+        "2001:db8:ffff:ffff:ffff:ffff:ffff:ffff",
+        "2001:db9::1",
+        "2001:0:0:1::1",
     };
 
-    for (const auto& addr_str : test_addresses) {
+    for (const auto &addr_str : test_addresses)
+    {
         auto addr = IPv6Address::from_string(addr_str);
         bool in_net = addr.in_subnet(network, prefix);
 
@@ -325,4 +338,3 @@ int main()
 
     return 0;
 }
-

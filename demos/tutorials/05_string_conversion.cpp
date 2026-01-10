@@ -107,7 +107,8 @@ int main()
     // ============================================================
     std::cout << "--- 7. Formato personalizado ---\n";
 
-    const uint128_t values[] = {\n uint128_t{1}, uint128_t{12}, uint128_t{123}, uint128_t{1234}, uint128_t{12345}\n};
+    const uint128_t values[] = {
+        uint128_t{1}, uint128_t{12}, uint128_t{123}, uint128_t{1234}, uint128_t{12345}};
 
     std::cout << "Con relleno de ceros:\n";
     for (const auto &v : values)

@@ -8,11 +8,11 @@
  */
 
 #include <int128_simple.hpp>
+#include <int128_base_cmath.hpp> // Para gcd, lcm, sqrt, pow, abs
 #include <iostream>
 
 using namespace nstd;
 
-using namespace nstd::int128_literals;
 using namespace nstd::int128_literals;
 
 int main()
@@ -60,7 +60,8 @@ int main()
     auto exponent = 10;
 
     uint128_t power{1};
-    for (int i = 0; i < exponent; ++i) {
+    for (int i = 0; i < exponent; ++i)
+    {
         power *= base;
     }
 
@@ -74,14 +75,16 @@ int main()
     auto num = 144_u128;
 
     // Implementación simple de sqrt
-    auto sqrt_approx = [](uint128_t n) -> uint128_t {
-        if (n == 0)
-            return 0;
-        uint128_t x = n;
-        uint128_t y = (x + 1) / 2;
-        while (y < x) {
+    auto sqrt_approx = [](uint128_t n) -> uint128_t
+    {
+        if (n == uint128_t{0})
+            return uint128_t{0};
+        uint128_t x{n};
+        uint128_t y{(x + uint128_t{1}) / uint128_t{2}};
+        while (y < x)
+        {
             x = y;
-            y = (x + n / x) / 2;
+            y = (x + n / x) / uint128_t{2};
         }
         return x;
     };
@@ -97,4 +100,3 @@ int main()
 
     return 0;
 }
-

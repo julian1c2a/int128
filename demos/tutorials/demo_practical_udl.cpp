@@ -1,153 +1,193 @@
+// =============================================================================
+// Demo: Practical UDL (User-Defined Literals) Usage
+// Part of int128 Library - https://github.com/[repo]
+// License: BSL-1.0
+// =============================================================================
+//
+// Demonstrates practical use of uint128_t/int128_t with the available
+// literal operators and formatting methods from the library API.
+//
+// Available literals: _u128, _U128, _i128, _I128
+// Available methods: to_string(), to_string(base)
+// =============================================================================
+
 #include <int128_simple.hpp>
+#include <int128_base_format.hpp>
 #include <iomanip>
 #include <iostream>
 #include <vector>
 
 using namespace nstd;
-
-using namespace nstd::int128_literals; // Importar literales UDL
+using namespace nstd::int128_literals;
+using namespace nstd::int128_format;
 
 void demo_crypto_like_operations()
 {
-    std::cout << "=== DEMO: Operaciones Tipo Criptografía ===" << std::endl;
+    std::cout << "=== DEMO: Crypto-like Operations ===" << std::endl;
 
-    // Simular claves y valores hash usando literales UDL
-    auto private_key = "DEADBEEFCAFEBABE123456789ABCDEF0"_u128_hex;
-    auto public_key = "FEDCBA9876543210ABCDEF0123456789"_u128_hex;
-    auto message_hash = "0x1A2B3C4D5E6F7890"_u128;
+    // Simulating keys and hash values using UDL literals
+    // Note: _u128 supports 0x prefix for hex values
+    const uint128_t private_key{0xDEADBEEFCAFEBABEull, 0x123456789ABCDEFull};
+    const uint128_t public_key{0xFEDCBA9876543210ull, 0xABCDEF0123456789ull};
+    const auto message_hash = 0x1A2B3C4D5E6F7890_u128;
 
-    std::cout << "Clave privada: " << private_key.to_string_hex(true) << std::endl;
-    std::cout << "Clave pública: " << public_key.to_string_hex(true) << std::endl;
-    std::cout << "Hash mensaje:  " << message_hash.to_string_hex(true) << std::endl;
+    std::cout << "Private key: " << hex(private_key) << std::endl;
+    std::cout << "Public key:  " << hex(public_key) << std::endl;
+    std::cout << "Message hash: " << hex(message_hash) << std::endl;
 
-    // Operación XOR para "cifrado" simple
-    auto encrypted = message_hash ^ private_key;
-    std::cout << "Mensaje cifrado: " << encrypted.to_string_hex(true) << std::endl;
+    // XOR operation for simple "encryption"
+    const auto encrypted = message_hash ^ private_key;
+    std::cout << "Encrypted message: " << hex(encrypted) << std::endl;
 
-    // Descifrado
-    auto decrypted = encrypted ^ private_key;
-    std::cout << "Mensaje descifrado: " << decrypted.to_string_hex(true) << std::endl;
-    std::cout << "Descifrado correcto: " << (decrypted == message_hash ? "✓" : "✗") << std::endl;
+    // Decryption
+    const auto decrypted = encrypted ^ private_key;
+    std::cout << "Decrypted message: " << hex(decrypted) << std::endl;
+    std::cout << "Decryption correct: " << (decrypted == message_hash ? "[OK]" : "[FAIL]") << std::endl;
 }
 
 void demo_memory_addressing()
 {
-    std::cout << "\n=== DEMO: Direccionamiento de Memoria ===" << std::endl;
+    std::cout << "\n=== DEMO: Memory Addressing ===" << std::endl;
 
-    // Simular direcciones de memoria de 128 bits
-    auto base_addr = "0x7FFF800000000000"_u128;
-    auto page_size = 4096_u128;
+    // Simulating 128-bit memory addresses
+    const auto base_addr = 0x7FFF800000000000_u128;
+    const auto page_size = 4096_u128;
 
-    std::cout << "Dirección base: " << base_addr.to_string_hex(true) << std::endl;
-    std::cout << "Tamaño página: " << page_size.to_string() << " bytes" << std::endl;
+    std::cout << "Base address: " << hex(base_addr) << std::endl;
+    std::cout << "Page size: " << page_size.to_string() << " bytes" << std::endl;
 
-    // Calcular direcciones de páginas
-    std::vector<uint128_t> page_addresses;
-    for (int i = 0; i < 5; ++i) {
-        auto page_addr = base_addr + (page_size * uint128_t(i));
+    // Calculate page addresses
+    std::vector<uint128_t> page_addresses{};
+    for (int i = 0; i < 5; ++i)
+    {
+        const auto page_addr = base_addr + (page_size * uint128_t{static_cast<uint64_t>(i)});
         page_addresses.push_back(page_addr);
-        std::cout << "Página " << i << ": " << page_addr.to_string_hex(true) << std::endl;
+        std::cout << "Page " << i << ": " << hex(page_addr) << std::endl;
     }
 
-    // Verificar alineación
-    for (size_t i = 0; i < page_addresses.size(); ++i) {
-        auto aligned = (page_addresses[i] % page_size) == 0_u128;
-        std::cout << "Página " << i << " alineada: " << (aligned ? "✓" : "✗") << std::endl;
+    // Check alignment
+    for (size_t i = 0; i < page_addresses.size(); ++i)
+    {
+        const auto aligned = (page_addresses[i] % page_size) == uint128_t{0};
+        std::cout << "Page " << i << " aligned: " << (aligned ? "[OK]" : "[FAIL]") << std::endl;
     }
 }
 
 void demo_bit_manipulation()
 {
-    std::cout << "\n=== DEMO: Manipulación de Bits ===" << std::endl;
+    std::cout << "\n=== DEMO: Bit Manipulation ===" << std::endl;
 
-    // Crear máscaras usando literales binarios
-    auto bit_mask = "11110000111100001111000011110000"_u128_bin;
-    auto data = "0x12345678"_u128;
+    // Create bitmasks using hex literals
+    const auto bit_mask = 0xF0F0F0F0_u128;
+    const auto data = 0x12345678_u128;
 
-    std::cout << "Datos originales: " << data.to_string_hex(true) << std::endl;
-    std::cout << "Máscara de bits:  " << bit_mask.to_string_hex(true) << std::endl;
-    std::cout << "Máscara binaria:  " << bit_mask.to_string_bin(true) << std::endl;
+    std::cout << "Original data: " << hex(data) << std::endl;
+    std::cout << "Bit mask:      " << hex(bit_mask) << std::endl;
+    std::cout << "Mask binary:   " << bin(bit_mask) << std::endl;
 
-    // Aplicar máscara
-    auto masked_data = data & bit_mask;
-    std::cout << "Datos enmascarados: " << masked_data.to_string_hex(true) << std::endl;
+    // Apply mask
+    const auto masked_data = data & bit_mask;
+    std::cout << "Masked data: " << hex(masked_data) << std::endl;
 
-    // Invertir bits específicos
-    auto inverted = data ^ bit_mask;
-    std::cout << "Bits invertidos: " << inverted.to_string_hex(true) << std::endl;
+    // Invert specific bits
+    const auto inverted = data ^ bit_mask;
+    std::cout << "Inverted bits: " << hex(inverted) << std::endl;
 
-    // Configurar bits específicos
-    auto set_bits = data | bit_mask;
-    std::cout << "Bits configurados: " << set_bits.to_string_hex(true) << std::endl;
+    // Set specific bits
+    const auto set_bits = data | bit_mask;
+    std::cout << "Set bits: " << hex(set_bits) << std::endl;
 }
 
 void demo_number_systems()
 {
-    std::cout << "\n=== DEMO: Sistemas de Numeración ===" << std::endl;
+    std::cout << "\n=== DEMO: Number Systems ===" << std::endl;
 
-    // Mismo número en diferentes representaciones
-    auto decimal_val = "1234567890"_u128;
-    auto hex_val = "499602D2"_u128_hex;                           // Mismo valor en hex
-    auto binary_val = "1001001100101100000001011010010"_u128_bin; // Primeros bits
-    auto octal_val = "11145401322"_u128_oct;                      // Mismo valor en octal
+    // Same number in different formats
+    const auto decimal_val = 1234567890_u128;
+    const auto hex_val = 0x499602D2_u128; // Same value in hex
 
-    std::cout << "Número: 1234567890 en diferentes bases:" << std::endl;
+    std::cout << "Number: 1234567890 in different bases:" << std::endl;
     std::cout << "Decimal: " << decimal_val.to_string() << std::endl;
-    std::cout << "Hexadecimal: " << hex_val.to_string_hex(true) << std::endl;
-    std::cout << "Octal: " << octal_val.to_string_oct(true) << std::endl;
-    std::cout << "Binario (truncado): " << binary_val.to_string_bin(true) << std::endl;
+    std::cout << "Hexadecimal: " << hex(hex_val) << std::endl;
+    std::cout << "Octal: " << oct(decimal_val) << std::endl;
+    std::cout << "Binary: " << bin(decimal_val) << std::endl;
 
-    // Verificar que todos representan valores relacionados
-    std::cout << "\nVerificaciones:" << std::endl;
-    std::cout << "decimal == hex: " << (decimal_val == hex_val ? "✓" : "✗") << std::endl;
-    std::cout << "decimal == octal: " << (decimal_val == octal_val ? "✓" : "✗") << std::endl;
+    // Verify they represent the same value
+    std::cout << "\nVerifications:" << std::endl;
+    std::cout << "decimal == hex: " << (decimal_val == hex_val ? "[OK]" : "[FAIL]") << std::endl;
 }
 
 void demo_large_numbers()
 {
-    std::cout << "\n=== DEMO: Números Extremadamente Grandes ===" << std::endl;
+    std::cout << "\n=== DEMO: Extremely Large Numbers ===" << std::endl;
 
-    // Usar literales para números que no caben en tipos nativos
-    auto huge_number = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"_u128_hex;
-    auto almost_max = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE"_u128_hex;
+    // Using constructor for max values
+    const uint128_t huge_number{0xFFFFFFFFFFFFFFFFull, 0xFFFFFFFFFFFFFFFFull};
+    const uint128_t almost_max{0xFFFFFFFFFFFFFFFFull, 0xFFFFFFFFFFFFFFFEull};
 
-    std::cout << "Número enorme: " << huge_number.to_string() << std::endl;
-    std::cout << "Casi máximo: " << almost_max.to_string() << std::endl;
+    std::cout << "Huge number: " << huge_number.to_string() << std::endl;
+    std::cout << "Almost max:  " << almost_max.to_string() << std::endl;
 
-    // Operaciones con números grandes
-    auto difference = huge_number - almost_max;
-    std::cout << "Diferencia: " << difference.to_string() << std::endl;
+    // Operations with large numbers
+    const auto difference = huge_number - almost_max;
+    std::cout << "Difference: " << difference.to_string() << std::endl;
 
-    // Suma que causaría overflow en tipos nativos
-    auto big1 = "FFFFFFFFFFFFFFFF0000000000000000"_u128_hex;
-    auto big2 = "0000000000000000FFFFFFFFFFFFFFFF"_u128_hex;
-    auto big_sum = big1 + big2;
+    // Sum that would overflow native types
+    const uint128_t big1{0xFFFFFFFFFFFFFFFFull, 0x0000000000000000ull};
+    const uint128_t big2{0x0000000000000000ull, 0xFFFFFFFFFFFFFFFFull};
+    const auto big_sum = big1 + big2;
 
-    std::cout << "Suma grande:" << std::endl;
-    std::cout << "  " << big1.to_string_hex(true) << std::endl;
-    std::cout << "+ " << big2.to_string_hex(true) << std::endl;
-    std::cout << "= " << big_sum.to_string_hex(true) << std::endl;
+    std::cout << "Large sum:" << std::endl;
+    std::cout << "  " << hex(big1) << std::endl;
+    std::cout << "+ " << hex(big2) << std::endl;
+    std::cout << "= " << hex(big_sum) << std::endl;
     std::cout << "Decimal: " << big_sum.to_string() << std::endl;
+}
+
+void demo_signed_literals()
+{
+    std::cout << "\n=== DEMO: Signed Literals ===" << std::endl;
+
+    // Using signed literals
+    const auto positive = 42_i128;
+    const auto negative = -42_i128;
+    const auto large_positive = 170141183460469231731687303715884105727_i128; // INT128_MAX
+
+    std::cout << "Positive: " << positive.to_string() << std::endl;
+    std::cout << "Negative: " << negative.to_string() << std::endl;
+    std::cout << "Large positive: " << large_positive.to_string() << std::endl;
+
+    // Arithmetic with signed values
+    const auto sum = positive + negative;
+    std::cout << "42 + (-42) = " << sum.to_string() << std::endl;
+
+    const auto product = positive * negative;
+    std::cout << "42 * (-42) = " << product.to_string() << std::endl;
 }
 
 int main()
 {
-    std::cout << "🚀 DEMOSTRACIÓN PRÁCTICA: LITERALES UDL Y FORMATOS 🚀" << std::endl;
-    std::cout << "========================================================" << std::endl;
+    std::cout << "+======================================================+" << std::endl;
+    std::cout << "|  PRACTICAL DEMO: UDL LITERALS AND FORMATS            |" << std::endl;
+    std::cout << "+======================================================+" << std::endl;
 
     demo_crypto_like_operations();
     demo_memory_addressing();
     demo_bit_manipulation();
     demo_number_systems();
     demo_large_numbers();
+    demo_signed_literals();
 
-    std::cout << "\n✨ DEMOSTRACIÓN COMPLETADA ✨" << std::endl;
-    std::cout << "\n🎯 BENEFICIOS DEMOSTRADOS:" << std::endl;
-    std::cout << "   ✓ Literales UDL hacen el código más legible y expresivo" << std::endl;
-    std::cout << "   ✓ Conversiones automáticas de formato simplifican el trabajo" << std::endl;
-    std::cout << "   ✓ Soporte multi-base facilita trabajo con diferentes sistemas" << std::endl;
-    std::cout << "   ✓ uint128_t ahora se integra naturalmente en código C++ moderno" << std::endl;
-    std::cout << "\n💡 uint128_t está listo para aplicaciones reales de 128 bits!" << std::endl;
+    std::cout << "\n+======================================================+" << std::endl;
+    std::cout << "|  DEMO COMPLETED SUCCESSFULLY                         |" << std::endl;
+    std::cout << "+======================================================+" << std::endl;
+
+    std::cout << "\nBENEFITS DEMONSTRATED:" << std::endl;
+    std::cout << "   [OK] UDL literals make code more readable and expressive" << std::endl;
+    std::cout << "   [OK] Format functions simplify output formatting" << std::endl;
+    std::cout << "   [OK] Multi-base support facilitates different systems" << std::endl;
+    std::cout << "   [OK] uint128_t integrates naturally in modern C++ code" << std::endl;
+    std::cout << "\nuint128_t is ready for real 128-bit applications!" << std::endl;
 
     return 0;
 }

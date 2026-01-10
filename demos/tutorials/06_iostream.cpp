@@ -74,18 +74,23 @@ int main()
     // ============================================================
     std::cout << "--- 5. Tabla formateada ---\n";
 
-    struct Data {
+    struct Data
+    {
         std::string name;
         uint128_t value;
     };
 
-    Data table[] = {{"Alpha", 100}, {"Beta", 5000}, {"Gamma", 250000}};
+    Data table[] = {
+        {"Alpha", uint128_t{100}},
+        {"Beta", uint128_t{5000}},
+        {"Gamma", uint128_t{250000}}};
 
     std::cout << std::left << std::setw(10) << "Nombre" << std::right << std::setw(12) << "Valor"
               << "\n";
     std::cout << std::string(22, '-') << "\n";
 
-    for (const auto& row : table) {
+    for (const auto &row : table)
+    {
         std::cout << std::left << std::setw(10) << row.name << std::right << std::setw(12)
                   << row.value << "\n";
     }
@@ -140,4 +145,3 @@ int main()
 
     return 0;
 }
-

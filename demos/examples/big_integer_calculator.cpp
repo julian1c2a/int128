@@ -18,6 +18,7 @@
 #include <sstream>
 #include <string>
 #include <int128_simple.hpp>
+#include <int128_base_cmath.hpp>
 
 using namespace nstd;
 
@@ -27,9 +28,10 @@ using namespace nstd::int128_literals;
 uint128_t factorial(int n)
 {
     if (n <= 1)
-        return 1;
+        return uint128_t{1};
     uint128_t result{1};
-    for (int i = 2; i <= n; ++i) {
+    for (int i = 2; i <= n; ++i)
+    {
         result *= i;
     }
     return result;
@@ -38,9 +40,11 @@ uint128_t factorial(int n)
 uint128_t fibonacci(int n)
 {
     if (n <= 1)
-        return n;
-    uint128_t a = 0, b = 1;
-    for (int i = 2; i <= n; ++i) {
+        return uint128_t{static_cast<uint64_t>(n)};
+    uint128_t a{0};
+    uint128_t b{1};
+    for (int i = 2; i <= n; ++i)
+    {
         uint128_t temp = a + b;
         a = b;
         b = temp;
@@ -51,8 +55,10 @@ uint128_t fibonacci(int n)
 uint128_t power(uint128_t base, uint128_t exp)
 {
     uint128_t result{1};
-    while (exp > 0) {
-        if (exp % 2 == 1) {
+    while (exp > uint128_t{0})
+    {
+        if (exp % uint128_t{2} == uint128_t{1})
+        {
             result *= base;
         }
         base *= base;
@@ -64,12 +70,13 @@ uint128_t power(uint128_t base, uint128_t exp)
 // Clase calculadora
 class BigIntCalculator
 {
-  private:
+private:
     uint128_t memory;
 
-    void print_number(const std::string& label, const uint128_t& num)
+    void print_number(const std::string &label, const uint128_t &num)
     {
-        std::cout << "\n" << label << ":\n";
+        std::cout << "\n"
+                  << label << ":\n";
         std::cout << "  Decimal: " << num << "\n";
         std::cout << "  Hex:     0x" << std::hex << num << std::dec << "\n";
 
@@ -77,7 +84,7 @@ class BigIntCalculator
         std::cout << "  Dígitos: " << str.length() << "\n";
     }
 
-  public:
+public:
     BigIntCalculator() : memory(0) {}
 
     void run()
@@ -115,7 +122,8 @@ Ingrese números en decimal (ej: 12345) o hex (ej: 0xABCD)
 )" << "\n";
 
         std::string line;
-        while (true) {
+        while (true)
+        {
             std::cout << "\n> ";
             std::getline(std::cin, line);
 
@@ -123,7 +131,8 @@ Ingrese números en decimal (ej: 12345) o hex (ej: 0xABCD)
                 continue;
             if (line == "quit" || line == "exit")
                 break;
-            if (line == "help") {
+            if (line == "help")
+            {
                 std::cout << "Ver comandos arriba.\n";
                 continue;
             }
@@ -132,100 +141,139 @@ Ingrese números en decimal (ej: 12345) o hex (ej: 0xABCD)
             std::string cmd;
             iss >> cmd;
 
-            try {
-                if (cmd == "add") {
+            try
+            {
+                if (cmd == "add")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
                     uint128_t result = a + b;
                     print_number("Resultado", result);
-                } else if (cmd == "sub") {
+                }
+                else if (cmd == "sub")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
                     uint128_t result = a - b;
                     print_number("Resultado", result);
-                } else if (cmd == "mul") {
+                }
+                else if (cmd == "mul")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
                     uint128_t result = a * b;
                     print_number("Resultado", result);
-                } else if (cmd == "div") {
+                }
+                else if (cmd == "div")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
-                    if (b == 0) {
+                    if (b == 0)
+                    {
                         std::cout << "Error: División por cero\n";
-                    } else {
+                    }
+                    else
+                    {
                         uint128_t result = a / b;
                         print_number("Resultado", result);
                     }
-                } else if (cmd == "mod") {
+                }
+                else if (cmd == "mod")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
                     uint128_t result = a % b;
                     print_number("Resultado", result);
-                } else if (cmd == "pow") {
+                }
+                else if (cmd == "pow")
+                {
                     std::string base_str, exp_str;
                     iss >> base_str >> exp_str;
                     uint128_t base(base_str.c_str());
                     uint128_t exp(exp_str.c_str());
                     uint128_t result = power(base, exp);
                     print_number("Resultado", result);
-                } else if (cmd == "fact") {
+                }
+                else if (cmd == "fact")
+                {
                     int n;
                     iss >> n;
-                    if (n < 0 || n > 34) {
+                    if (n < 0 || n > 34)
+                    {
                         std::cout << "Factorial solo soporta 0-34 (overflow después)\n";
-                    } else {
+                    }
+                    else
+                    {
                         uint128_t result = factorial(n);
                         print_number(std::to_string(n) + "!", result);
                     }
-                } else if (cmd == "fib") {
+                }
+                else if (cmd == "fib")
+                {
                     int n;
                     iss >> n;
-                    if (n < 0 || n > 185) {
+                    if (n < 0 || n > 185)
+                    {
                         std::cout << "Fibonacci solo soporta 0-185 (overflow después)\n";
-                    } else {
+                    }
+                    else
+                    {
                         uint128_t result = fibonacci(n);
                         print_number("Fibonacci(" + std::to_string(n) + ")", result);
                     }
-                } else if (cmd == "gcd") {
+                }
+                else if (cmd == "gcd")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
                     uint128_t result = nstd::gcd(a, b);
                     print_number("GCD", result);
-                } else if (cmd == "lcm") {
+                }
+                else if (cmd == "lcm")
+                {
                     std::string a_str, b_str;
                     iss >> a_str >> b_str;
                     uint128_t a(a_str.c_str());
                     uint128_t b(b_str.c_str());
                     uint128_t result = nstd::lcm(a, b);
                     print_number("LCM", result);
-                } else if (cmd == "mem") {
+                }
+                else if (cmd == "mem")
+                {
                     std::string val_str;
                     iss >> val_str;
                     memory = uint128_t(val_str.c_str());
                     std::cout << "✓ Guardado en memoria: " << memory << "\n";
-                } else if (cmd == "recall") {
+                }
+                else if (cmd == "recall")
+                {
                     print_number("Memoria", memory);
-                } else if (cmd == "clear") {
-                    memory = 0;
-                    std::cout << "✓ Memoria limpiada\n";
-                } else {
+                }
+                else if (cmd == "clear")
+                {
+                    memory = uint128_t{0};
+                    std::cout << "[OK] Memoria limpiada\n";
+                }
+                else
+                {
                     std::cout << "Comando desconocido: " << cmd << "\n";
                     std::cout << "Escribe 'help' para ver comandos disponibles\n";
                 }
-            } catch (const std::exception& e) {
+            }
+            catch (const std::exception &e)
+            {
                 std::cout << "Error: " << e.what() << "\n";
             }
         }
@@ -258,9 +306,10 @@ void demo_examples()
     std::cout << "   LCM(" << a << ", " << b << ") = " << nstd::lcm(a, b) << "\n";
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    if (argc > 1 && std::string(argv[1]) == "--demo") {
+    if (argc > 1 && std::string(argv[1]) == "--demo")
+    {
         demo_examples();
         return 0;
     }
@@ -270,4 +319,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-
