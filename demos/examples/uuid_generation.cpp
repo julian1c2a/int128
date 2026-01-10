@@ -26,12 +26,12 @@ using namespace nstd;
 
 class UUID
 {
-  private:
+private:
     uint128_t value;
 
-  public:
+public:
     // Constructor desde uint128_t
-    UUID(uint128_t val = 0) : value(val) {}
+    UUID(uint128_t val = uint128_t{0}) : value(val) {}
 
     // Generar UUID v4 (aleatorio)
     static UUID generate_v4()
@@ -50,20 +50,23 @@ class UUID
         // Variante RFC 4122: bits 62-63 del low = 10
         low = (low & 0x3FFFFFFFFFFFFFFFULL) | 0x8000000000000000ULL;
 
-        return UUID((uint128_t(high) << 64) | low);
+        return UUID{(uint128_t{high} << 64) | uint128_t{low}};
     }
 
     // Parsear desde string formato: "550e8400-e29b-41d4-a716-446655440000"
-    static UUID from_string(const std::string& str)
+    static UUID from_string(const std::string &str)
     {
         std::string hex_only;
-        for (char c : str) {
-            if (std::isxdigit(c)) {
+        for (char c : str)
+        {
+            if (std::isxdigit(c))
+            {
                 hex_only += c;
             }
         }
 
-        if (hex_only.length() != 32) {
+        if (hex_only.length() != 32)
+        {
             throw std::invalid_argument("UUID inválido");
         }
 
@@ -71,7 +74,7 @@ class UUID
         uint64_t high = std::stoull(hex_only.substr(0, 16), nullptr, 16);
         uint64_t low = std::stoull(hex_only.substr(16, 16), nullptr, 16);
 
-        return UUID((uint128_t(high) << 64) | low);
+        return UUID{(uint128_t{high} << 64) | uint128_t{low}};
     }
 
     // Convertir a string formato canónico
@@ -118,17 +121,17 @@ class UUID
     }
 
     // Operadores de comparación
-    bool operator==(const UUID& other) const
+    bool operator==(const UUID &other) const
     {
         return value == other.value;
     }
 
-    bool operator!=(const UUID& other) const
+    bool operator!=(const UUID &other) const
     {
         return value != other.value;
     }
 
-    bool operator<(const UUID& other) const
+    bool operator<(const UUID &other) const
     {
         return value < other.value;
     }
@@ -151,7 +154,8 @@ void demo_generation()
 
     std::cout << "Generando 5 UUIDs v4 aleatorios:\n\n";
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 5; ++i)
+    {
         UUID uuid = UUID::generate_v4();
         std::cout << "  " << (i + 1) << ". " << uuid.to_string();
         std::cout << " (v" << uuid.get_version() << ")\n";
@@ -171,15 +175,19 @@ void demo_parsing()
         "00000000-0000-0000-0000-000000000000",
     };
 
-    for (const auto& str : uuid_strings) {
-        try {
+    for (const auto &str : uuid_strings)
+    {
+        try
+        {
             UUID uuid = UUID::from_string(str);
             std::cout << "String: " << str << "\n";
             std::cout << "  Parseado: " << uuid.to_string() << "\n";
             std::cout << "  Versión: " << uuid.get_version() << "\n";
             std::cout << "  Variante: " << uuid.get_variant() << "\n";
             std::cout << "  Es nil: " << (uuid.is_nil() ? "Sí" : "No") << "\n\n";
-        } catch (const std::exception& e) {
+        }
+        catch (const std::exception &e)
+        {
             std::cout << "Error: " << e.what() << "\n\n";
         }
     }
@@ -191,12 +199,14 @@ void demo_comparison()
 
     // Generar varios UUIDs
     std::vector<UUID> uuids;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i)
+    {
         uuids.push_back(UUID::generate_v4());
     }
 
     std::cout << "UUIDs generados (desordenados):\n";
-    for (size_t i = 0; i < 5; ++i) {
+    for (size_t i = 0; i < 5; ++i)
+    {
         std::cout << "  " << uuids[i].to_string() << "\n";
     }
 
@@ -204,7 +214,8 @@ void demo_comparison()
     std::sort(uuids.begin(), uuids.end());
 
     std::cout << "\nUUIDs ordenados (primeros 5):\n";
-    for (size_t i = 0; i < 5; ++i) {
+    for (size_t i = 0; i < 5; ++i)
+    {
         std::cout << "  " << uuids[i].to_string() << "\n";
     }
 
@@ -244,15 +255,20 @@ void demo_practical_use()
 {
     std::cout << "\n=== Uso Práctico: Base de Datos de Usuarios ===\n\n";
 
-    struct User {
+    struct User
+    {
         UUID id;
         std::string name;
 
-        User(const std::string& n) : id(UUID::generate_v4()), name(n) {}
+        User(const std::string &n) : id(UUID::generate_v4()), name(n) {}
     };
 
     std::vector<User> users = {
-        User("Alice"), User("Bob"), User("Charlie"), User("Diana"), User("Eve"),
+        User("Alice"),
+        User("Bob"),
+        User("Charlie"),
+        User("Diana"),
+        User("Eve"),
     };
 
     std::cout << "Usuarios registrados:\n\n";
@@ -260,7 +276,8 @@ void demo_practical_use()
     std::cout << std::setw(40) << "UUID" << "Nombre\n";
     std::cout << std::string(50, '-') << "\n";
 
-    for (const auto& user : users) {
+    for (const auto &user : users)
+    {
         std::cout << std::setw(40) << user.id.to_string() << user.name << "\n";
     }
 
@@ -269,9 +286,11 @@ void demo_practical_use()
     UUID target = users[2].id;
 
     auto it = std::find_if(users.begin(), users.end(),
-                           [&target](const User& u) { return u.id == target; });
+                           [&target](const User &u)
+                           { return u.id == target; });
 
-    if (it != users.end()) {
+    if (it != users.end())
+    {
         std::cout << "✓ Usuario encontrado: " << it->name << "\n";
         std::cout << "  UUID: " << it->id.to_string() << "\n";
     }
@@ -306,4 +325,3 @@ int main()
 
     return 0;
 }
-
