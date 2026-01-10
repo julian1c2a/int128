@@ -3,9 +3,9 @@
  * Mediciones de rendimiento de conceptos C++20 para int128_t
  */
 
-#include "../include/int128/int128_algorithm.hpp"
-#include "../include/int128/int128_concepts.hpp"
-#include "../include/int128/int128_t.hpp"
+#include "int128_base_algorithm.hpp"
+#include "int128_base_concepts.hpp"
+#include "int128_base_tt.hpp"
 #include <algorithm>
 #include <cassert>
 #include <chrono>

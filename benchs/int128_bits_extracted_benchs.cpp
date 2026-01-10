@@ -3,7 +3,7 @@
  * @brief Benchmarks para funciones de int128_bits.hpp
  */
 
-#include "int128/int128_bits.hpp"
+#include "int128_base_bits.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iostream>
@@ -18,7 +18,7 @@
 #include <ia32intrin.h>
 #endif
 
-using namespace int128_bits;
+using namespace nstd;
 using namespace std::chrono;
 
 // Función para leer ciclos de CPU (rdtsc)

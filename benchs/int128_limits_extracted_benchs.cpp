@@ -3,8 +3,8 @@
  * Mide el rendimiento de acceso a std::numeric_limits<int128_t>
  */
 
-#include "../include/int128/int128_limits.hpp"
-#include "../include/int128/int128_t.hpp"
+#include "int128_base_limits.hpp"
+#include "int128_base_tt.hpp"
 #include <chrono>
 #include <ctime>
 #include <iomanip>

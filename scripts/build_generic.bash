@@ -5,30 +5,37 @@
 # Compila tests, benchmarks o demos con todos los compiladores (GCC, Clang, Intel, MSVC)
 # 
 # Uso:
-#   # Para tests y benchs (sintaxis simplificada - template unificado):
-#   build_generic.bash <feature> <target> [compiler] [mode] [print]
+#   # Para tests (template unificado - TYPE implícito):
+#   build_generic.bash <feature> tests [compiler] [mode] [print]
+#   
+#   # Para benchs (necesita TYPE porque archivos son distintos):
+#   build_generic.bash <type> <feature> benchs [compiler] [mode] [print]
 #   
 #   # Para demos:
 #   build_generic.bash demos <category> <demo_name> [compiler] [mode] [print]
 #
 # Argumentos:
-#   feature  : tt | bits | numeric | algorithm | etc. (o "demos" para demos)
+#   type     : uint128 | int128 (solo para benchs)
+#   feature  : tt | t | bits | numeric | algorithm | etc. (o "demos" para demos)
 #   target   : tests | benchs (o <category> si feature=demos)
 #   compiler : gcc | clang | intel | msvc | all (default: all)
 #   mode     : debug | release | all (default: all)
 #   print    : yes | no (default: no) - Imprime comandos de compilación
 #
-# Ejemplos Tests/Benchs:
+# Ejemplos Tests (sin TYPE - template unificado):
 #   build_generic.bash bits tests
-#   build_generic.bash numeric benchs gcc release
+#   build_generic.bash numeric tests gcc release
 #   build_generic.bash algorithm tests all all yes
+#
+# Ejemplos Benchs (con TYPE):
+#   build_generic.bash uint128 bits benchs
+#   build_generic.bash int128 numeric benchs gcc release
+#   build_generic.bash uint128 algorithm benchs all all yes
 #
 # Ejemplos Demos:
 #   build_generic.bash demos tutorials 01_basic_operations gcc release
 #   build_generic.bash demos examples ipv6_address clang debug
 #   build_generic.bash demos showcase main gcc release
-#
-# NOTA: El tipo "int128" se usa implícitamente (template unificado int128_base_t<S>)
 # ==============================================================================
 
 set -euo pipefail
@@ -37,46 +44,43 @@ set -euo pipefail
 
 if [[ $# -lt 2 ]]; then
     echo "Error: Se requieren al menos 2 argumentos"
-    echo "Uso: $0 <feature> <target> [compiler] [mode] [print]"
     echo ""
-    echo "Tests/Benchs:"
+    echo "Uso Tests (sin TYPE):"
+    echo "  $0 <feature> tests [compiler] [mode] [print]"
     echo "  $0 bits tests"
-    echo "  $0 numeric benchs gcc release"
-    echo "  $0 algorithm tests all all yes"
+    echo "  $0 numeric tests gcc release"
     echo ""
-    echo "Demos:"
-    echo "  $0 demos tutorials 01_basic_operations gcc release"
-    echo "  $0 demos examples ipv6_address clang debug"
+    echo "Uso Benchs (con TYPE):"
+    echo "  $0 <type> <feature> benchs [compiler] [mode] [print]"
+    echo "  $0 uint128 bits benchs"
+    echo "  $0 int128 numeric benchs gcc release"
+    echo ""
+    echo "Uso Demos:"
+    echo "  $0 demos <category> <demo_name> [compiler] [mode]"
     exit 1
 fi
 
-# Compatibilidad hacia atrás: detectar sintaxis vieja (uint128/int128 como primer arg)
-if [[ "$1" == "uint128" || "$1" == "int128" ]]; then
-    echo "-> NOTA: Sintaxis vieja detectada. TYPE '$1' ignorado (template unificado)."
-    shift  # Eliminar el primer argumento (TYPE)
-fi
+# ========================= Detect Syntax =========================
 
-FEATURE="$1"
-TARGET="$2"
-COMPILER="${3:-all}"
-MODE="${4:-all}"
-PRINT_COMMANDS="${5:-no}"
-
-# TYPE siempre es int128 con el template unificado
-TYPE="int128"
-
-# ========================= Validation =========================
-
-# Determine if this is a demo build
+# Determinar si es: tests, benchs (con TYPE), o demos
 IS_DEMO=false
-if [[ "$FEATURE" == "demos" ]]; then
+IS_BENCH=false
+IS_TEST=false
+
+if [[ "$1" == "demos" ]]; then
     IS_DEMO=true
-    CATEGORY="$TARGET"
-    DEMO_NAME="$COMPILER"
-    # Shift arguments for demos
-    COMPILER="${MODE:-all}"
-    MODE="${PRINT_COMMANDS:-all}"
+    FEATURE="demos"
+    CATEGORY="$2"
+    DEMO_NAME="${3:-}"
+    COMPILER="${4:-all}"
+    MODE="${5:-all}"
     PRINT_COMMANDS="${6:-no}"
+    
+    if [[ -z "$DEMO_NAME" ]]; then
+        echo "Error: Se requiere el nombre del demo"
+        echo "Uso: $0 demos <category> <demo_name> [compiler] [mode]"
+        exit 1
+    fi
     
     # Validate category
     VALID_CATEGORIES=("general" "tutorials" "examples" "showcase" "comparison" "performance" "integration")
@@ -84,16 +88,60 @@ if [[ "$FEATURE" == "demos" ]]; then
         echo "Error: CATEGORY debe ser uno de: ${VALID_CATEGORIES[*]}"
         exit 1
     fi
+
+elif [[ "$1" == "uint128" || "$1" == "int128" ]]; then
+    # Sintaxis benchs con TYPE explícito (legacy): <type> <feature> benchs [compiler] [mode]
+    IS_BENCH=true
+    TYPE="$1"
+    FEATURE="$2"
+    TARGET="${3:-benchs}"
+    COMPILER="${4:-all}"
+    MODE="${5:-all}"
+    PRINT_COMMANDS="${6:-no}"
+    
+    if [[ "$TARGET" != "benchs" ]]; then
+        echo "Error: Sintaxis con TYPE solo válida para benchs"
+        echo "Para tests use: $0 <feature> tests [compiler] [mode]"
+        exit 1
+    fi
+
+elif [[ "$2" == "tests" ]]; then
+    # Sintaxis tests: <feature> tests [compiler] [mode]
+    IS_TEST=true
+    FEATURE="$1"
+    TARGET="tests"
+    TYPE="int128"  # Template unificado
+    COMPILER="${3:-all}"
+    MODE="${4:-all}"
+    PRINT_COMMANDS="${5:-no}"
+
+elif [[ "$2" == "benchs" ]]; then
+    # Sintaxis benchs unificada: <feature> benchs [compiler] [mode]
+    IS_BENCH=true
+    FEATURE="$1"
+    TARGET="benchs"
+    TYPE="int128"  # Default para legacy fallback
+    COMPILER="${3:-all}"
+    MODE="${4:-all}"
+    PRINT_COMMANDS="${5:-no}"
+
 else
-    # Validate for tests/benchs
+    echo "Error: No se pudo determinar el tipo de build"
+    echo ""
+    echo "Sintaxis válidas:"
+    echo "  Tests:  $0 <feature> tests [compiler] [mode]"
+    echo "  Benchs: $0 <type> <feature> benchs [compiler] [mode]"
+    echo "  Demos:  $0 demos <category> <demo_name> [compiler] [mode]"
+    exit 1
+fi
+
+# ========================= Validation =========================
+
+# Validate feature (for tests and benchs)
+if [[ "$IS_TEST" == true || "$IS_BENCH" == true ]]; then
     VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
     if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
         echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
-        exit 1
-    fi
-    
-    if [[ "$TARGET" != "tests" && "$TARGET" != "benchs" ]]; then
-        echo "Error: TARGET debe ser 'tests' o 'benchs'"
         exit 1
     fi
 fi
@@ -134,18 +182,42 @@ echo_header() { echo -e "${BLUE}$1${NC}"; }
 if [[ "$IS_DEMO" == true ]]; then
     SOURCE_FILE="demos/${CATEGORY}/${DEMO_NAME}.cpp"
     BUILD_DIR="build/build_demos"
-    OUTPUT_SUFFIX="${DEMO_NAME}"  # Output name is the demo name
+    OUTPUT_SUFFIX="${DEMO_NAME}"
     echo_info "Building demo: ${CATEGORY}/${DEMO_NAME}..."
-elif [[ "$TARGET" == "tests" ]]; then
-    SOURCE_FILE="tests/${TYPE}_${FEATURE}_extracted_tests.cpp"
+    
+elif [[ "$IS_TEST" == true ]]; then
+    # Tests usan template unificado (int128_*)
+    # Primero intentar int128_<feature>_extracted_tests.cpp
+    # Si no existe, intentar int128_<feature>_tests.cpp (alias: tt → t)
+    if [[ "$FEATURE" == "tt" ]]; then
+        SOURCE_FILE="tests/int128_tt_extracted_tests.cpp"
+    else
+        SOURCE_FILE="tests/int128_${FEATURE}_extracted_tests.cpp"
+    fi
     BUILD_DIR="build/build_tests"
     OUTPUT_SUFFIX="tests"
-    echo_info "Building $TYPE $FEATURE $TARGET for all compilers..."
-else
-    SOURCE_FILE="benchs/${TYPE}_${FEATURE}_extracted_benchs.cpp"
+    echo_info "Building tests for feature '$FEATURE' (template unificado)..."
+    
+elif [[ "$IS_BENCH" == true ]]; then
+    # Benchmarks: primero intentar archivo unificado int128_<feature>_extracted_benchs.cpp
+    # Si no existe, caer al formato con TYPE: <type>_<feature>_extracted_benchs.cpp
     BUILD_DIR="build/build_benchs"
     OUTPUT_SUFFIX="benchs"
-    echo_info "Building $TYPE $FEATURE $TARGET for all compilers..."
+    
+    # Intentar formato unificado primero
+    SOURCE_FILE="benchs/int128_${FEATURE}_extracted_benchs.cpp"
+    
+    if [[ ! -f "$SOURCE_FILE" ]]; then
+        # Formato legacy con TYPE
+        if [[ "$FEATURE" == "tt" ]]; then
+            SOURCE_FILE="benchs/${TYPE}_t_extracted_benchs.cpp"
+        else
+            SOURCE_FILE="benchs/${TYPE}_${FEATURE}_extracted_benchs.cpp"
+        fi
+        echo_info "Building benchs for ${TYPE} ${FEATURE} (legacy format)..."
+    else
+        echo_info "Building benchs for ${FEATURE} (unified template)..."
+    fi
 fi
 
 # ========================= Check Source File =========================

@@ -3,7 +3,7 @@
  * @brief Benchmarks para funciones de uint128_algorithm.hpp
  */
 
-#include "uint128/uint128_algorithm.hpp"
+#include "int128_base_algorithm.hpp"
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
@@ -23,7 +23,7 @@ using namespace nstd;
 #include <ia32intrin.h>
 #endif
 
-using namespace uint128_algorithm;
+using namespace nstd;
 using namespace std::chrono;
 
 // Función para leer ciclos de CPU (rdtsc)

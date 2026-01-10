@@ -5,29 +5,28 @@
 # Ejecuta benchmarks o demos compilados con todos los compiladores y modos
 # 
 # Uso:
-#   # Para benchs (sintaxis simplificada - template unificado):
-#   run_generic.bash <feature> [compiler] [mode]
+#   # Para benchs (con TYPE porque archivos son distintos):
+#   run_generic.bash <type> <feature> [compiler] [mode]
 #   
 #   # Para demos:
 #   run_generic.bash demos <category> <demo_name> [compiler] [mode] [args...]
 #
 # Argumentos:
+#   type     : uint128 | int128 (para benchs)
 #   feature  : tt | bits | numeric | algorithm | etc. (o "demos" para demos)
 #   compiler : gcc | clang | intel | msvc | all (default: all)
 #   mode     : debug | release | all (default: all)
 #   args     : (solo demos) argumentos adicionales para pasar al demo
 #
 # Ejemplos Benchs:
-#   run_generic.bash bits
-#   run_generic.bash numeric gcc release
-#   run_generic.bash algorithm all all
+#   run_generic.bash uint128 bits
+#   run_generic.bash int128 numeric gcc release
+#   run_generic.bash uint128 algorithm all all
 #
 # Ejemplos Demos:
 #   run_generic.bash demos tutorials 01_basic_operations gcc release
 #   run_generic.bash demos examples ipv6_address clang debug
 #   run_generic.bash demos showcase main gcc release --verbose
-#
-# NOTA: El tipo "int128" se usa implícitamente (template unificado int128_base_t<S>)
 # ==============================================================================
 
 set -euo pipefail
@@ -36,33 +35,25 @@ set -euo pipefail
 
 if [[ $# -lt 1 ]]; then
     echo "Error: Se requiere al menos 1 argumento"
-    echo "Uso: $0 <feature> [compiler] [mode] [args...]"
     echo ""
-    echo "Benchs:"
-    echo "  $0 bits"
-    echo "  $0 numeric gcc release"
-    echo "  $0 algorithm all all"
+    echo "Uso Benchs (con TYPE):"
+    echo "  $0 <type> <feature> [compiler] [mode]"
+    echo "  $0 uint128 bits"
+    echo "  $0 int128 numeric gcc release"
     echo ""
-    echo "Demos:"
+    echo "Uso Demos:"
+    echo "  $0 demos <category> <demo_name> [compiler] [mode]"
     echo "  $0 demos tutorials 01_basic_operations gcc release"
-    echo "  $0 demos examples ipv6_address clang debug arg1 arg2"
     exit 1
 fi
 
-# Compatibilidad hacia atrás: detectar sintaxis vieja (uint128/int128 como primer arg)
-if [[ "$1" == "uint128" || "$1" == "int128" ]]; then
-    echo "-> NOTA: Sintaxis vieja detectada. TYPE '$1' ignorado (template unificado)."
-    shift  # Eliminar el primer argumento (TYPE)
-fi
+# ========================= Detect Syntax =========================
 
-FEATURE="$1"
-
-# TYPE siempre es int128 con el template unificado
-TYPE="int128"
-
-# Determine if this is a demo or benchmark
 IS_DEMO=false
-if [[ "$FEATURE" == "demos" ]]; then
+IS_BENCH=false
+DEMO_ARGS=()
+
+if [[ "$1" == "demos" ]]; then
     IS_DEMO=true
     CATEGORY="${2:-}"
     DEMO_NAME="${3:-}"
@@ -88,12 +79,32 @@ if [[ "$FEATURE" == "demos" ]]; then
         echo "Error: CATEGORY debe ser uno de: ${VALID_CATEGORIES[*]}"
         exit 1
     fi
+
+elif [[ "$1" == "uint128" || "$1" == "int128" ]]; then
+    # Sintaxis benchs: <type> <feature> [compiler] [mode]
+    IS_BENCH=true
+    TYPE="$1"
+    FEATURE="$2"
+    COMPILER="${3:-all}"
+    MODE="${4:-all}"
+    
+    # Validate feature
+    VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
+    if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
+        echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"
+        exit 1
+    fi
+
 else
+    # Sintaxis benchs sin TYPE explícito: <feature> [compiler] [mode]
+    IS_BENCH=true
+    FEATURE="$1"
+    TYPE="int128"  # Default
     COMPILER="${2:-all}"
     MODE="${3:-all}"
-    DEMO_ARGS=()
+    echo "-> NOTA: TYPE no especificado, usando '$TYPE' por defecto"
     
-    # Validate feature for benchmarks
+    # Validate feature
     VALID_FEATURES=("t" "tt" "traits" "limits" "concepts" "algorithm" "algorithms" "iostreams" "bits" "cmath" "numeric" "ranges" "format" "safe" "thread_safety" "comparison_boost" "interop")
     if [[ ! " ${VALID_FEATURES[*]} " =~ " ${FEATURE} " ]]; then
         echo "Error: FEATURE debe ser uno de: ${VALID_FEATURES[*]}"

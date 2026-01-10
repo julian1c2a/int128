@@ -17,10 +17,10 @@
  * - Operaciones específicas de signo (negación, signo)
  */
 
-#include "int128/int128_cmath.hpp"
-#include "int128/int128_t.hpp"
-#include "uint128/uint128_cmath.hpp"
-#include "uint128/uint128_t.hpp"
+#include "int128_base_cmath.hpp"
+#include "int128_base_tt.hpp"
+#include "int128_base_cmath.hpp"
+#include "int128_base_tt.hpp"
 
 #include <chrono>
 #include <functional>

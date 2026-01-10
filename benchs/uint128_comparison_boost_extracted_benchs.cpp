@@ -19,8 +19,8 @@
  * - Funciones matemáticas (gcd, lcm, pow, sqrt)
  */
 
-#include "uint128/uint128_cmath.hpp"
-#include "uint128/uint128_t.hpp"
+#include "int128_base_cmath.hpp"
+#include "int128_base_tt.hpp"
 #include <boost/multiprecision/cpp_int.hpp>
 
 // Opcional: Descomentar si tienes GMP/tommath instalados

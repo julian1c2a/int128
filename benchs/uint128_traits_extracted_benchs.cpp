@@ -3,9 +3,9 @@
  * Mide el rendimiento de operaciones que usan traits
  */
 
-#include "../include/uint128/uint128_limits.hpp"
-#include "../include/uint128/uint128_t.hpp"
-#include "../include/uint128/uint128_traits.hpp"
+#include "int128_base_limits.hpp"
+#include "int128_base_tt.hpp"
+#include "int128_base_traits.hpp"
 #include <chrono>
 #include <ctime>
 #include <iomanip>

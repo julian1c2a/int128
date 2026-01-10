@@ -9,7 +9,7 @@
  * - std::bit_width, has_single_bit, bit_ceil, bit_floor (bit utilities)
  */
 
-#include "../include/uint128/uint128_numeric.hpp"
+#include "int128_base_numeric.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iomanip>

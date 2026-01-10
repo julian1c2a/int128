@@ -13,7 +13,7 @@
  * Compares performance with built-in types and measures CPU cycles
  */
 
-#include "../include/uint128/uint128_cmath.hpp"
+#include "int128_base_cmath.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iomanip>

@@ -8,7 +8,7 @@
  * - std::bit_width, has_single_bit, bit_ceil, bit_floor
  */
 
-#include "../include/int128/int128_numeric.hpp"
+#include "int128_base_numeric.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iomanip>

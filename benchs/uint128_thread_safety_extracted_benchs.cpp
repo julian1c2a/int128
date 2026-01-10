@@ -14,7 +14,7 @@
  *       benchmarks/uint128_thread_safety_benchmarks.cpp -o uint128_thread_safety_bench -latomic
  */
 
-#include "../include/uint128/uint128_t.hpp"
+#include "int128_base_tt.hpp"
 #include <atomic>
 #include <chrono>
 #include <iomanip>

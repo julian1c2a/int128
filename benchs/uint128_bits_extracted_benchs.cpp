@@ -3,7 +3,7 @@
  * @brief Benchmarks para funciones de uint128_bits.hpp
  */
 
-#include "uint128/uint128_bits.hpp"
+#include "int128_base_bits.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iostream>
@@ -18,7 +18,7 @@
 #include <ia32intrin.h>
 #endif
 
-using namespace uint128_bits;
+using namespace nstd;
 using namespace std::chrono;
 
 // Función para leer ciclos de CPU (rdtsc)
@@ -302,16 +302,16 @@ void benchmark_parallel_extract()
     });
 }
 
-void benchmark_get_bit()
+void benchmark_test_bit()
 {
-    std::cout << "\n[Benchmark] get_bit\n";
+    std::cout << "\n[Benchmark] test_bit\n";
 
     const size_t ITERATIONS = 1000000;
     uint128_t value = random_uint128();
     int pos = std::uniform_int_distribution<int>(0, 127)(rng);
 
-    BENCHMARK("get_bit", ITERATIONS, {
-        volatile bool result = get_bit(value, pos);
+    BENCHMARK("test_bit", ITERATIONS, {
+        volatile bool result = test_bit(value, pos);
         (void)result;
     });
 }
@@ -402,7 +402,7 @@ int main()
     benchmark_insert_bits();
     benchmark_parallel_deposit();
     benchmark_parallel_extract();
-    benchmark_get_bit();
+    benchmark_test_bit();
     benchmark_set_bit();
     benchmark_flip_bit();
     benchmark_find_first_set();

@@ -2,7 +2,7 @@
 // Measures time (nanoseconds) and CPU cycles (rdtsc) for all mathematical functions
 // Tests with positive, negative, and mixed-sign values
 
-#include "int128/int128_cmath.hpp"
+#include "int128_base_cmath.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iomanip>
