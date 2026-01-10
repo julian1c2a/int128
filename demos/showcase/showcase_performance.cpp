@@ -15,7 +15,7 @@
 
 #include <algorithm>
 #include <chrono>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
@@ -70,7 +70,7 @@ void demo_arithmetic_performance()
     auto time_add64 = benchmark([&]() { sum64 += 12345; }, ITERATIONS);
 
     // uint128_t suma
-    uint128_t sum128 = 0;
+    uint128_t sum128{0};
     auto time_add128 = benchmark([&]() { sum128 += 12345_u128; }, ITERATIONS);
 
     std::cout << "  SUMA:\n";
@@ -84,7 +84,7 @@ void demo_arithmetic_performance()
     volatile uint64_t prod64 = 1;
     auto time_mul64 = benchmark([&]() { prod64 = (prod64 * 123) % 1000000; }, ITERATIONS);
 
-    uint128_t prod128 = 1;
+    uint128_t prod128{1};
     auto time_mul128 =
         benchmark([&]() { prod128 = (prod128 * 123_u128) % 1000000_u128; }, ITERATIONS);
 

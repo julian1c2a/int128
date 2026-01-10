@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iomanip>
 #include <iostream>
@@ -88,7 +88,7 @@ void demo_huge_numbers()
     print_section("Factoriales");
 
     // Factorial de 34 (el más grande que cabe en uint128_t)
-    uint128_t factorial = 1;
+    uint128_t factorial{1};
     for (int i = 2; i <= 34; ++i) {
         factorial *= i;
     }
@@ -339,7 +339,7 @@ void demo_performance()
     // Suma
     {
         auto start = std::chrono::high_resolution_clock::now();
-        uint128_t sum = 0;
+        uint128_t sum{0};
         for (int i = 0; i < iterations; ++i) {
             sum += i;
         }
@@ -354,7 +354,7 @@ void demo_performance()
     // Multiplicación
     {
         auto start = std::chrono::high_resolution_clock::now();
-        uint128_t product = 1;
+        uint128_t product{1};
         for (int i = 1; i < 100; ++i) {
             product = (product * i) % 1000000007;
         }

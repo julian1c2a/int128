@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
-#include <uint128/uint128_t.hpp>
+#include <int128_simple.hpp>
 
 using namespace nstd;
 
@@ -14,8 +14,8 @@ int main()
     std::cout << "==============================\n\n";
 
     // Test 1: Crear números básicos
-    uint128_t a = 1000;
-    uint128_t b = 2000;
+    uint128_t a{1000};
+    uint128_t b{2000};
 
     std::cout << "Suma: " << a << " + " << b << " = " << (a + b) << "\n";
 

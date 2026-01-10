@@ -19,7 +19,7 @@
 #include <string>
 #include <uint128/uint128_cmath.hpp>
 #include <uint128/uint128_iostreams.hpp>
-#include <uint128/uint128_t.hpp>
+#include <int128_simple.hpp>
 
 using namespace nstd;
 
@@ -30,7 +30,7 @@ uint128_t factorial(int n)
 {
     if (n <= 1)
         return 1;
-    uint128_t result = 1;
+    uint128_t result{1};
     for (int i = 2; i <= n; ++i) {
         result *= i;
     }
@@ -52,7 +52,7 @@ uint128_t fibonacci(int n)
 
 uint128_t power(uint128_t base, uint128_t exp)
 {
-    uint128_t result = 1;
+    uint128_t result{1};
     while (exp > 0) {
         if (exp % 2 == 1) {
             result *= base;

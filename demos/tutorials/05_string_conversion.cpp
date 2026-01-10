@@ -8,7 +8,7 @@
  * - Formateo personalizado
  */
 
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
@@ -28,7 +28,7 @@ int main()
     // ============================================================
     std::cout << "--- 1. uint128_t a string (decimal) ---\n";
 
-    uint128_t num = 123456789;
+    uint128_t num{123456789};
     std::ostringstream oss;
     oss << num;
     std::string str = oss.str();
@@ -73,7 +73,7 @@ int main()
     // ============================================================
     std::cout << "--- 4. Octal ---\n";
 
-    uint128_t oct_num = 0755;
+    uint128_t oct_num{0755};
 
     std::cout << std::oct << std::showbase;
     std::cout << "Octal: " << oct_num << "\n";
@@ -84,8 +84,8 @@ int main()
     // ============================================================
     std::cout << "--- 5. int128_t (con signo) ---\n";
 
-    int128_t positive = 12345;
-    int128_t negative = -67890;
+    int128_t positive{12345};
+    int128_t negative{-67890};
 
     std::cout << "Positivo: " << positive << "\n";
     std::cout << "Negativo: " << negative << "\n\n";
@@ -96,7 +96,7 @@ int main()
     std::cout << "--- 6. Números muy grandes ---\n";
 
     // Factorial de 30
-    uint128_t factorial = 1;
+    uint128_t factorial{1};
     for (int i = 2; i <= 30; ++i) {
         factorial *= i;
     }

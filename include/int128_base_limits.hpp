@@ -28,13 +28,29 @@
  * @file int128_base_limits.hpp
  * @brief Especialización de nstd::numeric_limits para int128_base_t<S>
  *
- * Proporciona información sobre las propiedades numéricas de los tipos
- * uint128_t e int128_t usando un template unificado.
+ * @section why_nstd ¿Por qué nstd::numeric_limits en lugar de std::numeric_limits?
  *
- * @note Fase 1.5: Template unificado para signed/unsigned
+ * El estándar C++ prohíbe especializar `std::numeric_limits` para tipos de
+ * usuario. MSVC y libc++ aplican esta restricción estrictamente.
+ *
+ * @code
+ * // ❌ INCORRECTO - no funciona portablemente:
+ * std::numeric_limits<uint128_t>::digits  // → 0
+ * std::numeric_limits<uint128_t>::max()   // → no definido
+ *
+ * // ✅ CORRECTO - usar nstd::numeric_limits:
+ * nstd::numeric_limits<uint128_t>::digits // → 128
+ * nstd::numeric_limits<uint128_t>::max()  // → UINT128_MAX
+ * nstd::numeric_limits<int128_t>::digits  // → 127
+ * nstd::numeric_limits<int128_t>::min()   // → INT128_MIN
+ * @endcode
+ *
+ * Para tipos builtin (int, double, uint64_t), nstd::numeric_limits hereda
+ * de std::numeric_limits, así que el comportamiento es idéntico.
+ *
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
  * @version 1.0.0
- * @date 2026-01-05
+ * @date 2026-01-10
  * @copyright Boost Software License 1.0
  */
 

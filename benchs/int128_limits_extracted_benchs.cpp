@@ -1,6 +1,9 @@
 /**
  * @file int128_limits_extracted_benchs.cpp
- * @brief Benchmarks unificados para std::numeric_limits de int128_base_t
+ * @brief Benchmarks unificados para nstd::numeric_limits de int128_base_t
+ *
+ * NOTA IMPORTANTE: Para tipos int128, usar nstd::numeric_limits, NO std::numeric_limits.
+ * std::numeric_limits no se puede especializar portablemente para tipos de usuario.
  *
  * Testea acceso a constantes de numeric_limits:
  * - min(), max(), lowest()
@@ -59,16 +62,16 @@ constexpr size_t ITERATIONS = 1000000;
 
 void benchmark_limits_min()
 {
-    std::cout << "\n=== numeric_limits::min() ===\n";
+    std::cout << "\n=== nstd::numeric_limits::min() (int128) / std::numeric_limits::min() (builtin) ===\n";
 
     BENCHMARK("min()", "uint128_t", ITERATIONS, {
-        auto result = std::numeric_limits<uint128_t>::min();
+        auto result = nstd::numeric_limits<uint128_t>::min();
         volatile auto sink = result.low();
         (void)sink;
     });
 
     BENCHMARK("min()", "int128_t", ITERATIONS, {
-        auto result = std::numeric_limits<int128_t>::min();
+        auto result = nstd::numeric_limits<int128_t>::min();
         volatile auto sink = result.low();
         (void)sink;
     });
@@ -86,16 +89,16 @@ void benchmark_limits_min()
 
 void benchmark_limits_max()
 {
-    std::cout << "\n=== numeric_limits::max() ===\n";
+    std::cout << "\n=== nstd::numeric_limits::max() (int128) / std::numeric_limits::max() (builtin) ===\n";
 
     BENCHMARK("max()", "uint128_t", ITERATIONS, {
-        auto result = std::numeric_limits<uint128_t>::max();
+        auto result = nstd::numeric_limits<uint128_t>::max();
         volatile auto sink = result.low();
         (void)sink;
     });
 
     BENCHMARK("max()", "int128_t", ITERATIONS, {
-        auto result = std::numeric_limits<int128_t>::max();
+        auto result = nstd::numeric_limits<int128_t>::max();
         volatile auto sink = result.low();
         (void)sink;
     });
@@ -113,16 +116,16 @@ void benchmark_limits_max()
 
 void benchmark_limits_lowest()
 {
-    std::cout << "\n=== numeric_limits::lowest() ===\n";
+    std::cout << "\n=== nstd::numeric_limits::lowest() (int128) / std::numeric_limits::lowest() (builtin) ===\n";
 
     BENCHMARK("lowest()", "uint128_t", ITERATIONS, {
-        auto result = std::numeric_limits<uint128_t>::lowest();
+        auto result = nstd::numeric_limits<uint128_t>::lowest();
         volatile auto sink = result.low();
         (void)sink;
     });
 
     BENCHMARK("lowest()", "int128_t", ITERATIONS, {
-        auto result = std::numeric_limits<int128_t>::lowest();
+        auto result = nstd::numeric_limits<int128_t>::lowest();
         volatile auto sink = result.low();
         (void)sink;
     });
@@ -140,15 +143,15 @@ void benchmark_limits_lowest()
 
 void benchmark_limits_digits()
 {
-    std::cout << "\n=== numeric_limits::digits (constexpr) ===\n";
+    std::cout << "\n=== nstd::numeric_limits::digits (int128) / std::numeric_limits::digits (builtin) ===\n";
 
     BENCHMARK("digits", "uint128_t", ITERATIONS, {
-        volatile auto result = std::numeric_limits<uint128_t>::digits;
+        volatile auto result = nstd::numeric_limits<uint128_t>::digits;
         (void)result;
     });
 
     BENCHMARK("digits", "int128_t", ITERATIONS, {
-        volatile auto result = std::numeric_limits<int128_t>::digits;
+        volatile auto result = nstd::numeric_limits<int128_t>::digits;
         (void)result;
     });
 
@@ -165,19 +168,19 @@ void benchmark_limits_digits()
 
 void verify_limits()
 {
-    std::cout << "\n=== Verification ===\n";
+    std::cout << "\n=== Verification (using nstd:: for int128 types) ===\n";
 
-    std::cout << "uint128_t:\n";
-    std::cout << "  digits    = " << std::numeric_limits<uint128_t>::digits << "\n";
-    std::cout << "  digits10  = " << std::numeric_limits<uint128_t>::digits10 << "\n";
-    std::cout << "  is_signed = " << std::boolalpha << std::numeric_limits<uint128_t>::is_signed << "\n";
+    std::cout << "uint128_t (nstd::):\n";
+    std::cout << "  digits    = " << nstd::numeric_limits<uint128_t>::digits << "\n";
+    std::cout << "  digits10  = " << nstd::numeric_limits<uint128_t>::digits10 << "\n";
+    std::cout << "  is_signed = " << std::boolalpha << nstd::numeric_limits<uint128_t>::is_signed << "\n";
 
-    std::cout << "int128_t:\n";
-    std::cout << "  digits    = " << std::numeric_limits<int128_t>::digits << "\n";
-    std::cout << "  digits10  = " << std::numeric_limits<int128_t>::digits10 << "\n";
-    std::cout << "  is_signed = " << std::boolalpha << std::numeric_limits<int128_t>::is_signed << "\n";
+    std::cout << "int128_t (nstd::):\n";
+    std::cout << "  digits    = " << nstd::numeric_limits<int128_t>::digits << "\n";
+    std::cout << "  digits10  = " << nstd::numeric_limits<int128_t>::digits10 << "\n";
+    std::cout << "  is_signed = " << std::boolalpha << nstd::numeric_limits<int128_t>::is_signed << "\n";
 
-    std::cout << "uint64_t:\n";
+    std::cout << "uint64_t (std::):\n";
     std::cout << "  digits    = " << std::numeric_limits<uint64_t>::digits << "\n";
     std::cout << "  digits10  = " << std::numeric_limits<uint64_t>::digits10 << "\n";
     std::cout << "  is_signed = " << std::boolalpha << std::numeric_limits<uint64_t>::is_signed << "\n";

@@ -13,7 +13,7 @@
  */
 
 #include <cstdint>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
 #include <limits>
@@ -33,7 +33,7 @@ int main()
     std::cout << "--- 1. Conversión desde tipos nativos ---\n";
 
     // Conversión implícita (automática)
-    uint128_t from_int = 42;
+    uint128_t from_int{42};
     uint128_t from_uint = 100u;
     uint128_t from_long = 500L;
     uint128_t from_uint64 = UINT64_MAX;
@@ -48,7 +48,7 @@ int main()
     // ============================================================
     std::cout << "--- 2. Conversión a tipos nativos ---\n";
 
-    uint128_t big = 12345;
+    uint128_t big{12345};
 
     // Conversión explícita con static_cast
     int to_int = static_cast<int>(big);
@@ -81,7 +81,7 @@ int main()
     // ============================================================
     std::cout << "--- 4. Verificación antes de convertir ---\n";
 
-    uint128_t value1 = 1000;
+    uint128_t value1{1000};
     uint128_t value2 = uint128_t(1) << 70;
 
     // Verificar si cabe en uint64_t
@@ -104,7 +104,7 @@ int main()
     // debido a limitaciones del tamaño del tipo. Para tales conversiones,
     // se recomienda usar conversión manual dividiendo en partes.
 
-    uint128_t unsigned_val = 1000;
+    uint128_t unsigned_val{1000};
     int128_t signed_val = static_cast<int128_t>(unsigned_val);
 
     std::cout << "uint128_t: " << unsigned_val << "\n";
@@ -137,7 +137,7 @@ int main()
     std::cout << "NOTA: uint128_t no soporta conversión directa a double/float\n";
     std::cout << "Se requiere conversión manual para tipos de punto flotante\n\n";
 
-    // uint128_t integer = 123456789;
+    // uint128_t integer{123456789};
     // double to_double = static_cast<double>(integer);  // NO SOPORTADO
     // float to_float = static_cast<float>(integer);     // NO SOPORTADO
 
@@ -160,8 +160,8 @@ int main()
     // ============================================================
     std::cout << "--- 9. Conversión a bool ---\n";
 
-    uint128_t zero = 0;
-    uint128_t non_zero = 42;
+    uint128_t zero{0};
+    uint128_t non_zero{42};
 
     bool is_zero = static_cast<bool>(zero);
     bool is_non_zero = static_cast<bool>(non_zero);
@@ -174,7 +174,7 @@ int main()
     // ============================================================
     std::cout << "--- 10. Promoción automática ---\n";
 
-    uint128_t a = 1000;
+    uint128_t a{1000};
     int b = 500;
 
     // int se promociona automáticamente a uint128_t
@@ -230,7 +230,7 @@ int main()
         return static_cast<int>(val);
     };
 
-    uint128_t safe_value = 100;
+    uint128_t safe_value{100};
     uint128_t unsafe_value = uint128_t(1) << 100;
 
     auto result1 = safe_to_int(safe_value);

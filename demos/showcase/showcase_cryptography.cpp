@@ -14,7 +14,7 @@
  *       usa bibliotecas especializadas como OpenSSL.
  */
 
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <random>
@@ -73,7 +73,7 @@ bool is_probably_prime(const uint128_t& n, int iterations = 5)
         uint128_t a = 2 + (rand_val % std::min(static_cast<uint64_t>(n.low() - 3), UINT64_MAX));
 
         // x = a^d mod n usando función auxiliar
-        uint128_t x = 1;
+        uint128_t x{1};
         uint128_t temp_d = d;
         uint128_t temp_a = a % n;
         while (temp_d > 0) {
@@ -109,7 +109,7 @@ bool is_probably_prime(const uint128_t& n, int iterations = 5)
  */
 uint128_t mod_pow(uint128_t base, uint128_t exp, const uint128_t& mod)
 {
-    uint128_t result = 1;
+    uint128_t result{1};
     base = base % mod;
 
     while (exp > 0) {
@@ -147,7 +147,7 @@ void demo_prime_numbers()
     std::cout << "\n" << YELLOW << ">>> Buscando primos en un rango" << RESET << "\n\n";
 
     uint128_t start = 1000000000_u128; // 10^9 (mil millones)
-    uint128_t found = 0;
+    uint128_t found{0};
     int count = 0;
 
     std::cout << "  Buscando 5 primos cerca de " << start << "...\n";
@@ -253,7 +253,7 @@ void demo_hash_functions()
     std::cout << YELLOW << ">>> Hash simple basado en aritmética modular" << RESET << "\n\n";
 
     auto simple_hash = [](const std::string& str) -> uint128_t {
-        uint128_t hash = 0;
+        uint128_t hash{0};
         uint128_t prime = 31_u128;
         uint128_t mod = (uint128_t(1) << 64) - 59; // Primo grande
 

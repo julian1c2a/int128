@@ -64,6 +64,50 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [16:00] 2026-01-11 - to_string() OPTIMIZADO: 5.5x Speedup
+
+- ✅ **Problema identificado:** to_string(decimal) era 12.5x más lento que Boost
+  - Causa: algoritmo bit-a-bit con O(39×64) = O(2496) iteraciones
+- ✅ **Solución implementada:** División por chunks de 10^18
+  - Nueva función `divrem_by_chunk(uint64_t divisor)`
+  - Usa `__uint128_t` nativo en GCC/Clang
+  - Fallback bit-a-bit para MSVC
+- ✅ **Resultados:**
+
+  | Métrica | Antes | Después | Mejora |
+  |---------|-------|---------|--------|
+  | uint128_t to_string(dec) | 3848 ns | 688 ns | **5.6x** |
+  | int128_t to_string(dec) | 3735 ns | 687 ns | **5.4x** |
+  | vs Boost | 12.5x más lento | 2.5x más lento | ✅ |
+
+- ✅ **Tests:** 137/137 PASS (correctitud verificada)
+- 📄 **Documentación:** [TOSTRING_PERFORMANCE_ANALYSIS.md](TOSTRING_PERFORMANCE_ANALYSIS.md)
+
+#### [14:30] 2026-01-11 - FEATURES Limpiadas + Benchmarks Verificados (14/14)
+
+- ✅ **FEATURES actualizadas en 8 archivos:**
+  - Removidos: `t` (alias redundante), `algorithms` (typo), `interop` (sin benchmark unificado)
+  - Añadido: `all` - ejecuta todos los features en secuencia
+  - **Lista final (15 features):** `all tt traits limits concepts algorithm iostreams bits cmath numeric ranges format safe thread_safety comparison_boost`
+- ✅ **Benchmarks verificados (14/14 compilan con GCC release):**
+  - `tt` ✅, `traits` ✅, `limits` ✅, `concepts` ✅, `algorithm` ✅
+  - `iostreams` ✅, `bits` ✅, `cmath` ✅, `numeric` ✅, `ranges` ✅
+  - `format` ✅, `safe` ✅ (fix: safe_cast template args), `thread_safety` ✅
+  - `comparison_boost` ⚠️ (requiere GMP instalado)
+- ✅ **Fix aplicado:** `int128_safe_extracted_benchs.cpp`
+  - `safe_cast<int64_t>(value)` → `safe_cast<signedness::signed_type, int64_t>(value)`
+- ✅ **Archivos actualizados:**
+  - `scripts/build_tests_generic.bash`
+  - `scripts/build_benchs_generic.bash`
+  - `scripts/check_generic.bash`
+  - `scripts/run_generic.bash`
+  - `scripts/check_direct.bash`
+  - `scripts/run_direct.bash`
+  - `scripts/wsl_build_and_test.bash`
+  - `Makefile`
+
+---
+
 #### [12:00] 2026-01-11 - Limpieza TYPE + Scripts Directos + Makefile Actualizado
 
 - ✅ **Scripts simplificados (eliminado TYPE de todos):**

@@ -11,32 +11,31 @@
  * - Diferencias entre signed y unsigned
  */
 
-#include <int128.hpp>
-#include <int128/int128_iostreams.hpp>
+#include <int128_simple.hpp> // Header simplificado para demos
 #include <iomanip>
 #include <iostream>
-#include <uint128/uint128_iostreams.hpp>
 
 using namespace nstd;
 
 int main()
 {
     std::cout << "========================================\n";
-    std::cout << "Tutorial 01: Operaciones Básicas\n";
+    std::cout << "Tutorial 01: Operaciones Basicas\n";
     std::cout << "========================================\n\n";
 
     // ============================================================
-    // 1. CREACIÓN DE NÚMEROS
+    // 1. CREACION DE NUMEROS
     // ============================================================
-    std::cout << "--- 1. Creación de números ---\n";
+    std::cout << "--- 1. Creacion de numeros ---\n";
 
     // Unsigned (sin signo, solo positivos)
-    uint128_t a = 1000;
-    uint128_t b = 2000;
+    // NOTA: Los constructores son EXPLICITOS - usar {} o ()
+    uint128_t a{1000};
+    uint128_t b{2000};
 
     // Signed (con signo, puede ser negativo)
-    int128_t x = 500;
-    int128_t y = -300; // ¡Puede ser negativo!
+    int128_t x{500};
+    int128_t y{-300}; // Puede ser negativo!
 
     std::cout << "uint128_t a = " << a << "\n";
     std::cout << "uint128_t b = " << b << "\n";
@@ -66,40 +65,40 @@ int main()
     std::cout << x << " - " << y << " = " << diff_signed << "\n\n";
 
     // ============================================================
-    // 4. MULTIPLICACIÓN
+    // 4. MULTIPLICACION
     // ============================================================
-    std::cout << "--- 4. Multiplicación ---\n";
+    std::cout << "--- 4. Multiplicacion ---\n";
 
-    uint128_t factor1 = 1000000;
-    uint128_t factor2 = 2000000;
+    uint128_t factor1{1000000};
+    uint128_t factor2{2000000};
     auto product = factor1 * factor2;
 
-    std::cout << factor1 << " × " << factor2 << " = " << product << "\n";
+    std::cout << factor1 << " x " << factor2 << " = " << product << "\n";
 
     // Con signed
-    int128_t neg = -100;
-    int128_t pos = 50;
+    int128_t neg{-100};
+    int128_t pos{50};
     auto product_signed = neg * pos;
 
-    std::cout << neg << " × " << pos << " = " << product_signed << "\n\n";
+    std::cout << neg << " x " << pos << " = " << product_signed << "\n\n";
 
     // ============================================================
-    // 5. DIVISIÓN
+    // 5. DIVISION
     // ============================================================
-    std::cout << "--- 5. División ---\n";
+    std::cout << "--- 5. Division ---\n";
 
-    uint128_t dividend = 10000;
-    uint128_t divisor = 25;
+    uint128_t dividend{10000};
+    uint128_t divisor{25};
     auto quotient = dividend / divisor;
 
-    std::cout << dividend << " ÷ " << divisor << " = " << quotient << "\n";
+    std::cout << dividend << " / " << divisor << " = " << quotient << "\n";
 
-    // División con truncamiento (no redondeo)
-    uint128_t div1 = 100;
-    uint128_t div2 = 3;
+    // Division con truncamiento (no redondeo)
+    uint128_t div1{100};
+    uint128_t div2{3};
     auto result = div1 / div2; // 33, no 33.333...
 
-    std::cout << div1 << " ÷ " << div2 << " = " << result << " (truncado)\n\n";
+    std::cout << div1 << " / " << div2 << " = " << result << " (truncado)\n\n";
 
     // ============================================================
     // 6. MÓDULO (RESTO)
@@ -120,7 +119,7 @@ int main()
     // ============================================================
     std::cout << "--- 7. Operaciones compuestas ---\n";
 
-    uint128_t n = 100;
+    uint128_t n{100};
 
     n += 50; // n = n + 50
     std::cout << "Después de += 50: " << n << "\n";
@@ -139,7 +138,7 @@ int main()
     // ============================================================
     std::cout << "--- 8. Incremento y decremento ---\n";
 
-    uint128_t counter = 10;
+    uint128_t counter{10};
 
     std::cout << "Valor inicial: " << counter << "\n";
     std::cout << "Pre-incremento (++counter): " << ++counter << "\n";
@@ -156,25 +155,26 @@ int main()
     std::cout << "--- 9. Operaciones con números GRANDES ---\n";
 
     // Factorial de 20: 2,432,902,008,176,640,000
-    uint128_t factorial_20 = 1;
-    for (int i = 2; i <= 20; ++i) {
+    uint128_t factorial_20{1};
+    for (int i = 2; i <= 20; ++i)
+    {
         factorial_20 *= i;
     }
 
     std::cout << "20! = " << factorial_20 << "\n";
 
     // Potencias de 2
-    uint128_t power = 1;
+    uint128_t power{1};
     power = power << 64; // 2^64
     std::cout << "2^64 = " << power << "\n\n";
 
     // ============================================================
     // 10. PITFALL: UNSIGNED UNDERFLOW
     // ============================================================
-    std::cout << "--- 10. ⚠️  PITFALL: Unsigned underflow ---\n";
+    std::cout << "--- 10. [PITFALL] Unsigned underflow ---\n";
 
-    uint128_t small = 5;
-    uint128_t large = 10;
+    uint128_t small{5};
+    uint128_t large{10};
 
     // Correcto: large - small
     std::cout << "Correcto: " << large << " - " << small << " = " << (large - small) << "\n";
@@ -254,4 +254,3 @@ Usa int128_t si necesitas números negativos.
 
 Próximo tutorial: 02_bitwise_operations.cpp
 */
-

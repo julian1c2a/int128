@@ -29,17 +29,53 @@
 
 /**
  * @file int128_base_traits_specializations.hpp
- * @brief Forward declarations for nstd::uint128_t type traits specializations
+ * @brief Type traits para uint128_t e int128_t en el namespace nstd::
  *
- * ⚠️ CRITICAL: This header MUST be included BEFORE <type_traits> is included
- * for the first time. Otherwise, the specializations will not be recognized.
+ * @section why_nstd ¿Por qué nstd:: en lugar de std::?
  *
- * This header only contains forward declarations and specializations for
- * std::type_traits. It does NOT include nstd::uint128_t.hpp to avoid circular
- * dependencies and ensure traits are available when type_traits is first included.
+ * El estándar C++ **prohíbe** especializar templates en el namespace `std::`
+ * para tipos definidos por el usuario, excepto en casos muy limitados.
+ * MSVC y libc++ aplican esta restricción estrictamente.
+ *
+ * Por ello, esta biblioteca define sus traits en el namespace `nstd::` (new std).
+ * El namespace `nstd::` replica la API de `std::` exactamente:
+ *
+ * @code
+ * // ❌ INCORRECTO - no funciona en MSVC/libc++:
+ * std::is_integral_v<uint128_t>           // → false
+ * std::numeric_limits<uint128_t>::digits  // → 0
+ *
+ * // ✅ CORRECTO - usar nstd:: para tipos int128:
+ * nstd::is_integral_v<uint128_t>          // → true
+ * nstd::numeric_limits<uint128_t>::digits // → 128
+ * @endcode
+ *
+ * @section usage Uso recomendado
+ *
+ * @code
+ * #include "int128_base_traits_specializations.hpp"
+ *
+ * // Traits para int128 (usar nstd::)
+ * static_assert(nstd::is_integral_v<uint128_t>);
+ * static_assert(nstd::is_unsigned_v<uint128_t>);
+ * static_assert(nstd::is_signed_v<int128_t>);
+ *
+ * // Traits para tipos builtin (nstd:: delega a std::)
+ * static_assert(nstd::is_integral_v<int>);     // funciona igual que std::
+ * static_assert(nstd::is_integral_v<uint64_t>); // funciona igual que std::
+ * @endcode
+ *
+ * @section compatibility Compatibilidad con std::
+ *
+ * Para tipos builtin (int, double, uint64_t, etc.), `nstd::` simplemente
+ * hereda de `std::`, así que el comportamiento es idéntico. Solo para
+ * uint128_t e int128_t se usan especializaciones propias.
+ *
+ * @warning Este header debe incluirse ANTES de usar traits con int128_t/uint128_t.
+ *
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
  * @version 1.0.0
- * @date 2026-01-05
+ * @date 2026-01-10
  * @copyright Boost Software License 1.0
  */
 
@@ -63,255 +99,371 @@
 
 namespace nstd
 {
-// NOTE: En Phase 1.5, uint128_t e int128_t son type aliases del template int128_base_t<signedness>,
-// NO son clases separadas. Las forward declarations ya no son necesarias aquí.
-// Las definiciones reales están en int128_base.hpp (líneas 479-480).
-//
-// class uint128_t;  // ← Ya no válido (ahora es type alias)
-// class int128_t;   // ← Ya no válido (ahora es type alias)
+    // NOTE: En Phase 1.5, uint128_t e int128_t son type aliases del template int128_base_t<signedness>,
+    // NO son clases separadas. Las forward declarations ya no son necesarias aquí.
+    // Las definiciones reales están en int128_base.hpp (líneas 479-480).
+    //
+    // class uint128_t;  // ← Ya no válido (ahora es type alias)
+    // class int128_t;   // ← Ya no válido (ahora es type alias)
 
-// ===============================================================================
-// TYPE TRAITS FUNDAMENTALES (1 PARÁMETRO)
-// ===============================================================================
+    // ===============================================================================
+    // TYPE TRAITS FUNDAMENTALES (1 PARÁMETRO)
+    // ===============================================================================
 
 #if !UINT128_USING_LIBCPP
 
-// Templates base que heredan de std::
-template <typename T> struct is_integral : std::is_integral<T> {
-};
-
-template <typename T> struct is_arithmetic : std::is_arithmetic<T> {
-};
-
-template <typename T> struct is_unsigned : std::is_unsigned<T> {
-};
-
-template <typename T> struct is_signed : std::is_signed<T> {
-};
-
-template <typename T> struct is_trivially_copyable : std::is_trivially_copyable<T> {
-};
-
-template <typename T> struct is_trivially_constructible : std::is_trivially_constructible<T> {
-};
-
-template <typename T>
-struct is_trivially_default_constructible : std::is_trivially_default_constructible<T> {
-};
-
-template <typename T>
-struct is_trivially_copy_constructible : std::is_trivially_copy_constructible<T> {
-};
-
-template <typename T>
-struct is_trivially_move_constructible : std::is_trivially_move_constructible<T> {
-};
-
-template <typename T> struct is_trivially_copy_assignable : std::is_trivially_copy_assignable<T> {
-};
-
-template <typename T> struct is_trivially_move_assignable : std::is_trivially_move_assignable<T> {
-};
-
-template <typename T> struct is_trivially_destructible : std::is_trivially_destructible<T> {
-};
-
-template <typename T> struct is_standard_layout : std::is_standard_layout<T> {
-};
-
-// Especializaciones para uint128_t
-template <> struct is_integral<uint128_t> : std::true_type {
-};
-template <> struct is_arithmetic<uint128_t> : std::true_type {
-};
-template <> struct is_unsigned<uint128_t> : std::true_type {
-};
-template <> struct is_signed<uint128_t> : std::false_type {
-};
-template <> struct is_trivially_copyable<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_constructible<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_default_constructible<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_copy_constructible<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_move_constructible<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_copy_assignable<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_move_assignable<uint128_t> : std::true_type {
-};
-template <> struct is_trivially_destructible<uint128_t> : std::true_type {
-};
-template <> struct is_standard_layout<uint128_t> : std::true_type {
-};
-
-// Especializaciones para int128_t
-template <> struct is_integral<int128_t> : std::true_type {
-};
-template <> struct is_arithmetic<int128_t> : std::true_type {
-};
-template <> struct is_unsigned<int128_t> : std::false_type {
-};
-template <> struct is_signed<int128_t> : std::true_type {
-};
-template <> struct is_trivially_copyable<int128_t> : std::true_type {
-};
-template <> struct is_trivially_constructible<int128_t> : std::true_type {
-};
-template <> struct is_trivially_default_constructible<int128_t> : std::true_type {
-};
-template <> struct is_trivially_copy_constructible<int128_t> : std::true_type {
-};
-template <> struct is_trivially_move_constructible<int128_t> : std::true_type {
-};
-template <> struct is_trivially_copy_assignable<int128_t> : std::true_type {
-};
-template <> struct is_trivially_move_assignable<int128_t> : std::true_type {
-};
-template <> struct is_trivially_destructible<int128_t> : std::true_type {
-};
-template <> struct is_standard_layout<int128_t> : std::true_type {
-};
-
-// ===============================================================================
-// TYPE TRAITS DE DOS PARÁMETROS
-// ===============================================================================
-
-// Template base que hereda de std::
-template <typename T, typename U>
-struct is_trivially_assignable : std::is_trivially_assignable<T, U> {
-};
-
-// Especializaciones para uint128_t (4 combinaciones importantes)
-template <> struct is_trivially_assignable<uint128_t&, uint128_t> : std::true_type {
-};
-
-template <> struct is_trivially_assignable<uint128_t&, const uint128_t&> : std::true_type {
-};
-
-template <> struct is_trivially_assignable<uint128_t&, uint128_t&&> : std::true_type {
-};
-
-template <> struct is_trivially_assignable<uint128_t&, uint128_t&> : std::true_type {
-};
-// Especializaciones para int128_t (4 combinaciones importantes)
-template <> struct is_trivially_assignable<int128_t&, int128_t> : std::true_type {
-};
-
-template <> struct is_trivially_assignable<int128_t&, const int128_t&> : std::true_type {
-};
-
-template <> struct is_trivially_assignable<int128_t&, int128_t&&> : std::true_type {
-};
-
-template <> struct is_trivially_assignable<int128_t&, int128_t&> : std::true_type {
-};
-
-// ===============================================================================
-// CONVERSIONES SIGNED/UNSIGNED
-// ===============================================================================
-
-// Templates base para make_signed/make_unsigned
-// NOTA: No heredamos de std:: porque no existe para int128_base_t
-template <typename T> struct make_signed {
-    using type = std::make_signed_t<T>;
-};
-
-template <typename T> struct make_unsigned {
-    using type = std::make_unsigned_t<T>;
-};
-
-// Especializaciones para nuestros tipos
-template <> struct make_signed<uint128_t> {
-    using type = int128_t;
-};
-
-template <> struct make_signed<int128_t> {
-    using type = int128_t;
-};
-
-template <> struct make_unsigned<int128_t> {
-    using type = uint128_t;
-};
-
-template <> struct make_unsigned<uint128_t> {
-    using type = uint128_t;
-};
-
-// ===============================================================================
-// HASH
-// ===============================================================================
-
-// Template base para hash
-template <typename T> struct hash;
-
-// Especializaciones para int128_base_t<S>
-template <> struct hash<uint128_t> {
-    size_t operator()(const uint128_t& value) const noexcept
+    // Templates base que heredan de std::
+    template <typename T>
+    struct is_integral : std::is_integral<T>
     {
-        std::hash<uint64_t> hasher;
-        return hasher(value.high()) ^ (hasher(value.low()) << 1);
-    }
-};
+    };
 
-template <> struct hash<int128_t> {
-    size_t operator()(const int128_t& value) const noexcept
+    template <typename T>
+    struct is_arithmetic : std::is_arithmetic<T>
     {
-        std::hash<uint64_t> hasher;
-        return hasher(value.high()) ^ (hasher(value.low()) << 1);
-    }
-};
+    };
 
-// ===============================================================================
-// HELPER VARIABLES (C++17)
-// ===============================================================================
+    template <typename T>
+    struct is_unsigned : std::is_unsigned<T>
+    {
+    };
 
-// Variables helper de un parámetro
-template <typename T> inline constexpr bool is_integral_v = is_integral<T>::value;
+    template <typename T>
+    struct is_signed : std::is_signed<T>
+    {
+    };
 
-template <typename T> inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+    template <typename T>
+    struct is_trivially_copyable : std::is_trivially_copyable<T>
+    {
+    };
 
-template <typename T> inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+    template <typename T>
+    struct is_trivially_constructible : std::is_trivially_constructible<T>
+    {
+    };
 
-template <typename T> inline constexpr bool is_signed_v = is_signed<T>::value;
+    template <typename T>
+    struct is_trivially_default_constructible : std::is_trivially_default_constructible<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_copyable_v = is_trivially_copyable<T>::value;
+    template <typename T>
+    struct is_trivially_copy_constructible : std::is_trivially_copy_constructible<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_constructible_v = is_trivially_constructible<T>::value;
+    template <typename T>
+    struct is_trivially_move_constructible : std::is_trivially_move_constructible<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_default_constructible_v =
-    is_trivially_default_constructible<T>::value;
+    template <typename T>
+    struct is_trivially_copy_assignable : std::is_trivially_copy_assignable<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_copy_constructible_v = is_trivially_copy_constructible<T>::value;
+    template <typename T>
+    struct is_trivially_move_assignable : std::is_trivially_move_assignable<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_move_constructible_v = is_trivially_move_constructible<T>::value;
+    template <typename T>
+    struct is_trivially_destructible : std::is_trivially_destructible<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_copy_assignable_v = is_trivially_copy_assignable<T>::value;
+    template <typename T>
+    struct is_standard_layout : std::is_standard_layout<T>
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_move_assignable_v = is_trivially_move_assignable<T>::value;
+    // Especializaciones para uint128_t
+    template <>
+    struct is_integral<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_arithmetic<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_unsigned<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_signed<uint128_t> : std::false_type
+    {
+    };
+    template <>
+    struct is_trivially_copyable<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_constructible<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_default_constructible<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_copy_constructible<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_move_constructible<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_copy_assignable<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_move_assignable<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_destructible<uint128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_standard_layout<uint128_t> : std::true_type
+    {
+    };
 
-template <typename T>
-inline constexpr bool is_trivially_destructible_v = is_trivially_destructible<T>::value;
+    // Especializaciones para int128_t
+    template <>
+    struct is_integral<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_arithmetic<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_unsigned<int128_t> : std::false_type
+    {
+    };
+    template <>
+    struct is_signed<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_copyable<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_constructible<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_default_constructible<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_copy_constructible<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_move_constructible<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_copy_assignable<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_move_assignable<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_trivially_destructible<int128_t> : std::true_type
+    {
+    };
+    template <>
+    struct is_standard_layout<int128_t> : std::true_type
+    {
+    };
 
-template <typename T> inline constexpr bool is_standard_layout_v = is_standard_layout<T>::value;
+    // ===============================================================================
+    // TYPE TRAITS DE DOS PARÁMETROS
+    // ===============================================================================
 
-// Variable helper de dos parámetros
-template <typename T, typename U>
-inline constexpr bool is_trivially_assignable_v = is_trivially_assignable<T, U>::value;
+    // Template base que hereda de std::
+    template <typename T, typename U>
+    struct is_trivially_assignable : std::is_trivially_assignable<T, U>
+    {
+    };
 
-// Type aliases
-template <typename T> using make_signed_t = typename make_signed<T>::type;
+    // Especializaciones para uint128_t (4 combinaciones importantes)
+    template <>
+    struct is_trivially_assignable<uint128_t &, uint128_t> : std::true_type
+    {
+    };
 
-template <typename T> using make_unsigned_t = typename make_unsigned<T>::type;
+    template <>
+    struct is_trivially_assignable<uint128_t &, const uint128_t &> : std::true_type
+    {
+    };
+
+    template <>
+    struct is_trivially_assignable<uint128_t &, uint128_t &&> : std::true_type
+    {
+    };
+
+    template <>
+    struct is_trivially_assignable<uint128_t &, uint128_t &> : std::true_type
+    {
+    };
+    // Especializaciones para int128_t (4 combinaciones importantes)
+    template <>
+    struct is_trivially_assignable<int128_t &, int128_t> : std::true_type
+    {
+    };
+
+    template <>
+    struct is_trivially_assignable<int128_t &, const int128_t &> : std::true_type
+    {
+    };
+
+    template <>
+    struct is_trivially_assignable<int128_t &, int128_t &&> : std::true_type
+    {
+    };
+
+    template <>
+    struct is_trivially_assignable<int128_t &, int128_t &> : std::true_type
+    {
+    };
+
+    // ===============================================================================
+    // CONVERSIONES SIGNED/UNSIGNED
+    // ===============================================================================
+
+    // Templates base para make_signed/make_unsigned
+    // NOTA: No heredamos de std:: porque no existe para int128_base_t
+    template <typename T>
+    struct make_signed
+    {
+        using type = std::make_signed_t<T>;
+    };
+
+    template <typename T>
+    struct make_unsigned
+    {
+        using type = std::make_unsigned_t<T>;
+    };
+
+    // Especializaciones para nuestros tipos
+    template <>
+    struct make_signed<uint128_t>
+    {
+        using type = int128_t;
+    };
+
+    template <>
+    struct make_signed<int128_t>
+    {
+        using type = int128_t;
+    };
+
+    template <>
+    struct make_unsigned<int128_t>
+    {
+        using type = uint128_t;
+    };
+
+    template <>
+    struct make_unsigned<uint128_t>
+    {
+        using type = uint128_t;
+    };
+
+    // ===============================================================================
+    // HASH
+    // ===============================================================================
+
+    // Template base para hash
+    template <typename T>
+    struct hash;
+
+    // Especializaciones para int128_base_t<S>
+    template <>
+    struct hash<uint128_t>
+    {
+        size_t operator()(const uint128_t &value) const noexcept
+        {
+            std::hash<uint64_t> hasher;
+            return hasher(value.high()) ^ (hasher(value.low()) << 1);
+        }
+    };
+
+    template <>
+    struct hash<int128_t>
+    {
+        size_t operator()(const int128_t &value) const noexcept
+        {
+            std::hash<uint64_t> hasher;
+            return hasher(value.high()) ^ (hasher(value.low()) << 1);
+        }
+    };
+
+    // ===============================================================================
+    // HELPER VARIABLES (C++17)
+    // ===============================================================================
+
+    // Variables helper de un parámetro
+    template <typename T>
+    inline constexpr bool is_integral_v = is_integral<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_signed_v = is_signed<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_copyable_v = is_trivially_copyable<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_constructible_v = is_trivially_constructible<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_default_constructible_v =
+        is_trivially_default_constructible<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_copy_constructible_v = is_trivially_copy_constructible<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_move_constructible_v = is_trivially_move_constructible<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_copy_assignable_v = is_trivially_copy_assignable<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_move_assignable_v = is_trivially_move_assignable<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_trivially_destructible_v = is_trivially_destructible<T>::value;
+
+    template <typename T>
+    inline constexpr bool is_standard_layout_v = is_standard_layout<T>::value;
+
+    // Variable helper de dos parámetros
+    template <typename T, typename U>
+    inline constexpr bool is_trivially_assignable_v = is_trivially_assignable<T, U>::value;
+
+    // Type aliases
+    template <typename T>
+    using make_signed_t = typename make_signed<T>::type;
+
+    template <typename T>
+    using make_unsigned_t = typename make_unsigned<T>::type;
 
 #endif // !UINT128_USING_LIBCPP
 

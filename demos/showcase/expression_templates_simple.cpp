@@ -28,7 +28,7 @@
  */
 
 #include <chrono>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
@@ -303,7 +303,7 @@ void benchmark_simple()
     uint128_t b = 9876543210987654ULL;
     uint128_t c = 1111111111111111ULL;
     uint128_t d = 2222222222222222ULL;
-    uint128_t result = 0;
+    uint128_t result{0};
 
     auto time1 = benchmark("Sin ET", [&]() { result = a + b + c + d; });
 
@@ -332,7 +332,7 @@ void benchmark_complex()
     cout << "Iteraciones: 1,000,000\n" << endl;
 
     uint128_t a = 100, b = 200, c = 500, d = 300, e = 10, f = 5;
-    uint128_t result = 0;
+    uint128_t result{0};
 
     auto time1 = benchmark("Sin ET", [&]() { result = (a + b) * (c - d) / (e + f); });
 
@@ -356,7 +356,7 @@ void benchmark_large()
     for (int i = 0; i < 10; ++i) {
         vals[i] = 1000 + i * 100;
     }
-    uint128_t result = 0;
+    uint128_t result{0};
 
     auto time1 = benchmark("Sin ET (9 temporales)", [&]() {
         result = vals[0] + vals[1] + vals[2] + vals[3] + vals[4] + vals[5] + vals[6] + vals[7] +

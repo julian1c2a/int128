@@ -7,7 +7,7 @@
  * - Funciones numéricas
  */
 
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
@@ -61,7 +61,7 @@ int main()
     auto base = 2_u128;
     auto exponent = 10;
 
-    uint128_t power = 1;
+    uint128_t power{1};
     for (int i = 0; i < exponent; ++i) {
         power *= base;
     }

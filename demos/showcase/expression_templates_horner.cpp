@@ -40,7 +40,7 @@
 #include <chrono>
 #include <cmath>
 #include <functional>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
@@ -271,7 +271,7 @@ void demo_basic_horner()
     cout << "\nPolinomio: P(x) = 3x² + 2x + 5" << endl;
     cout << "Horner:    P(x) = (3x + 2)x + 5\n" << endl;
 
-    uint128_t x = 10;
+    uint128_t x{10};
     vector<uint128_t> coeffs = {5, 2, 3}; // {a₀, a₁, a₂} = {5, 2, 3}
 
     cout << "Evaluando en x = " << x << ":\n" << endl;
@@ -300,7 +300,7 @@ void demo_high_degree_polynomial()
 
     // P(x) = x⁵ + 2x⁴ + 3x³ + 4x² + 5x + 6
     vector<uint128_t> coeffs = {6, 5, 4, 3, 2, 1}; // {a₀, a₁, ..., a₅}
-    uint128_t x = 2;
+    uint128_t x{2};
 
     cout << "\nPolinomio: P(x) = x⁵ + 2x⁴ + 3x³ + 4x² + 5x + 6" << endl;
     cout << "Grado: 5" << endl;
@@ -431,7 +431,7 @@ template <typename Func> double benchmark(const string& name, Func&& f, int iter
 {
     auto start = high_resolution_clock::now();
 
-    uint128_t sink = 0;
+    uint128_t sink{0};
     for (int i = 0; i < iterations; ++i) {
         auto result = f();
         sink = sink + result;
@@ -458,7 +458,7 @@ void benchmark_polynomials()
 
     // Polinomio de grado 3
     vector<uint128_t> coeffs3 = {7, 5, 3, 2}; // 2x³ + 3x² + 5x + 7
-    uint128_t x = 10;
+    uint128_t x{10};
     Terminal x_et(x);
 
     cout << "Polinomio grado 3: 2x³ + 3x² + 5x + 7" << endl;

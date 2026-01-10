@@ -12,7 +12,7 @@
  */
 
 #include <algorithm>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
@@ -31,9 +31,9 @@ int main()
     // ============================================================
     std::cout << "--- 1. Igualdad y desigualdad ---\n";
 
-    uint128_t a = 1000;
-    uint128_t b = 1000;
-    uint128_t c = 2000;
+    uint128_t a{1000};
+    uint128_t b{1000};
+    uint128_t c{2000};
 
     std::cout << "a = " << a << ", b = " << b << ", c = " << c << "\n\n";
 
@@ -64,7 +64,7 @@ int main()
     // ============================================================
     std::cout << "--- 4. Comparación con tipos nativos ---\n";
 
-    uint128_t big = 1000000;
+    uint128_t big{1000000};
     int native_int = 500000;
 
     std::cout << "uint128_t big = " << big << "\n";
@@ -79,9 +79,9 @@ int main()
     // ============================================================
     std::cout << "--- 5. Signed vs Unsigned ---\n";
 
-    int128_t signed_neg = -100;
-    int128_t signed_pos = 100;
-    uint128_t unsigned_val = 50;
+    int128_t signed_neg{-100};
+    int128_t signed_pos{100};
+    uint128_t unsigned_val{50};
 
     std::cout << "int128_t signed_neg = " << signed_neg << "\n";
     std::cout << "int128_t signed_pos = " << signed_pos << "\n";
@@ -136,7 +136,7 @@ int main()
     // ============================================================
     std::cout << "--- 8. Búsqueda binaria ---\n";
 
-    uint128_t target = 250;
+    uint128_t target{250};
 
     bool found = std::binary_search(numbers.begin(), numbers.end(), target);
 
@@ -153,9 +153,9 @@ int main()
     // ============================================================
     std::cout << "--- 9. Verificación de rangos ---\n";
 
-    uint128_t value = 75;
-    uint128_t min_range = 50;
-    uint128_t max_range = 100;
+    uint128_t value{75};
+    uint128_t min_range{50};
+    uint128_t max_range{100};
 
     bool in_range = (value >= min_range) && (value <= max_range);
 
@@ -187,8 +187,8 @@ int main()
     // Se puede simular usando los operadores de comparación tradicionales
     std::cout << "--- 11. Three-way comparison (simulado) ---\n";
 
-    uint128_t p = 100;
-    uint128_t q = 200;
+    uint128_t p{100};
+    uint128_t q{200};
 
     // Simulamos el comportamiento de operator<=>
     int cmp;
@@ -214,8 +214,8 @@ int main()
     // ============================================================
     std::cout << "--- 12. ⚠️  PITFALL: Comparaciones unsigned ---\n";
 
-    uint128_t unsigned_a = 5;
-    uint128_t unsigned_b = 10;
+    uint128_t unsigned_a{5};
+    uint128_t unsigned_b{10};
 
     // Esto puede ser confuso con unsigned!
     auto diff = unsigned_a - unsigned_b; // Wrap around!

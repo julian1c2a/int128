@@ -20,7 +20,7 @@
 #include <sstream>
 #include <string>
 #include <uint128/uint128_iostreams.hpp>
-#include <uint128/uint128_t.hpp>
+#include <int128_simple.hpp>
 #include <vector>
 
 using namespace nstd;
@@ -40,7 +40,7 @@ class IPv6Address
         // Simplificación: parseo básico de formato completo
         // Ejemplo: "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
 
-        uint128_t result = 0;
+        uint128_t result{0};
         std::string temp = str;
 
         // Expandir :: si existe

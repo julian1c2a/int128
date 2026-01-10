@@ -31,7 +31,7 @@
  */
 
 #include <chrono>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -339,10 +339,10 @@ void demo_basic_usage()
     cout << "Sin Expression Templates, 'e = a + b + c + d' crea 3 temporales." << endl;
     cout << "Con Expression Templates, se evalúa en una sola pasada.\n" << endl;
 
-    uint128_t a = 1000;
-    uint128_t b = 2000;
-    uint128_t c = 3000;
-    uint128_t d = 4000;
+    uint128_t a{1000};
+    uint128_t b{2000};
+    uint128_t c{3000};
+    uint128_t d{4000};
 
     cout << "a = " << a << endl;
     cout << "b = " << b << endl;
@@ -445,7 +445,7 @@ void benchmark_simple_addition()
     uint128_t c = 11111111111111111111ULL;
     uint128_t d = 22222222222222222222ULL;
 
-    uint128_t result = 0;
+    uint128_t result{0};
 
     // Sin Expression Templates
     auto time_no_et = benchmark("Sin ET (temporales)", [&]() { result = a + b + c + d; });
@@ -478,7 +478,7 @@ void benchmark_complex_expression()
 
     uint128_t a = 1000, b = 2000, c = 5000, d = 3000;
     uint128_t e = 100000, f = 10, g = 500;
-    uint128_t result = 0;
+    uint128_t result{0};
 
     // Sin Expression Templates
     auto time_no_et = benchmark("Sin ET", [&]() { result = (a + b) * (c - d) + (e / f) - g; });
@@ -506,7 +506,7 @@ void benchmark_large_expressions()
         vals[i] = 1000 + i * 100;
     }
 
-    uint128_t result = 0;
+    uint128_t result{0};
 
     // Sin Expression Templates (9 temporales)
     auto time_no_et = benchmark("Sin ET (9 temporales)", [&]() {

@@ -1652,7 +1652,7 @@ namespace nstd
          * std::string s3 = big.to_string();         // "340282366920938463463374607431768211455"
          * @endcode
          *
-         * @see to_string(int base), parse(), abs(), divrem_by_10()
+         * @see to_string(int base), parse(), abs(), divrem_by_chunk()
          */
         std::string to_string() const
         {
@@ -1661,9 +1661,6 @@ namespace nstd
             {
                 return "0";
             }
-
-            std::string result;
-            result.reserve(40); // Reservar espacio (~39 dígitos para 2^128)
 
             // Manejar signo para tipos signed
             bool negative = false;
@@ -1677,23 +1674,128 @@ namespace nstd
                 }
             }
 
-            // Extraer dígitos usando divrem_by_10()
+            // ============================================================
+            // OPTIMIZACIÓN: División por chunks de 10^18
+            // ============================================================
+            // En lugar de extraer dígito a dígito (39 divisiones × 64 iteraciones),
+            // dividimos por 10^18 para obtener chunks que caben en uint64_t.
+            // Máximo 3 chunks para un uint128_t (ya que 10^18 × 10^18 × 10^3 > 2^128).
+            // Esto reduce las operaciones de ~2500 a ~100-200.
+            // ============================================================
+
+            static constexpr uint64_t CHUNK_DIVISOR = 1'000'000'000'000'000'000ULL; // 10^18
+            static constexpr int CHUNK_DIGITS = 18;
+
+            // Fast path: valor cabe en 64 bits
+            if (temp.data[MSULL] == 0)
+            {
+                std::string result = std::to_string(temp.data[LSULL]);
+                if (negative)
+                {
+                    result.insert(result.begin(), '-');
+                }
+                return result;
+            }
+
+            // Extraer hasta 3 chunks de 18 dígitos cada uno
+            // chunk[0] = dígitos menos significativos, chunk[2] = más significativos
+            uint64_t chunks[3] = {0, 0, 0};
+            int num_chunks = 0;
+
             while (temp.data[LSULL] != 0 || temp.data[MSULL] != 0)
             {
-                auto [quotient, remainder] = temp.divrem_by_10();
-                result += static_cast<char>('0' + remainder); // Construir en reversa
+                auto [quotient, remainder] = temp.divrem_by_chunk(CHUNK_DIVISOR);
+                chunks[num_chunks++] = remainder;
                 temp = quotient;
             }
 
-            // Añadir signo si es negativo
+            // Construir string desde el chunk más significativo
+            std::string result;
+            result.reserve(40);
+
             if (negative)
             {
-                result += '-';
+                result = "-";
             }
 
-            // Invertir el string (lo construimos al revés)
-            std::reverse(result.begin(), result.end());
+            // Primer chunk sin padding (puede tener menos de 18 dígitos)
+            result += std::to_string(chunks[num_chunks - 1]);
+
+            // Chunks restantes con padding de ceros a la izquierda
+            for (int i = num_chunks - 2; i >= 0; --i)
+            {
+                std::string chunk_str = std::to_string(chunks[i]);
+                // Padding: añadir ceros a la izquierda si chunk < 10^18
+                result.append(CHUNK_DIGITS - chunk_str.length(), '0');
+                result += chunk_str;
+            }
+
             return result;
+        }
+
+        /**
+         * @brief División y módulo por un divisor de 64 bits (helper para to_string)
+         * @param divisor El divisor de 64 bits (debe ser != 0)
+         * @return std::pair<cociente, resto> donde resto < divisor
+         *
+         * @details Optimización clave para to_string(): divide 128 bits por un
+         * valor de 64 bits (como 10^18) usando el algoritmo más eficiente disponible.
+         *
+         * @note Usado internamente por to_string() para chunked conversion.
+         */
+        constexpr std::pair<int128_base_t, uint64_t> divrem_by_chunk(uint64_t divisor) const noexcept
+        {
+            const uint64_t low_val = data[LSULL];
+            const uint64_t high_val = data[MSULL];
+
+            // Fast path: valor cabe en 64 bits
+            if (high_val == 0)
+            {
+                const uint64_t quotient = low_val / divisor;
+                const uint64_t remainder = low_val % divisor;
+                return {int128_base_t(0ull, quotient), remainder};
+            }
+
+            // División 128÷64 usando el método de dos divisiones
+            // high:low ÷ divisor = (high ÷ divisor):((high % divisor):low ÷ divisor)
+            const uint64_t q_high = high_val / divisor;
+            const uint64_t r_high = high_val % divisor;
+
+            // Combinar r_high con low_val para segunda división
+            // Nota: r_high < divisor < 10^18, y low_val es 64 bits
+            // r_high * 2^64 + low_val puede causar overflow en 128 bits
+            // Usamos __uint128_t si está disponible, o división manual
+
+#if defined(__SIZEOF_INT128__)
+            // GCC/Clang: usar __uint128_t nativo
+            const unsigned __int128 combined =
+                (static_cast<unsigned __int128>(r_high) << 64) | low_val;
+            const uint64_t q_low = static_cast<uint64_t>(combined / divisor);
+            const uint64_t remainder = static_cast<uint64_t>(combined % divisor);
+#else
+            // MSVC o sin soporte nativo: división manual
+            // Algoritmo de división larga: (r_high:low_val) ÷ divisor
+            uint64_t q_low = 0;
+            uint64_t rem = r_high;
+
+            // Procesar la parte alta del combined (ya está en rem)
+            // Procesar cada bit de low_val desde el MSB
+            for (int i = 63; i >= 0; --i)
+            {
+                // Shift rem left y añadir siguiente bit
+                const bool will_overflow = (rem >> 63) != 0;
+                rem = (rem << 1) | ((low_val >> i) & 1);
+
+                if (will_overflow || rem >= divisor)
+                {
+                    rem -= divisor;
+                    q_low |= (1ULL << i);
+                }
+            }
+            const uint64_t remainder = rem;
+#endif
+
+            return {int128_base_t(q_high, q_low), remainder};
         }
 
         /**

@@ -10,7 +10,7 @@
  */
 
 #include <fstream>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iomanip>
@@ -30,8 +30,8 @@ int main()
     // ============================================================
     std::cout << "--- 1. Salida básica con cout ---\n";
 
-    uint128_t a = 1000;
-    int128_t b = -500;
+    uint128_t a{1000};
+    int128_t b{-500};
 
     std::cout << "uint128_t: " << a << "\n";
     std::cout << "int128_t:  " << b << "\n\n";
@@ -41,7 +41,7 @@ int main()
     // ============================================================
     std::cout << "--- 2. Manipuladores numéricos ---\n";
 
-    uint128_t value = 255;
+    uint128_t value{255};
 
     std::cout << "Decimal:     " << std::dec << value << "\n";
     std::cout << "Hexadecimal: " << std::hex << value << "\n";

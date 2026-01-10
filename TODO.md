@@ -795,43 +795,49 @@ static_assert(std::regular<int128_t>);                  // ✅ true
 | `comparison_boost` | ⚠️ Pendiente | **Añadir tests int128_t signed** |
 | `interop` | ⚠️ Pendiente | **Añadir tests int128_t signed** |
 
-### 🐛 Bugs Conocidos - Especializaciones std
+### ✅ Bugs Resueltos - Especializaciones std vs nstd (11 enero 2026)
 
-**Descubiertos durante benchmarks (11 enero 2026):**
+**Análisis:** Los "bugs" reportados NO eran bugs del código de la biblioteca.
+El problema era que los benchmarks usaban `std::` cuando debían usar `nstd::`.
 
-#### Bug 1: `std::numeric_limits<uint128_t>::digits` retorna 0
+**Por qué usar `nstd::`:** El estándar C++ no permite especializar `std::` para
+tipos definidos por el usuario de forma portable (MSVC lo prohíbe estrictamente).
+Por tanto, la biblioteca define sus traits en el namespace `nstd::`.
 
-- **Esperado:** 128 (para uint128_t) o 127 (para int128_t)
-- **Actual:** 0
-- **Impacto:** Código que depende de `digits` para determinar tamaño de tipo
-- **Archivo afectado:** `include/int128_base_limits.hpp`
-- **Estado:** 📋 Por investigar
+#### ✅ Bug 1: `std::numeric_limits<uint128_t>::digits` retorna 0
 
-#### Bug 2: `std::is_integral_v<uint128_t>` retorna false
+- **Causa real:** El benchmark usaba `std::numeric_limits` en lugar de `nstd::numeric_limits`
+- **Solución:** Usar `nstd::numeric_limits<uint128_t>::digits` → retorna **128** ✅
+- **Archivo corregido:** `benchs/int128_limits_extracted_benchs.cpp`
 
-- **Esperado:** true
-- **Actual:** false
-- **Impacto:** Conceptos C++20 como `std::integral` fallan
-- **Archivo afectado:** `include/int128_base_traits_specializations.hpp`
-- **Nota:** Las variantes `nstd::` funcionan correctamente
-- **Estado:** 📋 Por investigar (posible orden de includes)
+#### ✅ Bug 2: `std::is_integral_v<uint128_t>` retorna false
 
-#### Bug 3: `std::is_arithmetic_v<uint128_t>` retorna false
+- **Causa real:** El benchmark usaba `std::is_integral_v` en lugar de `nstd::is_integral_v`
+- **Solución:** Usar `nstd::is_integral_v<uint128_t>` → retorna **true** ✅
+- **Archivo corregido:** `benchs/int128_traits_extracted_benchs.cpp`
 
-- **Esperado:** true
-- **Actual:** false
-- **Relacionado:** Bug 2 (is_integral es prerequisito de is_arithmetic)
-- **Estado:** 📋 Por investigar
+#### ✅ Bug 3: `std::is_arithmetic_v<uint128_t>` retorna false
 
-#### Bug 4: to_string / from_string comportamiento anómalo
+- **Causa real:** Mismo problema que Bug 2
+- **Solución:** Usar `nstd::is_arithmetic_v<uint128_t>` → retorna **true** ✅
+- **Archivo corregido:** `benchs/int128_traits_extracted_benchs.cpp`
 
-- **Síntoma:** Comportamiento inesperado en conversiones string
-- **Contexto:** Detectado en benchmarks de format/iostreams
-- **Estado:** 📋 Por documentar y reproducir
+#### ✅ Bug 4: to_string / from_string comportamiento anómalo
 
-**Nota:** Las especializaciones en namespace `nstd::` funcionan correctamente.
-El problema parece ser que las especializaciones `std::` no se cargan antes
-de que el código cliente las use.
+- **Estado:** **NO ERA UN BUG** - los tests de to_string() pasan 137/137 ✅
+- **Verificación:** `tests/int128_tt_extracted_tests.cpp` ejecutado con éxito
+
+**Resumen de la solución:**
+
+```cpp
+// ❌ INCORRECTO (no funciona portablemente):
+std::is_integral_v<uint128_t>        // → false
+std::numeric_limits<uint128_t>::digits // → 0
+
+// ✅ CORRECTO (usar nstd::):
+nstd::is_integral_v<uint128_t>        // → true
+nstd::numeric_limits<uint128_t>::digits // → 128
+```
 
 ## 📋 Roadmap Futuro
 

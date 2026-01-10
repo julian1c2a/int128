@@ -8,7 +8,7 @@
  * - Best practices
  */
 
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
@@ -42,7 +42,7 @@ int main()
     std::cout << "--- 2. Comparación con sintaxis tradicional ---\n";
 
     // Sintaxis tradicional (verbose)
-    uint128_t traditional = uint128_t(1000);
+    uint128_t traditional{uint128_t(1000)};
 
     // Con literal (conciso)
     auto with_literal = 1000_u128;

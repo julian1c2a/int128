@@ -15,7 +15,7 @@
  */
 
 #include <cmath>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <uint128/uint128_cmath.hpp>
@@ -51,7 +51,7 @@ uint128_t factorial(int n)
 {
     if (n <= 1)
         return 1;
-    uint128_t result = 1;
+    uint128_t result{1};
     for (int i = 2; i <= n; ++i) {
         result *= i;
     }
@@ -70,7 +70,7 @@ uint128_t binomial(int n, int k)
     if (k > n - k)
         k = n - k; // Optimización
 
-    uint128_t result = 1;
+    uint128_t result{1};
     for (int i = 0; i < k; ++i) {
         result *= (n - i);
         result /= (i + 1);
@@ -269,8 +269,8 @@ void demo_approximations()
     std::cout << "  e = 1 + 1/1! + 1/2! + 1/3! + ...\n\n";
 
     // Calcular suma parcial (numerador/denominador común)
-    uint128_t numerator = 1;
-    uint128_t denominator = 1;
+    uint128_t numerator{1};
+    uint128_t denominator{1};
 
     for (int n = 1; n <= 20; ++n) {
         uint128_t fact = factorial(n);

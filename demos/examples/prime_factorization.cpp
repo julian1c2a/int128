@@ -16,7 +16,7 @@
 #include <map>
 #include <uint128/uint128_cmath.hpp>
 #include <uint128/uint128_iostreams.hpp>
-#include <uint128/uint128_t.hpp>
+#include <int128_simple.hpp>
 #include <vector>
 
 using namespace nstd;
@@ -61,7 +61,7 @@ std::map<uint128_t, int> factorize_trial_division(uint128_t n)
     }
 
     // Factorizar por impares
-    uint128_t divisor = 3;
+    uint128_t divisor{3};
     while (divisor * divisor <= n && divisor < 10000000) {
         while (n % divisor == 0) {
             factors[divisor]++;
@@ -97,7 +97,7 @@ void print_factors(const std::map<uint128_t, int>& factors)
 // Verificar factorización
 uint128_t verify_factorization(const std::map<uint128_t, int>& factors)
 {
-    uint128_t product = 1;
+    uint128_t product{1};
     for (const auto& [factor, count] : factors) {
         for (int i = 0; i < count; ++i) {
             product *= factor;

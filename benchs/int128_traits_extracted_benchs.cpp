@@ -3,14 +3,19 @@
  * @brief Benchmarks unificados para type_traits de int128_base_t
  *
  * Testea que los type_traits funcionen correctamente:
- * - is_integral, is_arithmetic, is_unsigned, is_signed
- * - Comparación con tipos builtin
+ * - nstd::is_integral, nstd::is_arithmetic, nstd::is_unsigned, nstd::is_signed
+ * - Comparación con tipos builtin (usando std:: para builtin)
+ *
+ * NOTA: Los traits de int128_t/uint128_t están en namespace nstd::, NO en std::
+ * Esto es intencional porque el estándar C++ no permite especializar std::
+ * para tipos definidos por el usuario en todas las implementaciones (ej: MSVC).
  *
  * Nota: Los traits son constexpr, por lo que el compilador optimiza
  * la mayoría a constantes. Este benchmark verifica compatibilidad.
  */
 
 #include "int128_base_traits.hpp"
+#include "int128_base_traits_specializations.hpp"
 #include <chrono>
 #include <cstdint>
 #include <iomanip>
@@ -61,18 +66,20 @@ constexpr size_t ITERATIONS = 1000000;
 
 void benchmark_is_integral()
 {
-    std::cout << "\n=== std::is_integral_v ===\n";
+    std::cout << "\n=== nstd::is_integral_v (int128) / std::is_integral_v (builtin) ===\n";
 
+    // int128 types use nstd::
     BENCHMARK("is_integral_v", "uint128_t", ITERATIONS, {
-        volatile bool result = std::is_integral_v<uint128_t>;
+        volatile bool result = nstd::is_integral_v<uint128_t>;
         (void)result;
     });
 
     BENCHMARK("is_integral_v", "int128_t", ITERATIONS, {
-        volatile bool result = std::is_integral_v<int128_t>;
+        volatile bool result = nstd::is_integral_v<int128_t>;
         (void)result;
     });
 
+    // builtin types use std::
     BENCHMARK("is_integral_v", "uint64_t", ITERATIONS, {
         volatile bool result = std::is_integral_v<uint64_t>;
         (void)result;
@@ -86,18 +93,20 @@ void benchmark_is_integral()
 
 void benchmark_is_unsigned()
 {
-    std::cout << "\n=== std::is_unsigned_v ===\n";
+    std::cout << "\n=== nstd::is_unsigned_v (int128) / std::is_unsigned_v (builtin) ===\n";
 
+    // int128 types use nstd::
     BENCHMARK("is_unsigned_v", "uint128_t", ITERATIONS, {
-        volatile bool result = std::is_unsigned_v<uint128_t>;
+        volatile bool result = nstd::is_unsigned_v<uint128_t>;
         (void)result;
     });
 
     BENCHMARK("is_unsigned_v", "int128_t", ITERATIONS, {
-        volatile bool result = std::is_unsigned_v<int128_t>;
+        volatile bool result = nstd::is_unsigned_v<int128_t>;
         (void)result;
     });
 
+    // builtin types use std::
     BENCHMARK("is_unsigned_v", "uint64_t", ITERATIONS, {
         volatile bool result = std::is_unsigned_v<uint64_t>;
         (void)result;
@@ -111,18 +120,20 @@ void benchmark_is_unsigned()
 
 void benchmark_is_signed()
 {
-    std::cout << "\n=== std::is_signed_v ===\n";
+    std::cout << "\n=== nstd::is_signed_v (int128) / std::is_signed_v (builtin) ===\n";
 
+    // int128 types use nstd::
     BENCHMARK("is_signed_v", "uint128_t", ITERATIONS, {
-        volatile bool result = std::is_signed_v<uint128_t>;
+        volatile bool result = nstd::is_signed_v<uint128_t>;
         (void)result;
     });
 
     BENCHMARK("is_signed_v", "int128_t", ITERATIONS, {
-        volatile bool result = std::is_signed_v<int128_t>;
+        volatile bool result = nstd::is_signed_v<int128_t>;
         (void)result;
     });
 
+    // builtin types use std::
     BENCHMARK("is_signed_v", "uint64_t", ITERATIONS, {
         volatile bool result = std::is_signed_v<uint64_t>;
         (void)result;
@@ -136,18 +147,20 @@ void benchmark_is_signed()
 
 void benchmark_is_arithmetic()
 {
-    std::cout << "\n=== std::is_arithmetic_v ===\n";
+    std::cout << "\n=== nstd::is_arithmetic_v (int128) / std::is_arithmetic_v (builtin) ===\n";
 
+    // int128 types use nstd::
     BENCHMARK("is_arithmetic_v", "uint128_t", ITERATIONS, {
-        volatile bool result = std::is_arithmetic_v<uint128_t>;
+        volatile bool result = nstd::is_arithmetic_v<uint128_t>;
         (void)result;
     });
 
     BENCHMARK("is_arithmetic_v", "int128_t", ITERATIONS, {
-        volatile bool result = std::is_arithmetic_v<int128_t>;
+        volatile bool result = nstd::is_arithmetic_v<int128_t>;
         (void)result;
     });
 
+    // builtin types use std::
     BENCHMARK("is_arithmetic_v", "uint64_t", ITERATIONS, {
         volatile bool result = std::is_arithmetic_v<uint64_t>;
         (void)result;
@@ -161,25 +174,36 @@ void benchmark_is_arithmetic()
 
 void verify_traits()
 {
-    std::cout << "\n=== Verification ===\n";
+    std::cout << "\n=== Verification (using nstd:: for int128 types) ===\n";
 
-    std::cout << "uint128_t:\n";
-    std::cout << "  is_integral   = " << std::boolalpha << std::is_integral_v<uint128_t> << "\n";
-    std::cout << "  is_arithmetic = " << std::is_arithmetic_v<uint128_t> << "\n";
-    std::cout << "  is_unsigned   = " << std::is_unsigned_v<uint128_t> << "\n";
-    std::cout << "  is_signed     = " << std::is_signed_v<uint128_t> << "\n";
+    std::cout << "uint128_t (nstd::):\n";
+    std::cout << "  is_integral   = " << std::boolalpha << nstd::is_integral_v<uint128_t> << "\n";
+    std::cout << "  is_arithmetic = " << nstd::is_arithmetic_v<uint128_t> << "\n";
+    std::cout << "  is_unsigned   = " << nstd::is_unsigned_v<uint128_t> << "\n";
+    std::cout << "  is_signed     = " << nstd::is_signed_v<uint128_t> << "\n";
 
-    std::cout << "int128_t:\n";
-    std::cout << "  is_integral   = " << std::is_integral_v<int128_t> << "\n";
-    std::cout << "  is_arithmetic = " << std::is_arithmetic_v<int128_t> << "\n";
-    std::cout << "  is_unsigned   = " << std::is_unsigned_v<int128_t> << "\n";
-    std::cout << "  is_signed     = " << std::is_signed_v<int128_t> << "\n";
+    std::cout << "int128_t (nstd::):\n";
+    std::cout << "  is_integral   = " << nstd::is_integral_v<int128_t> << "\n";
+    std::cout << "  is_arithmetic = " << nstd::is_arithmetic_v<int128_t> << "\n";
+    std::cout << "  is_unsigned   = " << nstd::is_unsigned_v<int128_t> << "\n";
+    std::cout << "  is_signed     = " << nstd::is_signed_v<int128_t> << "\n";
 
-    // Verificación usando nstd:: traits (funcionan correctamente)
+    // make_unsigned / make_signed
     std::cout << "\nnstd::make_unsigned_t<int128_t> == uint128_t: "
               << std::is_same_v<nstd::make_unsigned_t<int128_t>, uint128_t> << "\n";
     std::cout << "nstd::make_signed_t<uint128_t> == int128_t: "
               << std::is_same_v<nstd::make_signed_t<uint128_t>, int128_t> << "\n";
+
+    // Builtin types (std:: works for these)
+    std::cout << "\nuint64_t (std::):\n";
+    std::cout << "  is_integral   = " << std::is_integral_v<uint64_t> << "\n";
+    std::cout << "  is_arithmetic = " << std::is_arithmetic_v<uint64_t> << "\n";
+    std::cout << "  is_unsigned   = " << std::is_unsigned_v<uint64_t> << "\n";
+
+    std::cout << "int64_t (std::):\n";
+    std::cout << "  is_integral   = " << std::is_integral_v<int64_t> << "\n";
+    std::cout << "  is_arithmetic = " << std::is_arithmetic_v<int64_t> << "\n";
+    std::cout << "  is_signed     = " << std::is_signed_v<int64_t> << "\n";
 }
 
 int main()

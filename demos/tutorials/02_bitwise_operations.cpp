@@ -11,7 +11,7 @@
  * - Aplicaciones prácticas
  */
 
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iomanip>
@@ -93,7 +93,7 @@ int main()
     std::cout << "--- 5. Desplazamiento izquierda (<<) ---\n";
     std::cout << "Multiplica por potencias de 2\n\n";
 
-    uint128_t n = 5; // 0b101
+    uint128_t n{5}; // 0b101
 
     std::cout << "n       = " << n << "\n";
     std::cout << "n << 1  = " << (n << 1) << " (× 2)\n";
@@ -107,7 +107,7 @@ int main()
     std::cout << "--- 6. Desplazamiento derecha (>>) ---\n";
     std::cout << "Divide por potencias de 2 (trunca)\n\n";
 
-    uint128_t m = 1000;
+    uint128_t m{1000};
 
     std::cout << "m       = " << m << "\n";
     std::cout << "m >> 1  = " << (m >> 1) << " (÷ 2)\n";
@@ -136,7 +136,7 @@ int main()
     // ============================================================
     std::cout << "--- 8. Manipulación de bits individuales ---\n";
 
-    uint128_t flags = 0;
+    uint128_t flags{0};
 
     // Activar bit 5
     flags |= (uint128_t(1) << 5);
@@ -167,7 +167,7 @@ int main()
     const uint128_t FLAG_WRITE = 1 << 1;   // 0b010
     const uint128_t FLAG_EXECUTE = 1 << 2; // 0b100
 
-    uint128_t permissions = 0;
+    uint128_t permissions{0};
 
     // Otorgar permisos de lectura y escritura
     permissions |= FLAG_READ;
@@ -199,8 +199,8 @@ int main()
     // ============================================================
     std::cout << "--- 10. Aplicación: Swap usando XOR ---\n";
 
-    uint128_t x = 123;
-    uint128_t y = 456;
+    uint128_t x{123};
+    uint128_t y{456};
 
     std::cout << "Antes:   x = " << x << ", y = " << y << "\n";
 

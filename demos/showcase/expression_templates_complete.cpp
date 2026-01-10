@@ -25,7 +25,7 @@
  */
 
 #include <chrono>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <type_traits>
@@ -728,7 +728,7 @@ template <typename Func> double benchmark(const string& name, Func&& f, int iter
 {
     auto start = high_resolution_clock::now();
 
-    uint128_t sink = 0; // Evitar optimización agresiva
+    uint128_t sink{0}; // Evitar optimización agresiva
     for (int i = 0; i < iterations; ++i) {
         auto result = f();
         sink = sink + result; // Uso para evitar optimización
@@ -754,10 +754,10 @@ void benchmark_operations()
     cout << "\n=== BENCHMARKS ===" << endl;
     cout << "Iteraciones: 1,000,000\n" << endl;
 
-    uint128_t a_raw = 12345;
-    uint128_t b_raw = 67890;
-    uint128_t c_raw = 11111;
-    uint128_t d_raw = 22222;
+    uint128_t a_raw{12345};
+    uint128_t b_raw{67890};
+    uint128_t c_raw{11111};
+    uint128_t d_raw{22222};
 
     UInt128ET a(a_raw), b(b_raw), c(c_raw), d(d_raw);
 

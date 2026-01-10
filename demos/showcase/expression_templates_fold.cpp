@@ -25,7 +25,7 @@
  */
 
 #include <chrono>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <iomanip>
 #include <iostream>
 #include <uint128/uint128_iostreams.hpp>
@@ -312,7 +312,7 @@ template <typename Func> double benchmark(const string& name, Func&& f, int iter
 {
     auto start = high_resolution_clock::now();
 
-    uint128_t sink = 0;
+    uint128_t sink{0};
     for (int i = 0; i < iterations; ++i) {
         auto result = f();
         sink = sink + result;

@@ -9,7 +9,7 @@
  */
 
 #include <atomic>
-#include <int128.hpp>
+#include <int128_simple.hpp>
 #include <uint128/uint128_iostreams.hpp>
 #include <int128/int128_iostreams.hpp>
 #include <iostream>
@@ -32,7 +32,7 @@ int main()
     // ============================================================
     std::cout << "--- 1. ⚠️  Sin protección (INCORRECTO) ---\n";
 
-    uint128_t counter = 0;
+    uint128_t counter{0};
 
     auto increment_unsafe = [&]() {
         for (int i = 0; i < 1000; ++i) {
@@ -49,7 +49,7 @@ int main()
     // ============================================================
     std::cout << "--- 2. ✅ Protección con std::mutex ---\n";
 
-    uint128_t safe_counter = 0;
+    uint128_t safe_counter{0};
     std::mutex mtx;
 
     auto increment_safe = [&]() {
