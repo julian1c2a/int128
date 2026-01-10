@@ -1,8 +1,57 @@
 # TODO: uint128_t & int128_t - Lista de Mejoras y Estado
 
-> 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_T.md](API_INT128_BASE_T.md)
+> 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_TT.md](API_INT128_BASE_TT.md) | [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md)
 >
-> ⏰ **Última actualización:** 2026-01-08 10:30 (ver CHANGELOG.md para historial horario)
+> ⏰ **Última actualización:** 2026-01-10 12:00 (ver CHANGELOG.md para historial horario)
+
+---
+
+## 📁 FASE 1.6 - Integración de Directorios 🔄 **EN PLANIFICACIÓN**
+
+**Estado:** 🔄 **PLANIFICADO (10 ene 2026)**  
+**Dependencia:** Fase 1.5 (Template unificado) en progreso
+**Documentación:** Ver [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md) para detalles
+
+### Objetivo
+
+Consolidar la estructura de directorios del proyecto:
+
+1. `include_new/` → `include/` (renombrar cuando esté listo)
+2. `tests_new/` → `tests/` (integrar tests del template unificado)
+3. `experimental/` → `tests/experimental/` (preservar tests experimentales)
+
+### Estado Actual de Directorios
+
+| Directorio | Archivos | Propósito | Acción |
+|------------|----------|-----------|--------|
+| `include/` | 19 headers | Headers legacy + unified | Mantener como canónico |
+| `include_new/` | 17 headers | Template unificado fase 1.5 | → Renombrar a include/ |
+| `tests/` | 100+ archivos | Tests canónicos | Mantener + ampliar |
+| `tests_new/` | 14 archivos | Tests para template unificado | → Integrar en tests/ |
+| `experimental/` | 12 archivos | Tests experimentales | → tests/experimental/ |
+
+### Plan de Ejecución
+
+#### Fase A: Consolidación `include_new/` → `include/`
+
+- [ ] Verificar que `include_new/` tiene template completo
+- [ ] Backup de `include/` actual → `include_legacy/`
+- [ ] Mover `include_new/` → `include/`
+- [ ] Actualizar `#include` paths en tests y demos
+- [ ] Verificar compilación completa (4 compiladores)
+- [ ] Eliminar `include_legacy/` si todo OK
+
+#### Fase B: Integración `tests_new/` → `tests/`
+
+- [ ] Renombrar tests template: `test_*_template.cpp` → subdirectorio
+- [ ] Integrar `int128_base_*_tests.cpp` con extractados
+- [ ] Verificar que todos los tests pasan
+
+#### Fase C: Mover `experimental/` → `tests/experimental/`
+
+- [ ] Crear `tests/experimental/`
+- [ ] Mover todos los archivos
+- [ ] Actualizar scripts de build
 
 ---
 

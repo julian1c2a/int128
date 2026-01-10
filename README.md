@@ -1843,15 +1843,44 @@ uint64_t mask = std::numeric_limits<uint64_t>::max();
 
 ## 📚 Documentación del Proyecto
 
-### Documentos Disponibles
+### 🗺️ Grafo de Documentación
+
+Ver **[DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md)** para el mapa completo de interconexiones
+entre los 114 archivos de documentación del proyecto. Este grafo define:
+
+- Dependencias entre documentos
+- Protocolo de actualización
+- Plan de integración de directorios (`include_new/` → `include/`, etc.)
+
+### Documentos Principales
 
 | Documento | Descripción | Estado |
 |-----------|-------------|--------|
-| **[API_INT128_BASE_T.md](API_INT128_BASE_T.md)** | Referencia completa de API (680 líneas) | ✅ Completo |
-| **[CHANGELOG.md](CHANGELOG.md)** | Historial de versiones y cambios críticos | ✅ Completo |
-| **[TWOS_COMPLEMENT_MULTIPLICATION_PROOF.md](TWOS_COMPLEMENT_MULTIPLICATION_PROOF.md)** | Demostración matemática de multiplicación en complemento a 2 | ✅ Completo |
-| **[documentation/generated/html/index.html](documentation/generated/html/index.html)** | Documentación HTML generada por Doxygen | ✅ Generado |
+| **[DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md)** | Mapa de dependencias entre documentos | ✅ Nuevo |
+| **[API_INT128_BASE_TT.md](API_INT128_BASE_TT.md)** | Referencia API del template principal | ✅ Completo |
+| **[CHANGELOG.md](CHANGELOG.md)** | Historial de versiones y cambios críticos | ✅ Actualizado |
 | **[TODO.md](TODO.md)** | Roadmap y estado de tareas | 🔄 Actualizado |
+
+### Referencias API (estilo cppreference)
+
+| Documento | Header | Contenido |
+|-----------|--------|-----------|
+| [API_INT128_BASE_LIMITS.md](API_INT128_BASE_LIMITS.md) | `int128_base_limits.hpp` | `std::numeric_limits` |
+| [API_INT128_BASE_TRAITS.md](API_INT128_BASE_TRAITS.md) | `int128_base_traits*.hpp` | Type traits STL |
+| [API_INT128_BASE_CONCEPTS.md](API_INT128_BASE_CONCEPTS.md) | `int128_base_concepts.hpp` | Concepts C++20 |
+| [API_INT128_BASE_BITS.md](API_INT128_BASE_BITS.md) | `int128_base_bits.hpp` | Operaciones de bits |
+| [API_INT128_BASE_NUMERIC.md](API_INT128_BASE_NUMERIC.md) | `int128_base_numeric.hpp` | Algoritmos numéricos |
+| [API_INT128_BASE_ALGORITHM.md](API_INT128_BASE_ALGORITHM.md) | `int128_base_algorithm.hpp` | Algoritmos STL |
+| [API_INT128_BASE_CMATH.md](API_INT128_BASE_CMATH.md) | `int128_base_cmath.hpp` | Funciones matemáticas |
+| [API_INT128_BASE_IOSTREAMS.md](API_INT128_BASE_IOSTREAMS.md) | `int128_base_iostreams.hpp` | Stream I/O |
+| [API_INT128_BASE_FORMAT.md](API_INT128_BASE_FORMAT.md) | `int128_base_format.hpp` | Formateo avanzado |
+
+### Documentos Técnicos
+
+| Documento | Descripción | Estado |
+|-----------|-------------|--------|
+| **[TWOS_COMPLEMENT_MULTIPLICATION_PROOF.md](TWOS_COMPLEMENT_MULTIPLICATION_PROOF.md)** | Demostración matemática multiplicación | ✅ Completo |
+| **[documentation/generated/html/index.html](documentation/generated/html/index.html)** | Documentación Doxygen | ✅ Generado |
 
 ### API Reference - Contenido
 

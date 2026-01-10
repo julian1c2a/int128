@@ -11,7 +11,7 @@
 #include "int128_base_traits.hpp"
 
 // Especializaciones en namespace std
-namespace std {
+namespace nstd {
     template<nstd::signedness S>
     struct is_integral<nstd::int128_base_t<S>> : std::true_type {};
     
@@ -59,8 +59,8 @@ namespace std {
 ### is_integral
 
 ```cpp
-static_assert(std::is_integral_v<nstd::uint128_t>);  // true
-static_assert(std::is_integral_v<nstd::int128_t>);   // true
+static_assert(nstd::is_integral_v<nstd::uint128_t>);  // true
+static_assert(nstd::is_integral_v<nstd::int128_t>);   // true
 ```
 
 **Brief:** Ambos tipos de 128 bits son integrales.
@@ -70,8 +70,8 @@ static_assert(std::is_integral_v<nstd::int128_t>);   // true
 ### is_arithmetic
 
 ```cpp
-static_assert(std::is_arithmetic_v<nstd::uint128_t>);  // true
-static_assert(std::is_arithmetic_v<nstd::int128_t>);   // true
+static_assert(nstd::is_arithmetic_v<nstd::uint128_t>);  // true
+static_assert(nstd::is_arithmetic_v<nstd::int128_t>);   // true
 ```
 
 ---
@@ -79,11 +79,11 @@ static_assert(std::is_arithmetic_v<nstd::int128_t>);   // true
 ### is_signed / is_unsigned
 
 ```cpp
-static_assert(!std::is_signed_v<nstd::uint128_t>);   // uint128 NO es signed
-static_assert(std::is_signed_v<nstd::int128_t>);     // int128 ES signed
+static_assert(!nstd::is_signed_v<nstd::uint128_t>);   // uint128 NO es signed
+static_assert(nstd::is_signed_v<nstd::int128_t>);     // int128 ES signed
 
-static_assert(std::is_unsigned_v<nstd::uint128_t>);  // uint128 ES unsigned
-static_assert(!std::is_unsigned_v<nstd::int128_t>);  // int128 NO es unsigned
+static_assert(nstd::is_unsigned_v<nstd::uint128_t>);  // uint128 ES unsigned
+static_assert(!nstd::is_unsigned_v<nstd::int128_t>);  // int128 NO es unsigned
 ```
 
 ---
@@ -91,11 +91,11 @@ static_assert(!std::is_unsigned_v<nstd::int128_t>);  // int128 NO es unsigned
 ### make_signed / make_unsigned
 
 ```cpp
-using S1 = std::make_signed_t<nstd::uint128_t>;   // nstd::int128_t
-using S2 = std::make_signed_t<nstd::int128_t>;    // nstd::int128_t
+using S1 = nstd::make_signed_t<nstd::uint128_t>;   // nstd::int128_t
+using S2 = nstd::make_signed_t<nstd::int128_t>;    // nstd::int128_t
 
-using U1 = std::make_unsigned_t<nstd::uint128_t>; // nstd::uint128_t
-using U2 = std::make_unsigned_t<nstd::int128_t>;  // nstd::uint128_t
+using U1 = nstd::make_unsigned_t<nstd::uint128_t>; // nstd::uint128_t
+using U2 = nstd::make_unsigned_t<nstd::int128_t>;  // nstd::uint128_t
 ```
 
 **Ejemplo:**
@@ -103,7 +103,7 @@ using U2 = std::make_unsigned_t<nstd::int128_t>;  // nstd::uint128_t
 ```cpp
 template<typename T>
 auto to_signed(T val) {
-    return static_cast<std::make_signed_t<T>>(val);
+    return static_cast<nstd::make_signed_t<T>>(val);
 }
 
 nstd::uint128_t u{42};
@@ -116,12 +116,12 @@ nstd::int128_t s = to_signed(u);  // Funciona
 
 ```cpp
 // int128 con tipos builtin
-using CT1 = std::common_type_t<nstd::uint128_t, uint64_t>;  // nstd::uint128_t
-using CT2 = std::common_type_t<nstd::int128_t, int64_t>;    // nstd::int128_t
-using CT3 = std::common_type_t<nstd::uint128_t, int>;       // nstd::uint128_t
+using CT1 = nstd::common_type_t<nstd::uint128_t, uint64_t>;  // nstd::uint128_t
+using CT2 = nstd::common_type_t<nstd::int128_t, int64_t>;    // nstd::int128_t
+using CT3 = nstd::common_type_t<nstd::uint128_t, int>;       // nstd::uint128_t
 
 // Entre ambos tipos de 128 bits
-using CT4 = std::common_type_t<nstd::uint128_t, nstd::int128_t>;  // nstd::int128_t
+using CT4 = nstd::common_type_t<nstd::uint128_t, nstd::int128_t>;  // nstd::int128_t
 ```
 
 **Regla:** `int128_t` es el tipo común entre signed y unsigned de 128 bits.
@@ -131,7 +131,7 @@ using CT4 = std::common_type_t<nstd::uint128_t, nstd::int128_t>;  // nstd::int12
 ## Hash Especialización
 
 ```cpp
-std::hash<nstd::uint128_t> hasher;
+nstd::hash<nstd::uint128_t> hasher;
 nstd::uint128_t val{42};
 std::size_t h = hasher(val);
 ```

@@ -64,6 +64,27 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [12:00] 2026-01-10 - Grafo de Documentación y Plan de Integración (#001)
+
+- ✅ **DOCUMENTATION_GRAPH.md**: Creado grafo completo de 114 archivos .md
+  - Mapa de dependencias entre documentos
+  - Categorización: Primarios, API, Soporte, Análisis
+  - Protocolo de actualización con checklist
+  - Contador de actividad por sesión
+- 📋 **Plan de Integración de Directorios** documentado:
+  - `include_new/` → `include/` (Fase A)
+  - `tests_new/` → `tests/` (Fase B)
+  - `experimental/` → `tests/experimental/` (Fase C)
+- 📊 **Inventario actual:**
+  - `include_new/`: 17 headers + subdirs
+  - `tests_new/`: 14 archivos test
+  - `experimental/`: 12 archivos test
+- 🔗 **Ver:** [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md) para mapa completo
+
+---
+
+### 📜 Sesiones Anteriores
+
 #### [11:00] 2026-01-08 - Licencias Boost expandidas en todos los headers
 
 - ✅ `type_traits.hpp`: Añadida licencia Boost completa (faltaba)
