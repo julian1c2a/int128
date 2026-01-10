@@ -51,7 +51,7 @@
  * @endcode
  *
  * @author Julián Calderón Almendros
- * @version 1.75
+ * @version 1.66
  * @date 2026-01-08
  */
 

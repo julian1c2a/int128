@@ -31,7 +31,7 @@
  * @file int128_base_algorithm.hpp
  * @brief Algoritmos para int128_base_t<S>
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
- * @version 1.0.0
+ * @version 1.66.0
  * @date 2026-01-05
  * @copyright Boost Software License 1.0
  *
