@@ -64,6 +64,16 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [11:00] 2026-01-08 - Licencias Boost expandidas en todos los headers
+
+- ✅ `type_traits.hpp`: Añadida licencia Boost completa (faltaba)
+- ✅ `intrinsics/arithmetic_operations.hpp`: Expandida licencia abreviada → completa
+- ✅ `intrinsics/bit_operations.hpp`: Expandida licencia abreviada → completa
+- ✅ `intrinsics/compiler_detection.hpp`: Expandida licencia abreviada → completa
+- ✅ `intrinsics/fallback_portable.hpp`: Expandida licencia abreviada → completa
+- ✅ `intrinsics/byte_operations.hpp`: Expandida licencia abreviada → completa
+- 📋 **Total archivos con licencia completa:** 17/17 en `include_new/`
+
 #### [10:30] 2026-01-08 - FEATURES cmath, iostreams y format COMPLETOS
 
 - ✅ **FEATURE cmath**: `int128_base_cmath.hpp` completo (18/18 tests OK)

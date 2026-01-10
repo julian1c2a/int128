@@ -16,6 +16,179 @@ All C++ console output must use ASCII only:
 - **CHANGELOG.md**: Update hourly during active development
 - **PROMPT.md**: Reference for all build conventions and naming patterns
 
+### 4. Interactive Work Mode
+**Report status every ~3 minutes** during active development:
+- Brief summary of progress
+- Any issues encountered
+- Next steps planned
+- Wait for user feedback before major changes
+
+**User compiles in MSYS2 terminal** and reports logs back. Do NOT run long compilations autonomously.
+
+---
+
+## 📜 License Header (MANDATORY)
+
+**ALL headers (.hpp) and library source files (.cpp) MUST include this header:**
+
+```cpp
+// =============================================================================
+// int128 Library - 128-bit Integer Types for C++20
+// =============================================================================
+//
+// SPDX-License-Identifier: BSL-1.0
+// 
+// Copyright (c) 2024-2026 Julián Calderón Almendros
+// Email: julian.calderon.almendros@gmail.com
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE.txt or copy at
+//  https://www.boost.org/LICENSE_1_0.txt)
+//
+// =============================================================================
+// @file       filename.hpp
+// @brief      Brief description of the file
+// @author     Julián Calderón Almendros
+// @date       YYYY-MM-DD (last edit)
+// @version    1.0.0
+// =============================================================================
+```
+
+**For test files and demos**, use a simplified header:
+```cpp
+// =============================================================================
+// Test/Demo: brief description
+// Part of int128 Library - https://github.com/[repo]
+// License: BSL-1.0
+// =============================================================================
+```
+
+---
+
+## 📚 Documentation Standards (Doxygen)
+
+### For Library Users
+Document public API with:
+```cpp
+/**
+ * @brief One-line description of function/class
+ * 
+ * @details Longer explanation if needed. Explain behavior,
+ *          edge cases, and any important notes.
+ * 
+ * @param[in]  param1  Description of input parameter
+ * @param[out] param2  Description of output parameter
+ * @return Description of return value
+ * 
+ * @throws None (noexcept) OR list exceptions
+ * 
+ * @note Any important notes for users
+ * @see Related functions or classes
+ * 
+ * @code
+ * // Usage example
+ * const uint128_t x{42};
+ * const auto result = x.to_string();
+ * @endcode
+ */
+```
+
+### For Maintainers/Contributors
+Add implementation notes with:
+```cpp
+/**
+ * @internal
+ * @brief Implementation detail - not for public use
+ * 
+ * @par Implementation Notes:
+ * - Why this approach was chosen
+ * - Performance considerations
+ * - Platform-specific behavior
+ * 
+ * @par Complexity:
+ * - Time: O(n)
+ * - Space: O(1)
+ */
+```
+
+### File-Level Documentation
+Every header must have:
+```cpp
+/**
+ * @file int128_base_bits.hpp
+ * @brief Bit manipulation functions for 128-bit integers
+ * 
+ * @details This module provides:
+ * - popcount, countl_zero, countr_zero
+ * - rotl, rotr (rotation)
+ * - bit_width, has_single_bit
+ * 
+ * @par Dependencies:
+ * - int128_base_tt.hpp (core type)
+ * - <bit> (C++20 bit operations)
+ * 
+ * @par Example:
+ * @code
+ * #include "int128_base_bits.hpp"
+ * const uint128_t x{0xFF00};
+ * const int zeros = nstd::countl_zero(x);  // 112
+ * @endcode
+ */
+```
+
+---
+
+## 📖 API Documentation Files (API_*.md)
+
+Maintain **cppreference-style** documentation in `API_[header].md`:
+
+### Structure Template:
+````markdown
+# API Reference - [Header Name]
+
+## Synopsis
+```cpp
+namespace nstd {
+    // Declarations with syntax highlighting
+    constexpr int popcount(uint128_t x) noexcept;
+}
+```
+
+## Functions
+
+### popcount
+```cpp
+constexpr int popcount(uint128_t x) noexcept;
+```
+**Brief:** Counts the number of 1-bits in x.
+
+**Parameters:**
+- `x` - Value to examine
+
+**Return value:** Number of 1-bits
+
+**Example:**
+```cpp
+const uint128_t val{0b11110000};
+assert(nstd::popcount(val) == 4);
+```
+````
+
+---
+
+## 🎭 Demo Categories
+
+Demos serve different purposes - maintain all categories:
+
+| Category | Purpose | Audience |
+|----------|---------|----------|
+| **tutorials/** | Step-by-step learning | Beginners |
+| **examples/** | Real-world use cases | Users |
+| **showcase/** | Advanced features | Power users |
+| **comparison/** | vs other libraries | Evaluators |
+| **performance/** | Benchmark demos | Performance-focused |
+| **integration/** | With other libs | Integrators |
+
 ---
 
 ## Coding Standards

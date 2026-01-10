@@ -467,17 +467,166 @@ python make.py check demos all gcc release
 
 ## 🐧 WSL/Linux
 
-Ver sección en [WSL Ubuntu Setup](#wsl-ubuntu-setup) para configuración de:
+### Objetivo
 
-- GCC 13, 14, 15
-- Clang 18, 19, 20, 21
-- Intel oneAPI icpx
+Validar el proyecto en un entorno Linux real usando WSL (Windows Subsystem for Linux)
+con múltiples versiones de compiladores:
 
-### Script de Ejecución en WSL
+- **GCC**: 13, 14, 15
+- **Clang**: 18, 19, 20, 21
+- **Intel**: icpx (oneAPI)
+
+### Instalación de Compiladores en WSL Ubuntu
+
+#### 1. Usando el Script Automático
 
 ```bash
-python scripts/run_wsl_tests.py
+# Desde MSYS2 o PowerShell
+python scripts/run_wsl_tests.py setup
+
+# O directamente en WSL
+bash scripts/wsl_build_system.bash setup
 ```
+
+#### 2. Instalación Manual
+
+```bash
+# Actualizar sistema
+sudo apt update && sudo apt upgrade -y
+
+# Herramientas base
+sudo apt install -y build-essential cmake ninja-build git curl wget
+
+# GCC 13, 14, 15
+sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+sudo apt update
+sudo apt install -y g++-13 g++-14 g++-15
+
+# Clang 18-21 (desde repositorio LLVM)
+wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+UBUNTU_CODENAME=$(lsb_release -cs)
+echo "deb http://apt.llvm.org/$UBUNTU_CODENAME/ llvm-toolchain-$UBUNTU_CODENAME main" | sudo tee /etc/apt/sources.list.d/llvm.list
+for ver in 18 19 20 21; do
+    echo "deb http://apt.llvm.org/$UBUNTU_CODENAME/ llvm-toolchain-$UBUNTU_CODENAME-$ver main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
+done
+sudo apt update
+sudo apt install -y clang-18 clang-19 clang-20 clang-21
+
+# Intel oneAPI (opcional)
+wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+sudo apt update
+sudo apt install -y intel-oneapi-compiler-dpcpp-cpp
+
+# Cargar entorno Intel (añadir a ~/.bashrc)
+source /opt/intel/oneapi/setvars.sh
+
+# Herramientas de análisis
+sudo apt install -y cppcheck libboost-all-dev
+```
+
+### Verificar Compiladores
+
+```bash
+# Desde MSYS2/PowerShell
+python scripts/run_wsl_tests.py detect
+
+# O en WSL directamente
+bash scripts/wsl_build_system.bash detect
+```
+
+**Salida esperada:**
+
+```
+GCC:
+  ✓ g++-13: g++ (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+  ✓ g++-14: g++ (Ubuntu 14.2.0-1ubuntu1) 14.2.0
+  ✓ g++-15: g++ (Ubuntu 15.0.0-0ubuntu1) 15.0.0
+
+Clang:
+  ✓ clang++-18: Ubuntu clang version 18.1.8
+  ✓ clang++-19: Ubuntu clang version 19.1.0
+  ✓ clang++-20: Ubuntu clang version 20.0.0
+  ✓ clang++-21: Ubuntu clang version 21.0.0
+
+Intel:
+  ✓ icpx: Intel(R) oneAPI DPC++/C++ Compiler 2024.1.0
+```
+
+### Ejecutar Tests en WSL
+
+#### Desde Windows (MSYS2/PowerShell/CMD)
+
+```bash
+# Pipeline completo (init + test + compare)
+python scripts/run_wsl_tests.py
+
+# Solo tests con GCC 15
+python scripts/run_wsl_tests.py test gcc-15 release
+
+# Tests con todos los compiladores
+python scripts/run_wsl_tests.py test all release
+
+# Benchmark comparativo
+python scripts/run_wsl_tests.py compare gcc-15 release-O3
+```
+
+#### Desde WSL Directamente
+
+```bash
+# Compilar y testear
+bash scripts/wsl_build_system.bash build uint128 bits tests gcc-15 release
+bash scripts/wsl_build_system.bash check uint128 bits gcc-15 release
+
+# Con sanitizers
+bash scripts/wsl_build_system.bash sanitize uint128 bits asan gcc-15
+
+# Benchmark comparativo
+bash scripts/wsl_build_system.bash compare gcc-15 release-O3
+```
+
+### Estructura de Builds WSL
+
+```
+build/
+└── wsl_build_tests/           # Tests compilados en WSL
+    ├── gcc-13/
+    │   ├── debug/
+    │   └── release/
+    ├── gcc-14/
+    ├── gcc-15/
+    ├── clang-18/
+    ├── clang-19/
+    ├── clang-20/
+    ├── clang-21/
+    └── icpx/
+```
+
+### Diferencias MSYS2 vs WSL
+
+| Aspecto | MSYS2 (Windows) | WSL (Linux) |
+|---------|-----------------|-------------|
+| **GCC** | ucrt64/bin/g++ | g++-13, g++-14, g++-15 |
+| **Clang** | clang64/bin/clang++ | clang++-18 a clang++-21 |
+| **Intel** | icx (Windows) | icpx (Linux) |
+| **Binarios** | .exe | Sin extensión |
+| **ABI** | Windows | Linux (incompatibles) |
+| **Paths** | /c/... | /mnt/c/... |
+
+### Notas Importantes
+
+1. **Los binarios son incompatibles**: Un .exe de Windows no funciona en Linux y viceversa.
+   Los scripts limpian `build/` antes de compilar en WSL.
+
+2. **Cargar entorno Intel**: Siempre ejecutar `source /opt/intel/oneapi/setvars.sh`
+   antes de usar `icpx`.
+
+3. **Finales de línea**: El script `run_wsl_tests.py` convierte automáticamente
+   CRLF → LF para evitar errores `$'\r': command not found`.
+
+4. **Sincronización**: WSL accede al mismo código fuente via `/mnt/c/...`,
+   los cambios se reflejan instantáneamente.
 
 ---
 

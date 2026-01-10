@@ -1189,17 +1189,56 @@ mantenible que reemplaza completamente el Makefile tradicional.**
      directamente desde Windows, asegurando portabilidad total.
      
      1. Requisitos:
-        - WSL instalado (Ubuntu recomendado)
-        - Compiladores en WSL: g++, clang++, icpx (Intel oneAPI opcional)
+        - WSL instalado (Ubuntu 24.04 o 25.04 recomendado)
+        - Compiladores en WSL:
+          - GCC: g++-13, g++-14, g++-15
+          - Clang: clang++-18, clang++-19, clang++-20, clang++-21
+          - Intel: icpx (oneAPI, opcional)
         - Python 3 en WSL
+        - Boost (para benchmarks comparativos): libboost-all-dev
      
-     2. Ejecución:
-        Desde una terminal de Windows (PowerShell/CMD) o MSYS2 en la raíz del proyecto:
+     2. Instalación de compiladores:
         
-        python scripts/run_wsl_tests.py
+        # Usando script automático:
+        python scripts/run_wsl_tests.py setup
+        
+        # O manualmente en WSL:
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt install g++-13 g++-14 g++-15
+        
+        # Clang desde LLVM:
+        wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+        sudo apt install clang-18 clang-19 clang-20 clang-21
      
-     3. Funcionamiento:
+     3. Ejecución desde Windows (PowerShell/CMD/MSYS2):
+        
+        python scripts/run_wsl_tests.py              # Pipeline completo
+        python scripts/run_wsl_tests.py detect       # Ver compiladores
+        python scripts/run_wsl_tests.py test gcc-15  # Tests con GCC 15
+        python scripts/run_wsl_tests.py sanitize asan # Con AddressSanitizer
+        python scripts/run_wsl_tests.py compare      # Benchmark comparativo
+     
+     4. Ejecución directa en WSL:
+        
+        bash scripts/wsl_build_system.bash setup     # Instalar compiladores
+        bash scripts/wsl_build_system.bash detect    # Ver compiladores
+        bash scripts/wsl_build_system.bash build uint128 bits tests gcc-15 release
+        bash scripts/wsl_build_system.bash check uint128 bits all all
+        bash scripts/wsl_build_system.bash sanitize uint128 bits asan gcc-15
+        bash scripts/wsl_build_system.bash compare gcc-15 release-O3
+     
+     5. Funcionamiento:
         - Monta la carpeta actual en WSL (/mnt/c/...)
         - Carga el entorno de Intel oneAPI (si existe)
-        - Limpia builds previos para evitar conflictos de binarios
-        - Ejecuta 'make.py init' y 'make.py test' dentro de Linux
+        - Limpia builds previos para evitar conflictos de binarios (ABI incompatible)
+        - Ejecuta compilación y tests con el compilador especificado
+        
+     6. Diferencias MSYS2 vs WSL:
+        
+        | Aspecto | MSYS2 (Windows) | WSL (Linux) |
+        |---------|-----------------|-------------|
+        | GCC | g++ (ucrt64) | g++-13, g++-14, g++-15 |
+        | Clang | clang++ (clang64) | clang++-18 a clang++-21 |
+        | Intel | icx | icpx |
+        | Binarios | .exe | Sin extensión |
+        | Paths | /c/... | /mnt/c/... |
