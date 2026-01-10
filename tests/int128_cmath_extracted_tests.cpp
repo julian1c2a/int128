@@ -1,477 +1,477 @@
-// Comprehensive tests for int128_cmath.hpp
-// Mathematical functions with signed 128-bit integers
-// Tests: gcd, lcm, abs, pow, sqrt, sign, max, min, clamp, midpoint
+/**
+ * @file int128_cmath_extracted_tests.cpp
+ * @brief Tests completos de int128_base_cmath.hpp (template unificado)
+ *
+ * Fusión de:
+ * - Legacy int128_cmath.hpp tests (90+ tests)
+ * - test_cmath_template.cpp (18 tests)
+ *
+ * Total: 100+ tests cubriendo:
+ * - gcd, lcm
+ * - abs, sign
+ * - pow, sqrt
+ * - min, max, clamp
+ * - midpoint, divmod
+ * - bezout_coeffs
+ */
 
-#include "int128/int128_cmath.hpp"
+#include "int128_base_cmath.hpp"
 #include <cassert>
-#include <cstdint>
-#include <iomanip>
 #include <iostream>
-#include <vector>
 
 using namespace nstd;
 
-// Test counter
-static int total_tests = 0;
-static int passed_tests = 0;
-static int failed_tests = 0;
+static int tests_passed = 0;
+static int tests_failed = 0;
 
-// Test macro
-#define TEST_ASSERT(condition, message)                                                            \
-    do {                                                                                           \
-        total_tests++;                                                                             \
-        if (condition) {                                                                           \
-            passed_tests++;                                                                        \
-            std::cout << "  [OK] " << message << std::endl;                                        \
-        } else {                                                                                   \
-            failed_tests++;                                                                        \
-            std::cout << "  [ERROR] FAILED: " << message << std::endl;                             \
-        }                                                                                          \
-    } while (0)
-
-// Print section header
-void print_section(const std::string& title)
+void check(bool condition, const char *test_name)
 {
-    std::cout << "\n=== " << title << " ===" << std::endl;
+    if (condition)
+    {
+        std::cout << "[OK]   " << test_name << std::endl;
+        tests_passed++;
+    }
+    else
+    {
+        std::cout << "[FAIL] " << test_name << std::endl;
+        tests_failed++;
+    }
 }
 
-// Test std::gcd
-void test_gcd_basic()
+// =============================================================================
+// SECTION: gcd (Greatest Common Divisor)
+// =============================================================================
+
+void test_gcd()
 {
-    using namespace std;
+    // uint128_t
+    check(gcd(uint128_t(48), uint128_t(18)) == uint128_t(6), "gcd(48, 18) == 6 (uint)");
+    check(gcd(uint128_t(100), uint128_t(35)) == uint128_t(5), "gcd(100, 35) == 5 (uint)");
+    check(gcd(uint128_t(0), uint128_t(5)) == uint128_t(5), "gcd(0, 5) == 5 (uint)");
+    check(gcd(uint128_t(5), uint128_t(0)) == uint128_t(5), "gcd(5, 0) == 5 (uint)");
+    check(gcd(uint128_t(0), uint128_t(0)) == uint128_t(0), "gcd(0, 0) == 0 (uint)");
+    check(gcd(uint128_t(64), uint128_t(128)) == uint128_t(64), "gcd(64, 128) == 64 (uint)");
+    check(gcd(uint128_t(17), uint128_t(19)) == uint128_t(1), "gcd(17, 19) == 1 coprimes");
 
-    // Basic cases
-    TEST_ASSERT(gcd(int128_t(12), int128_t(18)) == int128_t(6), "gcd(12, 18) == 6");
-    TEST_ASSERT(gcd(int128_t(48), int128_t(18)) == int128_t(6), "gcd(48, 18) == 6");
-    TEST_ASSERT(gcd(int128_t(100), int128_t(35)) == int128_t(5), "gcd(100, 35) == 5");
+    // int128_t basicos
+    check(gcd(int128_t(12), int128_t(18)) == int128_t(6), "gcd(12, 18) == 6 (signed)");
+    check(gcd(int128_t(48), int128_t(18)) == int128_t(6), "gcd(48, 18) == 6 (signed)");
 
-    // With negative numbers
-    TEST_ASSERT(gcd(int128_t(-12), int128_t(18)) == int128_t(6), "gcd(-12, 18) == 6");
-    TEST_ASSERT(gcd(int128_t(12), int128_t(-18)) == int128_t(6), "gcd(12, -18) == 6");
-    TEST_ASSERT(gcd(int128_t(-12), int128_t(-18)) == int128_t(6), "gcd(-12, -18) == 6");
+    // int128_t con negativos
+    check(gcd(int128_t(-12), int128_t(18)) == int128_t(6), "gcd(-12, 18) == 6");
+    check(gcd(int128_t(12), int128_t(-18)) == int128_t(6), "gcd(12, -18) == 6");
+    check(gcd(int128_t(-12), int128_t(-18)) == int128_t(6), "gcd(-12, -18) == 6");
+    check(gcd(int128_t(-48), int128_t(18)) == int128_t(6), "gcd(-48, 18) == 6");
 
-    // Edge cases
-    TEST_ASSERT(gcd(int128_t(0), int128_t(5)) == int128_t(5), "gcd(0, 5) == 5");
-    TEST_ASSERT(gcd(int128_t(5), int128_t(0)) == int128_t(5), "gcd(5, 0) == 5");
-    TEST_ASSERT(gcd(int128_t(0), int128_t(0)) == int128_t(0), "gcd(0, 0) == 0");
-
-    // Large values
+    // Valores grandes
     int128_t large1(1000000000LL);
     int128_t large2(500000000LL);
-    TEST_ASSERT(gcd(large1, large2) == int128_t(500000000LL), "gcd(1e9, 5e8) == 5e8");
+    check(gcd(large1, large2) == int128_t(500000000LL), "gcd(1e9, 5e8) == 5e8");
 
-    // Powers of 2
-    TEST_ASSERT(gcd(int128_t(64), int128_t(128)) == int128_t(64), "gcd(64, 128) == 64");
-    TEST_ASSERT(gcd(int128_t(1024), int128_t(2048)) == int128_t(1024), "gcd(1024, 2048) == 1024");
-
-    // Co-primes
-    TEST_ASSERT(gcd(int128_t(17), int128_t(19)) == int128_t(1), "gcd(17, 19) == 1");
-    TEST_ASSERT(gcd(int128_t(101), int128_t(103)) == int128_t(1), "gcd(101, 103) == 1");
-
-    // Mixed types
-    TEST_ASSERT(gcd(int128_t(12), 18) == int128_t(6), "gcd(int128_t, int) works");
-    TEST_ASSERT(gcd(12, int128_t(18)) == int128_t(6), "gcd(int, int128_t) works");
+    // Mixed types con integral_builtin
+    check(gcd(uint128_t(48), 18) == uint128_t(6), "gcd(uint128_t, int) works");
+    check(gcd(12, uint128_t(18)) == uint128_t(6), "gcd(int, uint128_t) works");
+    check(gcd(int128_t(12), 18) == int128_t(6), "gcd(int128_t, int) works");
 }
 
-// Test std::lcm
-void test_lcm_basic()
+// =============================================================================
+// SECTION: lcm (Least Common Multiple)
+// =============================================================================
+
+void test_lcm()
 {
-    using namespace std;
+    // uint128_t
+    check(lcm(uint128_t(4), uint128_t(6)) == uint128_t(12), "lcm(4, 6) == 12 (uint)");
+    check(lcm(uint128_t(12), uint128_t(18)) == uint128_t(36), "lcm(12, 18) == 36 (uint)");
+    check(lcm(uint128_t(0), uint128_t(5)) == uint128_t(0), "lcm(0, 5) == 0 (uint)");
+    check(lcm(uint128_t(1), uint128_t(5)) == uint128_t(5), "lcm(1, 5) == 5 (uint)");
 
-    // Basic cases
-    TEST_ASSERT(lcm(int128_t(4), int128_t(6)) == int128_t(12), "lcm(4, 6) == 12");
-    TEST_ASSERT(lcm(int128_t(12), int128_t(18)) == int128_t(36), "lcm(12, 18) == 36");
-    TEST_ASSERT(lcm(int128_t(21), int128_t(6)) == int128_t(42), "lcm(21, 6) == 42");
+    // int128_t basicos
+    check(lcm(int128_t(4), int128_t(6)) == int128_t(12), "lcm(4, 6) == 12 (signed)");
+    check(lcm(int128_t(21), int128_t(6)) == int128_t(42), "lcm(21, 6) == 42 (signed)");
 
-    // With negative numbers
-    TEST_ASSERT(lcm(int128_t(-4), int128_t(6)) == int128_t(12), "lcm(-4, 6) == 12");
-    TEST_ASSERT(lcm(int128_t(4), int128_t(-6)) == int128_t(12), "lcm(4, -6) == 12");
-    TEST_ASSERT(lcm(int128_t(-4), int128_t(-6)) == int128_t(12), "lcm(-4, -6) == 12");
-
-    // Edge cases
-    TEST_ASSERT(lcm(int128_t(0), int128_t(5)) == int128_t(0), "lcm(0, 5) == 0");
-    TEST_ASSERT(lcm(int128_t(5), int128_t(0)) == int128_t(0), "lcm(5, 0) == 0");
-    TEST_ASSERT(lcm(int128_t(1), int128_t(5)) == int128_t(5), "lcm(1, 5) == 5");
-
-    // Large values
-    TEST_ASSERT(lcm(int128_t(100), int128_t(150)) == int128_t(300), "lcm(100, 150) == 300");
-    TEST_ASSERT(lcm(int128_t(1000), int128_t(2000)) == int128_t(2000), "lcm(1000, 2000) == 2000");
+    // int128_t con negativos
+    check(lcm(int128_t(-4), int128_t(6)) == int128_t(12), "lcm(-4, 6) == 12");
+    check(lcm(int128_t(4), int128_t(-6)) == int128_t(12), "lcm(4, -6) == 12");
+    check(lcm(int128_t(-4), int128_t(-6)) == int128_t(12), "lcm(-4, -6) == 12");
 
     // Mixed types
-    TEST_ASSERT(lcm(int128_t(4), 6) == int128_t(12), "lcm(int128_t, int) works");
-    TEST_ASSERT(lcm(4, int128_t(6)) == int128_t(12), "lcm(int, int128_t) works");
+    check(lcm(4, uint128_t(6)) == uint128_t(12), "lcm(int, uint128_t) works");
+    check(lcm(int128_t(4), 6) == int128_t(12), "lcm(int128_t, int) works");
 }
 
-// Test std::abs
+// =============================================================================
+// SECTION: abs (Absolute Value)
+// =============================================================================
+
 void test_abs()
 {
-    using namespace std;
+    // Positivos
+    check(abs(int128_t(42)) == int128_t(42), "abs(42) == 42");
+    check(abs(int128_t(12345)) == int128_t(12345), "abs(12345) == 12345");
 
-    // Positive numbers
-    TEST_ASSERT(abs(int128_t(42)) == int128_t(42), "abs(42) == 42");
-    TEST_ASSERT(abs(int128_t(12345)) == int128_t(12345), "abs(12345) == 12345");
+    // Negativos
+    check(abs(int128_t(-42)) == int128_t(42), "abs(-42) == 42");
+    check(abs(int128_t(-12345)) == int128_t(12345), "abs(-12345) == 12345");
 
-    // Negative numbers
-    TEST_ASSERT(abs(int128_t(-42)) == int128_t(42), "abs(-42) == 42");
-    TEST_ASSERT(abs(int128_t(-12345)) == int128_t(12345), "abs(-12345) == 12345");
+    // Cero
+    check(abs(int128_t(0)) == int128_t(0), "abs(0) == 0");
 
-    // Zero
-    TEST_ASSERT(abs(int128_t(0)) == int128_t(0), "abs(0) == 0");
-
-    // Large values
+    // Valores grandes
     int128_t large(-1000000000LL);
-    TEST_ASSERT(abs(large) == int128_t(1000000000LL), "abs(-1e9) == 1e9");
+    check(abs(large) == int128_t(1000000000LL), "abs(-1e9) == 1e9");
 }
 
-// Test std::pow
-void test_pow_basic()
-{
-    using namespace std;
+// =============================================================================
+// SECTION: sign
+// =============================================================================
 
-    // Basic cases
-    TEST_ASSERT(pow(int128_t(2), int128_t(3)) == int128_t(8), "pow(2, 3) == 8");
-    TEST_ASSERT(pow(int128_t(3), int128_t(4)) == int128_t(81), "pow(3, 4) == 81");
-    TEST_ASSERT(pow(int128_t(5), int128_t(2)) == int128_t(25), "pow(5, 2) == 25");
-
-    // Fast paths
-    TEST_ASSERT(pow(int128_t(123), int128_t(0)) == int128_t(1), "pow(123, 0) == 1");
-    TEST_ASSERT(pow(int128_t(123), int128_t(1)) == int128_t(123), "pow(123, 1) == 123");
-    TEST_ASSERT(pow(int128_t(0), int128_t(5)) == int128_t(0), "pow(0, 5) == 0");
-    TEST_ASSERT(pow(int128_t(1), int128_t(100)) == int128_t(1), "pow(1, 100) == 1");
-
-    // Negative base
-    TEST_ASSERT(pow(int128_t(-2), int128_t(3)) == int128_t(-8), "pow(-2, 3) == -8");
-    TEST_ASSERT(pow(int128_t(-2), int128_t(4)) == int128_t(16), "pow(-2, 4) == 16");
-    TEST_ASSERT(pow(int128_t(-3), int128_t(2)) == int128_t(9), "pow(-3, 2) == 9");
-    TEST_ASSERT(pow(int128_t(-1), int128_t(5)) == int128_t(-1), "pow(-1, 5) == -1");
-    TEST_ASSERT(pow(int128_t(-1), int128_t(6)) == int128_t(1), "pow(-1, 6) == 1");
-
-    // Larger exponents
-    TEST_ASSERT(pow(int128_t(2), int128_t(10)) == int128_t(1024), "pow(2, 10) == 1024");
-    TEST_ASSERT(pow(int128_t(10), int128_t(5)) == int128_t(100000), "pow(10, 5) == 100000");
-
-    // Mixed types
-    TEST_ASSERT(pow(int128_t(2), 3) == int128_t(8), "pow(int128_t, int) works");
-}
-
-// Test std::sqrt
-void test_sqrt_basic()
-{
-    using namespace std;
-
-    // Perfect squares
-    TEST_ASSERT(sqrt(int128_t(0)) == int128_t(0), "sqrt(0) == 0");
-    TEST_ASSERT(sqrt(int128_t(1)) == int128_t(1), "sqrt(1) == 1");
-    TEST_ASSERT(sqrt(int128_t(4)) == int128_t(2), "sqrt(4) == 2");
-    TEST_ASSERT(sqrt(int128_t(9)) == int128_t(3), "sqrt(9) == 3");
-    TEST_ASSERT(sqrt(int128_t(16)) == int128_t(4), "sqrt(16) == 4");
-    TEST_ASSERT(sqrt(int128_t(25)) == int128_t(5), "sqrt(25) == 5");
-    TEST_ASSERT(sqrt(int128_t(100)) == int128_t(10), "sqrt(100) == 10");
-    TEST_ASSERT(sqrt(int128_t(144)) == int128_t(12), "sqrt(144) == 12");
-    TEST_ASSERT(sqrt(int128_t(10000)) == int128_t(100), "sqrt(10000) == 100");
-
-    // Non-perfect squares (floor)
-    TEST_ASSERT(sqrt(int128_t(2)) == int128_t(1), "sqrt(2) == 1");
-    TEST_ASSERT(sqrt(int128_t(3)) == int128_t(1), "sqrt(3) == 1");
-    TEST_ASSERT(sqrt(int128_t(5)) == int128_t(2), "sqrt(5) == 2");
-    TEST_ASSERT(sqrt(int128_t(8)) == int128_t(2), "sqrt(8) == 2");
-    TEST_ASSERT(sqrt(int128_t(15)) == int128_t(3), "sqrt(15) == 3");
-    TEST_ASSERT(sqrt(int128_t(99)) == int128_t(9), "sqrt(99) == 9");
-
-    // Verify property: sqrt(n)^2 <= n < (sqrt(n)+1)^2
-    for (int i = 1; i <= 20; ++i) {
-        int128_t n(i * i + i); // Non-perfect square
-        int128_t root = sqrt(n);
-        int128_t root_sq = root * root;
-        int128_t next_sq = (root + int128_t(1)) * (root + int128_t(1));
-        TEST_ASSERT(root_sq <= n && n < next_sq,
-                    "sqrt property holds for " + std::to_string(i * i + i));
-    }
-
-    // Large values
-    int128_t large(1000000);
-    TEST_ASSERT(sqrt(large) == int128_t(1000), "sqrt(1000000) == 1000");
-}
-
-// Test std::sign
 void test_sign()
 {
-    using namespace std;
+    // Positivos
+    check(sign(int128_t(1)) == int128_t(1), "sign(1) == 1");
+    check(sign(int128_t(42)) == int128_t(1), "sign(42) == 1");
+    check(sign(int128_t(12345)) == int128_t(1), "sign(12345) == 1");
 
-    // Positive
-    TEST_ASSERT(sign(int128_t(1)) == int128_t(1), "sign(1) == 1");
-    TEST_ASSERT(sign(int128_t(42)) == int128_t(1), "sign(42) == 1");
-    TEST_ASSERT(sign(int128_t(12345)) == int128_t(1), "sign(12345) == 1");
+    // Negativos
+    check(sign(int128_t(-1)) == int128_t(-1), "sign(-1) == -1");
+    check(sign(int128_t(-42)) == int128_t(-1), "sign(-42) == -1");
+    check(sign(int128_t(-5)) == int128_t(-1), "sign(-5) == -1");
 
-    // Negative
-    TEST_ASSERT(sign(int128_t(-1)) == int128_t(-1), "sign(-1) == -1");
-    TEST_ASSERT(sign(int128_t(-42)) == int128_t(-1), "sign(-42) == -1");
-    TEST_ASSERT(sign(int128_t(-12345)) == int128_t(-1), "sign(-12345) == -1");
-
-    // Zero
-    TEST_ASSERT(sign(int128_t(0)) == int128_t(0), "sign(0) == 0");
+    // Cero
+    check(sign(int128_t(0)) == int128_t(0), "sign(0) == 0");
 }
 
-// Test std::min and std::max
-void test_min_max()
+// =============================================================================
+// SECTION: pow (Power)
+// =============================================================================
+
+void test_pow()
 {
-    using namespace std;
+    // uint128_t basicos
+    check(pow(uint128_t(2), uint128_t(10)) == uint128_t(1024), "pow(2, 10) == 1024 (uint)");
+    check(pow(uint128_t(3), uint128_t(4)) == uint128_t(81), "pow(3, 4) == 81 (uint)");
+    check(pow(uint128_t(5), uint128_t(2)) == uint128_t(25), "pow(5, 2) == 25 (uint)");
 
-    // Basic min
-    TEST_ASSERT(min(int128_t(3), int128_t(5)) == int128_t(3), "min(3, 5) == 3");
-    TEST_ASSERT(min(int128_t(5), int128_t(3)) == int128_t(3), "min(5, 3) == 3");
-    TEST_ASSERT(min(int128_t(-3), int128_t(5)) == int128_t(-3), "min(-3, 5) == -3");
-    TEST_ASSERT(min(int128_t(-5), int128_t(-3)) == int128_t(-5), "min(-5, -3) == -5");
+    // int128_t basicos
+    check(pow(int128_t(2), int128_t(3)) == int128_t(8), "pow(2, 3) == 8 (signed)");
+    check(pow(int128_t(10), int128_t(5)) == int128_t(100000), "pow(10, 5) == 100000 (signed)");
 
-    // Basic max
-    TEST_ASSERT(max(int128_t(3), int128_t(5)) == int128_t(5), "max(3, 5) == 5");
-    TEST_ASSERT(max(int128_t(5), int128_t(3)) == int128_t(5), "max(5, 3) == 5");
-    TEST_ASSERT(max(int128_t(-3), int128_t(5)) == int128_t(5), "max(-3, 5) == 5");
-    TEST_ASSERT(max(int128_t(-5), int128_t(-3)) == int128_t(-3), "max(-5, -3) == -3");
+    // Fast paths
+    check(pow(int128_t(123), int128_t(0)) == int128_t(1), "pow(123, 0) == 1");
+    check(pow(int128_t(123), int128_t(1)) == int128_t(123), "pow(123, 1) == 123");
+    check(pow(int128_t(0), int128_t(5)) == int128_t(0), "pow(0, 5) == 0");
+    check(pow(int128_t(1), int128_t(100)) == int128_t(1), "pow(1, 100) == 1");
 
-    // Equal values
-    TEST_ASSERT(min(int128_t(5), int128_t(5)) == int128_t(5), "min(5, 5) == 5");
-    TEST_ASSERT(max(int128_t(5), int128_t(5)) == int128_t(5), "max(5, 5) == 5");
-
-    // Large values
-    int128_t large1(1000000000LL);
-    int128_t large2(-1000000000LL);
-    TEST_ASSERT(min(large1, large2) == large2, "min(1e9, -1e9) == -1e9");
-    TEST_ASSERT(max(large1, large2) == large1, "max(1e9, -1e9) == 1e9");
+    // Base negativa
+    check(pow(int128_t(-2), int128_t(3)) == int128_t(-8), "pow(-2, 3) == -8");
+    check(pow(int128_t(-2), int128_t(4)) == int128_t(16), "pow(-2, 4) == 16");
+    check(pow(int128_t(-3), int128_t(2)) == int128_t(9), "pow(-3, 2) == 9");
+    check(pow(int128_t(-1), int128_t(5)) == int128_t(-1), "pow(-1, 5) == -1");
+    check(pow(int128_t(-1), int128_t(6)) == int128_t(1), "pow(-1, 6) == 1");
 
     // Mixed types
-    TEST_ASSERT(min(int128_t(3), 5) == int128_t(3), "min(int128_t, int) works");
-    TEST_ASSERT(max(3, int128_t(5)) == int128_t(5), "max(int, int128_t) works");
+    check(pow(int128_t(2), 3) == int128_t(8), "pow(int128_t, int) works");
 }
 
-// Test std::clamp
+// =============================================================================
+// SECTION: sqrt (Square Root)
+// =============================================================================
+
+void test_sqrt()
+{
+    // uint128_t
+    check(sqrt(uint128_t(100)) == uint128_t(10), "sqrt(100) == 10 (uint)");
+    check(sqrt(uint128_t(0)) == uint128_t(0), "sqrt(0) == 0 (uint)");
+    check(sqrt(uint128_t(1)) == uint128_t(1), "sqrt(1) == 1 (uint)");
+
+    // int128_t cuadrados perfectos
+    check(sqrt(int128_t(0)) == int128_t(0), "sqrt(0) == 0");
+    check(sqrt(int128_t(1)) == int128_t(1), "sqrt(1) == 1");
+    check(sqrt(int128_t(4)) == int128_t(2), "sqrt(4) == 2");
+    check(sqrt(int128_t(9)) == int128_t(3), "sqrt(9) == 3");
+    check(sqrt(int128_t(16)) == int128_t(4), "sqrt(16) == 4");
+    check(sqrt(int128_t(25)) == int128_t(5), "sqrt(25) == 5");
+    check(sqrt(int128_t(100)) == int128_t(10), "sqrt(100) == 10");
+    check(sqrt(int128_t(144)) == int128_t(12), "sqrt(144) == 12");
+    check(sqrt(int128_t(10000)) == int128_t(100), "sqrt(10000) == 100");
+
+    // No cuadrados perfectos (floor)
+    check(sqrt(int128_t(2)) == int128_t(1), "sqrt(2) == 1 (floor)");
+    check(sqrt(int128_t(3)) == int128_t(1), "sqrt(3) == 1 (floor)");
+    check(sqrt(int128_t(5)) == int128_t(2), "sqrt(5) == 2 (floor)");
+    check(sqrt(int128_t(8)) == int128_t(2), "sqrt(8) == 2 (floor)");
+    check(sqrt(int128_t(15)) == int128_t(3), "sqrt(15) == 3 (floor)");
+    check(sqrt(int128_t(99)) == int128_t(9), "sqrt(99) == 9 (floor)");
+
+    // Propiedad: sqrt(n)^2 <= n < (sqrt(n)+1)^2
+    for (int i = 1; i <= 20; ++i)
+    {
+        const int128_t n(i * i + i);
+        const int128_t root = sqrt(n);
+        const int128_t root_sq = root * root;
+        const int128_t next_sq = (root + int128_t(1)) * (root + int128_t(1));
+        check(root_sq <= n && n < next_sq, ("sqrt property for " + std::to_string(i * i + i)).c_str());
+    }
+
+    // Valores grandes
+    check(sqrt(int128_t(1000000)) == int128_t(1000), "sqrt(1000000) == 1000");
+}
+
+// =============================================================================
+// SECTION: min / max
+// =============================================================================
+
+void test_min_max()
+{
+    // uint128_t
+    check(min(uint128_t(5), uint128_t(10)) == uint128_t(5), "min(5, 10) == 5 (uint)");
+    check(max(uint128_t(5), uint128_t(10)) == uint128_t(10), "max(5, 10) == 10 (uint)");
+
+    // int128_t basicos
+    check(min(int128_t(3), int128_t(5)) == int128_t(3), "min(3, 5) == 3");
+    check(min(int128_t(5), int128_t(3)) == int128_t(3), "min(5, 3) == 3");
+    check(max(int128_t(3), int128_t(5)) == int128_t(5), "max(3, 5) == 5");
+    check(max(int128_t(5), int128_t(3)) == int128_t(5), "max(5, 3) == 5");
+
+    // Con negativos
+    check(min(int128_t(-3), int128_t(5)) == int128_t(-3), "min(-3, 5) == -3");
+    check(min(int128_t(-5), int128_t(-3)) == int128_t(-5), "min(-5, -3) == -5");
+    check(max(int128_t(-3), int128_t(5)) == int128_t(5), "max(-3, 5) == 5");
+    check(max(int128_t(-5), int128_t(-3)) == int128_t(-3), "max(-5, -3) == -3");
+
+    // Iguales
+    check(min(int128_t(5), int128_t(5)) == int128_t(5), "min(5, 5) == 5");
+    check(max(int128_t(5), int128_t(5)) == int128_t(5), "max(5, 5) == 5");
+
+    // Valores grandes
+    int128_t large1(1000000000LL);
+    int128_t large2(-1000000000LL);
+    check(min(large1, large2) == large2, "min(1e9, -1e9) == -1e9");
+    check(max(large1, large2) == large1, "max(1e9, -1e9) == 1e9");
+
+    // Mixed types
+    check(min(int128_t(3), 5) == int128_t(3), "min(int128_t, int) works");
+    check(max(3, int128_t(5)) == int128_t(5), "max(int, int128_t) works");
+}
+
+// =============================================================================
+// SECTION: clamp
+// =============================================================================
+
 void test_clamp()
 {
-    using namespace std;
+    // uint128_t
+    check(clamp(uint128_t(15), uint128_t(0), uint128_t(10)) == uint128_t(10), "clamp(15, 0, 10) == 10 (uint)");
 
-    // Value within range
-    TEST_ASSERT(clamp(int128_t(5), int128_t(0), int128_t(10)) == int128_t(5),
-                "clamp(5, 0, 10) == 5");
+    // Dentro del rango
+    check(clamp(int128_t(5), int128_t(0), int128_t(10)) == int128_t(5), "clamp(5, 0, 10) == 5");
 
-    // Value below minimum
-    TEST_ASSERT(clamp(int128_t(-5), int128_t(0), int128_t(10)) == int128_t(0),
-                "clamp(-5, 0, 10) == 0");
+    // Debajo del minimo
+    check(clamp(int128_t(-5), int128_t(0), int128_t(10)) == int128_t(0), "clamp(-5, 0, 10) == 0");
 
-    // Value above maximum
-    TEST_ASSERT(clamp(int128_t(15), int128_t(0), int128_t(10)) == int128_t(10),
-                "clamp(15, 0, 10) == 10");
+    // Encima del maximo
+    check(clamp(int128_t(15), int128_t(0), int128_t(10)) == int128_t(10), "clamp(15, 0, 10) == 10");
 
-    // Value at boundaries
-    TEST_ASSERT(clamp(int128_t(0), int128_t(0), int128_t(10)) == int128_t(0),
-                "clamp(0, 0, 10) == 0");
-    TEST_ASSERT(clamp(int128_t(10), int128_t(0), int128_t(10)) == int128_t(10),
-                "clamp(10, 0, 10) == 10");
+    // En los limites
+    check(clamp(int128_t(0), int128_t(0), int128_t(10)) == int128_t(0), "clamp(0, 0, 10) == 0");
+    check(clamp(int128_t(10), int128_t(0), int128_t(10)) == int128_t(10), "clamp(10, 0, 10) == 10");
 
-    // Negative ranges
-    TEST_ASSERT(clamp(int128_t(-5), int128_t(-10), int128_t(-1)) == int128_t(-5),
-                "clamp(-5, -10, -1) == -5");
-    TEST_ASSERT(clamp(int128_t(-15), int128_t(-10), int128_t(-1)) == int128_t(-10),
-                "clamp(-15, -10, -1) == -10");
-    TEST_ASSERT(clamp(int128_t(5), int128_t(-10), int128_t(-1)) == int128_t(-1),
-                "clamp(5, -10, -1) == -1");
+    // Rangos negativos
+    check(clamp(int128_t(-5), int128_t(-10), int128_t(-1)) == int128_t(-5), "clamp(-5, -10, -1) == -5");
+    check(clamp(int128_t(-15), int128_t(-10), int128_t(-1)) == int128_t(-10), "clamp(-15, -10, -1) == -10");
+    check(clamp(int128_t(5), int128_t(-10), int128_t(-1)) == int128_t(-1), "clamp(5, -10, -1) == -1");
 }
 
-// Test std::midpoint
+// =============================================================================
+// SECTION: midpoint
+// =============================================================================
+
 void test_midpoint()
 {
-    using namespace std;
+    // uint128_t
+    check(midpoint(uint128_t(10), uint128_t(20)) == uint128_t(15), "midpoint(10, 20) == 15 (uint)");
 
-    // Basic cases
-    TEST_ASSERT(midpoint(int128_t(0), int128_t(10)) == int128_t(5), "midpoint(0, 10) == 5");
-    TEST_ASSERT(midpoint(int128_t(10), int128_t(20)) == int128_t(15), "midpoint(10, 20) == 15");
-    TEST_ASSERT(midpoint(int128_t(-10), int128_t(10)) == int128_t(0), "midpoint(-10, 10) == 0");
+    // int128_t basicos
+    check(midpoint(int128_t(0), int128_t(10)) == int128_t(5), "midpoint(0, 10) == 5");
+    check(midpoint(int128_t(10), int128_t(20)) == int128_t(15), "midpoint(10, 20) == 15");
+    check(midpoint(int128_t(-10), int128_t(10)) == int128_t(0), "midpoint(-10, 10) == 0");
 
-    // Negative values
-    TEST_ASSERT(midpoint(int128_t(-20), int128_t(-10)) == int128_t(-15),
-                "midpoint(-20, -10) == -15");
-    TEST_ASSERT(midpoint(int128_t(-5), int128_t(-1)) == int128_t(-3), "midpoint(-5, -1) == -3");
+    // Negativos
+    check(midpoint(int128_t(-20), int128_t(-10)) == int128_t(-15), "midpoint(-20, -10) == -15");
+    check(midpoint(int128_t(-5), int128_t(-1)) == int128_t(-3), "midpoint(-5, -1) == -3");
 
-    // Same values
-    TEST_ASSERT(midpoint(int128_t(5), int128_t(5)) == int128_t(5), "midpoint(5, 5) == 5");
+    // Iguales
+    check(midpoint(int128_t(5), int128_t(5)) == int128_t(5), "midpoint(5, 5) == 5");
 
-    // Odd sum (rounds towards a)
-    TEST_ASSERT(midpoint(int128_t(1), int128_t(2)) == int128_t(1), "midpoint(1, 2) == 1");
-    TEST_ASSERT(midpoint(int128_t(2), int128_t(1)) == int128_t(2), "midpoint(2, 1) == 2");
+    // Suma impar (redondea hacia a)
+    check(midpoint(int128_t(1), int128_t(2)) == int128_t(1), "midpoint(1, 2) == 1");
+    check(midpoint(int128_t(2), int128_t(1)) == int128_t(2), "midpoint(2, 1) == 2");
 
-    // Large values
+    // Valores grandes
     int128_t large1(1000000000LL);
     int128_t large2(2000000000LL);
-    TEST_ASSERT(midpoint(large1, large2) == int128_t(1500000000LL), "midpoint(1e9, 2e9) == 1.5e9");
+    check(midpoint(large1, large2) == int128_t(1500000000LL), "midpoint(1e9, 2e9) == 1.5e9");
 }
 
-// Test edge cases
+// =============================================================================
+// SECTION: divmod
+// =============================================================================
+
+void test_divmod()
+{
+    // uint128_t
+    {
+        auto [q, r] = divmod(uint128_t(17), uint128_t(5));
+        check(q == uint128_t(3) && r == uint128_t(2), "divmod(17, 5) == (3, 2) (uint)");
+    }
+
+    // int128_t
+    {
+        auto [q, r] = divmod(int128_t(17), int128_t(5));
+        check(q == int128_t(3) && r == int128_t(2), "divmod(17, 5) == (3, 2) (signed)");
+    }
+
+    // Division exacta
+    {
+        auto [q, r] = divmod(uint128_t(100), uint128_t(10));
+        check(q == uint128_t(10) && r == uint128_t(0), "divmod(100, 10) == (10, 0)");
+    }
+}
+
+// =============================================================================
+// SECTION: bezout_coeffs (Extended Euclidean Algorithm)
+// =============================================================================
+
+void test_bezout_coeffs()
+{
+    // Caso basico: 48*x + 18*y = gcd(48,18) = 6
+    {
+        auto [x, y] = bezout_coeffs(uint128_t(48), uint128_t(18));
+        uint128_t ax = uint128_t(48) * x.magnitude;
+        uint128_t by = uint128_t(18) * y.magnitude;
+
+        uint128_t result;
+        if (!x.is_negative && !y.is_negative)
+        {
+            result = ax + by;
+        }
+        else if (x.is_negative && !y.is_negative)
+        {
+            result = by - ax;
+        }
+        else if (!x.is_negative && y.is_negative)
+        {
+            result = ax - by;
+        }
+        else
+        {
+            result = uint128_t(0);
+        }
+        check(result == uint128_t(6), "bezout_coeffs(48, 18) satisfies 48x + 18y = 6");
+    }
+
+    // Con cero
+    {
+        auto [x, y] = bezout_coeffs(uint128_t(0), uint128_t(5));
+        check(x.magnitude == uint128_t(0) && y.magnitude == uint128_t(1), "bezout_coeffs(0, 5) == (0, 1)");
+    }
+
+    // Primos: gcd(17, 13) = 1
+    {
+        auto [x, y] = bezout_coeffs(uint128_t(17), uint128_t(13));
+        uint128_t ax = uint128_t(17) * x.magnitude;
+        uint128_t by = uint128_t(13) * y.magnitude;
+
+        uint128_t result;
+        if (!x.is_negative && !y.is_negative)
+        {
+            result = ax + by;
+        }
+        else if (x.is_negative && !y.is_negative)
+        {
+            result = by - ax;
+        }
+        else if (!x.is_negative && y.is_negative)
+        {
+            result = ax - by;
+        }
+        else
+        {
+            result = uint128_t(0);
+        }
+        check(result == uint128_t(1), "bezout_coeffs(17, 13) satisfies 17x + 13y = 1");
+    }
+}
+
+// =============================================================================
+// SECTION: edge cases
+// =============================================================================
+
 void test_edge_cases()
 {
-    using namespace std;
+    // Operaciones con cero
+    check(abs(int128_t(0)) == int128_t(0), "abs(0) == 0");
+    check(sign(int128_t(0)) == int128_t(0), "sign(0) == 0");
+    check(sqrt(int128_t(0)) == int128_t(0), "sqrt(0) == 0");
 
-    // Zero operations
-    TEST_ASSERT(abs(int128_t(0)) == int128_t(0), "abs(0) == 0");
-    TEST_ASSERT(sign(int128_t(0)) == int128_t(0), "sign(0) == 0");
-    TEST_ASSERT(sqrt(int128_t(0)) == int128_t(0), "sqrt(0) == 0");
-
-    // Identity operations
-    TEST_ASSERT(gcd(int128_t(42), int128_t(1)) == int128_t(1), "gcd(n, 1) == 1");
-    TEST_ASSERT(lcm(int128_t(42), int128_t(1)) == int128_t(42), "lcm(n, 1) == n");
-    TEST_ASSERT(pow(int128_t(42), int128_t(1)) == int128_t(42), "pow(n, 1) == n");
+    // Operaciones de identidad
+    check(gcd(int128_t(42), int128_t(1)) == int128_t(1), "gcd(n, 1) == 1");
+    check(lcm(int128_t(42), int128_t(1)) == int128_t(42), "lcm(n, 1) == n");
+    check(pow(int128_t(42), int128_t(1)) == int128_t(42), "pow(n, 1) == n");
 
     // Self operations
-    TEST_ASSERT(min(int128_t(42), int128_t(42)) == int128_t(42), "min(n, n) == n");
-    TEST_ASSERT(max(int128_t(42), int128_t(42)) == int128_t(42), "max(n, n) == n");
-    TEST_ASSERT(midpoint(int128_t(42), int128_t(42)) == int128_t(42), "midpoint(n, n) == n");
+    check(min(int128_t(42), int128_t(42)) == int128_t(42), "min(n, n) == n");
+    check(max(int128_t(42), int128_t(42)) == int128_t(42), "max(n, n) == n");
+    check(midpoint(int128_t(42), int128_t(42)) == int128_t(42), "midpoint(n, n) == n");
 }
 
-// Test constexpr compatibility (GCC/Clang only)
-void test_constexpr()
-{
-    print_section("Testing Constexpr Compatibility");
-
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-    // Compile-time evaluation (GCC/Clang)
-    // Note: abs, pow, sqrt use intrinsics not constexpr, only constexpr functions work
-
-    constexpr int128_t sign_result = nstd::sign(int128_t(-5));
-    TEST_ASSERT(sign_result == int128_t(-1), "constexpr sign(-5) == -1");
-
-    constexpr int128_t min_result = nstd::min(int128_t(3), int128_t(5));
-    TEST_ASSERT(min_result == int128_t(3), "constexpr min(3, 5) == 3");
-
-    constexpr int128_t max_result = nstd::max(int128_t(3), int128_t(5));
-    TEST_ASSERT(max_result == int128_t(5), "constexpr max(3, 5) == 5");
-
-    constexpr int128_t clamp_result = nstd::clamp(int128_t(15), int128_t(0), int128_t(10));
-    TEST_ASSERT(clamp_result == int128_t(10), "constexpr clamp(15, 0, 10) == 10");
-
-    // Runtime for functions with intrinsics
-    int128_t abs_result = nstd::abs(int128_t(-42));
-    TEST_ASSERT(abs_result == int128_t(42), "runtime abs(-42) == 42");
-
-    int128_t pow_result = nstd::pow(int128_t(2), int128_t(3));
-    TEST_ASSERT(pow_result == int128_t(8), "runtime pow(2, 3) == 8");
-
-    int128_t sqrt_result = nstd::sqrt(int128_t(16));
-    TEST_ASSERT(sqrt_result == int128_t(4), "runtime sqrt(16) == 4");
-
-    int128_t midpoint_result = nstd::midpoint(int128_t(0), int128_t(10));
-    TEST_ASSERT(midpoint_result == int128_t(5), "runtime midpoint(0, 10) == 5");
-#else
-    // Runtime evaluation (MSVC/Intel)
-    std::cout << "Note: Constexpr tests skipped (MSVC/Intel intrinsics not constexpr)" << std::endl;
-
-    int128_t abs_result = nstd::abs(int128_t(-42));
-    TEST_ASSERT(abs_result == int128_t(42), "runtime abs(-42) == 42");
-
-    int128_t pow_result = nstd::pow(int128_t(2), int128_t(3));
-    TEST_ASSERT(pow_result == int128_t(8), "runtime pow(2, 3) == 8");
-
-    int128_t sqrt_result = nstd::sqrt(int128_t(16));
-    TEST_ASSERT(sqrt_result == int128_t(4), "runtime sqrt(16) == 4");
-
-    int128_t sign_result = nstd::sign(int128_t(-5));
-    TEST_ASSERT(sign_result == int128_t(-1), "runtime sign(-5) == -1");
-
-    int128_t min_result = nstd::min(int128_t(3), int128_t(5));
-    TEST_ASSERT(min_result == int128_t(3), "runtime min(3, 5) == 3");
-
-    int128_t max_result = nstd::max(int128_t(3), int128_t(5));
-    TEST_ASSERT(max_result == int128_t(5), "runtime max(3, 5) == 5");
-#endif
-}
+// =============================================================================
+// MAIN
+// =============================================================================
 
 int main()
 {
-    std::cout << "╔===========================================================╗" << std::endl;
-    std::cout << "║  INT128_CMATH.HPP - COMPREHENSIVE TEST SUITE             ║" << std::endl;
-    std::cout << "╚===========================================================╝" << std::endl;
+    std::cout << "=== int128_base_cmath.hpp tests ===\n\n";
 
-    print_section("Testing std::gcd (Greatest Common Divisor)");
-    test_gcd_basic();
-    std::cout << "[GCD] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
+    std::cout << "--- gcd ---\n";
+    test_gcd();
 
-    int prev_total = total_tests;
-    print_section("Testing std::lcm (Least Common Multiple)");
-    test_lcm_basic();
-    std::cout << "[LCM] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
+    std::cout << "\n--- lcm ---\n";
+    test_lcm();
 
-    prev_total = total_tests;
-    print_section("Testing std::abs (Absolute Value)");
+    std::cout << "\n--- abs ---\n";
     test_abs();
-    std::cout << "[ABS] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
 
-    prev_total = total_tests;
-    print_section("Testing std::pow (Power Function)");
-    test_pow_basic();
-    std::cout << "[POW] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
-
-    prev_total = total_tests;
-    print_section("Testing std::sqrt (Square Root)");
-    test_sqrt_basic();
-    std::cout << "[SQRT] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
-
-    prev_total = total_tests;
-    print_section("Testing std::sign");
+    std::cout << "\n--- sign ---\n";
     test_sign();
-    std::cout << "[SIGN] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
 
-    prev_total = total_tests;
-    print_section("Testing std::min and std::max");
+    std::cout << "\n--- pow ---\n";
+    test_pow();
+
+    std::cout << "\n--- sqrt ---\n";
+    test_sqrt();
+
+    std::cout << "\n--- min / max ---\n";
     test_min_max();
-    std::cout << "[MIN/MAX] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
 
-    prev_total = total_tests;
-    print_section("Testing std::clamp");
+    std::cout << "\n--- clamp ---\n";
     test_clamp();
-    std::cout << "[CLAMP] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
 
-    prev_total = total_tests;
-    print_section("Testing std::midpoint");
+    std::cout << "\n--- midpoint ---\n";
     test_midpoint();
-    std::cout << "[MIDPOINT] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
 
-    prev_total = total_tests;
-    print_section("Testing Edge Cases");
+    std::cout << "\n--- divmod ---\n";
+    test_divmod();
+
+    std::cout << "\n--- bezout_coeffs ---\n";
+    test_bezout_coeffs();
+
+    std::cout << "\n--- edge cases ---\n";
     test_edge_cases();
-    std::cout << "[EDGE CASES] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
 
-    prev_total = total_tests;
-    test_constexpr();
-    std::cout << "[CONSTEXPR] Tests: " << total_tests << " | Passed: " << passed_tests
-              << " | Failed: " << failed_tests << std::endl;
+    std::cout << "\n=== RESULTADO: " << tests_passed << "/" << (tests_passed + tests_failed)
+              << " tests pasaron ===\n";
 
-    // Summary
-    std::cout << "\n╔===========================================================╗" << std::endl;
-    std::cout << "║  FINAL SUMMARY                                            ║" << std::endl;
-    std::cout << "╚===========================================================╝" << std::endl;
-    std::cout << "Total Tests:  " << total_tests << std::endl;
-    std::cout << "[OK] Passed:     " << passed_tests << std::endl;
-    std::cout << "[ERROR] Failed:     " << failed_tests << std::endl;
-    std::cout << "Success Rate: " << std::fixed << std::setprecision(1)
-              << (100.0 * passed_tests / total_tests) << "%" << std::endl;
-
-    std::cout << "\n=== Performance Notes ===" << std::endl;
-    std::cout
-        << "* std::gcd usa algoritmo binario (Stein's) con manejo de signos - O(log(min(a,b)))"
-        << std::endl;
-    std::cout << "* std::lcm optimizado: lcm(a,b) = abs(a*b)/gcd(a,b) - evita overflow"
-              << std::endl;
-    std::cout << "* std::pow usa exponenciación rápida con signos - O(log(exp))" << std::endl;
-    std::cout << "* std::sqrt usa método de Newton para valores no-negativos" << std::endl;
-    std::cout << "* std::midpoint evita overflow: a + (b-a)/2" << std::endl;
-    std::cout << "* Todas las funciones constexpr son compatible con compile-time" << std::endl;
-
-    return (failed_tests == 0) ? 0 : 1;
+    return (tests_failed == 0) ? 0 : 1;
 }

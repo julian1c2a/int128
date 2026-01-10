@@ -1,438 +1,362 @@
-/*
- * Tests extraídos para int128_traits.hpp
- * Pruebas individuales por función/especialización
+/**
+ * @file int128_traits_extracted_tests.cpp
+ * @brief Tests completos de int128_base_traits.hpp (template unificado)
+ *
+ * Fusión de:
+ * - Legacy int128_traits.hpp tests (18 tests)
+ * - test_traits_template.cpp (15 tests)
+ *
+ * Total: 30+ tests cubriendo:
+ * - Type traits fundamentales (is_integral, is_arithmetic, is_signed, is_unsigned)
+ * - Traits de trivialidad (copyable, constructible, destructible)
+ * - Transformaciones de tipos (make_signed, make_unsigned)
+ * - common_type con varios tipos
+ * - hash para uint128_t e int128_t
+ * - unordered containers
  */
 
-// [WARN] CRITICAL: Include traits specializations BEFORE any other header
-// that might include <type_traits>
-#include "../include/uint128/uint128_traits_specializations.hpp"
-
-#include "../include/int128/int128_limits.hpp"
-#include "../include/int128/int128_t.hpp"
-#include "../include/int128/int128_traits.hpp"
+#include "int128_base_traits.hpp"
 #include <cassert>
 #include <iostream>
 #include <limits>
 #include <type_traits>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 using namespace nstd;
 
-// Los traits se definen en int128_traits.hpp
-// La macro INT128_USING_LIBCPP indica si las especializaciones están disponibles
-// (0 = disponibles en GCC/MSVC con libstdc++/MS STL, 1 = NO disponibles en libc++)
+static int tests_passed = 0;
+static int tests_failed = 0;
 
-// =============================================================================
-// TEST: is_integral
-// =============================================================================
-bool test_is_integral()
+void check(bool condition, const char *test_name)
 {
-    std::cout << "\n=== TEST: is_integral ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_integral_v<int128_t>;
-    std::cout << "  std::is_integral_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser integral");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
+    if (condition)
+    {
+        std::cout << "[OK]   " << test_name << std::endl;
+        tests_passed++;
+    }
+    else
+    {
+        std::cout << "[FAIL] " << test_name << std::endl;
+        tests_failed++;
+    }
 }
 
 // =============================================================================
-// TEST: is_arithmetic
+// SECTION: Type traits fundamentales usando namespace nstd
 // =============================================================================
-bool test_is_arithmetic()
+
+void test_nstd_is_integral()
 {
-    std::cout << "\n=== TEST: is_arithmetic ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_arithmetic_v<int128_t>;
-    std::cout << "  std::is_arithmetic_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser arithmetic");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
+    check(nstd::is_integral_v<uint128_t>, "nstd::is_integral_v<uint128_t>");
+    check(nstd::is_integral_v<int128_t>, "nstd::is_integral_v<int128_t>");
+    check(!nstd::is_integral_v<float>, "!nstd::is_integral_v<float>");
+}
+
+void test_nstd_is_signed()
+{
+    check(nstd::is_signed_v<int128_t>, "nstd::is_signed_v<int128_t>");
+    check(!nstd::is_signed_v<uint128_t>, "!nstd::is_signed_v<uint128_t>");
+}
+
+void test_nstd_is_unsigned()
+{
+    check(nstd::is_unsigned_v<uint128_t>, "nstd::is_unsigned_v<uint128_t>");
+    check(!nstd::is_unsigned_v<int128_t>, "!nstd::is_unsigned_v<int128_t>");
+}
+
+void test_nstd_is_arithmetic()
+{
+    check(nstd::is_arithmetic_v<uint128_t>, "nstd::is_arithmetic_v<uint128_t>");
+    check(nstd::is_arithmetic_v<int128_t>, "nstd::is_arithmetic_v<int128_t>");
 }
 
 // =============================================================================
-// TEST: is_unsigned
+// SECTION: Transformaciones de tipos
 // =============================================================================
-bool test_is_unsigned()
-{
-    std::cout << "\n=== TEST: is_unsigned ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_unsigned_v<int128_t>;
-    std::cout << "  std::is_unsigned_v<int128_t> = " << result << "\n";
-    assert(!result && "int128_t NO debe ser unsigned");
 
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
+void test_make_signed()
+{
+    using signed_from_unsigned = nstd::make_signed_t<uint128_t>;
+    using signed_from_signed = nstd::make_signed_t<int128_t>;
+
+    check(std::is_same_v<signed_from_unsigned, int128_t>,
+          "make_signed_t<uint128_t> = int128_t");
+    check(std::is_same_v<signed_from_signed, int128_t>,
+          "make_signed_t<int128_t> = int128_t");
+}
+
+void test_make_unsigned()
+{
+    using unsigned_from_unsigned = nstd::make_unsigned_t<uint128_t>;
+    using unsigned_from_signed = nstd::make_unsigned_t<int128_t>;
+
+    check(std::is_same_v<unsigned_from_unsigned, uint128_t>,
+          "make_unsigned_t<uint128_t> = uint128_t");
+    check(std::is_same_v<unsigned_from_signed, uint128_t>,
+          "make_unsigned_t<int128_t> = uint128_t");
 }
 
 // =============================================================================
-// TEST: is_signed
+// SECTION: common_type tests
 // =============================================================================
-bool test_is_signed()
+
+void test_common_type_same()
 {
-    std::cout << "\n=== TEST: is_signed ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_signed_v<int128_t>;
-    std::cout << "  std::is_signed_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser signed");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
+    check(std::is_same_v<nstd::common_type_t<uint128_t, uint128_t>, uint128_t>,
+          "common_type<uint128_t, uint128_t> = uint128_t");
+    check(std::is_same_v<nstd::common_type_t<int128_t, int128_t>, int128_t>,
+          "common_type<int128_t, int128_t> = int128_t");
+}
+
+void test_common_type_cross()
+{
+    // signed tiene prioridad
+    check(std::is_same_v<nstd::common_type_t<uint128_t, int128_t>, int128_t>,
+          "common_type<uint128_t, int128_t> = int128_t");
+    check(std::is_same_v<nstd::common_type_t<int128_t, uint128_t>, int128_t>,
+          "common_type<int128_t, uint128_t> = int128_t");
+}
+
+void test_common_type_uint64()
+{
+    check(std::is_same_v<nstd::common_type_t<uint128_t, uint64_t>, uint128_t>,
+          "common_type<uint128_t, uint64_t> = uint128_t");
+    check(std::is_same_v<nstd::common_type_t<uint64_t, uint128_t>, uint128_t>,
+          "common_type<uint64_t, uint128_t> = uint128_t");
+}
+
+void test_common_type_int64()
+{
+    check(std::is_same_v<nstd::common_type_t<int128_t, int64_t>, int128_t>,
+          "common_type<int128_t, int64_t> = int128_t");
+    check(std::is_same_v<nstd::common_type_t<int64_t, int128_t>, int128_t>,
+          "common_type<int64_t, int128_t> = int128_t");
+}
+
+void test_common_type_int()
+{
+    check(std::is_same_v<nstd::common_type_t<int128_t, int>, int128_t>,
+          "common_type<int128_t, int> = int128_t");
+    check(std::is_same_v<nstd::common_type_t<int, int128_t>, int128_t>,
+          "common_type<int, int128_t> = int128_t");
 }
 
 // =============================================================================
-// TEST: is_trivially_copyable
+// SECTION: Trivialidad (usando std:: directamente)
 // =============================================================================
-bool test_is_trivially_copyable()
+
+void test_trivially_copyable()
 {
-    std::cout << "\n=== TEST: is_trivially_copyable ===\n";
-    bool result = std::is_trivially_copyable_v<int128_t>;
-    std::cout << "  std::is_trivially_copyable_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser trivialmente copiable");
-    std::cout << "  [OK] PASS\n";
-    return true;
+    check(std::is_trivially_copyable_v<uint128_t>,
+          "std::is_trivially_copyable<uint128_t>");
+    check(std::is_trivially_copyable_v<int128_t>,
+          "std::is_trivially_copyable<int128_t>");
+}
+
+void test_trivially_constructible()
+{
+    check(std::is_trivially_copy_constructible_v<uint128_t>,
+          "std::is_trivially_copy_constructible<uint128_t>");
+    check(std::is_trivially_copy_constructible_v<int128_t>,
+          "std::is_trivially_copy_constructible<int128_t>");
+
+    check(std::is_trivially_move_constructible_v<uint128_t>,
+          "std::is_trivially_move_constructible<uint128_t>");
+    check(std::is_trivially_move_constructible_v<int128_t>,
+          "std::is_trivially_move_constructible<int128_t>");
+}
+
+void test_trivially_assignable()
+{
+    check(std::is_trivially_copy_assignable_v<uint128_t>,
+          "std::is_trivially_copy_assignable<uint128_t>");
+    check(std::is_trivially_copy_assignable_v<int128_t>,
+          "std::is_trivially_copy_assignable<int128_t>");
+
+    check(std::is_trivially_move_assignable_v<uint128_t>,
+          "std::is_trivially_move_assignable<uint128_t>");
+    check(std::is_trivially_move_assignable_v<int128_t>,
+          "std::is_trivially_move_assignable<int128_t>");
+}
+
+void test_trivially_destructible()
+{
+    check(std::is_trivially_destructible_v<uint128_t>,
+          "std::is_trivially_destructible<uint128_t>");
+    check(std::is_trivially_destructible_v<int128_t>,
+          "std::is_trivially_destructible<int128_t>");
+}
+
+void test_standard_layout()
+{
+    check(std::is_standard_layout_v<uint128_t>,
+          "std::is_standard_layout<uint128_t>");
+    check(std::is_standard_layout_v<int128_t>,
+          "std::is_standard_layout<int128_t>");
 }
 
 // =============================================================================
-// TEST: is_trivially_copy_constructible
+// SECTION: Hash
 // =============================================================================
-bool test_is_trivially_copy_constructible()
+
+void test_hash_uint128()
 {
-    std::cout << "\n=== TEST: is_trivially_copy_constructible ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_trivially_copy_constructible_v<int128_t>;
-    std::cout << "  std::is_trivially_copy_constructible_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser trivialmente copy constructible");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
+    nstd::hash<uint128_t> hasher;
 
-// =============================================================================
-// TEST: is_trivially_move_constructible
-// =============================================================================
-bool test_is_trivially_move_constructible()
-{
-    std::cout << "\n=== TEST: is_trivially_move_constructible ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_trivially_move_constructible_v<int128_t>;
-    std::cout << "  std::is_trivially_move_constructible_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser trivialmente move constructible");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: is_trivially_copy_assignable
-// =============================================================================
-bool test_is_trivially_copy_assignable()
-{
-    std::cout << "\n=== TEST: is_trivially_copy_assignable ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_trivially_copy_assignable_v<int128_t>;
-    std::cout << "  std::is_trivially_copy_assignable_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser trivialmente copy assignable");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: is_trivially_move_assignable
-// =============================================================================
-bool test_is_trivially_move_assignable()
-{
-    std::cout << "\n=== TEST: is_trivially_move_assignable ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_trivially_move_assignable_v<int128_t>;
-    std::cout << "  std::is_trivially_move_assignable_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser trivialmente move assignable");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: is_trivially_destructible
-// =============================================================================
-bool test_is_trivially_destructible()
-{
-    std::cout << "\n=== TEST: is_trivially_destructible ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_trivially_destructible_v<int128_t>;
-    std::cout << "  std::is_trivially_destructible_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe ser trivialmente destructible");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: is_standard_layout
-// =============================================================================
-bool test_is_standard_layout()
-{
-    std::cout << "\n=== TEST: is_standard_layout ===\n";
-#if !INT128_USING_LIBCPP
-    bool result = std::is_standard_layout_v<int128_t>;
-    std::cout << "  std::is_standard_layout_v<int128_t> = " << result << "\n";
-    assert(result && "int128_t debe tener standard layout");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: make_signed
-// =============================================================================
-bool test_make_signed()
-{
-    std::cout << "\n=== TEST: make_signed ===\n";
-#if !INT128_USING_LIBCPP
-    using signed_type = std::make_signed_t<int128_t>;
-    bool result = std::is_same_v<signed_type, int128_t>;
-    std::cout << "  std::make_signed_t<int128_t> es int128_t = " << result << "\n";
-    assert(result && "make_signed<int128_t> debe devolver int128_t");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: make_unsigned
-// =============================================================================
-bool test_make_unsigned()
-{
-    std::cout << "\n=== TEST: make_unsigned ===\n";
-#if !INT128_USING_LIBCPP
-    using unsigned_type = std::make_unsigned_t<int128_t>;
-    bool result = std::is_same_v<unsigned_type, uint128_t>;
-    std::cout << "  std::make_unsigned_t<int128_t> es uint128_t = " << result << "\n";
-    assert(result && "make_unsigned<int128_t> debe devolver uint128_t");
-    std::cout << "  [OK] PASS\n";
-#else
-    std::cout << "  [SKIP] No soportado en esta configuración STL\n";
-#endif
-    return true;
-}
-
-// =============================================================================
-// TEST: common_type with uint64_t
-// =============================================================================
-bool test_common_type_uint64()
-{
-    std::cout << "\n=== TEST: common_type<int128_t, uint64_t> ===\n";
-    bool result1 = std::is_same_v<std::common_type_t<int128_t, uint64_t>, int128_t>;
-    bool result2 = std::is_same_v<std::common_type_t<uint64_t, int128_t>, int128_t>;
-
-    std::cout << "  common_type<int128_t, uint64_t> = int128_t: " << result1 << "\n";
-    std::cout << "  common_type<uint64_t, int128_t> = int128_t: " << result2 << "\n";
-
-    assert(result1 && "common_type<int128_t, uint64_t> debe ser int128_t");
-    assert(result2 && "common_type<uint64_t, int128_t> debe ser int128_t");
-    std::cout << "  [OK] PASS\n";
-    return true;
-}
-
-// =============================================================================
-// TEST: common_type with uint32_t
-// =============================================================================
-bool test_common_type_uint32()
-{
-    std::cout << "\n=== TEST: common_type<int128_t, uint32_t> ===\n";
-    bool result1 = std::is_same_v<std::common_type_t<int128_t, uint32_t>, int128_t>;
-    bool result2 = std::is_same_v<std::common_type_t<uint32_t, int128_t>, int128_t>;
-
-    std::cout << "  common_type<int128_t, uint32_t> = int128_t: " << result1 << "\n";
-    std::cout << "  common_type<uint32_t, int128_t> = int128_t: " << result2 << "\n";
-
-    assert(result1 && "common_type<int128_t, uint32_t> debe ser int128_t");
-    assert(result2 && "common_type<uint32_t, int128_t> debe ser int128_t");
-    std::cout << "  [OK] PASS\n";
-    return true;
-}
-
-// =============================================================================
-// TEST: common_type with int
-// =============================================================================
-bool test_common_type_int()
-{
-    std::cout << "\n=== TEST: common_type<int128_t, int> ===\n";
-    bool result1 = std::is_same_v<std::common_type_t<int128_t, int>, int128_t>;
-    bool result2 = std::is_same_v<std::common_type_t<int, int128_t>, int128_t>;
-
-    std::cout << "  common_type<int128_t, int> = int128_t: " << result1 << "\n";
-    std::cout << "  common_type<int, int128_t> = int128_t: " << result2 << "\n";
-
-    assert(result1 && "common_type<int128_t, int> debe ser int128_t");
-    assert(result2 && "common_type<int, int128_t> debe ser int128_t");
-    std::cout << "  [OK] PASS\n";
-    return true;
-}
-
-// =============================================================================
-// TEST: std::hash
-// =============================================================================
-bool test_hash()
-{
-    std::cout << "\n=== TEST: nstd::hash<int128_t> ===\n";
-
-    nstd::hash<int128_t> hasher;
-
-    // Probar valores diferentes
-    int128_t val1(0, 42);
-    int128_t val2(0, 43);
-    int128_t val3(1, 42);
-    int128_t val4(0, 42); // Igual a val1
+    uint128_t val1(123);
+    uint128_t val2(123);
+    uint128_t val3(456);
 
     size_t hash1 = hasher(val1);
     size_t hash2 = hasher(val2);
     size_t hash3 = hasher(val3);
-    size_t hash4 = hasher(val4);
 
-    std::cout << "  hash(0, 42) = " << hash1 << "\n";
-    std::cout << "  hash(0, 43) = " << hash2 << "\n";
-    std::cout << "  hash(1, 42) = " << hash3 << "\n";
-    std::cout << "  hash(0, 42) [dup] = " << hash4 << "\n";
+    check(hash1 == hash2, "hash<uint128_t>: iguales tienen mismo hash");
+    check(hash1 != hash3, "hash<uint128_t>: diferentes tienen distinto hash");
+}
 
-    assert(hash1 == hash4 && "Valores iguales deben tener el mismo hash");
-    assert(hash1 != hash2 && "Valores diferentes deben tener hashes diferentes");
-    assert(hash1 != hash3 && "Valores diferentes deben tener hashes diferentes");
+void test_hash_int128()
+{
+    nstd::hash<int128_t> hasher;
 
-    // Probar en un unordered_map
-    std::unordered_map<int128_t, int, nstd::hash<int128_t>> map;
-    map[val1] = 100;
-    map[val2] = 200;
-    map[val3] = 300;
+    int128_t val1(-42);
+    int128_t val2(-42);
+    int128_t val3(42);
 
-    assert(map[val1] == 100);
-    assert(map[val4] == 100); // val4 == val1
-    assert(map[val2] == 200);
-    assert(map[val3] == 300);
+    size_t hash1 = hasher(val1);
+    size_t hash2 = hasher(val2);
+    size_t hash3 = hasher(val3);
 
-    std::cout << "  Unordered map con int128_t funciona correctamente\n";
-    std::cout << "  [OK] PASS\n";
-    return true;
+    check(hash1 == hash2, "hash<int128_t>: iguales tienen mismo hash");
+    check(hash1 != hash3, "hash<int128_t>: diferentes tienen distinto hash");
+}
+
+void test_hash_with_high_bits()
+{
+    nstd::hash<uint128_t> hasher;
+
+    // Valores que difieren solo en high bits
+    uint128_t val1(uint64_t(0), uint64_t(1));
+    uint128_t val2(uint64_t(1), uint64_t(1));
+
+    check(hasher(val1) != hasher(val2), "hash distingue high bits diferentes");
 }
 
 // =============================================================================
-// TEST: numeric_limits
+// SECTION: Unordered containers
 // =============================================================================
-bool test_numeric_limits()
+
+void test_unordered_set_uint128()
 {
-    std::cout << "\n=== TEST: std::numeric_limits<int128_t> ===\n";
+    std::unordered_set<uint128_t, nstd::hash<uint128_t>> set;
+    set.insert(uint128_t(100));
+    set.insert(uint128_t(200));
+    set.insert(uint128_t(100)); // duplicado
 
-    using limits = std::numeric_limits<int128_t>;
+    check(set.size() == 2, "unordered_set<uint128_t> tamaño correcto");
+    check(set.count(uint128_t(100)) == 1, "unordered_set<uint128_t> count(100)");
+    check(set.count(uint128_t(200)) == 1, "unordered_set<uint128_t> count(200)");
+    check(set.count(uint128_t(300)) == 0, "unordered_set<uint128_t> count(300)=0");
+}
 
-    std::cout << "  is_specialized = " << limits::is_specialized << "\n";
-    std::cout << "  is_signed = " << limits::is_signed << "\n";
-    std::cout << "  is_integer = " << limits::is_integer << "\n";
-    std::cout << "  digits = " << limits::digits << "\n";
-    std::cout << "  digits10 = " << limits::digits10 << "\n";
+void test_unordered_set_int128()
+{
+    std::unordered_set<int128_t, nstd::hash<int128_t>> set;
+    set.insert(int128_t(-100));
+    set.insert(int128_t(100));
+    set.insert(int128_t(-100)); // duplicado
 
-    if (!limits::is_specialized) {
-        std::cout << "  [SKIP] numeric_limits no está especializado en esta configuración STL\n";
-        return true;
-    }
+    check(set.size() == 2, "unordered_set<int128_t> tamaño correcto");
+    check(set.count(int128_t(-100)) == 1, "unordered_set<int128_t> count(-100)");
+    check(set.count(int128_t(100)) == 1, "unordered_set<int128_t> count(100)");
+}
 
-    assert(limits::is_signed && "int128_t debe ser signed");
-    assert(limits::is_integer && "int128_t debe ser integer");
-    assert(limits::digits == 127 && "int128_t debe tener 127 bits de valor (1 bit para signo)");
+void test_unordered_map()
+{
+    std::unordered_map<uint128_t, int, nstd::hash<uint128_t>> map;
 
-    int128_t min_val = limits::min();
-    int128_t max_val = limits::max();
+    uint128_t key1(42);
+    uint128_t key2(123);
 
-    assert(min_val < int128_t(0) && "min() debe ser negativo");
-    assert(max_val > int128_t(0) && "max() debe ser positivo");
+    map[key1] = 100;
+    map[key2] = 200;
 
-    std::cout << "  min() < 0\n";
-    std::cout << "  max() > 0\n";
-    std::cout << "  [OK] PASS\n";
+    check(map[key1] == 100, "unordered_map[key1]=100");
+    check(map[key2] == 200, "unordered_map[key2]=200");
+    check(map.size() == 2, "unordered_map size=2");
+}
 
-    return true;
+// =============================================================================
+// SECTION: numeric_limits (verificación básica)
+// =============================================================================
+
+void test_numeric_limits_basic()
+{
+    using limits_u = std::numeric_limits<uint128_t>;
+    using limits_i = std::numeric_limits<int128_t>;
+
+    check(limits_u::is_specialized, "numeric_limits<uint128_t>::is_specialized");
+    check(limits_i::is_specialized, "numeric_limits<int128_t>::is_specialized");
+
+    check(!limits_u::is_signed, "numeric_limits<uint128_t>::is_signed=false");
+    check(limits_i::is_signed, "numeric_limits<int128_t>::is_signed=true");
+
+    check(limits_u::is_integer, "numeric_limits<uint128_t>::is_integer");
+    check(limits_i::is_integer, "numeric_limits<int128_t>::is_integer");
+
+    check(limits_u::digits == 128, "numeric_limits<uint128_t>::digits=128");
+    check(limits_i::digits == 127, "numeric_limits<int128_t>::digits=127");
 }
 
 // =============================================================================
 // MAIN
 // =============================================================================
+
 int main()
 {
-    std::cout << "====================================================\n";
-    std::cout << "  int128_traits.hpp - Tests Extraídos Individuales\n";
-    std::cout << "====================================================\n";
+    std::cout << "=== int128_base_traits.hpp tests ===\n\n";
 
-    int passed = 0;
-    int total = 0;
+    std::cout << "--- Type traits fundamentales (nstd) ---\n";
+    test_nstd_is_integral();
+    test_nstd_is_signed();
+    test_nstd_is_unsigned();
+    test_nstd_is_arithmetic();
 
-#define RUN_TEST(func)                                                                             \
-    total++;                                                                                       \
-    try {                                                                                          \
-        if (func())                                                                                \
-            passed++;                                                                              \
-    } catch (const std::exception& e) {                                                            \
-        std::cout << "  [FAIL] EXCEPTION: " << e.what() << "\n";                                   \
-    }
+    std::cout << "\n--- Transformaciones de tipos ---\n";
+    test_make_signed();
+    test_make_unsigned();
 
-    // Tests de type traits fundamentales
-    RUN_TEST(test_is_integral);
-    RUN_TEST(test_is_arithmetic);
-    RUN_TEST(test_is_unsigned);
-    RUN_TEST(test_is_signed);
+    std::cout << "\n--- common_type ---\n";
+    test_common_type_same();
+    test_common_type_cross();
+    test_common_type_uint64();
+    test_common_type_int64();
+    test_common_type_int();
 
-    // Tests de trivialidad
-    RUN_TEST(test_is_trivially_copyable);
-    RUN_TEST(test_is_trivially_copy_constructible);
-    RUN_TEST(test_is_trivially_move_constructible);
-    RUN_TEST(test_is_trivially_copy_assignable);
-    RUN_TEST(test_is_trivially_move_assignable);
-    RUN_TEST(test_is_trivially_destructible);
-    RUN_TEST(test_is_standard_layout);
+    std::cout << "\n--- Trivialidad (std) ---\n";
+    test_trivially_copyable();
+    test_trivially_constructible();
+    test_trivially_assignable();
+    test_trivially_destructible();
+    test_standard_layout();
 
-    // Tests de transformación de tipos
-    RUN_TEST(test_make_signed);
-    RUN_TEST(test_make_unsigned);
+    std::cout << "\n--- Hash ---\n";
+    test_hash_uint128();
+    test_hash_int128();
+    test_hash_with_high_bits();
 
-    // Tests de common_type
-    RUN_TEST(test_common_type_uint64);
-    RUN_TEST(test_common_type_uint32);
-    RUN_TEST(test_common_type_int);
+    std::cout << "\n--- Unordered containers ---\n";
+    test_unordered_set_uint128();
+    test_unordered_set_int128();
+    test_unordered_map();
 
-    // Tests de hash
-    RUN_TEST(test_hash);
+    std::cout << "\n--- numeric_limits ---\n";
+    test_numeric_limits_basic();
 
-    // Tests de numeric_limits
-    RUN_TEST(test_numeric_limits);
+    std::cout << "\n=== RESULTADO: " << tests_passed << "/" << (tests_passed + tests_failed)
+              << " tests pasaron ===\n";
 
-    std::cout << "\n====================================================\n";
-    std::cout << "  RESUMEN: " << passed << "/" << total << " tests pasados\n";
-    std::cout << "====================================================\n";
-
-    return (passed == total) ? 0 : 1;
+    return (tests_failed == 0) ? 0 : 1;
 }

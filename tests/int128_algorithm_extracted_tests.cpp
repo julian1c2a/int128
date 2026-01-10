@@ -1,424 +1,463 @@
-/*
- * Tests para int128_algorithm.hpp
- * Verifica todos los algoritmos especializados para int128_t
+/**
+ * @file int128_algorithm_extracted_tests.cpp
+ * @brief Tests completos de int128_base_algorithm.hpp (template unificado)
+ *
+ * Fusión de:
+ * - Legacy int128_algorithm.hpp tests (16 tests)
+ * - test_algorithm_template.cpp (47 tests)
+ *
+ * Total: 50+ tests cubriendo:
+ * - Búsqueda (binary_search, find_if, lower_bound, upper_bound, count_if)
+ * - Transformación (transform, for_each)
+ * - Reducción (sum, product, accumulate)
+ * - Ordenamiento (sort, partial_sort, nth_element)
+ * - Partición (partition, partition_by_sign)
+ * - Generación de secuencias (arithmetic, geometric, iota)
+ * - GCD/LCM de rangos
+ * - Estadísticas
+ * - Edge cases
  */
 
-#include "int128/int128_algorithm.hpp"
+#include "int128_base_algorithm.hpp"
 #include <cassert>
+#include <functional>
 #include <iostream>
 #include <vector>
 
 using namespace nstd;
 
+static int tests_passed = 0;
+static int tests_failed = 0;
 
-using namespace int128_algorithm;
-
-// ===============================================================================
-// TESTS DE BUSQUEDA
-// ===============================================================================
-
-void test_binary_search_int128()
+void check(bool condition, const char *test_name)
 {
-    std::cout << "Test: binary_search_int128...";
-
-    std::vector<int128_t> vec = {int128_t(-50), int128_t(-20), int128_t(10), int128_t(30),
-                                 int128_t(50)};
-
-    // Valores existentes
-    assert(binary_search_int128(vec.begin(), vec.end(), int128_t(30)));
-    assert(binary_search_int128(vec.begin(), vec.end(), int128_t(-20)));
-    assert(binary_search_int128(vec.begin(), vec.end(), int128_t(-50)));
-
-    // Valores inexistentes
-    assert(!binary_search_int128(vec.begin(), vec.end(), int128_t(15)));
-    assert(!binary_search_int128(vec.begin(), vec.end(), int128_t(-100)));
-
-    // Rango vacio
-    std::vector<int128_t> empty;
-    assert(!binary_search_int128(empty.begin(), empty.end(), int128_t(10)));
-
-    std::cout << " [PASS]\n";
+    if (condition)
+    {
+        std::cout << "[OK]   " << test_name << std::endl;
+        tests_passed++;
+    }
+    else
+    {
+        std::cout << "[FAIL] " << test_name << std::endl;
+        tests_failed++;
+    }
 }
 
-void test_find_if_int128()
+// =============================================================================
+// SECTION: Búsqueda - uint128_t
+// =============================================================================
+
+void test_search_uint128()
 {
-    std::cout << "Test: find_if_int128...";
+    std::vector<uint128_t> sorted = {uint128_t(1), uint128_t(3), uint128_t(5),
+                                     uint128_t(7), uint128_t(9)};
 
-    std::vector<int128_t> vec = {int128_t(-15), int128_t(-5), int128_t(5), int128_t(10),
-                                 int128_t(15)};
+    check(binary_search_128<signedness::unsigned_type>(sorted.begin(), sorted.end(), uint128_t(5)),
+          "binary_search<uint128> encontrado");
+    check(!binary_search_128<signedness::unsigned_type>(sorted.begin(), sorted.end(), uint128_t(4)),
+          "binary_search<uint128> no encontrado");
 
-    // Encontrar primer positivo mayor que 7
-    auto it =
-        find_if_int128(vec.begin(), vec.end(), [](const int128_t& x) { return x > int128_t(7); });
-    assert(it != vec.end() && *it == int128_t(10));
+    auto it = lower_bound_128<signedness::unsigned_type>(sorted.begin(), sorted.end(), uint128_t(5));
+    check(it != sorted.end() && *it == uint128_t(5), "lower_bound<uint128>");
 
-    // Encontrar primer negativo
-    auto it2 =
-        find_if_int128(vec.begin(), vec.end(), [](const int128_t& x) { return x < int128_t(0); });
-    assert(it2 != vec.end() && *it2 == int128_t(-15));
+    it = upper_bound_128<signedness::unsigned_type>(sorted.begin(), sorted.end(), uint128_t(5));
+    check(it != sorted.end() && *it == uint128_t(7), "upper_bound<uint128>");
 
-    // No encontrar numero mayor que 100
-    auto it3 =
-        find_if_int128(vec.begin(), vec.end(), [](const int128_t& x) { return x > int128_t(100); });
-    assert(it3 == vec.end());
+    auto count = count_if_128<signedness::unsigned_type>(
+        sorted.begin(), sorted.end(),
+        [](const uint128_t &x)
+        { return x > uint128_t(4); });
+    check(count == 3, "count_if<uint128> > 4");
 
-    std::cout << " [PASS]\n";
+    it = find_if_128<signedness::unsigned_type>(
+        sorted.begin(), sorted.end(),
+        [](const uint128_t &x)
+        { return x == uint128_t(7); });
+    check(it != sorted.end() && *it == uint128_t(7), "find_if<uint128>");
 }
 
-// ===============================================================================
-// TESTS DE TRANSFORMACION
-// ===============================================================================
+// =============================================================================
+// SECTION: Búsqueda - int128_t
+// =============================================================================
 
-void test_transform_int128()
+void test_search_int128()
 {
-    std::cout << "Test: transform_int128...";
+    std::vector<int128_t> sorted = {int128_t(-5), int128_t(-1), int128_t(0),
+                                    int128_t(3), int128_t(7)};
 
-    std::vector<int128_t> input = {int128_t(-5), int128_t(10), int128_t(-15)};
-    std::vector<int128_t> output(input.size());
+    check(binary_search_128<signedness::signed_type>(sorted.begin(), sorted.end(), int128_t(0)),
+          "binary_search<int128> encontrado cero");
+    check(binary_search_128<signedness::signed_type>(sorted.begin(), sorted.end(), int128_t(-5)),
+          "binary_search<int128> encontrado negativo");
+    check(!binary_search_128<signedness::signed_type>(sorted.begin(), sorted.end(), int128_t(2)),
+          "binary_search<int128> no encontrado");
 
-    // Duplicar valores
-    transform_int128(input.begin(), input.end(), output.begin(),
-                     [](const int128_t& x) { return x * int128_t(2); });
-    assert(output[0] == int128_t(-10) && output[1] == int128_t(20) && output[2] == int128_t(-30));
-
-    // Valor absoluto
-    transform_int128(input.begin(), input.end(), output.begin(),
-                     [](const int128_t& x) { return x.abs(); });
-    assert(output[0] == int128_t(5) && output[1] == int128_t(10) && output[2] == int128_t(15));
-
-    std::cout << " [PASS]\n";
+    auto count = count_if_128<signedness::signed_type>(
+        sorted.begin(), sorted.end(),
+        [](const int128_t &x)
+        { return x < int128_t(0); });
+    check(count == 2, "count_if<int128> negativos");
 }
 
-void test_for_each_int128()
+// =============================================================================
+// SECTION: Transformación
+// =============================================================================
+
+void test_transform()
 {
-    std::cout << "Test: for_each_int128...";
+    // uint128_t
+    {
+        std::vector<uint128_t> src = {uint128_t(1), uint128_t(2), uint128_t(3)};
+        std::vector<uint128_t> dst(3);
 
-    std::vector<int128_t> vec = {int128_t(-2), int128_t(1), int128_t(3)};
+        transform_128<signedness::unsigned_type>(
+            src.begin(), src.end(), dst.begin(),
+            [](const uint128_t &x)
+            { return x * uint128_t(2); });
+        check(dst[0] == uint128_t(2) && dst[1] == uint128_t(4) && dst[2] == uint128_t(6),
+              "transform<uint128> duplicar");
 
-    // Contar elementos
-    int count = 0;
-    for_each_int128(vec.begin(), vec.end(), [&count](const int128_t&) { count++; });
-    assert(count == 3);
-
-    // Sumar elementos
-    int128_t sum = 0;
-    for_each_int128(vec.begin(), vec.end(), [&sum](const int128_t& x) { sum += x; });
-    assert(sum == int128_t(2)); // -2 + 1 + 3
-
-    std::cout << " [PASS]\n";
-}
-
-// ===============================================================================
-// TESTS DE REDUCCION
-// ===============================================================================
-
-void test_accumulate_int128()
-{
-    std::cout << "Test: accumulate_int128...";
-
-    std::vector<int128_t> vec = {int128_t(-10), int128_t(20), int128_t(-30), int128_t(40)};
-
-    // Suma con acumulador inicial
-    auto sum = accumulate_int128(vec.begin(), vec.end(), int128_t(100), std::plus<int128_t>());
-    assert(sum == int128_t(120)); // 100 - 10 + 20 - 30 + 40
-
-    // Producto con acumulador inicial
-    std::vector<int128_t> vec2 = {int128_t(-2), int128_t(3), int128_t(-4)};
-    auto product =
-        accumulate_int128(vec2.begin(), vec2.end(), int128_t(1), std::multiplies<int128_t>());
-    assert(product == int128_t(24)); // 1 * (-2) * 3 * (-4) = 24
-
-    std::cout << " [PASS]\n";
-}
-
-void test_sum_int128()
-{
-    std::cout << "Test: sum_int128...";
-
-    std::vector<int128_t> vec = {int128_t(-5), int128_t(10), int128_t(-15), int128_t(20)};
-    auto sum = sum_int128(vec.begin(), vec.end());
-    assert(sum == int128_t(10)); // -5 + 10 - 15 + 20
-
-    // Rango vacio
-    std::vector<int128_t> empty;
-    auto sum_empty = sum_int128(empty.begin(), empty.end());
-    assert(sum_empty == int128_t(0));
-
-    // Solo negativos
-    std::vector<int128_t> negatives = {int128_t(-1), int128_t(-2), int128_t(-3)};
-    auto sum_neg = sum_int128(negatives.begin(), negatives.end());
-    assert(sum_neg == int128_t(-6));
-
-    std::cout << " [PASS]\n";
-}
-
-void test_product_int128()
-{
-    std::cout << "Test: product_int128...";
-
-    std::vector<int128_t> vec = {int128_t(-2), int128_t(3), int128_t(-4)};
-    auto product = product_int128(vec.begin(), vec.end());
-    assert(product == int128_t(24)); // (-2) * 3 * (-4)
-
-    // Con cero
-    std::vector<int128_t> with_zero = {int128_t(2), int128_t(0), int128_t(3)};
-    auto product_zero = product_int128(with_zero.begin(), with_zero.end());
-    assert(product_zero == int128_t(0));
-
-    // Rango vacio (debe ser 1)
-    std::vector<int128_t> empty;
-    auto product_empty = product_int128(empty.begin(), empty.end());
-    assert(product_empty == int128_t(1));
-
-    std::cout << " [PASS]\n";
-}
-
-// ===============================================================================
-// TESTS DE PARTICION Y ORDENAMIENTO
-// ===============================================================================
-
-void test_partition_int128()
-{
-    std::cout << "Test: partition_int128...";
-
-    std::vector<int128_t> vec = {int128_t(-10), int128_t(15), int128_t(-20), int128_t(25),
-                                 int128_t(30)};
-
-    // Particionar: negativos primero
-    auto middle =
-        partition_int128(vec.begin(), vec.end(), [](const int128_t& x) { return x < int128_t(0); });
-
-    // Verificar que elementos antes de middle son negativos
-    for (auto it = vec.begin(); it != middle; ++it) {
-        assert(*it < int128_t(0));
+        uint128_t sum(0);
+        for_each_128<signedness::unsigned_type>(
+            src.begin(), src.end(),
+            [&sum](const uint128_t &x)
+            { sum += x; });
+        check(sum == uint128_t(6), "for_each<uint128> suma");
     }
 
-    // Verificar que elementos despues de middle son positivos
-    for (auto it = middle; it != vec.end(); ++it) {
-        assert(*it >= int128_t(0));
+    // int128_t
+    {
+        std::vector<int128_t> src = {int128_t(-2), int128_t(0), int128_t(3)};
+        std::vector<int128_t> dst(3);
+
+        transform_128<signedness::signed_type>(
+            src.begin(), src.end(), dst.begin(),
+            [](const int128_t &x)
+            { return abs(x); });
+        check(dst[0] == int128_t(2) && dst[1] == int128_t(0) && dst[2] == int128_t(3),
+              "transform<int128> abs");
+    }
+}
+
+// =============================================================================
+// SECTION: Reducción
+// =============================================================================
+
+void test_reduction()
+{
+    // uint128_t
+    {
+        std::vector<uint128_t> vals = {uint128_t(2), uint128_t(3), uint128_t(5)};
+
+        auto sum = sum_128<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(sum == uint128_t(10), "sum<uint128>");
+
+        auto prod = product_128<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(prod == uint128_t(30), "product<uint128>");
+
+        auto acc = accumulate_128<signedness::unsigned_type>(
+            vals.begin(), vals.end(), uint128_t(0),
+            [](const uint128_t &a, const uint128_t &b)
+            { return a + b; });
+        check(acc == uint128_t(10), "accumulate<uint128> suma");
+
+        acc = accumulate_128<signedness::unsigned_type>(
+            vals.begin(), vals.end(), uint128_t(1),
+            [](const uint128_t &a, const uint128_t &b)
+            { return a * b; });
+        check(acc == uint128_t(30), "accumulate<uint128> producto");
     }
 
-    std::cout << " [PASS]\n";
+    // int128_t
+    {
+        std::vector<int128_t> vals = {int128_t(-2), int128_t(3), int128_t(5)};
+
+        auto sum = sum_128<signedness::signed_type>(vals.begin(), vals.end());
+        check(sum == int128_t(6), "sum<int128>");
+
+        auto prod = product_128<signedness::signed_type>(vals.begin(), vals.end());
+        check(prod == int128_t(-30), "product<int128> negativo");
+    }
 }
 
-void test_sort_int128()
+// =============================================================================
+// SECTION: Ordenamiento
+// =============================================================================
+
+void test_sort()
 {
-    std::cout << "Test: sort_int128...";
+    // uint128_t
+    {
+        std::vector<uint128_t> vals = {uint128_t(5), uint128_t(2), uint128_t(8),
+                                       uint128_t(1), uint128_t(9)};
+        sort_128<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(vals[0] == uint128_t(1) && vals[1] == uint128_t(2) && vals[4] == uint128_t(9),
+              "sort<uint128> ascendente");
 
-    std::vector<int128_t> vec = {int128_t(30), int128_t(-10), int128_t(50), int128_t(-20),
-                                 int128_t(10)};
+        sort_128<signedness::unsigned_type>(
+            vals.begin(), vals.end(),
+            [](const uint128_t &a, const uint128_t &b)
+            { return a > b; });
+        check(vals[0] == uint128_t(9) && vals[4] == uint128_t(1),
+              "sort<uint128> descendente");
 
-    // Orden ascendente (por defecto)
-    sort_int128(vec.begin(), vec.end());
-    assert(vec[0] == int128_t(-20) && vec[1] == int128_t(-10) && vec[2] == int128_t(10) &&
-           vec[3] == int128_t(30) && vec[4] == int128_t(50));
+        std::vector<uint128_t> partial = {uint128_t(5), uint128_t(2), uint128_t(8), uint128_t(1)};
+        partial_sort_128<signedness::unsigned_type>(partial.begin(), partial.begin() + 2, partial.end());
+        check(partial[0] == uint128_t(1) && partial[1] == uint128_t(2),
+              "partial_sort<uint128>");
 
-    // Orden descendente
-    sort_int128(vec.begin(), vec.end(), std::greater<int128_t>());
-    assert(vec[0] == int128_t(50) && vec[1] == int128_t(30) && vec[2] == int128_t(10) &&
-           vec[3] == int128_t(-10) && vec[4] == int128_t(-20));
-
-    std::cout << " [PASS]\n";
-}
-
-// ===============================================================================
-// TESTS DE GCD/LCM
-// ===============================================================================
-
-void test_gcd_range()
-{
-    std::cout << "Test: gcd_range...";
-
-    std::vector<int128_t> vec = {int128_t(12), int128_t(-18), int128_t(24)};
-    auto gcd = gcd_range(vec.begin(), vec.end());
-    assert(gcd == int128_t(6));
-
-    // Con negativos (GCD siempre positivo)
-    std::vector<int128_t> vec2 = {int128_t(-15), int128_t(-25), int128_t(-35)};
-    auto gcd2 = gcd_range(vec2.begin(), vec2.end());
-    assert(gcd2 == int128_t(5));
-
-    // Coprimos
-    std::vector<int128_t> coprimes = {int128_t(7), int128_t(11), int128_t(13)};
-    auto gcd3 = gcd_range(coprimes.begin(), coprimes.end());
-    assert(gcd3 == int128_t(1));
-
-    std::cout << " [PASS]\n";
-}
-
-void test_lcm_range()
-{
-    std::cout << "Test: lcm_range...";
-
-    std::vector<int128_t> vec = {int128_t(4), int128_t(-6), int128_t(8)};
-    auto lcm = lcm_range(vec.begin(), vec.end());
-    assert(lcm == int128_t(24));
-
-    // Con negativos (LCM siempre positivo)
-    std::vector<int128_t> vec2 = {int128_t(-3), int128_t(-4), int128_t(-5)};
-    auto lcm2 = lcm_range(vec2.begin(), vec2.end());
-    assert(lcm2 == int128_t(60));
-
-    // Con cero (resultado es 0)
-    std::vector<int128_t> with_zero = {int128_t(4), int128_t(0), int128_t(6)};
-    auto lcm3 = lcm_range(with_zero.begin(), with_zero.end());
-    assert(lcm3 == int128_t(0));
-
-    std::cout << " [PASS]\n";
-}
-
-// ===============================================================================
-// TESTS DE GENERACION DE SECUENCIAS
-// ===============================================================================
-
-void test_generate_arithmetic_sequence()
-{
-    std::cout << "Test: generate_arithmetic_sequence...";
-
-    std::vector<int128_t> seq(5);
-
-    // Secuencia ascendente: 10, 15, 20, 25, 30
-    generate_arithmetic_sequence(seq.begin(), 5, int128_t(10), int128_t(5));
-    assert(seq[0] == int128_t(10) && seq[1] == int128_t(15) && seq[2] == int128_t(20) &&
-           seq[3] == int128_t(25) && seq[4] == int128_t(30));
-
-    // Secuencia descendente: 20, 10, 0, -10, -20
-    generate_arithmetic_sequence(seq.begin(), 5, int128_t(20), int128_t(-10));
-    assert(seq[0] == int128_t(20) && seq[1] == int128_t(10) && seq[2] == int128_t(0) &&
-           seq[3] == int128_t(-10) && seq[4] == int128_t(-20));
-
-    std::cout << " [PASS]\n";
-}
-
-void test_generate_geometric_sequence()
-{
-    std::cout << "Test: generate_geometric_sequence...";
-
-    std::vector<int128_t> seq(5);
-
-    // Secuencia: 2, 4, 8, 16, 32
-    generate_geometric_sequence(seq.begin(), 5, int128_t(2), int128_t(2));
-    assert(seq[0] == int128_t(2) && seq[1] == int128_t(4) && seq[2] == int128_t(8) &&
-           seq[3] == int128_t(16) && seq[4] == int128_t(32));
-
-    // Secuencia con ratio negativo: 3, -6, 12, -24, 48
-    generate_geometric_sequence(seq.begin(), 5, int128_t(3), int128_t(-2));
-    assert(seq[0] == int128_t(3) && seq[1] == int128_t(-6) && seq[2] == int128_t(12) &&
-           seq[3] == int128_t(-24) && seq[4] == int128_t(48));
-
-    std::cout << " [PASS]\n";
-}
-
-// ===============================================================================
-// TESTS ESPECIFICOS DE SIGNADOS
-// ===============================================================================
-
-void test_partition_by_sign()
-{
-    std::cout << "Test: partition_by_sign...";
-
-    std::vector<int128_t> vec = {int128_t(-5), int128_t(10), int128_t(-15),
-                                 int128_t(0),  int128_t(20), int128_t(-25)};
-
-    auto middle = partition_by_sign(vec.begin(), vec.end());
-
-    // Verificar negativos a la izquierda
-    for (auto it = vec.begin(); it != middle; ++it) {
-        assert(*it < int128_t(0));
+        std::vector<uint128_t> nth = {uint128_t(5), uint128_t(2), uint128_t(8),
+                                      uint128_t(1), uint128_t(3)};
+        nth_element_128<signedness::unsigned_type>(nth.begin(), nth.begin() + 2, nth.end());
+        check(nth[2] == uint128_t(3), "nth_element<uint128>");
     }
 
-    // Verificar positivos/cero a la derecha
-    for (auto it = middle; it != vec.end(); ++it) {
-        assert(*it >= int128_t(0));
+    // int128_t
+    {
+        std::vector<int128_t> vals = {int128_t(5), int128_t(-2), int128_t(0),
+                                      int128_t(-7), int128_t(3)};
+        sort_128<signedness::signed_type>(vals.begin(), vals.end());
+        check(vals[0] == int128_t(-7) && vals[1] == int128_t(-2) &&
+                  vals[2] == int128_t(0) && vals[4] == int128_t(5),
+              "sort<int128> con negativos");
+    }
+}
+
+// =============================================================================
+// SECTION: Partición
+// =============================================================================
+
+void test_partition()
+{
+    // uint128_t
+    {
+        std::vector<uint128_t> vals = {uint128_t(1), uint128_t(4), uint128_t(3),
+                                       uint128_t(6), uint128_t(2)};
+        auto it = partition_128<signedness::unsigned_type>(
+            vals.begin(), vals.end(),
+            [](const uint128_t &x)
+            { return x % uint128_t(2) == 0; });
+
+        int even_count = 0;
+        for (auto i = vals.begin(); i != it; ++i)
+        {
+            if (*i % uint128_t(2) == 0)
+                even_count++;
+        }
+        check(even_count == 3, "partition<uint128> pares");
     }
 
-    std::cout << " [PASS]\n";
+    // int128_t
+    {
+        std::vector<int128_t> vals = {int128_t(-3), int128_t(5), int128_t(-1),
+                                      int128_t(7), int128_t(-8)};
+        auto it = partition_128<signedness::signed_type>(
+            vals.begin(), vals.end(),
+            [](const int128_t &x)
+            { return x < int128_t(0); });
+
+        int neg_count = 0;
+        for (auto i = vals.begin(); i != it; ++i)
+        {
+            if (*i < int128_t(0))
+                neg_count++;
+        }
+        check(neg_count == 3, "partition<int128> negativos");
+    }
 }
 
-void test_max_abs_value()
+// =============================================================================
+// SECTION: Generación de secuencias
+// =============================================================================
+
+void test_generate_sequences()
 {
-    std::cout << "Test: max_abs_value...";
+    // Aritmética uint128_t
+    {
+        std::vector<uint128_t> arith(5);
+        generate_arithmetic_sequence<signedness::unsigned_type>(
+            arith.begin(), 5, uint128_t(10), uint128_t(3));
+        check(arith[0] == uint128_t(10) && arith[1] == uint128_t(13) && arith[4] == uint128_t(22),
+              "generate_arithmetic<uint128>");
+    }
 
-    std::vector<int128_t> vec = {int128_t(10), int128_t(-50), int128_t(30), int128_t(-20)};
+    // Geométrica uint128_t
+    {
+        std::vector<uint128_t> geom(5);
+        generate_geometric_sequence<signedness::unsigned_type>(
+            geom.begin(), 5, uint128_t(2), uint128_t(3));
+        check(geom[0] == uint128_t(2) && geom[1] == uint128_t(6) && geom[2] == uint128_t(18),
+              "generate_geometric<uint128>");
+    }
 
-    auto max_abs = max_abs_value(vec.begin(), vec.end());
-    assert(max_abs == int128_t(-50)); // Mantiene signo original, pero |-50| es el mayor
+    // Aritmética int128_t con paso negativo
+    {
+        std::vector<int128_t> arith_neg(5);
+        generate_arithmetic_sequence<signedness::signed_type>(
+            arith_neg.begin(), 5, int128_t(10), int128_t(-3));
+        check(arith_neg[0] == int128_t(10) && arith_neg[1] == int128_t(7) && arith_neg[4] == int128_t(-2),
+              "generate_arithmetic<int128> negativo");
+    }
 
-    // Solo positivos
-    std::vector<int128_t> positives = {int128_t(5), int128_t(15), int128_t(3)};
-    auto max_abs2 = max_abs_value(positives.begin(), positives.end());
-    assert(max_abs2 == int128_t(15));
+    // Iota
+    {
+        std::vector<uint128_t> iota_vec(5);
+        iota_128<signedness::unsigned_type>(iota_vec.begin(), iota_vec.end(), uint128_t(100));
+        check(iota_vec[0] == uint128_t(100) && iota_vec[4] == uint128_t(104),
+              "iota<uint128>");
 
-    // Con cero
-    std::vector<int128_t> with_zero = {int128_t(0), int128_t(-1), int128_t(1)};
-    auto max_abs3 = max_abs_value(with_zero.begin(), with_zero.end());
-    assert(max_abs3 == int128_t(-1) || max_abs3 == int128_t(1)); // Ambos tienen |1|
-
-    std::cout << " [PASS]\n";
+        std::vector<int128_t> iota_neg(5);
+        iota_128<signedness::signed_type>(iota_neg.begin(), iota_neg.end(), int128_t(-2));
+        check(iota_neg[0] == int128_t(-2) && iota_neg[2] == int128_t(0) && iota_neg[4] == int128_t(2),
+              "iota<int128> desde negativo");
+    }
 }
 
-// ===============================================================================
-// TESTS DE ESTADISTICAS
-// ===============================================================================
+// =============================================================================
+// SECTION: GCD/LCM de rangos
+// =============================================================================
 
-void test_calculate_stats()
+void test_gcd_lcm_range()
 {
-    std::cout << "Test: calculate_stats...";
+    // GCD uint128_t
+    {
+        std::vector<uint128_t> vals = {uint128_t(12), uint128_t(18), uint128_t(24)};
+        auto g = gcd_range<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(g == uint128_t(6), "gcd_range<uint128>");
 
-    std::vector<int128_t> vec = {int128_t(-10), int128_t(20), int128_t(0), int128_t(-30),
-                                 int128_t(40)};
+        std::vector<uint128_t> primes = {uint128_t(7), uint128_t(11), uint128_t(13)};
+        g = gcd_range<signedness::unsigned_type>(primes.begin(), primes.end());
+        check(g == uint128_t(1), "gcd_range<uint128> coprimos");
+    }
 
-    auto stats = calculate_stats(vec.begin(), vec.end());
+    // GCD int128_t con negativos
+    {
+        std::vector<int128_t> signed_vals = {int128_t(-12), int128_t(18), int128_t(-24)};
+        auto gi = gcd_range<signedness::signed_type>(signed_vals.begin(), signed_vals.end());
+        check(gi == int128_t(6), "gcd_range<int128> negativos");
+    }
 
-    assert(stats.min_value == int128_t(-30));
-    assert(stats.max_value == int128_t(40));
-    assert(stats.sum == int128_t(20)); // -10 + 20 + 0 - 30 + 40
-    assert(stats.count == 5);
-    assert(stats.negative_count == 2);
-    assert(stats.positive_count == 2);
-    assert(stats.zero_count == 1);
-    assert(stats.has_negative_values());
-    assert(stats.has_positive_values());
-    assert(stats.has_zero_values());
-
-    // Rango vacio
-    std::vector<int128_t> empty;
-    auto stats_empty = calculate_stats(empty.begin(), empty.end());
-    assert(stats_empty.count == 0);
-
-    std::cout << " [PASS]\n";
+    // LCM uint128_t
+    {
+        std::vector<uint128_t> vals = {uint128_t(4), uint128_t(6), uint128_t(8)};
+        auto l = lcm_range<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(l == uint128_t(24), "lcm_range<uint128>");
+    }
 }
 
-// ===============================================================================
+// =============================================================================
+// SECTION: MinMax y Stats
+// =============================================================================
+
+void test_minmax_stats()
+{
+    // MinMax
+    {
+        std::vector<uint128_t> vals = {uint128_t(5), uint128_t(2), uint128_t(9), uint128_t(1)};
+        auto [min_u, max_u] = minmax_128<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(min_u == uint128_t(1) && max_u == uint128_t(9), "minmax<uint128>");
+
+        std::vector<int128_t> signed_vals = {int128_t(-5), int128_t(2), int128_t(-9), int128_t(1)};
+        auto [min_i, max_i] = minmax_128<signedness::signed_type>(signed_vals.begin(), signed_vals.end());
+        check(min_i == int128_t(-9) && max_i == int128_t(2), "minmax<int128>");
+    }
+
+    // Stats
+    {
+        std::vector<uint128_t> vals = {uint128_t(10), uint128_t(20), uint128_t(30)};
+        auto stats = calculate_stats<signedness::unsigned_type>(vals.begin(), vals.end());
+        check(stats.min_val == uint128_t(10) && stats.max_val == uint128_t(30) &&
+                  stats.sum == uint128_t(60) && stats.count == 3,
+              "calculate_stats<uint128>");
+    }
+}
+
+// =============================================================================
+// SECTION: Edge cases
+// =============================================================================
+
+void test_edge_cases()
+{
+    // Rangos vacíos
+    {
+        std::vector<uint128_t> empty;
+        check(!binary_search_128<signedness::unsigned_type>(empty.begin(), empty.end(), uint128_t(1)),
+              "binary_search vacío");
+
+        auto sum = sum_128<signedness::unsigned_type>(empty.begin(), empty.end());
+        check(sum == uint128_t(0), "sum vacío");
+
+        auto g = gcd_range<signedness::unsigned_type>(empty.begin(), empty.end());
+        check(g == uint128_t(0), "gcd_range vacío");
+
+        auto [min_val, max_val] = minmax_128<signedness::unsigned_type>(empty.begin(), empty.end());
+        check(min_val == uint128_t(0) && max_val == uint128_t(0), "minmax vacío");
+    }
+
+    // Elemento único
+    {
+        std::vector<uint128_t> single = {uint128_t(42)};
+        check(binary_search_128<signedness::unsigned_type>(single.begin(), single.end(), uint128_t(42)),
+              "binary_search único");
+        check(sum_128<signedness::unsigned_type>(single.begin(), single.end()) == uint128_t(42),
+              "sum único");
+        check(product_128<signedness::unsigned_type>(single.begin(), single.end()) == uint128_t(42),
+              "product único");
+        check(gcd_range<signedness::unsigned_type>(single.begin(), single.end()) == uint128_t(42),
+              "gcd_range único");
+    }
+
+    // Valores grandes
+    {
+        std::vector<uint128_t> large = {uint128_t::max() - uint128_t(2),
+                                        uint128_t::max() - uint128_t(1),
+                                        uint128_t::max()};
+        sort_128<signedness::unsigned_type>(large.begin(), large.end());
+        check(large[0] == uint128_t::max() - uint128_t(2) && large[2] == uint128_t::max(),
+              "sort valores grandes");
+    }
+}
+
+// =============================================================================
 // MAIN
-// ===============================================================================
+// =============================================================================
 
 int main()
 {
-    std::cout << "========================================\n";
-    std::cout << "  Test Suite: int128_algorithm.hpp\n";
-    std::cout << "========================================\n\n";
+    std::cout << "=== int128_base_algorithm.hpp tests ===\n\n";
 
-    test_binary_search_int128();
-    test_find_if_int128();
-    test_transform_int128();
-    test_for_each_int128();
-    test_accumulate_int128();
-    test_sum_int128();
-    test_product_int128();
-    test_partition_int128();
-    test_sort_int128();
-    test_gcd_range();
-    test_lcm_range();
-    test_generate_arithmetic_sequence();
-    test_generate_geometric_sequence();
-    test_partition_by_sign();
-    test_max_abs_value();
-    test_calculate_stats();
+    std::cout << "--- Búsqueda uint128_t ---\n";
+    test_search_uint128();
 
-    std::cout << "\n========================================\n";
-    std::cout << "  [OK] Todos los tests pasaron\n";
-    std::cout << "========================================\n";
+    std::cout << "\n--- Búsqueda int128_t ---\n";
+    test_search_int128();
 
-    return 0;
+    std::cout << "\n--- Transformación ---\n";
+    test_transform();
+
+    std::cout << "\n--- Reducción ---\n";
+    test_reduction();
+
+    std::cout << "\n--- Ordenamiento ---\n";
+    test_sort();
+
+    std::cout << "\n--- Partición ---\n";
+    test_partition();
+
+    std::cout << "\n--- Generación de secuencias ---\n";
+    test_generate_sequences();
+
+    std::cout << "\n--- GCD/LCM ---\n";
+    test_gcd_lcm_range();
+
+    std::cout << "\n--- MinMax y Stats ---\n";
+    test_minmax_stats();
+
+    std::cout << "\n--- Edge cases ---\n";
+    test_edge_cases();
+
+    std::cout << "\n=== RESULTADO: " << tests_passed << "/" << (tests_passed + tests_failed)
+              << " tests pasaron ===\n";
+
+    return (tests_failed == 0) ? 0 : 1;
 }

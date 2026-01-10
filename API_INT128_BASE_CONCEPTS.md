@@ -45,11 +45,10 @@ namespace nstd {
 
 ```cpp
 template<typename T>
-concept int128_type = std::same_as<std::remove_cv_t<T>, uint128_t> ||
-                      std::same_as<std::remove_cv_t<T>, int128_t>;
+concept int128_type = is_128bit_type_v<T>;
 ```
 
-**Brief:** Verifica si T es cualquier tipo de 128 bits (signed o unsigned).
+**Brief:** Verifica si T es cualquier tipo de 128 bits (uint128_t o int128_t).
 
 **Ejemplo:**
 
