@@ -75,6 +75,77 @@
 #endif
 
 // ============================================================================
+// DETECCIÓN DE SISTEMA OPERATIVO
+// ============================================================================
+
+#if defined(_WIN32) || defined(_WIN64) || defined(__WIN32__) || defined(__WINDOWS__)
+#define INTRINSICS_OS_WINDOWS 1
+#elif defined(__linux__) || defined(__linux) || defined(linux)
+#define INTRINSICS_OS_LINUX 1
+#elif defined(__APPLE__) && defined(__MACH__)
+#define INTRINSICS_OS_MACOS 1
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#define INTRINSICS_OS_BSD 1
+#elif defined(__unix__) || defined(__unix)
+#define INTRINSICS_OS_UNIX 1
+#else
+#define INTRINSICS_OS_UNKNOWN 1
+#endif
+
+// Definir 0 para sistemas operativos no detectados
+#ifndef INTRINSICS_OS_WINDOWS
+#define INTRINSICS_OS_WINDOWS 0
+#endif
+#ifndef INTRINSICS_OS_LINUX
+#define INTRINSICS_OS_LINUX 0
+#endif
+#ifndef INTRINSICS_OS_MACOS
+#define INTRINSICS_OS_MACOS 0
+#endif
+#ifndef INTRINSICS_OS_BSD
+#define INTRINSICS_OS_BSD 0
+#endif
+#ifndef INTRINSICS_OS_UNIX
+#define INTRINSICS_OS_UNIX 0
+#endif
+#ifndef INTRINSICS_OS_UNKNOWN
+#define INTRINSICS_OS_UNKNOWN 0
+#endif
+
+// ============================================================================
+// DETECCIÓN DE ABI (Application Binary Interface)
+// ============================================================================
+
+/**
+ * @brief Detecta si el compilador usa ABI de MSVC
+ *
+ * Intel ICX en Windows usa el ABI y las bibliotecas de MSVC, por lo que
+ * debe usar los intrínsecos de MSVC (_addcarry_u64, etc.) en lugar de
+ * los builtins de GCC (__builtin_addcll, etc.).
+ *
+ * Esta macro es true cuando:
+ * - Compilador es MSVC
+ * - Compilador es Intel en Windows (usa MSVC ABI)
+ */
+#if INTRINSICS_COMPILER_MSVC || (INTRINSICS_COMPILER_INTEL && INTRINSICS_OS_WINDOWS)
+#define INTRINSICS_USES_MSVC_ABI 1
+#else
+#define INTRINSICS_USES_MSVC_ABI 0
+#endif
+
+/**
+ * @brief Detecta si el compilador usa ABI de GCC/Clang
+ *
+ * GCC, Clang, y Intel ICX en Linux/macOS usan builtins estilo GCC.
+ */
+#if (INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || \
+     (INTRINSICS_COMPILER_INTEL && !INTRINSICS_OS_WINDOWS))
+#define INTRINSICS_USES_GNU_ABI 1
+#else
+#define INTRINSICS_USES_GNU_ABI 0
+#endif
+
+// ============================================================================
 // DETECCIÓN DE ARQUITECTURA
 // ============================================================================
 
@@ -128,17 +199,18 @@
 // DETECCIÓN DE CAPACIDADES (BUILTINS)
 // ============================================================================
 
-// GCC/Clang/Intel tienen __has_builtin
+// GCC/Clang/Intel (en Linux/macOS) tienen __has_builtin
 #ifdef __has_builtin
 #define INTRINSICS_HAS_BUILTIN(x) __has_builtin(x)
 #else
 #define INTRINSICS_HAS_BUILTIN(x) 0
 #endif
 
-// Detectar builtins específicos
+// Detectar builtins específicos - SOLO para compiladores con GNU ABI
+// Intel ICX en Windows NO tiene estos builtins
 #if INTRINSICS_HAS_BUILTIN(__builtin_popcountll)
 #define INTRINSICS_HAS_BUILTIN_POPCOUNT 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_POPCOUNT 1
 #else
 #define INTRINSICS_HAS_BUILTIN_POPCOUNT 0
@@ -146,7 +218,7 @@
 
 #if INTRINSICS_HAS_BUILTIN(__builtin_clzll)
 #define INTRINSICS_HAS_BUILTIN_CLZ 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_CLZ 1
 #else
 #define INTRINSICS_HAS_BUILTIN_CLZ 0
@@ -154,7 +226,7 @@
 
 #if INTRINSICS_HAS_BUILTIN(__builtin_ctzll)
 #define INTRINSICS_HAS_BUILTIN_CTZ 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_CTZ 1
 #else
 #define INTRINSICS_HAS_BUILTIN_CTZ 0
@@ -162,14 +234,14 @@
 
 #if INTRINSICS_HAS_BUILTIN(__builtin_bswap64)
 #define INTRINSICS_HAS_BUILTIN_BSWAP 1
-#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG || INTRINSICS_COMPILER_INTEL
+#elif INTRINSICS_USES_GNU_ABI
 #define INTRINSICS_HAS_BUILTIN_BSWAP 1
 #else
 #define INTRINSICS_HAS_BUILTIN_BSWAP 0
 #endif
 
-// Detectar __builtin_addcll / __builtin_subcll (GCC/Clang x86-64)
-#if INTRINSICS_HAS_BUILTIN(__builtin_addcll) && INTRINSICS_ARCH_X86_64
+// Detectar __builtin_addcll / __builtin_subcll (GCC/Clang x86-64, NO Intel Windows)
+#if INTRINSICS_HAS_BUILTIN(__builtin_addcll) && INTRINSICS_ARCH_X86_64 && !INTRINSICS_USES_MSVC_ABI
 #define INTRINSICS_HAS_BUILTIN_ADDC 1
 #else
 #define INTRINSICS_HAS_BUILTIN_ADDC 0
@@ -179,7 +251,8 @@
 // DETECCIÓN DE HEADERS INTRÍNSECOS
 // ============================================================================
 
-#if INTRINSICS_COMPILER_MSVC
+// Usar <intrin.h> para MSVC y también para Intel ICX en Windows (MSVC ABI)
+#if INTRINSICS_USES_MSVC_ABI
 #define INTRINSICS_HAS_INTRIN_H 1
 #define INTRINSICS_HAS_X86INTRIN_H 0
 #define INTRINSICS_HAS_ARM_NEON_H 0
@@ -255,6 +328,23 @@
  * - INTRINSICS_COMPILER_GCC: GNU Compiler Collection
  * - INTRINSICS_COMPILER_UNKNOWN: Compilador no reconocido
  *
+ * ## Sistemas Operativos Detectados
+ * - INTRINSICS_OS_WINDOWS: Windows (32/64-bit)
+ * - INTRINSICS_OS_LINUX: Linux
+ * - INTRINSICS_OS_MACOS: macOS (Darwin)
+ * - INTRINSICS_OS_BSD: FreeBSD, NetBSD, OpenBSD
+ * - INTRINSICS_OS_UNIX: Otros sistemas Unix-like
+ * - INTRINSICS_OS_UNKNOWN: Sistema operativo no reconocido
+ *
+ * ## Detección de ABI
+ * - INTRINSICS_USES_MSVC_ABI: Compilador usa ABI/bibliotecas de MSVC
+ *   - MSVC
+ *   - Intel ICX en Windows
+ * - INTRINSICS_USES_GNU_ABI: Compilador usa ABI/bibliotecas de GCC
+ *   - GCC
+ *   - Clang
+ *   - Intel ICX en Linux/macOS
+ *
  * ## Arquitecturas Soportadas
  * - INTRINSICS_ARCH_X86_64: x86-64 (AMD64, x64)
  * - INTRINSICS_ARCH_X86_32: x86 32-bit (i386, i686)
@@ -272,14 +362,24 @@
  * - INTRINSICS_HAS_BUILTIN_BSWAP: __builtin_bswap64
  * - INTRINSICS_HAS_BUILTIN_ADDC: __builtin_addcll
  *
- * ## Uso
+ * ## Uso Recomendado
  * @code
- * #if INTRINSICS_COMPILER_MSVC
- *     // Código específico de MSVC
- * #elif INTRINSICS_COMPILER_INTEL
- *     // Código específico de Intel
+ * // Para elegir intrínsecos según ABI (RECOMENDADO):
+ * #if INTRINSICS_USES_MSVC_ABI
+ *     // Código usando intrínsecos MSVC: _addcarry_u64, _umul128, etc.
+ * #elif INTRINSICS_USES_GNU_ABI
+ *     // Código usando builtins GCC: __builtin_addcll, __uint128_t, etc.
  * #else
  *     // Fallback genérico
+ * #endif
+ *
+ * // Para casos muy específicos por compilador:
+ * #if INTRINSICS_COMPILER_MSVC
+ *     // Código específico de MSVC
+ * #elif INTRINSICS_COMPILER_INTEL && INTRINSICS_OS_WINDOWS
+ *     // Intel ICX en Windows (usa MSVC ABI)
+ * #elif INTRINSICS_COMPILER_INTEL && !INTRINSICS_OS_WINDOWS
+ *     // Intel ICX en Linux/macOS (usa GNU ABI)
  * #endif
  * @endcode
  */

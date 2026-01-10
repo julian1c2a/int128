@@ -2,13 +2,13 @@
 
 > 📋 **Documentos relacionados:** [CHANGELOG.md](CHANGELOG.md) | [README.md](README.md) | [PROMPT.md](PROMPT.md) | [API_INT128_BASE_TT.md](API_INT128_BASE_TT.md) | [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md)
 >
-> ⏰ **Última actualización:** 2026-01-10 12:00 (ver CHANGELOG.md para historial horario)
+> ⏰ **Última actualización:** 2026-01-10 12:10 (ver CHANGELOG.md para historial horario)
 
 ---
 
-## 📁 FASE 1.6 - Integración de Directorios 🔄 **EN PLANIFICACIÓN**
+## 📁 FASE 1.6 - Integración de Directorios 🔄 **EN PROGRESO**
 
-**Estado:** 🔄 **PLANIFICADO (10 ene 2026)**  
+**Estado:** 🔄 **EN PROGRESO (10 ene 2026)**  
 **Dependencia:** Fase 1.5 (Template unificado) en progreso
 **Documentación:** Ver [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md) para detalles
 
@@ -16,30 +16,37 @@
 
 Consolidar la estructura de directorios del proyecto:
 
-1. `include_new/` → `include/` (renombrar cuando esté listo)
+1. `include_new/` → `include/` ✅ **COMPLETADO**
 2. `tests_new/` → `tests/` (integrar tests del template unificado)
 3. `experimental/` → `tests/experimental/` (preservar tests experimentales)
 
 ### Estado Actual de Directorios
 
-| Directorio | Archivos | Propósito | Acción |
+| Directorio | Archivos | Propósito | Estado |
 |------------|----------|-----------|--------|
-| `include/` | 19 headers | Headers legacy + unified | Mantener como canónico |
-| `include_new/` | 17 headers | Template unificado fase 1.5 | → Renombrar a include/ |
+| `include/` | 18 headers | **Headers canónicos** (era include_new/) | ✅ Migrado |
+| `include_legacy/` | 19 headers | Backup de include/ anterior | 🗄️ Backup |
 | `tests/` | 100+ archivos | Tests canónicos | Mantener + ampliar |
-| `tests_new/` | 14 archivos | Tests para template unificado | → Integrar en tests/ |
-| `experimental/` | 12 archivos | Tests experimentales | → tests/experimental/ |
+| `tests_new/` | 14 archivos | Tests para template unificado | 📋 Pendiente |
+| `experimental/` | 12 archivos | Tests experimentales | 📋 Pendiente |
 
 ### Plan de Ejecución
 
-#### Fase A: Consolidación `include_new/` → `include/`
+#### Fase A: Consolidación `include_new/` → `include/` ✅ **COMPLETADA**
 
-- [ ] Verificar que `include_new/` tiene template completo
-- [ ] Backup de `include/` actual → `include_legacy/`
-- [ ] Mover `include_new/` → `include/`
-- [ ] Actualizar `#include` paths en tests y demos
-- [ ] Verificar compilación completa (4 compiladores)
+- [x] Verificar que `include_new/` tiene template completo
+- [x] Backup de `include/` actual → `include_legacy/`
+- [x] Mover `include_new/` → `include/`
+- [x] Copiar `int128.hpp` (wrapper conveniente)
+- [x] Verificar compilación con GCC
+- [ ] Verificar compilación con Clang, Intel, MSVC
 - [ ] Eliminar `include_legacy/` si todo OK
+
+**Diferencias detectadas (include_new/ es SUPERIOR):**
+
+- `int128_base_algorithm.hpp`: +34 líneas (licencia Boost completa)
+- `intrinsics/compiler_detection.hpp`: +100 líneas (detección OS/ABI)
+- `intrinsics/arithmetic_operations.hpp`: Usa `INTRINSICS_USES_MSVC_ABI` (más robusto)
 
 #### Fase B: Integración `tests_new/` → `tests/`
 

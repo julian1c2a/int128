@@ -30,6 +30,7 @@ Este documento describe todas las dependencias y variables de entorno necesarias
 ### 🎯 Propósito
 
 El script `scripts/setup_intel_combined.bash` configura un entorno **híbrido crítico**:
+
 - **Compilador**: Intel oneAPI (icx/icpx)
 - **STL/Headers**: Visual Studio MSVC
 - **Shell**: MSYS2 Bash
@@ -94,28 +95,34 @@ int128/
 ### 🔴 DEPENDENCIAS OBLIGATORIAS
 
 #### A) Python 3.x
+
 - **Comando**: `python3` o `python`
 - **Propósito**: Ejecutar `get_combined_env.py`
 - **Ubicación**: Debe estar en PATH del sistema o MSYS2
-- **Verificación**: 
+- **Verificación**:
+
   ```bash
   python3 --version
   # o
   python --version
   ```
 
-#### B) Visual Studio 2019/2022
+#### B) Visual Studio 2026 (versión 18)
+
 - **Componente requerido**: `Microsoft.VisualStudio.Component.VC.Tools.x86.x64`
 - **Archivo crítico**: `vcvarsall.bat`
 - **Ubicaciones buscadas** (en orden de prioridad):
   1. Detectado por `vswhere.exe`:
      - `C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe`
-  2. Rutas manuales:
-     - `D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat`
+  2. Rutas manuales (VS 2026 = versión 18):
+     - `C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`
+     - `D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`
+  3. Rutas legacy (VS 2022/2019, si 18 no existe):
      - `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat`
      - `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat`
 
 #### C) Intel oneAPI
+
 - **Componente requerido**: Intel C++ Compiler (icx/icpx)
 - **Archivo crítico**: `setvars.bat`
 - **Ubicaciones buscadas** (en orden):
@@ -128,6 +135,7 @@ int128/
      - `D:\Program Files\Intel\oneAPI\setvars.bat`
 
 #### D) MSYS2 Bash
+
 - **Comandos requeridos**:
   - `bash` - Shell principal
   - `mktemp` - Creación de archivos temporales
@@ -140,6 +148,7 @@ int128/
 ### ⚪ DEPENDENCIAS OPCIONALES
 
 #### vswhere.exe
+
 - **Ubicación**: `C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe`
 - **Propósito**: Detectar automáticamente la instalación de Visual Studio
 - **Fallback**: Si no existe, se buscan rutas manuales
@@ -162,6 +171,7 @@ int128/
 #### Variables con Patrones Específicos
 
 El script exporta automáticamente todas las variables que contengan:
+
 - `INTEL` - Variables de Intel oneAPI
 - `ONEAPI` - Variables de configuración oneAPI
 - `VC` - Variables de Visual C++
@@ -204,6 +214,7 @@ C:\Program Files (x86)\Intel\oneAPI\compiler\latest\bin
 ```
 
 **Reglas de conversión:**
+
 1. `\` → `/` (separadores de ruta)
 2. `C:` → `/c` (letra de unidad)
 3. `;` → `:` (separador de PATH)
@@ -230,13 +241,14 @@ call "vcvarsall.bat" x64 && call "setvars.bat" intel64 && set
 2. **SEGUNDO**: `setvars.bat intel64`
    - Configura Intel oneAPI
    - **AÑADE** rutas de Intel al PATH (no las reemplaza)
-   - Configura variables INTEL_* y ONEAPI_*
+   - Configura variables INTEL_*y ONEAPI_*
 
 3. **TERCERO**: `set`
    - Exporta todas las variables de entorno actuales
    - Capturado por el script Python
 
 **Por qué este orden:**
+
 - Intel oneAPI en Windows depende de las bibliotecas estándar de MSVC
 - Si se invierte el orden, Intel no encuentra los headers/libs de MSVC
 - El PATH debe incluir primero Intel y luego MSVC para que `icx` tenga prioridad
@@ -293,6 +305,7 @@ echo $LIB | grep "Visual Studio"
 **Causa**: El archivo Python no está en `scripts/`
 
 **Solución**:
+
 ```bash
 # Verificar ubicación del archivo
 ls -la get_combined_env.py
@@ -307,6 +320,7 @@ mv path/to/get_combined_env.py ./
 **Causa**: Python no está instalado o no está en PATH
 
 **Solución**:
+
 ```bash
 # En MSYS2, instalar Python
 pacman -S python3
@@ -320,6 +334,7 @@ export PATH="/c/Python312:$PATH"
 **Causa**: Visual Studio no está instalado o está en una ubicación no estándar
 
 **Solución**:
+
 1. Instalar Visual Studio 2019 o 2022 con componente C++
 2. Si está en ubicación personalizada, editar `MSVC_CANDIDATES` en `get_combined_env.py`
 
@@ -335,6 +350,7 @@ MSVC_CANDIDATES = [
 **Causa**: Intel oneAPI no está instalado
 
 **Solución**:
+
 1. Descargar e instalar [Intel oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html)
 2. Instalar también [Intel oneAPI HPC Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit.html) para icx/icpx
 
@@ -343,6 +359,7 @@ MSVC_CANDIDATES = [
 **Causa**: El entorno no se cargó correctamente
 
 **Solución**:
+
 ```bash
 # Revisar el log de errores
 cat scripts/intel_debug.log
@@ -359,6 +376,7 @@ source "/c/Program Files (x86)/Intel/oneAPI/setvars.sh" intel64
 **Causa**: La variable `INCLUDE` no contiene rutas de Visual Studio
 
 **Diagnóstico**:
+
 ```bash
 # Verificar contenido de INCLUDE
 echo $INCLUDE
@@ -368,6 +386,7 @@ echo $INCLUDE
 ```
 
 **Solución**:
+
 - Verificar que Visual Studio está correctamente instalado
 - Ejecutar `vcvarsall.bat` manualmente y verificar la salida
 - Revisar el log: `cat scripts/intel_debug.log`

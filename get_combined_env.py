@@ -4,8 +4,13 @@ import subprocess
 import sys
 
 # --- CONFIGURACIÓN DE RUTAS MANUALES (FALLBACKS) ---
+# VS 2026 usa versión 18, no carpeta "2022"
 # Incluimos tus rutas personalizadas del disco D:
 MSVC_CANDIDATES = [
+    # VS 2026 (versión 18) - PRIORIDAD MÁXIMA
+    r"C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat",
+    r"D:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat",
+    # Legacy VS 2022/2019 (fallback)
     r"D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat",
     r"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat",
     r"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat"

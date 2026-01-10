@@ -64,7 +64,21 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
-#### [12:00] 2026-01-10 - Grafo de Documentación y Plan de Integración (#001)
+#### [12:10] 2026-01-10 - FASE A COMPLETADA: include_new/ → include/ (#003)
+
+- ✅ **Migración de directorios ejecutada:**
+  - `include/` → `include_legacy/` (backup)
+  - `include_new/` → `include/` (nuevo canónico)
+  - `int128.hpp` copiado a include/ (wrapper de conveniencia)
+- ✅ **Comparación de archivos:**
+  - 15 headers idénticos entre ambos directorios
+  - `int128_base_algorithm.hpp`: include_new/ tiene licencia Boost completa (+34 líneas)
+  - `intrinsics/compiler_detection.hpp`: include_new/ tiene detección de OS/ABI (+100 líneas)
+  - `intrinsics/arithmetic_operations.hpp`: include_new/ usa `INTRINSICS_USES_MSVC_ABI` (más robusto)
+- ✅ **Compilación verificada:** `int128_base_tt_extracted_tests.cpp` compila OK con GCC
+- 📋 **Próximo:** Fase B (tests_new/ → tests/)
+
+#### [12:00] 2026-01-10 - Grafo de Documentación y Plan de Integración (#001-#002)
 
 - ✅ **DOCUMENTATION_GRAPH.md**: Creado grafo completo de 114 archivos .md
   - Mapa de dependencias entre documentos
@@ -72,13 +86,9 @@ README.md ─────────┬──> CHANGELOG.md (historial)
   - Protocolo de actualización con checklist
   - Contador de actividad por sesión
 - 📋 **Plan de Integración de Directorios** documentado:
-  - `include_new/` → `include/` (Fase A)
+  - `include_new/` → `include/` (Fase A) ✅ **COMPLETADA**
   - `tests_new/` → `tests/` (Fase B)
   - `experimental/` → `tests/experimental/` (Fase C)
-- 📊 **Inventario actual:**
-  - `include_new/`: 17 headers + subdirs
-  - `tests_new/`: 14 archivos test
-  - `experimental/`: 12 archivos test
 - 🔗 **Ver:** [DOCUMENTATION_GRAPH.md](DOCUMENTATION_GRAPH.md) para mapa completo
 
 ---

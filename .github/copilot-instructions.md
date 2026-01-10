@@ -2,6 +2,14 @@
 
 ## ⚠️ CRITICAL RULES
 
+### 0. Compiler Paths (CRITICAL - DO NOT CHANGE)
+**Visual Studio 2026 uses version "18", NOT "2022"!**
+- **MSVC:** `C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\`
+- **vcvarsall.bat:** `C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat`
+- **Intel oneAPI:** `C:\Program Files (x86)\Intel\oneAPI\` (depends on MSVC)
+- **GCC:** `/c/msys64/ucrt64/bin/g++`
+- **Clang:** `/c/msys64/clang64/bin/clang++`
+
 ### 1. Keep Root Directory CLEAN
 **NEVER create in project root:** `*.exe`, `*.obj`, `*.pdb`, `*.o`  
 **Use instead:** `build_temp/`, `build/build_[tests|benchs]/[compiler]/[mode]/`

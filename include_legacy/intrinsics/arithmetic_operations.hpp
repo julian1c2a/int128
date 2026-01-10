@@ -30,8 +30,8 @@
  *
  * Proporciona implementaciones optimizadas para operaciones aritméticas
  * con propagación de carry/borrow:
- * - GCC/Clang/Intel(Linux): __builtin_* cuando disponible
- * - MSVC/Intel(Windows): intrínsecos _addcarry_u64, _subborrow_u64
+ * - GCC/Clang/Intel: __builtin_* cuando disponible
+ * - MSVC: intrínsecos _addcarry_u64, _subborrow_u64
  * - Fallback: Implementación C++ puro portable
  *
  * @author Julián Calderón Almendros <julian.calderon.almendros@gmail.com>
@@ -47,8 +47,7 @@
 #include "fallback_portable.hpp"
 #include <cstdint>
 
-// Incluir <intrin.h> para MSVC y Intel ICX en Windows
-#if INTRINSICS_USES_MSVC_ABI
+#if INTRINSICS_COMPILER_MSVC
 #include <intrin.h>
 #endif
 
@@ -76,8 +75,7 @@ namespace intrinsics
     inline constexpr unsigned char addcarry_u64(unsigned char carry_in, uint64_t a, uint64_t b,
                                                 uint64_t *result) noexcept
     {
-#if INTRINSICS_USES_MSVC_ABI
-        // MSVC y Intel ICX en Windows: usar intrínsecos de MSVC
+#if INTRINSICS_COMPILER_MSVC
         if (INTRINSICS_IS_CONSTANT_EVALUATED())
         {
             // Versión constexpr portable
@@ -92,8 +90,8 @@ namespace intrinsics
         {
             return _addcarry_u64(carry_in, a, b, reinterpret_cast<unsigned long long *>(result));
         }
-#elif INTRINSICS_USES_GNU_ABI
-        // GCC/Clang/Intel(Linux): usar builtins
+#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG
+        // GCC/Clang: usar __builtin_addcll desde GCC 5 / Clang 3.8
         if (INTRINSICS_IS_CONSTANT_EVALUATED())
         {
             // Versión constexpr portable
@@ -118,6 +116,20 @@ namespace intrinsics
         *result = sum_with_carry;
         return (sum < a) || (sum_with_carry < sum) ? 1 : 0;
 #endif
+#elif INTRINSICS_COMPILER_INTEL
+        // Intel: soporta __builtin_addcll
+        if (INTRINSICS_IS_CONSTANT_EVALUATED())
+        {
+            // Versión constexpr portable
+            uint64_t sum = a + b;
+            uint64_t sum_with_carry = sum + carry_in;
+            *result = sum_with_carry;
+            return (sum < a) || (sum_with_carry < sum) ? 1 : 0;
+        }
+        unsigned long long r;
+        unsigned char carry_out = __builtin_addcll(a, b, carry_in, &r);
+        *result = r;
+        return carry_out;
 #else
         // Fallback portable
         uint64_t sum = a + b;
@@ -164,8 +176,7 @@ namespace intrinsics
     inline constexpr unsigned char subborrow_u64(unsigned char borrow_in, uint64_t a, uint64_t b,
                                                  uint64_t *result) noexcept
     {
-#if INTRINSICS_USES_MSVC_ABI
-        // MSVC y Intel ICX en Windows: usar intrínsecos de MSVC
+#if INTRINSICS_COMPILER_MSVC
         if (INTRINSICS_IS_CONSTANT_EVALUATED())
         {
             // Versión constexpr portable
@@ -179,10 +190,24 @@ namespace intrinsics
         {
             return _subborrow_u64(borrow_in, a, b, reinterpret_cast<unsigned long long *>(result));
         }
-#else
-        // GCC/Clang/Intel(Linux)/Fallback: usar implementación portable
-        // NOTA: __builtin_subcll tiene comportamiento incorrecto en algunas versiones
+#elif INTRINSICS_COMPILER_GCC || INTRINSICS_COMPILER_CLANG
+        // GCC/Clang: usar implementación portable
+        // NOTA: __builtin_subcll tiene comportamiento incorrecto en algunas versiones de GCC
         // Por eso usamos la versión portable que siempre funciona correctamente
+        uint64_t diff = a - b;
+        uint64_t diff_with_borrow = diff - borrow_in;
+        *result = diff_with_borrow;
+        return (diff > a) || (diff_with_borrow > diff) ? 1 : 0;
+#elif INTRINSICS_COMPILER_INTEL
+        // Intel: usar implementación portable
+        // NOTA: __builtin_subcll tiene comportamiento incorrecto
+        // Por eso usamos la versión portable que siempre funciona correctamente
+        uint64_t diff = a - b;
+        uint64_t diff_with_borrow = diff - borrow_in;
+        *result = diff_with_borrow;
+        return (diff > a) || (diff_with_borrow > diff) ? 1 : 0;
+#else
+        // Fallback portable
         uint64_t diff = a - b;
         uint64_t diff_with_borrow = diff - borrow_in;
         *result = diff_with_borrow;
@@ -224,8 +249,7 @@ namespace intrinsics
     inline constexpr void mulx_u64(uint64_t a, uint64_t b, uint64_t *result_high,
                                    uint64_t *result_low) noexcept
     {
-#if INTRINSICS_USES_MSVC_ABI
-        // MSVC y Intel ICX en Windows: usar _umul128
+#if INTRINSICS_COMPILER_MSVC
         if (INTRINSICS_IS_CONSTANT_EVALUATED())
         {
             // Versión constexpr: multiplicación de 64x64 -> 128 bits
@@ -250,7 +274,7 @@ namespace intrinsics
             *result_low = _umul128(a, b, result_high);
         }
 #elif defined(__SIZEOF_INT128__)
-        // GCC/Clang/Intel(Linux) con soporte de __uint128_t
+        // GCC/Clang/Intel con soporte de __uint128_t
         __uint128_t product = static_cast<__uint128_t>(a) * static_cast<__uint128_t>(b);
         *result_low = static_cast<uint64_t>(product);
         *result_high = static_cast<uint64_t>(product >> 64);
