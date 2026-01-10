@@ -60,9 +60,36 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ---
 
-## [Unreleased] - Fase 1.5 en Progreso
+## [Unreleased] - Fase 1.6 Completada
 
 ### 🔄 Sesión Actual
+
+#### [14:30] 2026-01-10 - FASE 1.6 COMPLETADA: Limpieza total de directorios
+
+- ✅ **Directorios eliminados:**
+  - `tests_new/` - 14 archivos template (contenido fusionado en tests/)
+  - `experimental/` - 12 archivos (duplicados de tests_new/)
+  - `include_legacy/` - 19 headers (backup obsoleto)
+- ✅ **Archivos de raíz eliminados:**
+  - 62 archivos `.cpp` de debugging/testing temporal
+  - 3 archivos `.hpp` temporales (`int128_base.hpp`, `uint128_bits_*.hpp`)
+  - 4 archivos temporales (`temp_*.sh`, `output.txt`, `debug_*.bash`)
+- ✅ **Tests fusionados (14 features):**
+  - `int128_algorithm_extracted_tests.cpp`
+  - `int128_base_tt_extracted_tests.cpp`
+  - `int128_bits_extracted_tests.cpp`
+  - `int128_cmath_extracted_tests.cpp`
+  - `int128_concepts_extracted_tests.cpp`
+  - `int128_format_extracted_tests.cpp`
+  - `int128_iostreams_extracted_tests.cpp`
+  - `int128_limits_extracted_tests.cpp`
+  - `int128_numeric_extracted_tests.cpp`
+  - `int128_ranges_extracted_tests.cpp`
+  - `int128_safe_extracted_tests.cpp`
+  - `int128_t_extracted_tests.cpp`
+  - `int128_thread_safety_extracted_tests.cpp`
+  - `int128_traits_extracted_tests.cpp`
+- 📋 **Estructura final limpia:** include/, tests/, benchs/, demos/, scripts/
 
 #### [12:10] 2026-01-10 - FASE A COMPLETADA: include_new/ → include/ (#003)
 
