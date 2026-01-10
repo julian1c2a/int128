@@ -486,6 +486,89 @@ def cmd_demo(args: argparse.Namespace) -> int:
     return ret
 
 
+def cmd_sanitize(args: argparse.Namespace) -> int:
+    """Compila con sanitizers"""
+    echo_header("=" * 60)
+    echo_header("  COMPILACIÓN CON SANITIZER")
+    echo_header("=" * 60)
+    print()
+    
+    type_name = args.type
+    feature = args.feature
+    sanitizer = args.sanitizer or 'asan'
+    compiler = args.compiler or 'gcc'
+    target = args.target or 'tests'
+    
+    echo_info(f"Tipo:       {type_name}")
+    echo_info(f"Feature:    {feature}")
+    echo_info(f"Sanitizer:  {sanitizer}")
+    echo_info(f"Compilador: {compiler}")
+    echo_info(f"Target:     {target}")
+    print()
+    
+    # Ejecutar script bash
+    script_path = SCRIPTS_DIR / "build_with_sanitizers.bash"
+    if not script_path.exists():
+        echo_error(f"Script no encontrado: {script_path}")
+        return 1
+    
+    cmd = ["bash", str(script_path), type_name, feature, target, compiler, sanitizer]
+    result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    return result.returncode
+
+
+def cmd_analyze(args: argparse.Namespace) -> int:
+    """Ejecuta análisis estático"""
+    echo_header("=" * 60)
+    echo_header("  ANÁLISIS ESTÁTICO")
+    echo_header("=" * 60)
+    print()
+    
+    tool = args.tool or 'cppcheck'
+    target = args.target or 'headers'
+    
+    echo_info(f"Herramienta: {tool}")
+    echo_info(f"Target:      {target}")
+    print()
+    
+    # Ejecutar script bash
+    script_path = SCRIPTS_DIR / "run_static_analysis.bash"
+    if not script_path.exists():
+        echo_error(f"Script no encontrado: {script_path}")
+        return 1
+    
+    cmd = ["bash", str(script_path), tool, target]
+    result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    return result.returncode
+
+
+def cmd_compare(args: argparse.Namespace) -> int:
+    """Ejecuta benchmark comparativo"""
+    echo_header("=" * 60)
+    echo_header("  BENCHMARK COMPARATIVO")
+    echo_header("=" * 60)
+    print()
+    
+    compiler = args.compiler or 'gcc'
+    mode = args.mode or 'release-O3'
+    iterations = args.iterations or '100000'
+    
+    echo_info(f"Compilador:   {compiler}")
+    echo_info(f"Modo:         {mode}")
+    echo_info(f"Iteraciones:  {iterations}")
+    print()
+    
+    # Ejecutar script bash
+    script_path = SCRIPTS_DIR / "benchmark_comparison.bash"
+    if not script_path.exists():
+        echo_error(f"Script no encontrado: {script_path}")
+        return 1
+    
+    cmd = ["bash", str(script_path), compiler, mode, iterations]
+    result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    return result.returncode
+
+
 def cmd_list(args: argparse.Namespace) -> int:
     """Lista todas las combinaciones disponibles"""
     echo_header("=" * 60)
@@ -558,6 +641,21 @@ Ejemplos:
   
   # Demos:
   python make.py build demos tutorials 01_basic_operations gcc release
+  python make.py demo tutorials 01_basic_operations gcc release
+  
+  # Sanitizers:
+  python make.py sanitize uint128 bits asan gcc tests
+  python make.py sanitize uint128 thread_safety tsan gcc tests
+  python make.py sanitize int128 algorithm ubsan clang tests
+  
+  # Análisis estático:
+  python make.py analyze cppcheck headers
+  python make.py analyze clang-tidy tests
+  python make.py analyze all all
+  
+  # Benchmark comparativo (builtin, __int128, boost):
+  python make.py compare gcc release-O3 100000
+  python make.py compare clang release-Ofast 1000000
   python make.py run demos tutorials 01_basic_operations gcc release
   python make.py check demos tutorials
   python make.py demo tutorials 01_basic_operations
@@ -620,6 +718,33 @@ Ejemplos:
     # list
     subparsers.add_parser('list', help='Lista todas las combinaciones disponibles')
     
+    # sanitize
+    sanitize_parser = subparsers.add_parser('sanitize', help='Compila con sanitizers (asan, ubsan, tsan)')
+    sanitize_parser.add_argument('type', help='uint128 | int128')
+    sanitize_parser.add_argument('feature', help='bits | numeric | algorithm | etc.')
+    sanitize_parser.add_argument('sanitizer', nargs='?', default='asan', 
+                                 help='asan | ubsan | tsan | msan | all (default: asan)')
+    sanitize_parser.add_argument('compiler', nargs='?', default='gcc',
+                                 help='gcc | clang | intel | msvc (default: gcc)')
+    sanitize_parser.add_argument('target', nargs='?', default='tests',
+                                 help='tests | benchs (default: tests)')
+    
+    # static-analysis
+    analysis_parser = subparsers.add_parser('analyze', help='Análisis estático del código')
+    analysis_parser.add_argument('tool', nargs='?', default='cppcheck',
+                                 help='cppcheck | clang-tidy | infer | all (default: cppcheck)')
+    analysis_parser.add_argument('target', nargs='?', default='headers',
+                                 help='headers | tests | benchs | demos | all (default: headers)')
+    
+    # benchmark-compare
+    compare_parser = subparsers.add_parser('compare', help='Benchmark comparativo (builtin, __int128, boost)')
+    compare_parser.add_argument('compiler', nargs='?', default='gcc',
+                                help='gcc | clang (default: gcc)')
+    compare_parser.add_argument('mode', nargs='?', default='release-O3',
+                                help='release-O1 | release-O2 | release-O3 | release-Ofast (default: release-O3)')
+    compare_parser.add_argument('iterations', nargs='?', default='100000',
+                                help='Número de iteraciones (default: 100000)')
+    
     # Parse argumentos
     args = parser.parse_args()
     
@@ -639,6 +764,9 @@ Ejemplos:
         'bench': cmd_bench,
         'demo': cmd_demo,
         'list': cmd_list,
+        'sanitize': cmd_sanitize,
+        'analyze': cmd_analyze,
+        'compare': cmd_compare,
     }
     
     return commands[args.command](args)

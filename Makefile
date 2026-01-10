@@ -4,6 +4,7 @@
 #      make demo CATEGORY=[category] DEMO=[demo] COMPILER=[compiler] MODE=[mode]
 
 .PHONY: help build_tests build_benchs build_demo check check_demos run run_demo clean
+.PHONY: sanitize static-analysis benchmark-compare
 .DEFAULT_GOAL := help
 
 # =============================================================================
@@ -320,6 +321,51 @@ clean: clean-build clean-results clean-logs
 	@echo "✅ Limpieza completa"
 
 # =============================================================================
+# SANITIZERS
+# =============================================================================
+# Uso: make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan
+# SANITIZER: asan | ubsan | tsan | msan | all
+
+SANITIZER ?= asan
+SANIT_TARGET ?= tests
+
+sanitize:
+ifndef TYPE
+	$(error TYPE is required. Use: make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan)
+endif
+ifndef FEATURE
+	$(error FEATURE is required. Use: make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan)
+endif
+	@echo "🔬 Compilando con sanitizer $(SANITIZER)..."
+	@bash scripts/build_with_sanitizers.bash $(TYPE) $(FEATURE) $(SANIT_TARGET) $(COMPILER) $(SANITIZER)
+
+# =============================================================================
+# STATIC ANALYSIS
+# =============================================================================
+# Uso: make static-analysis TOOL=cppcheck TARGET=headers
+# TOOL: cppcheck | clang-tidy | infer | all
+# TARGET: headers | tests | benchs | demos | all
+
+TOOL ?= cppcheck
+ANALYSIS_TARGET ?= headers
+
+static-analysis:
+	@echo "🔍 Ejecutando análisis estático con $(TOOL)..."
+	@bash scripts/run_static_analysis.bash $(TOOL) $(ANALYSIS_TARGET)
+
+# =============================================================================
+# BENCHMARK COMPARISON
+# =============================================================================
+# Uso: make benchmark-compare COMPILER=gcc MODE=release-O3 ITERATIONS=100000
+# Compara: builtin (int8-64), nstd::uint128_t, __int128, boost::uint128_t
+
+ITERATIONS ?= 100000
+
+benchmark-compare:
+	@echo "📊 Ejecutando benchmark comparativo..."
+	@bash scripts/benchmark_comparison.bash $(COMPILER) $(MODE) $(ITERATIONS)
+
+# =============================================================================
 # TARGETS ÚTILES
 # =============================================================================
 
@@ -420,6 +466,23 @@ help:
 	@echo "  make list-compilers         - Listar compiladores disponibles"
 	@echo "  make list-modes             - Listar modos disponibles"
 	@echo "  make list-all               - Listar todas las opciones"
+	@echo ""
+	@echo "SANITIZADORES Y ANALISIS ESTATICO:"
+	@echo "  make sanitize TYPE=uint128 FEATURE=bits COMPILER=gcc SANITIZER=asan"
+	@echo "  make sanitize TYPE=uint128 FEATURE=thread_safety COMPILER=gcc SANITIZER=tsan"
+	@echo "  make static-analysis TOOL=cppcheck TARGET=headers"
+	@echo "  make static-analysis TOOL=clang-tidy TARGET=tests"
+	@echo "  make static-analysis TOOL=all TARGET=all"
+	@echo ""
+	@echo "  SANITIZER: asan | ubsan | tsan | msan | all"
+	@echo "  TOOL:      cppcheck | clang-tidy | infer | all"
+	@echo "  TARGET:    headers | tests | benchs | demos | all"
+	@echo ""
+	@echo "BENCHMARK COMPARATIVO:"
+	@echo "  make benchmark-compare COMPILER=gcc MODE=release-O3"
+	@echo "  make benchmark-compare COMPILER=clang MODE=release-Ofast ITERATIONS=1000000"
+	@echo ""
+	@echo "  Compara: builtin (int8-64), nstd::uint128_t, __int128, boost::uint128_t"
 	@echo ""
 	@echo "LIMPIEZA:"
 	@echo "  make clean-build            - Limpiar ejecutables compilados"
