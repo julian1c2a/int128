@@ -64,6 +64,36 @@ README.md ─────────┬──> CHANGELOG.md (historial)
 
 ### 🔄 Sesión Actual
 
+#### [17:30] 2026-01-10 - VALIDACIÓN WINDOWS COMPLETADA: 13/13 Features
+
+- ✅ **Windows (MSYS2) - 26/26 configuraciones GCC+Clang:**
+  - Scripts `build_generic.bash`, `check_generic.bash`, `run_generic.bash` actualizados
+  - Removido parámetro TYPE redundante (igual que WSL)
+  - Fix: OSTYPE check para `"cygwin"` (no `"msys"`)
+  - Fix: `MSYS2_ARG_CONV_EXCL="*"` para MSVC
+  - Fix: Flags separados GCC vs Clang para `-Ofast`
+- ✅ **Resultados de tests (GCC + Clang release):**
+
+| Feature | GCC | Clang |
+|---------|-----|-------|
+| tt | ✅ PASS | ✅ PASS |
+| traits | ✅ PASS | ✅ PASS |
+| limits | ✅ PASS | ✅ PASS |
+| concepts | ✅ PASS | ✅ PASS |
+| bits | ✅ PASS | ✅ PASS |
+| numeric | ✅ PASS | ✅ PASS |
+| algorithm | ✅ PASS | ✅ PASS |
+| cmath | ✅ PASS | ✅ PASS |
+| iostreams | ✅ PASS | ✅ PASS |
+| format | ✅ PASS | ✅ PASS |
+| ranges | ✅ PASS | ✅ PASS |
+| safe | ✅ PASS | ✅ PASS |
+| thread_safety | ✅ PASS | ✅ PASS |
+
+- 📋 **Total Windows:** 26/26 (GCC 13 + Clang 13)
+- 📋 **Total WSL:** 16/16 (8 compiladores × 2 modos)
+- 📋 **Total Global:** 42/42 configuraciones validadas
+
 #### [16:00] 2026-01-10 - FASE 1.66 COMPLETADA: Validación Multi-Compilador WSL
 
 - ✅ **Validación Windows (MSYS2):** 24/24 configuraciones
